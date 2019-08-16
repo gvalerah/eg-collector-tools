@@ -1,0 +1,10 @@
+{
+  "metadata":{
+             "name":"Trace full map",
+             "table_name":"Trace"
+             },
+  "fields":[
+     {"name":"ID","type":"int(11)","null":"NO","key":"PRI","default":"None","extra":"auto_increment","output":"True","export_name":"ID","length":"11","precision":"0","quote":"False","format":"%011d","isid":"False","iscode":"False","isdescription":"False"}
+    ,{"name":"LINE","type":"varchar(128)","null":"YES","key":"","default":"None","extra":"","output":"True","export_name":"LINE","length":"128","precision":"0","quote":"True","format":"%-128s","isid":"False","iscode":"False","isdescription":"False"}
+ ]
+}

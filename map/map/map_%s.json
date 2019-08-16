@@ -1,0 +1,14 @@
+{
+  'metadata':{
+             'name':'Users full map',
+             'table_name':'Users'
+             },
+  'fields':[
+             {'name':'Id','type':'int(11)','null':'NO','key':'PRI','default':'None','extra':'auto_increment','format':'%011d'}
+            ,{'name':'username','type':'varchar(64)','null':'YES','key':'','default':'None','extra':'','format':'%-64s'}
+            ,{'name':'role_id','type':'int(11)','null':'NO','key':'MUL','default':'None','extra':'','format':'%011d'}
+            ,{'name':'email','type':'varchar(64)','null':'YES','key':'','default':'None','extra':'','format':'%-64s'}
+            ,{'name':'password_hash','type':'varchar(128)','null':'YES','key':'','default':'None','extra':'','format':'%-128s'}
+            ,{'name':'confirmed','type':'tinyint(4)','null':'YES','key':'','default':'None','extra':'','format':'%d'}
+  ]
+}

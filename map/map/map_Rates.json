@@ -1,0 +1,19 @@
+{
+  "metadata":{
+             "name":"Rates full map",
+             "table_name":"Rates"
+             },
+  "fields":[
+     {"name":"Rat_Id","type":"int(11)","null":"NO","key":"PRI","default":"None","extra":"auto_increment","output":"True","export_name":"Rat_Id","length":"11","precision":"0","quote":"False","format":"%011d","isid":"True","iscode":"False","isdescription":"False"}
+    ,{"name":"Typ_Code","type":"varchar(10)","null":"NO","key":"MUL","default":"None","extra":"","output":"True","export_name":"Typ_Code","length":"10","precision":"0","quote":"True","format":"%-10s","isid":"False","iscode":"True","isdescription":"False"}
+    ,{"name":"Cus_Id","type":"int(11)","null":"NO","key":"MUL","default":"None","extra":"","output":"True","export_name":"Cus_Id","length":"11","precision":"0","quote":"False","format":"%011d","isid":"True","iscode":"False","isdescription":"False"}
+    ,{"name":"Pla_Id","type":"int(11)","null":"NO","key":"MUL","default":"None","extra":"","output":"True","export_name":"Pla_Id","length":"11","precision":"0","quote":"False","format":"%011d","isid":"True","iscode":"False","isdescription":"False"}
+    ,{"name":"CC_Id","type":"int(11)","null":"NO","key":"MUL","default":"None","extra":"","output":"True","export_name":"CC_Id","length":"11","precision":"0","quote":"False","format":"%011d","isid":"True","iscode":"False","isdescription":"False"}
+    ,{"name":"CI_Id","type":"int(11)","null":"NO","key":"MUL","default":"None","extra":"","output":"True","export_name":"CI_Id","length":"11","precision":"0","quote":"False","format":"%011d","isid":"True","iscode":"False","isdescription":"False"}
+    ,{"name":"Rat_Price","type":"decimal(20,6)","null":"YES","key":"","default":"None","extra":"","output":"True","export_name":"Rat_Price","length":"20","precision":"6","quote":"False","format":"%020.6f","isid":"False","iscode":"False","isdescription":"False"}
+    ,{"name":"Cur_Code","type":"varchar(3)","null":"NO","key":"MUL","default":"None","extra":"","output":"True","export_name":"Cur_Code","length":"3","precision":"0","quote":"True","format":"%-3s","isid":"False","iscode":"True","isdescription":"False"}
+    ,{"name":"MU_Code","type":"varchar(3)","null":"NO","key":"MUL","default":"None","extra":"","output":"True","export_name":"MU_Code","length":"3","precision":"0","quote":"True","format":"%-3s","isid":"False","iscode":"True","isdescription":"False"}
+    ,{"name":"Rat_Period","type":"int(11)","null":"NO","key":"MUL","default":"None","extra":"","output":"True","export_name":"Rat_Period","length":"11","precision":"0","quote":"False","format":"%011d","isid":"False","iscode":"False","isdescription":"False"}
+    ,{"name":"Rat_Type","type":"int(11)","null":"YES","key":"","default":"None","extra":"","output":"True","export_name":"Rat_Type","length":"11","precision":"0","quote":"False","format":"%011d","isid":"False","iscode":"False","isdescription":"False"}
+ ]
+}

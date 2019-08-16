@@ -1,0 +1,11 @@
+{
+  "metadata":{
+             "name":"Countries_Currencies full map",
+             "table_name":"Countries_Currencies"
+             },
+  "fields":[
+     {"name":"Cou_Code","type":"varchar(2)","null":"NO","key":"PRI","default":"None","extra":"","output":"True","export_name":"Cou_Code","length":"2","precision":"0","quote":"True","format":"%-2s","isid":"False","iscode":"True","isdescription":"False"}
+    ,{"name":"Cur_Code","type":"varchar(3)","null":"NO","key":"PRI","default":"None","extra":"","output":"True","export_name":"Cur_Code","length":"3","precision":"0","quote":"True","format":"%-3s","isid":"False","iscode":"True","isdescription":"False"}
+    ,{"name":"Cou_Cur_Comment","type":"varchar(45)","null":"YES","key":"","default":"None","extra":"","output":"True","export_name":"Cou_Cur_Comment","length":"45","precision":"0","quote":"True","format":"%-45s","isid":"False","iscode":"False","isdescription":"False"}
+ ]
+}

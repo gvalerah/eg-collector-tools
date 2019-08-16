@@ -1,0 +1,1 @@
+/home/gvalera/GIT/EG-Collector-Tools/code/src/functions/db_status/view_db_status.py

@@ -1,0 +1,10 @@
+{
+  "metadata":{
+             "name":"CU_Types full map",
+             "table_name":"CU_Types"
+             },
+  "fields":[
+     {"name":"Typ_Code","type":"varchar(10)","null":"NO","key":"PRI","default":"None","extra":"","output":"True","export_name":"Typ_Code","length":"10","precision":"0","quote":"True","format":"%-10s","isid":"False","iscode":"True","isdescription":"False"}
+    ,{"name":"Typ_Description","type":"varchar(45)","null":"NO","key":"","default":"None","extra":"","output":"True","export_name":"Typ_Description","length":"45","precision":"0","quote":"True","format":"%-45s","isid":"False","iscode":"False","isdescription":"True"}
+ ]
+}

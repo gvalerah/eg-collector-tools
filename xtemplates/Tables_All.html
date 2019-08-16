@@ -1,0 +1,60 @@
+{# ============================================================================= #}
+{# Auto-Generated code. do not modify #}
+{# (c) Sertechno 2018 #}
+{# GLVH @ 2018-11-13 10:26:02 #}
+{# ============================================================================= #}
+{% extends "base.html" %}
+
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}Collector{% endblock %}
+
+{% block head %}
+   {{ super() }}
+   <link rel="shortcut icon" href="{{ url_for('static', filename = 'favicon.ico') }}"
+   type="image/x-icon">
+   <link rel="icon" href="{{ url_for('static', filename = 'img/favicon.ico') }}"
+   type="image/x-icon">
+{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h2>Tables:<h2> <p>{{ rows.__len__() }} records found.</p>
+</div>
+<table>
+    <tr id="header">
+        <td>Id</td>
+        <td>Name</td>
+        <td>Caption</td>
+        <td>Entity</td>
+        <td>Class_Name</td>
+        <td>Child_Table</td>
+        <td>Use_Pagination</td>
+        <td>Use_Children_Pagination</td>
+        <td>Generate_Form_One</td>
+        <td>Generate_Form_All</td>
+        <td>Generate_Form_Filter</td>
+        <td>Generate_Children</td>
+        <td>Edit Link</td>
+    </tr>
+    {% for row in rows %}
+       <tr id="{{loop.cycle("even","odd")}}">
+           <td>{{ row.Id }}</td>
+           <td>{{ row.Name }}</td>
+           <td>{{ row.Caption }}</td>
+           <td>{{ row.Entity }}</td>
+           <td>{{ row.Class_Name }}</td>
+           <td>{{ row.Child_Table }}</td>
+           <td>{{ row.Use_Pagination }}</td>
+           <td>{{ row.Use_Children_Pagination }}</td>
+           <td>{{ row.Generate_Form_One }}</td>
+           <td>{{ row.Generate_Form_All }}</td>
+           <td>{{ row.Generate_Form_Filter }}</td>
+           <td>{{ row.Generate_Children }}</td>
+           <td><a href="/forms/Tables/{{ row.Id }}">Edit</a></td>
+       </tr>
+    {% endfor %}
+</table>
+{% endblock %}
+
+{# ============================================================================= #}

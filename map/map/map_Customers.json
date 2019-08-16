@@ -1,0 +1,11 @@
+{
+  "metadata":{
+             "name":"Customers full map",
+             "table_name":"Customers"
+             },
+  "fields":[
+     {"name":"Cus_Id","type":"int(11)","null":"NO","key":"PRI","default":"None","extra":"auto_increment","output":"True","export_name":"Cus_Id","length":"11","precision":"0","quote":"False","format":"%011d","isid":"True","iscode":"False","isdescription":"False"}
+    ,{"name":"Cus_Name","type":"varchar(45)","null":"NO","key":"UNI","default":"None","extra":"","output":"True","export_name":"Cus_Name","length":"45","precision":"0","quote":"True","format":"%-45s","isid":"False","iscode":"False","isdescription":"True"}
+    ,{"name":"CC_Id","type":"int(11)","null":"NO","key":"MUL","default":"None","extra":"","output":"True","export_name":"CC_Id","length":"11","precision":"0","quote":"False","format":"%011d","isid":"True","iscode":"False","isdescription":"False"}
+ ]
+}

@@ -1,0 +1,13 @@
+{
+  "metadata":{
+             "name":"Cost_Centers full map",
+             "table_name":"Cost_Centers"
+             },
+  "fields":[
+     {"name":"CC_Id","type":"int(11)","null":"NO","key":"PRI","default":"None","extra":"auto_increment","output":"True","export_name":"CC_Id","length":"11","precision":"0","quote":"False","format":"%011d","isid":"True","iscode":"False","isdescription":"False"}
+    ,{"name":"CC_Code","type":"varchar(45)","null":"YES","key":"","default":"None","extra":"","output":"True","export_name":"CC_Code","length":"45","precision":"0","quote":"True","format":"%-45s","isid":"False","iscode":"True","isdescription":"False"}
+    ,{"name":"CC_Description","type":"varchar(45)","null":"YES","key":"","default":"None","extra":"","output":"True","export_name":"CC_Description","length":"45","precision":"0","quote":"True","format":"%-45s","isid":"False","iscode":"False","isdescription":"True"}
+    ,{"name":"Cur_Code","type":"varchar(3)","null":"NO","key":"MUL","default":"None","extra":"","output":"True","export_name":"Cur_Code","length":"3","precision":"0","quote":"True","format":"%-3s","isid":"False","iscode":"True","isdescription":"False"}
+    ,{"name":"CC_Parent_Code","type":"varchar(45)","null":"NO","key":"","default":"1","extra":"","output":"True","export_name":"CC_Parent_Code","length":"45","precision":"0","quote":"True","format":"%-45s","isid":"False","iscode":"True","isdescription":"False"}
+ ]
+}

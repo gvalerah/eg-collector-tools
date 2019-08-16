@@ -1,0 +1,68 @@
+{# ============================================================================= #}
+{# Auto-Generated code. do not modify #}
+{# (c) Sertechno 2018 #}
+{# GLVH @ 2018-11-13 10:26:02 #}
+{# ============================================================================= #}
+{% extends "base.html" %}
+
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}Collector{% endblock %}
+
+{% block head %}
+   {{ super() }}
+   <link rel="shortcut icon" href="{{ url_for('static', filename = 'favicon.ico') }}"
+   type="image/x-icon">
+   <link rel="icon" href="{{ url_for('static', filename = 'img/favicon.ico') }}"
+   type="image/x-icon">
+{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h2>Forms:<h2> <p>{{ rows.__len__() }} records found.</p>
+</div>
+<table>
+    <tr id="header">
+        <td>Id</td>
+        <td>Table</td>
+        <td>Field</td>
+        <td>Type</td>
+        <td>Null</td>
+        <td>Key</td>
+        <td>Default</td>
+        <td>Extra</td>
+        <td>Foreign_Key</td>
+        <td>Referenced_Table</td>
+        <td>Foreign_Field</td>
+        <td>Length</td>
+        <td>Validation</td>
+        <td>Validation_Type</td>
+        <td>Validation_String</td>
+        <td>Caption_String</td>
+        <td>Edit Link</td>
+    </tr>
+    {% for row in rows %}
+       <tr id="{{loop.cycle("even","odd")}}">
+           <td>{{ row.Id }}</td>
+           <td>{{ row.Table }}</td>
+           <td>{{ row.Field }}</td>
+           <td>{{ row.Type }}</td>
+           <td>{{ row.Null }}</td>
+           <td>{{ row.Key }}</td>
+           <td>{{ row.Default }}</td>
+           <td>{{ row.Extra }}</td>
+           <td>{{ row.Foreign_Key }}</td>
+           <td>{{ row.Referenced_Table }}</td>
+           <td>{{ row.Foreign_Field }}</td>
+           <td>{{ row.Length }}</td>
+           <td>{{ row.Validation }}</td>
+           <td>{{ row.Validation_Type }}</td>
+           <td>{{ row.Validation_String }}</td>
+           <td>{{ row.Caption_String }}</td>
+           <td><a href="/forms/Forms/{{ row.Id }}">Edit</a></td>
+       </tr>
+    {% endfor %}
+</table>
+{% endblock %}
+
+{# ============================================================================= #}

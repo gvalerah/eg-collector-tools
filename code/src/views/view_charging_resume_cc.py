@@ -1,0 +1,1 @@
+/home/gvalera/GIT/EG-Collector-Tools/code/src/functions/charging_resume_cc/view_charging_resume_cc.py

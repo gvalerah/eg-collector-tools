@@ -1,0 +1,22 @@
+{# ============================================================================= #}
+{# Auto-Generated code. do not modify #}
+{# (c) Sertechno 2018 #}
+{# GLVH @ 2018-11-13 10:26:02 #}
+{# ============================================================================= #}
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block title %}Collector{% endblock %}
+{% block head %}
+{{ super() }}
+<link rel="shortcut icon" href="{{ url_for('static', filename = 'favicon.ico') }}"
+type="image/x-icon">
+<link rel="icon" href="{{ url_for('static', filename = 'img/favicon.ico') }}"
+type="image/x-icon">
+{% endblock %}
+{% block page_content %}
+<div class="page-header">
+    <h2>Forms Form:</h2>
+</div>
+{{ wtf.quick_form(form) }}
+{% endblock %}
+{# ============================================================================= #}

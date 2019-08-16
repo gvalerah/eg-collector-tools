@@ -1,0 +1,15 @@
+{
+  "metadata":{
+             "name":"Charge_Items full map",
+             "table_name":"Charge_Items"
+             },
+  "fields":[
+     {"name":"CU_Id","type":"int(11)","null":"NO","key":"PRI","default":"0","extra":"","output":"True","export_name":"CU_Id","length":"11","precision":"0","quote":"False","format":"%011d","isid":"True","iscode":"False","isdescription":"False"}
+    ,{"name":"CIT_Date","type":"date","null":"NO","key":"PRI","default":"None","extra":"","output":"True","export_name":"CIT_Date","length":"10","precision":"0","quote":"True","format":"%Y-%m-%d","isid":"False","iscode":"False","isdescription":"False"}
+    ,{"name":"CIT_Time","type":"time","null":"NO","key":"PRI","default":"None","extra":"","output":"True","export_name":"CIT_Time","length":"8","precision":"0","quote":"True","format":"%H:%M:%S","isid":"False","iscode":"False","isdescription":"False"}
+    ,{"name":"CIT_Quantity","type":"decimal(20,6)","null":"NO","key":"","default":"0.000000","extra":"","output":"True","export_name":"CIT_Quantity","length":"20","precision":"6","quote":"False","format":"%020.6f","isid":"False","iscode":"False","isdescription":"False"}
+    ,{"name":"CIT_Status","type":"int(11)","null":"NO","key":"MUL","default":"0","extra":"","output":"True","export_name":"CIT_Status","length":"11","precision":"0","quote":"False","format":"%011d","isid":"False","iscode":"False","isdescription":"False"}
+    ,{"name":"CIT_Is_Active","type":"tinyint(4)","null":"YES","key":"","default":"0","extra":"","output":"True","export_name":"CIT_Is_Active","length":"1","precision":"0","quote":"False","format":"%d","isid":"False","iscode":"False","isdescription":"False"}
+    ,{"name":"CIT_DateTime","type":"datetime","null":"YES","key":"","default":"None","extra":"","output":"True","export_name":"CIT_DateTime","length":"10","precision":"0","quote":"True","format":"%Y-%m-%d","isid":"False","iscode":"False","isdescription":"False"}
+ ]
+}

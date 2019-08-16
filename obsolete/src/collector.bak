@@ -1,0 +1,270 @@
+""" Import Framework and Extentions """
+
+from flask import Flask
+from flask import render_template
+from flask_script import Manager
+
+from flask import request
+from flask import current_app
+
+from flask_bootstrap import Bootstrap
+from flask_moment import Moment
+
+from flask import session
+from flask import redirect
+from flask import url_for
+
+
+""" Import System modules """
+import sys
+import os
+import getpass
+
+from time import strftime
+from datetime import datetime
+
+# Import sqlalchemy functions function
+from sqlalchemy import create_engine
+from sqlalchemy import text
+from sqlalchemy import exc
+from sqlalchemy.orm import sessionmaker
+
+""" Import App specfic modules """
+
+from common.context     import Context
+
+from db.Charge_Units    import Charge_Units        
+#from db.Platforms       import Platforms        
+from db.Customers       import Customers
+from db.Countries       import Countries,frm_Countries
+       
+
+
+""" Application Globals """
+
+C = None
+
+""" Forms """
+
+from flask_wtf import Form
+from wtforms import StringField, SubmitField
+from wtforms.validators import Required
+
+class NameForm(Form):
+    name = StringField('What is your name?', validators=[Required()])
+    password = StringField('What is your password?', validators=[Required()])
+    submit = SubmitField('Submit')
+
+
+""" Creates Application Objects """
+
+app = Flask(__name__)
+app.config['SECRET_KEY'] = 'hard to guess string'   # Check chapter 7 for more secure method of Key generation instead of hard codding
+
+manager = Manager(app)
+bootstrap = Bootstrap(app)
+moment = Moment(app)
+
+""" Application decorators for routes """
+
+@app.route('/forms/Countries/<Cou_Code>', methods=['GET', 'POST'])
+def forms_Countries(Cou_Code):
+    countries =  Countries(None,None,None,None)
+    countries.engine =  C.db
+    row =  countries.queryone(Cou_Code)
+    if row is not None:
+        session['data'] =  {'Cou_Code':row.Cou_Code,'Cou_Name':row.Cou_Name,'Cou_A3':row.Cou_A3,'Cou_N':row.Cou_N}
+    else:
+        session['data'] =  {'Cou_Code':None,'Cou_Name':None,'Cou_A3':None,'Cou_N':None}
+    form = frm_Countries()
+    if form.validate_on_submit():
+        session['data']['Cou_Code'] = form.Cou_Code.data
+        session['data']['Cou_Name'] = form.Cou_Name.data
+        session['data']['Cou_A3'] = form.Cou_A3.data
+        session['data']['Cou_N'] = form.Cou_N.data
+        return redirect(url_for('forms_Countries',Cou_Code=session['data']['Cou_Code']))
+    form.Cou_Code.data = session['data']['Cou_Code']
+    form.Cou_Name.data = session['data']['Cou_Name']
+    form.Cou_A3.data = session['data']['Cou_A3']
+    form.Cou_N.data = session['data']['Cou_N']
+    return render_template('Countries.html',C=C, form=form, data=session.get('data'),row=row)
+
+@app.route('/select/Countries', methods=['GET'])
+def select_Countries():
+    countries =  Countries(None,None,None,None)
+    countries.engine =  C.db
+    rows =  countries.queryall()
+    #if rows is not None:
+    #    session['data'] =  {'Cou_Code':row.Cou_Code,'Cou_Name':row.Cou_Name,'Cou_A3':row.Cou_A3,'Cou_N':row.Cou_N}
+    #else:
+    #    session['data'] =  {'Cou_Code':None,'Cou_Name':None,'Cou_A3':None,'Cou_N':None}
+    return render_template('Countries_Filter.html',C=C,rows=rows)
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
+
+@app.errorhandler(500)
+def internal_server_error(e):
+    return render_template('500.html'), 500
+
+""" Common Interface functions """
+
+""" Decorators specify main routes to be handled by Collector Solution """
+
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    # Espera a capitulo 3 para mejorar procedimiento de respuesta, hard coding mucho aqui
+    logger.debug("index() IN")
+
+    data =  {   "name":current_app.name,
+                "app_name":C.app_name,
+                "date_time":strftime('%Y-%m-%d %H:%M:%S'),
+                "user_agent":request.headers.get('User-Agent'),
+                "current_time":datetime.utcnow()
+            }
+    name = None
+    password = None
+    form = NameForm()
+    if form.validate_on_submit():
+        name = form.name.data
+        password = form.password.data
+        form.name.data = ''            
+        form.password.data = ''            
+    logger.debug("index() OUT")
+    return render_template('collector.html',data=data, form=form, name=name,password=password)
+       
+
+@app.route('/user/<name>')
+def user(name):
+    return '<h1>Hello, %s!</h1>' % name
+
+@app.route('/reports/<report>&<customer>&<fromx>&<tox>&<currency>')
+def reports(report,customer,fromx,tox,currency):
+    logger.debug("reports() IN %s,%s,%s,%s,%s"% (report,customer,fromx,tox,currency))
+
+    r = page_header()
+    r+= '<h1>Get \'%s\' for customer %s in period %s to %s cur=%s</h1>' % (report,customer,fromx,tox,currency)
+    # SQL Query call here
+    query = text("CALL Get_Billing_Resume(%s,'%s','%s',1,'%s')"%(customer,fromx,tox,currency))
+    try:
+        result = C.db.execute(query).fetchall()
+    except Exception as e:
+        r+="<h2>EXCEPTION:%s</h2>"%e
+    r+="<table>"
+    sum=0.0
+    for row in result:
+        r+='<tr>'
+        for c in range(len(row)):
+            r+="<td>%s</td>"%str(row[c])
+        sum+=row[25]
+        r+="<td>%.2f</td>"%sum
+        r+='</tr>'
+    r+="</table>"
+    r+="<p>Total in %s = %10.2f<p>"%(currency,sum)
+    r+=page_footer()
+    logger.debug("reports() OUT %s"% (r))
+    return r
+
+@app.route('/table/<name>')
+def table(name):
+    logger.debug("table() IN %s"% (name))
+
+    r = page_header()
+    r+= '<h1>Get \'%s\' data</h1>' % (name)
+
+    # SQL Query call here
+    
+    try:
+        # Build Query
+        query = text("SELECT * FROM %s"%(name))
+
+        # Get keys (column names) from Query        
+        keys=C.db.execute(query).keys()
+
+        r+="<p>Query=%s</p>"%str(query)
+        r+="<p>Keys =%s</p>"%str(keys)
+        r+="<table>"
+        r+='<tr style="border:2px solid blue ; background-color:blue; color:yellow">'
+        for key in keys:
+           r+="<td><b>%s</b></td>"%key
+        r+='</tr>'           
+               
+        result=None
+        result = C.db.execute(query).fetchall()
+        rc = 0
+        for row in result:
+            if (rc%2):
+                r+='<tr style="background-color:cyan">'
+                #r+='<tr id="tr01">'
+            else:
+                r+='<tr style="background-color:white">'
+                #r+='<tr id="tr02">'
+            
+            for c in range(len(row)):
+                r+="<td>%s</td>"%str(row[c])
+            r+='</tr>'
+            rc+=1
+        r+="</table>"
+        if rc:
+            r+="<p>Count=%s</p>"%str(rc)
+    except Exception as e:
+        r+="<h2>EXCEPTION:%s</h2>"%e
+    r+=page_footer()
+    logger.debug("table() out %s"% (r))
+    return r
+
+@app.route('/query/<name>')
+def query(name):
+    logger.debug("query() IN %s"% (name))
+
+    # SQL Query call here    
+    try:
+        # Build Query
+        query = text("SELECT * FROM %s"%(name))
+
+        # Get keys (column names) from Query        
+        keys=C.db.execute(query).keys()
+
+        rows = C.db.execute(query).fetchall()
+    except Exception as e:
+        msg="EXCEPTION: %s"%e
+        logger.error("query() %s"% (msg))
+        return "<h2>%s</h2>"%msg
+    
+    logger.debug("query() out")
+    return render_template('query.html',name=name,keys=keys,rows=rows,count=len(rows))
+
+@app.route('/query_orm/<table_name>')
+def query_orm(table_name):
+    logger.debug("query() IN %s"% (table_name))
+    # SQL Query call here    
+    try:
+        Session = sessionmaker(bind=C.db)  
+        session=Session()
+        keys = ("ID","NOMBRE","CC")
+        rows = session.query(Customers.Cus_Id,Customers.Cus_Name,Customers.CC_Id).all()
+    except Exception as e:
+        msg="EXCEPTION: %s"%e
+        logger.error("query() %s"% (msg))
+        return "<h2>%s</h2>"%msg
+    
+    logger.debug("query() out")
+    return render_template('query_orm.html',name=table_name,keys=keys,rows=rows,count=len(rows))
+
+""" Main Code Starts here """
+
+if __name__ == '__main__':
+    AC = app.app_context()
+    AC.push()
+    config_file = "collector.ini"
+    if C is None:
+        C = Context("Collector Server",config_file)    
+    if (C):
+        logger = C.logger
+        logger.info("****** Collector Server *****************")
+        logger.info("%s: as '%s' Using configuration: '%s'"%(sys.argv[0],getpass.getuser(),config_file))
+        logger.info("*****************************************")
+
+    manager.run()
+    

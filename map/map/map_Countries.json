@@ -1,0 +1,12 @@
+{
+  "metadata":{
+             "name":"Countries full map",
+             "table_name":"Countries"
+             },
+  "fields":[
+     {"name":"Cou_Code","type":"varchar(2)","null":"NO","key":"PRI","default":"None","extra":"","output":"True","export_name":"Cou_Code","length":"2","precision":"0","quote":"True","format":"%-2s","isid":"False","iscode":"True","isdescription":"False"}
+    ,{"name":"Cou_Name","type":"varchar(45)","null":"YES","key":"","default":"None","extra":"","output":"True","export_name":"Cou_Name","length":"45","precision":"0","quote":"True","format":"%-45s","isid":"False","iscode":"False","isdescription":"True"}
+    ,{"name":"Cou_A3","type":"varchar(3)","null":"YES","key":"","default":"None","extra":"","output":"True","export_name":"Cou_A3","length":"3","precision":"0","quote":"True","format":"%-3s","isid":"False","iscode":"False","isdescription":"False"}
+    ,{"name":"Cou_N","type":"int(11)","null":"YES","key":"","default":"None","extra":"","output":"True","export_name":"Cou_N","length":"11","precision":"0","quote":"False","format":"%011d","isid":"False","iscode":"False","isdescription":"False"}
+ ]
+}

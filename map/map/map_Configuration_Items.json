@@ -1,0 +1,16 @@
+{
+  "metadata":{
+             "name":"Configuration_Items full map",
+             "table_name":"Configuration_Items"
+             },
+  "fields":[
+     {"name":"CI_Id","type":"int(11)","null":"NO","key":"PRI","default":"None","extra":"auto_increment","output":"True","export_name":"CI_Id","length":"11","precision":"0","quote":"False","format":"%011d","isid":"True","iscode":"False","isdescription":"False"}
+    ,{"name":"CI_Name","type":"varchar(45)","null":"NO","key":"","default":"None","extra":"","output":"True","export_name":"CI_Name","length":"45","precision":"0","quote":"True","format":"%-45s","isid":"False","iscode":"False","isdescription":"True"}
+    ,{"name":"CI_UUID","type":"varchar(45)","null":"NO","key":"","default":"None","extra":"","output":"True","export_name":"CI_UUID","length":"45","precision":"0","quote":"True","format":"%-45s","isid":"False","iscode":"False","isdescription":"False"}
+    ,{"name":"Pla_Id","type":"int(11)","null":"NO","key":"MUL","default":"None","extra":"","output":"True","export_name":"Pla_Id","length":"11","precision":"0","quote":"False","format":"%011d","isid":"True","iscode":"False","isdescription":"False"}
+    ,{"name":"CC_Id","type":"int(11)","null":"NO","key":"MUL","default":"None","extra":"","output":"True","export_name":"CC_Id","length":"11","precision":"0","quote":"False","format":"%011d","isid":"True","iscode":"False","isdescription":"False"}
+    ,{"name":"Cus_Id","type":"int(11)","null":"NO","key":"MUL","default":"1","extra":"","output":"True","export_name":"Cus_Id","length":"11","precision":"0","quote":"False","format":"%011d","isid":"True","iscode":"False","isdescription":"False"}
+    ,{"name":"CI_Commissioning_DateTime","type":"datetime","null":"YES","key":"","default":"None","extra":"","output":"True","export_name":"CI_Commissioning_DateTime","length":"10","precision":"0","quote":"True","format":"%Y-%m-%d","isid":"False","iscode":"False","isdescription":"False"}
+    ,{"name":"CI_Decommissioning_DateTime","type":"datetime","null":"YES","key":"","default":"None","extra":"","output":"True","export_name":"CI_Decommissioning_DateTime","length":"10","precision":"0","quote":"True","format":"%Y-%m-%d","isid":"False","iscode":"False","isdescription":"False"}
+ ]
+}

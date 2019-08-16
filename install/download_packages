@@ -1,0 +1,8 @@
+REQ=$1
+pip download -r $REQ.txt
+mkdir collector_$REQ
+mv *.gz  collector_$REQ
+mv *.whl collector_$REQ
+echo Done !!!
+
+

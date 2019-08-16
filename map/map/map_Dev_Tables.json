@@ -1,0 +1,30 @@
+{
+  "metadata":{
+             "name":"Dev_Tables full map",
+             "table_name":"Dev_Tables"
+             },
+  "fields":[
+     {"name":"Id","type":"int(11)","null":"NO","key":"PRI","default":"None","extra":"auto_increment","output":"True","export_name":"Id","length":"11","precision":"0","quote":"False","format":"%011d","isid":"False","iscode":"False","isdescription":"False"}
+    ,{"name":"Name","type":"varchar(45)","null":"YES","key":"","default":"None","extra":"","output":"True","export_name":"Name","length":"45","precision":"0","quote":"True","format":"%-45s","isid":"False","iscode":"False","isdescription":"False"}
+    ,{"name":"Caption","type":"varchar(45)","null":"YES","key":"","default":"None","extra":"","output":"True","export_name":"Caption","length":"45","precision":"0","quote":"True","format":"%-45s","isid":"False","iscode":"False","isdescription":"False"}
+    ,{"name":"Entity","type":"varchar(45)","null":"YES","key":"","default":"None","extra":"","output":"True","export_name":"Entity","length":"45","precision":"0","quote":"True","format":"%-45s","isid":"False","iscode":"False","isdescription":"False"}
+    ,{"name":"Class_Name","type":"varchar(45)","null":"YES","key":"","default":"None","extra":"","output":"True","export_name":"Class_Name","length":"45","precision":"0","quote":"True","format":"%-45s","isid":"False","iscode":"False","isdescription":"True"}
+    ,{"name":"Child_Table","type":"varchar(45)","null":"YES","key":"","default":"None","extra":"","output":"True","export_name":"Child_Table","length":"45","precision":"0","quote":"True","format":"%-45s","isid":"False","iscode":"False","isdescription":"False"}
+    ,{"name":"Parent_Table","type":"varchar(45)","null":"YES","key":"","default":"None","extra":"","output":"True","export_name":"Parent_Table","length":"45","precision":"0","quote":"True","format":"%-45s","isid":"False","iscode":"False","isdescription":"False"}
+    ,{"name":"Use_Pagination","type":"tinyint(4)","null":"YES","key":"","default":"None","extra":"","output":"True","export_name":"Use_Pagination","length":"1","precision":"0","quote":"False","format":"%d","isid":"False","iscode":"False","isdescription":"False"}
+    ,{"name":"Use_Children_Pagination","type":"tinyint(4)","null":"YES","key":"","default":"None","extra":"","output":"True","export_name":"Use_Children_Pagination","length":"1","precision":"0","quote":"False","format":"%d","isid":"False","iscode":"False","isdescription":"False"}
+    ,{"name":"Generate_Form_One","type":"tinyint(4)","null":"YES","key":"","default":"None","extra":"","output":"True","export_name":"Generate_Form_One","length":"1","precision":"0","quote":"False","format":"%d","isid":"False","iscode":"False","isdescription":"False"}
+    ,{"name":"Generate_Form_All","type":"tinyint(4)","null":"YES","key":"","default":"None","extra":"","output":"True","export_name":"Generate_Form_All","length":"1","precision":"0","quote":"False","format":"%d","isid":"False","iscode":"False","isdescription":"False"}
+    ,{"name":"Generate_Form_Filter","type":"tinyint(4)","null":"YES","key":"","default":"None","extra":"","output":"True","export_name":"Generate_Form_Filter","length":"1","precision":"0","quote":"False","format":"%d","isid":"False","iscode":"False","isdescription":"False"}
+    ,{"name":"Generate_Children","type":"tinyint(4)","null":"YES","key":"","default":"None","extra":"","output":"True","export_name":"Generate_Children","length":"1","precision":"0","quote":"False","format":"%d","isid":"False","iscode":"False","isdescription":"False"}
+    ,{"name":"Generate_Foreign_Fields","type":"tinyint(4)","null":"YES","key":"","default":"None","extra":"","output":"True","export_name":"Generate_Foreign_Fields","length":"1","precision":"0","quote":"False","format":"%d","isid":"False","iscode":"False","isdescription":"False"}
+    ,{"name":"Permission_View","type":"tinyint(4)","null":"YES","key":"","default":"None","extra":"","output":"True","export_name":"Permission_View","length":"1","precision":"0","quote":"False","format":"%d","isid":"False","iscode":"False","isdescription":"False"}
+    ,{"name":"Permission_Delete","type":"tinyint(4)","null":"YES","key":"","default":"None","extra":"","output":"True","export_name":"Permission_Delete","length":"1","precision":"0","quote":"False","format":"%d","isid":"False","iscode":"False","isdescription":"False"}
+    ,{"name":"Permission_Modify","type":"tinyint(4)","null":"YES","key":"","default":"None","extra":"","output":"True","export_name":"Permission_Modify","length":"1","precision":"0","quote":"False","format":"%d","isid":"False","iscode":"False","isdescription":"False"}
+    ,{"name":"Permission_Report","type":"tinyint(4)","null":"YES","key":"","default":"None","extra":"","output":"True","export_name":"Permission_Report","length":"1","precision":"0","quote":"False","format":"%d","isid":"False","iscode":"False","isdescription":"False"}
+    ,{"name":"Permission_Export","type":"tinyint(4)","null":"YES","key":"","default":"None","extra":"","output":"True","export_name":"Permission_Export","length":"1","precision":"0","quote":"False","format":"%d","isid":"False","iscode":"False","isdescription":"False"}
+    ,{"name":"Permission_View_Private","type":"tinyint(4)","null":"YES","key":"","default":"None","extra":"","output":"True","export_name":"Permission_View_Private","length":"1","precision":"0","quote":"False","format":"%d","isid":"False","iscode":"False","isdescription":"False"}
+    ,{"name":"Permission_Modify_Private","type":"tinyint(4)","null":"YES","key":"","default":"None","extra":"","output":"True","export_name":"Permission_Modify_Private","length":"1","precision":"0","quote":"False","format":"%d","isid":"False","iscode":"False","isdescription":"False"}
+    ,{"name":"Permission_Administer","type":"tinyint(4)","null":"YES","key":"","default":"None","extra":"","output":"True","export_name":"Permission_Administer","length":"1","precision":"0","quote":"False","format":"%d","isid":"False","iscode":"False","isdescription":"False"}
+ ]
+}

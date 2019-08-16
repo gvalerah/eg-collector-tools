@@ -1,0 +1,28 @@
+{
+  "metadata":{
+             "name":"Dev_Forms full map",
+             "table_name":"Dev_Forms"
+             },
+  "fields":[
+     {"name":"Id","type":"int(11)","null":"NO","key":"PRI","default":"None","extra":"auto_increment","output":"True","export_name":"Id","length":"11","precision":"0","quote":"False","format":"%011d","isid":"False","iscode":"False","isdescription":"False"}
+    ,{"name":"Table","type":"varchar(45)","null":"NO","key":"","default":"None","extra":"","output":"True","export_name":"Table","length":"45","precision":"0","quote":"True","format":"%-45s","isid":"False","iscode":"False","isdescription":"False"}
+    ,{"name":"Field","type":"varchar(45)","null":"NO","key":"","default":"None","extra":"","output":"True","export_name":"Field","length":"45","precision":"0","quote":"True","format":"%-45s","isid":"False","iscode":"False","isdescription":"False"}
+    ,{"name":"Type","type":"varchar(45)","null":"YES","key":"","default":"None","extra":"","output":"True","export_name":"Type","length":"45","precision":"0","quote":"True","format":"%-45s","isid":"False","iscode":"False","isdescription":"False"}
+    ,{"name":"Null","type":"varchar(45)","null":"YES","key":"","default":"None","extra":"","output":"True","export_name":"Null","length":"45","precision":"0","quote":"True","format":"%-45s","isid":"False","iscode":"False","isdescription":"False"}
+    ,{"name":"Key","type":"varchar(45)","null":"YES","key":"","default":"None","extra":"","output":"True","export_name":"Key","length":"45","precision":"0","quote":"True","format":"%-45s","isid":"False","iscode":"False","isdescription":"False"}
+    ,{"name":"Default","type":"varchar(45)","null":"YES","key":"","default":"None","extra":"","output":"True","export_name":"Default","length":"45","precision":"0","quote":"True","format":"%-45s","isid":"False","iscode":"False","isdescription":"False"}
+    ,{"name":"Extra","type":"varchar(45)","null":"YES","key":"","default":"None","extra":"","output":"True","export_name":"Extra","length":"45","precision":"0","quote":"True","format":"%-45s","isid":"False","iscode":"False","isdescription":"False"}
+    ,{"name":"Foreign_Key","type":"varchar(45)","null":"YES","key":"","default":"None","extra":"","output":"True","export_name":"Foreign_Key","length":"45","precision":"0","quote":"True","format":"%-45s","isid":"False","iscode":"False","isdescription":"False"}
+    ,{"name":"Referenced_Table","type":"varchar(45)","null":"YES","key":"","default":"None","extra":"","output":"True","export_name":"Referenced_Table","length":"45","precision":"0","quote":"True","format":"%-45s","isid":"False","iscode":"False","isdescription":"False"}
+    ,{"name":"Foreign_Field","type":"varchar(45)","null":"YES","key":"","default":"None","extra":"","output":"True","export_name":"Foreign_Field","length":"45","precision":"0","quote":"True","format":"%-45s","isid":"False","iscode":"False","isdescription":"False"}
+    ,{"name":"Foreign_Value","type":"varchar(45)","null":"YES","key":"","default":"None","extra":"","output":"True","export_name":"Foreign_Value","length":"45","precision":"0","quote":"True","format":"%-45s","isid":"False","iscode":"False","isdescription":"False"}
+    ,{"name":"Length","type":"int(11)","null":"YES","key":"","default":"None","extra":"","output":"True","export_name":"Length","length":"11","precision":"0","quote":"False","format":"%011d","isid":"False","iscode":"False","isdescription":"False"}
+    ,{"name":"Validation","type":"tinyint(4)","null":"YES","key":"","default":"None","extra":"","output":"True","export_name":"Validation","length":"1","precision":"0","quote":"False","format":"%d","isid":"False","iscode":"False","isdescription":"False"}
+    ,{"name":"Validation_Type","type":"varchar(45)","null":"YES","key":"","default":"None","extra":"","output":"True","export_name":"Validation_Type","length":"45","precision":"0","quote":"True","format":"%-45s","isid":"False","iscode":"False","isdescription":"False"}
+    ,{"name":"Validation_String","type":"varchar(128)","null":"YES","key":"","default":"None","extra":"","output":"True","export_name":"Validation_String","length":"128","precision":"0","quote":"True","format":"%-128s","isid":"False","iscode":"False","isdescription":"False"}
+    ,{"name":"Caption_String","type":"varchar(45)","null":"YES","key":"","default":"None","extra":"","output":"True","export_name":"Caption_String","length":"45","precision":"0","quote":"True","format":"%-45s","isid":"False","iscode":"False","isdescription":"False"}
+    ,{"name":"Field_Order","type":"int(11)","null":"YES","key":"","default":"None","extra":"","output":"True","export_name":"Field_Order","length":"11","precision":"0","quote":"False","format":"%011d","isid":"False","iscode":"False","isdescription":"False"}
+    ,{"name":"Field_Format","type":"varchar(45)","null":"YES","key":"","default":"None","extra":"","output":"True","export_name":"Field_Format","length":"45","precision":"0","quote":"True","format":"%-45s","isid":"False","iscode":"False","isdescription":"False"}
+    ,{"name":"Form_Editable","type":"tinyint(4)","null":"YES","key":"","default":"1","extra":"","output":"True","export_name":"Form_Editable","length":"1","precision":"0","quote":"False","format":"%d","isid":"False","iscode":"False","isdescription":"False"}
+ ]
+}

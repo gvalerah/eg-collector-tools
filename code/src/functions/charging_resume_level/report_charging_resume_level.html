@@ -1,0 +1,214 @@
+{# ============================================================================= #}
+{# Charging Report Template                                                      #}
+{# For Customer on a defined period and status                                   #}
+{# (c) Sertechno 2018                                                            #}
+{# GLVH @ 2018-11-11                                                             #}
+{# ============================================================================= #}
+{% extends "base.html" %}
+
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% import "_macros.html" as macros %}
+
+{% block title %}Collector{% endblock %}
+
+{% block head %}
+   {{ super() }}
+{% endblock %}
+
+    
+{% block page_content %}
+    {% set prev_CC = ['***'] -%}
+    {% set prev_CC_ID = [-1] -%}
+    {% set prev_CI = ['***'] -%}
+    {% set prev_CI_Name = ['***'] -%}
+    {% set sum_CC = [0] -%}
+    {% set sum_CI = [0] -%}
+    {% set count_CC = [0] -%}
+    {% set count_CI = [0] -%}
+    {% set count_CIT = [0] -%}
+    {% set count_REC = [0] -%}
+    
+    {% set sum_Total = [0] -%}
+        <div class="page-header">
+            <h2>Charging Report:<h2>
+            <h3>
+            <table>
+                <tr><td>Customer    </td><td> : </td><td>{{Cus_Name}}</td></tr> 
+                <tr><td>Report From </td><td> : </td><td>{{CIT_Date_From}}</td></tr>
+                <tr><td>Report To   </td><td> : </td><td>{{CIT_Date_To}}</td></tr>
+                <tr><td>Status      </td><td> : </td><td>{{CIT_Status_Value}}</td></tr>
+                <tr><td>Currency    </td><td> : </td><td>{{Cur_Name}} ({{Cur_Code}})</td></tr>
+                <tr><td>Resume Level</td><td> : </td><td>{{Level}}</td></tr>
+            </table>
+        
+            <a href="#" onclick="history.go(-1)"><img src="/static/img/back.png"  color=yellow width="32" height="32" title="" alt="Add"></a>
+        </div>
+        <hr>        
+        
+    {% for row in rows %}
+        {% if prev_CI.0 != row.CI_Id %}
+            {# Report partial sums in final currency for previous Configuration Item, except in first loop #}
+            {% if not loop.first %}
+                {% if Level == "Device" %}
+                <tr>
+                    <td><b>Configuration Item Z: <a href="/forms/Configuration_Items?CI_Id={{ prev_CI.0 }}">{{ prev_CI_Name.0 }}</a></b></td>
+                    <td align="right"><b>{{ "{:,.2f}".format(sum_CI.0) }}</b> {{Cur_Code}}</td>
+                </tr> 
+                {% endif %}              
+                {% if Level == "Component" %}
+                <tr>
+                    <td></td><td></td><td></td><td></td><td>
+                    </td><td align="right">Total CI : <a href="/forms/Configuration_Items?CI_Id={{ prev_CI.0 }}">{{ prev_CI_Name.0 }}</a></td>
+                    <td align="right"><b>{{ "{:,.2f}".format(sum_CI.0) }}</b> {{Cur_Code}}</td>
+                </tr>
+                {% endif %}
+                {% if Level == "Component" %}
+                    </table>
+                {% endif %}
+            {% endif %}
+            {% set count = count_CI.0  + 1 %}
+            {% set _ = count_CI.pop() %}
+            {% set _ = count_CI.append(count) %}
+            {% if prev_CC.0 != row.CC_Description %}
+                {# Report partial sums in final currency for previous Cost Center, except in first loop #}
+                {% if not loop.first %}
+                    {# <hr> #}
+                    <table>
+                    <tr>
+                        <td align="right"><b>Total CC : <a href="/forms/Cost_Centers?CC_Id={{ prev_CC_ID.0 }}">{{ prev_CC.0 }}</a></b> : </td>
+                        <td align="right"><b>{{ "{:,.2f}".format(sum_CC.0) }}</b> {{Cur_Code}}</td>
+                    </tr>
+                    </table>
+                    {# <hr> #}
+                {% endif %}     
+                {% if Level != "Cost Center" %}
+                    <table>
+                        <tr>
+                            <b>Cost Center : <a href="/forms/Cost_Centers?CC_Id={{ row.CI_CC_Id }}">{{ row.CC_Description }}</a></b>
+                        </tr> 
+                    </table>
+                    {# <hr> #}
+                {% endif %}
+                {# Reset acumulator and control variables       #}
+                {% set _ = prev_CC.pop()                        %}
+                {% set _ = prev_CC.append(row.CC_Description)   %}
+                {% set _ = prev_CC_ID.pop()                     %}
+                {% set _ = prev_CC_ID.append(row.CI_CC_Id)         %}
+                {% set _ = sum_CC.pop()                         %}
+                {% set _ = sum_CC.append(0)                     %}
+                {% set count = count_CC.0  + 1 %}
+                {% set _ = count_CC.pop() %}
+                {% set _ = count_CC.append(count) %}
+            {% endif %}
+            {% if Level == "Component" %}
+                <table>
+                    <tr>
+                        <b>Configuration Item Y: <a href="/forms/Configuration_Items?CI_Id={{ row.CI_Id }}">{{ row.CI_Name }}</a></b>
+                    </tr> 
+                </table>
+            {% endif %}
+            {# Reset acumulator and control variables #}
+            {% set _ = prev_CI.pop() %}
+            {% set _ = prev_CI.append(row.CI_Id) %}
+            {% set _ = prev_CI_Name.pop() %}
+            {% set _ = prev_CI_Name.append(row.CI_Name) %}
+            {% set _ = sum_CI.pop() %}
+            {% set _ = sum_CI.append(0) %}
+            {% if Level == "Component" %}
+            <table class="table">
+                <thead class="thead-dark">
+                    <tr>
+                        <th align="center" valign="top">CHARGE<br>RECORDS</th>
+                        <th align="center">CHARGE<br>UNIT</th>
+                        <th align="center">CHARGE UNIT<br>RATE</th>
+                        <th align="center">PERIOD<br>QUANTITY</th>
+                        <th align="center">SUB-TOTAL<br>@ RATE</th>            
+                        {# <th align="center">EXCHANGE<br>RATE<br>{{row.Rat_Cur_Code}}->{{row.Cur_Code}}</th> #}
+                        <th align="center">EXCHANGE<br>RATE</th> 
+                        <th align="center">TOTAL CHARGE<br>{{Cur_Code}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+            {% endif %}
+             {% if Level == "Device" %}
+            <table class="table">    
+            {% endif %}                  
+        {% endif %}
+                {% if Level == "Component" %}
+                        <tr>
+                <td align="right"   >{{ row.CIT_Count }}</td>
+                <td align="center"  ><a href="/forms/Charge_Units?CU_Id={{ row.CU_Id }}">{{ row.CU_Description }}</a></td>
+                <td align="right"><b>{{ "{:,.6f}".format(row.Rat_Price) }}</b> {{row.Rat_Cur_Code}} ({{row.Rat_MU_Code}}/{{row.Rat_Period_Description}})</td>
+                
+                <td align="right"><b>{{ "{:,.6f}".format(row.CR_Quantity_at_Rate) }}</b></td>                
+                <td align="right"><b>{{ "{:,.2f}".format(row.CR_ST_at_Rate_Cur) }}</b> {{row.Rat_Cur_Code}}</td>
+                {% if row.Rat_Cur_Code == row.Cur_Code %}
+                <td align="right"   ><b>{{ "{:,.10f}".format(1/row.CR_Cur_XR)}}</b> {{row.Rat_Cur_Code}}/{{ row.Cur_Code }}</td>                
+                {% else %} 
+                <td align="right"   ><b>{{ "{:,.10f}".format(1/row.CR_Cur_XR)}}</b> {{row.Rat_Cur_Code}}/{{ row.Cur_Code }}<br>
+                                     {{ "{:,.10f}".format(row.CR_Cur_XR)}} {{row.Cur_Code}}/{{ row.Rat_Cur_Code }}</td>                
+                {% endif %}
+                <td align="right"><b>{{ "{:,.2f}".format(row.CR_ST_at_Cur) }}</b> {{ row.Cur_Code }}</td>
+                {# NOTE: to address during "localization" process -------------------------------------------------------#}                
+                {# <td align="right"><b>{{ format_currency(row.TOTAL_BILL_CUR,locale="es_CL") }}</b> {{ row.XCUR }}</td> #}
+                {# ------------------------------------------------------------------------------------------------------#}                
+           </tr>
+                {% endif %}
+                {# Calculate partial and total sums in final currency #}
+                {% set sum    = sum_CI.0 + row.CR_ST_at_Cur %}
+                {% set sumCC  = sum_CC.0    + row.CR_ST_at_Cur %}
+                {% set total  = sum_Total.0 + row.CR_ST_at_Cur %}
+                {% set _ = sum_CI.pop() %}
+                {% set _ = sum_CI.append(sum) %}
+                {% set _ = sum_CC.pop() %}
+                {% set _ = sum_CC.append(sumCC) %}
+                {% set _ = sum_Total.pop() %}
+                {% set _ = sum_Total.append(total) %}
+                {% set count = count_CIT.0  + row.CIT_Count %}
+                {% set _ = count_CIT.pop() %}
+                {% set _ = count_CIT.append(count) %}
+                {% set count = count_REC.0  + 1 %}
+                {% set _ = count_REC.pop() %}
+                {% set _ = count_REC.append(count) %}
+    {% endfor %}
+            {# Report partial and total sums in final currency for last Configuration Item #}
+                {% if Level == "Device" %}
+                <tr>
+                    <td><b>Configuration Item X: <a href="/forms/Configuration_Items?CI_Id={{ prev_CI.0 }}">{{ prev_CI_Name.0 }}</a></b></td>
+                    <td align="right"><b>{{ "{:,.2f}".format(sum_CI.0) }}</b> {{Cur_Code}}</td>
+                </tr> 
+                {% endif %}
+                {% if Level == "Component" %}
+                <tr>
+                    <td></td><td></td><td></td><td></td><td>
+                    </td><td align="right">Total CI : <a href="/forms/Configuration_Items?CI_Id={{ prev_CI.0 }}">{{ prev_CI_Name.0 }}</a></td>
+                    <td align="right"><b>{{ "{:,.2f}".format(sum_CI.0) }}</b> {{Cur_Code}}</td>
+                </tr>
+                </tbody>
+                </table>
+                {% endif %}
+            {# <hr> #}
+            <table>
+                <tr>
+                    <td align="right"><b>Total CC : <a href="/forms/Cost_Centers?CC_Id={{ prev_CC_ID.0 }}">{{ prev_CC.0 }}</a></b> : </td>
+                    <td></td><td></td><td></td><td></td><td>
+                    <td align="right"><b>{{ "{:,.2f}".format(sum_CC.0) }}</b> {{Cur_Code}}</td>
+                </tr>
+            </table>
+            <hr>
+            <table>
+                <tr>
+                    <td align="right">Total of <b>{{CIT_Status_Value}}</b> for customer <b>{{Cus_Name}}</b> between <b>{{CIT_Date_From}}</b> and <b>{{CIT_Date_To}}</b> is </td>
+                    <td align="right"><b>{{ "{:,.2f}".format(sum_Total.0) }}</b> {{Cur_Code}}</td>
+                </tr>
+            </table>
+<hr>
+Reports Statistics :
+Charge Groups: <b>{{"{:,d}".format(count_CC.0)}}</b>
+Configuration Items : <b>{{"{:,d}".format(count_CI.0)}}</b>
+Resume Records : <b>{{"{:,d}".format(count_REC.0)}}</b>
+Charge Pool Records: <b>{{"{:,d}".format(count_CIT.0)}}</b>
+<hr>
+{% endblock %}
+{# ============================================================================= #}

@@ -1,0 +1,48 @@
+{# ============================================================================= #}
+{# Charge CIT Status                                                             #}
+{# (c) Sertechno 2018                                                            #}
+{# GLVH @ 2018-12-06                                                             #}
+{# ============================================================================= #}
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block title %}Collector{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block page_content %}
+<div class="page-header">
+    <h2>Change Charge Item Status for next {{rows.__len__()}} records: </h2>
+    <a href="#" onclick="history.go(-1)"><img src="/static/img/back.png"  color=yellow width="32" height="32" title="" alt="Add"></a>
+    <hr>
+    {{ wtf.quick_form(form) }}  
+    <hr>
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th align="center" valign="top">CHARGE UNIT</th>
+                <th align="center" valign="top">DATE</th>
+                <th align="center" valign="top">TIME</th>
+                <th align="center" valign="top">QUANTITY</th>
+                <th align="center" valign="top">ACTIVE</th>
+                <th align="center" valign="top">FROM STATUS</th>
+                <th align="center" valign="top">TO STATUS</th>
+            </tr>
+        </thead>
+        <tbody>    
+            {% for row in rows %}
+            <tr>
+                <td>{{CU_Description}}<br>({{row.0.CU_Id}}) {{row.1}}</td>
+                <td>{{row.0.CIT_Date}}</td>
+                <td>{{row.0.CIT_Time}}</td>
+                <td>{{row.0.CIT_Quantity}}</td>
+                <td>{{row.0.CIT_Is_Active}}</td>
+                <td>{{CIT_Status_Value}}</td>
+                <td>{{CIT_Status_To_Value}}</td>
+            </tr>
+            {% endfor %}
+       </tbody>
+    </table>
+</div>
+<hr>
+{% endblock %}
+{# ============================================================================= #}

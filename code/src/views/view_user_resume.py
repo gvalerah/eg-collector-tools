@@ -1,0 +1,1 @@
+/home/gvalera/GIT/EG-Collector-Tools/code/src/functions/user_resume/view_user_resume.py

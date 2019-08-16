@@ -1,0 +1,19 @@
+{
+  "metadata":{
+             "name":"Rates compact values map",
+             "table_name":"Rates"
+             },
+  "fields":[
+     {"name":"Rat_Id","type":"int(11)","null":"NO","key":"PRI","default":"None","extra":"auto_increment","output":"True","length":"0","precision":"0","export_name":"Id","quote":"False","format":"%d"}
+    ,{"name":"Typ_Code","type":"varchar(10)","null":"NO","key":"MUL","default":"None","extra":"","output":"True","length":"0","precision":"0","export_name":"Type","quote":"True","format":"%s"}
+    ,{"name":"Cus_Id","type":"int(11)","null":"NO","key":"MUL","default":"None","extra":"","output":"True","length":"0","precision":"0","export_name":"Customer","quote":"False","format":"%d"}
+    ,{"name":"Pla_Id","type":"int(11)","null":"NO","key":"MUL","default":"None","extra":"","output":"True","length":"0","precision":"0","export_name":"Platform","quote":"False","format":"%d"}
+    ,{"name":"CC_Id","type":"int(11)","null":"NO","key":"MUL","default":"None","extra":"","output":"True","length":"0","precision":"0","export_name":"CC","quote":"False","format":"%d"}
+    ,{"name":"CU_Id","type":"int(11)","null":"NO","key":"MUL","default":"None","extra":"","output":"True","length":"0","precision":"0","export_name":"CU","quote":"False","format":"%d"}
+    ,{"name":"Rat_Price","type":"decimal(20,6)","null":"YES","key":"","default":"None","extra":"","output":"True","length":"0","precision":"0","export_name":"Price","quote":"False","format":"%.6f"}
+    ,{"name":"Cur_Code","type":"varchar(3)","null":"NO","key":"MUL","default":"None","extra":"","output":"True","length":"0","precision":"0","export_name":"Currency","quote":"True","format":"%s"}
+    ,{"name":"MU_Code","type":"varchar(3)","null":"NO","key":"MUL","default":"None","extra":"","output":"True","length":"0","precision":"0","export_name":"MU","quote":"True","format":"%s"}
+    ,{"name":"Rat_Period","type":"int(11)","null":"NO","key":"MUL","default":"None","extra":"","output":"True","length":"0","precision":"0","export_name":"Period","quote":"False","format":"%d"}
+    ,{"name":"Rat_Type","type":"int(11)","null":"YES","key":"","default":"None","extra":"","output":"False","length":"0","precision":"0","export_name":"Rate","quote":"False","format":"%d"}
+ ]
+}

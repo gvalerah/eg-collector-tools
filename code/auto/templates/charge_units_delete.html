@@ -1,0 +1,64 @@
+{# ============================================================================= #}
+
+{# Auto-Generated code. do not modify #}
+{# (c) Sertechno 2018 #}
+{# GLVH @ 2019-08-16 15:51:37 #}
+{# ============================================================================= #}
+
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block title %}Collector{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block page_content %}
+<!-- -------------------- -->
+<!-- gen_templates_delete -->
+<!-- -------------------- -->
+<div class="page-header">
+<table>
+   {% for d in session.data %}
+   <tr><td>{{d}}</td><td>:</td><td>{{session.data[d]}}</td></tr>
+   {% endfor %}
+<table>
+    <h2>Charge Unit: {{ row.CU_Id }}</h2>
+    <a href="#" onclick="history.go(-1)"><img src="/static/img/back.png"  color=yellow width="32" height="32" title="" alt="Add"></a>
+</div>
+{{ wtf.quick_form(form) }}
+<hr>
+<div>
+<h2>Charge Items(s) found {{row.charge_items.__len__()}} records</h2>
+<table class="table">
+  <thead class="thead-dark">
+    <tr id="header">
+        <th>Date</th>
+        <th>Time</th>
+        <th>Quantity</th>
+        <th>Status</th>
+        <th>Is Active</th>
+        <th>CIT_DateTime</th>
+        <td><a href="/forms/Charge_Items/0"><img src="/static/img/add.png"  color=yellow width="32" height="32" title="" alt="Add"></a></td>
+    </tr>
+  </thead>
+  <tbody>
+    {% for crow in row.charge_items %}
+       <tr>
+           <td>{{ crow.CIT_Date }}</td>
+           <td>{{ crow.CIT_Time }}</td>
+           <td>{{ crow.CIT_Quantity }}</td>
+           <td>{{ crow.CIT_Status }}</td>
+           <td>{{ crow.CIT_Is_Active }}</td>
+           <td>{{ crow.CIT_DateTime }}</td>
+           <td><a href="/forms/Charge_Items/{{crow.CU_Id}}&{{crow.CIT_DateTime}}"><img src="/static/img/edit.png" width="32" height="32" title="" alt="Edit"></a><a href="/forms/Charge_Items_delete/{{crow.CU_Id}}&{{crow.CIT_DateTime}}"><img src="/static/img/delete.png" width="32" height="32" title="" alt="Edit"></a></td>
+       </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+<hr>
+<!-- -------------------- -->
+<!-- gen_templates_delete -->
+<!-- -------------------- -->
+{% endblock %}
+{# ============================================================================= #}
+

@@ -1,0 +1,15 @@
+{
+  "metadata":{
+             "name":"Users full map",
+             "table_name":"Users"
+             },
+  "fields":[
+     {"name":"id","type":"int(11)","null":"NO","key":"PRI","default":"None","extra":"auto_increment","output":"True","export_name":"id","length":"11","precision":"0","quote":"False","format":"%011d","isid":"True","iscode":"False","isdescription":"False"}
+    ,{"name":"username","type":"varchar(64)","null":"YES","key":"","default":"None","extra":"","output":"True","export_name":"username","length":"64","precision":"0","quote":"True","format":"%-64s","isid":"False","iscode":"False","isdescription":"False"}
+    ,{"name":"role_id","type":"int(11)","null":"NO","key":"MUL","default":"None","extra":"","output":"True","export_name":"role_id","length":"11","precision":"0","quote":"False","format":"%011d","isid":"False","iscode":"False","isdescription":"False"}
+    ,{"name":"email","type":"varchar(64)","null":"YES","key":"","default":"None","extra":"","output":"True","export_name":"email","length":"64","precision":"0","quote":"True","format":"%-64s","isid":"False","iscode":"False","isdescription":"False"}
+    ,{"name":"password_hash","type":"varchar(128)","null":"YES","key":"","default":"None","extra":"","output":"True","export_name":"password_hash","length":"128","precision":"0","quote":"True","format":"%-128s","isid":"False","iscode":"False","isdescription":"False"}
+    ,{"name":"confirmed","type":"tinyint(4)","null":"YES","key":"","default":"0","extra":"","output":"True","export_name":"confirmed","length":"1","precision":"0","quote":"False","format":"%d","isid":"False","iscode":"False","isdescription":"False"}
+    ,{"name":"CC_Id","type":"int(11)","null":"NO","key":"MUL","default":"1","extra":"","output":"True","export_name":"CC_Id","length":"11","precision":"0","quote":"False","format":"%011d","isid":"True","iscode":"False","isdescription":"False"}
+ ]
+}

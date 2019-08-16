@@ -1,0 +1,79 @@
+{# ============================================================================= #}
+{# Get Year to report Statistice per Type for                                    #}
+{# (c) Sertechno 2019                                                            #}
+{# GLVH @ 2019-01-21                                                            #}
+{# ============================================================================= #}
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block title %}Collector{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block page_content %}
+<div class="page-header">
+    <h2>Statistics: </h2>
+    <h2>Use per Charge Unit Type</h2>
+    <a href="#" onclick="history.go(-1)"><img src="/static/img/back.png"  color=yellow width="32" height="32" title="" alt="Add"></a>
+</div>
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class=flashes>
+    {% for message in messages %}
+      <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+<hr>
+{# <img src="/static/{{filename}}"  color=yellow width="32" height="32" title="" alt="Add"> #}
+<table>
+    <tr>
+        <td>
+        <img src="/static/tmp/{{filename}}">
+        </td>
+        <td>
+            <table class="table">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Actual Data</th>
+                        {% for i in range(0,12) %}
+                            <th>{{months[i][0:3]}}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><b>{{Year}}</b></td>
+                        {% for i in range(0,12) %}
+                            <td>{{ "{:.0f}".format(actual[i]) }}</td>
+                        {% endfor %}
+                    </tr>
+                </tbody>
+            </table>
+            <table class="table">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Estimate Data</th>
+                        {% for i in range(0,12) %}
+                            <th>{{months[i][0:3]}}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        
+                        <td><b>{{Year+1}}</b></td>
+                        {% for i in range(0,12) %}
+                            
+                            <td><font color="red">{{ "{:.0f}".format(estimate[i]) }}</font></td>
+                            
+                        {% endfor %}
+                    </tr>
+                <tbody>
+            </table>
+        <td>
+    </tr>
+</table>
+<hr>
+{% endblock %}
+{# ============================================================================= #}

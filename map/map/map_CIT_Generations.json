@@ -1,0 +1,10 @@
+{
+  "metadata":{
+             "name":"CIT_Generations full map",
+             "table_name":"CIT_Generations"
+             },
+  "fields":[
+     {"name":"CIT_Generation","type":"int(11)","null":"NO","key":"PRI","default":"None","extra":"","output":"True","export_name":"CIT_Generation","length":"11","precision":"0","quote":"False","format":"%011d","isid":"False","iscode":"False","isdescription":"False"}
+    ,{"name":"Value","type":"varchar(45)","null":"YES","key":"","default":"None","extra":"","output":"True","export_name":"Value","length":"45","precision":"0","quote":"True","format":"%-45s","isid":"False","iscode":"False","isdescription":"False"}
+ ]
+}

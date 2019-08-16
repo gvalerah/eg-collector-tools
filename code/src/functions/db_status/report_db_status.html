@@ -1,0 +1,51 @@
+{# ============================================================================= #}
+{# Development Only DB Status Report                                             #}
+{# (c) Sertechno 2018                                                            #}
+{# GLVH @ 2018-11-11                                                             #}
+{# ============================================================================= #}
+{% extends "base.html" %}
+
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% import "_macros.html" as macros %}
+
+
+{% block title %}Collector{% endblock %}
+
+{% block head %}
+   {{ super() }}
+{% endblock %}
+
+    
+{% block page_content %}
+    <div class="page-header">
+            <h2>DB Status Report:</h2>
+
+            <table>
+            <tr><td>Version</td><td> : </td><td>{{data.version}}</td></tr> 
+            <tr><td>Host Name</td><td> : </td><td>{{data.hostname}}</td></tr>
+            </table>
+            <table class="table">
+                <thead class="thead-dark">
+                    <tr>
+                        <th align="center" valign="top">Table</th>
+                        <th align="center" valign="top">Records</th>
+                        <th align="center" valign="top">Size in MB</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for t in data.table_usage %}
+                    <tr>
+                        {% set records = data.table_data[t[1]].count %}
+                        <td>{{t[1]}}</td><td>{{"{:,d}".format(records)}}</td><td>{{ "{:,.2f}".format(t[2])}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        
+            <a href="#" onclick="history.go(-1)"><img src="/static/img/back.png"  color=yellow width="32" height="32" title="" alt="Add"></a>
+    </div>
+    <hr>
+{% endblock %}
+
+{# ============================================================================= #}

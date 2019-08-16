@@ -1,0 +1,12 @@
+{
+  "metadata":{
+             "name":"CU_Operations full map",
+             "table_name":"CU_Operations"
+             },
+  "fields":[
+     {"name":"CU_Operation","type":"varchar(10)","null":"NO","key":"PRI","default":"None","extra":"","output":"True","export_name":"CU_Operation","length":"10","precision":"0","quote":"True","format":"%-10s","isid":"False","iscode":"False","isdescription":"False"}
+    ,{"name":"Value","type":"varchar(45)","null":"YES","key":"","default":"None","extra":"","output":"True","export_name":"Value","length":"45","precision":"0","quote":"True","format":"%-45s","isid":"False","iscode":"False","isdescription":"False"}
+    ,{"name":"Is_Multiply","type":"tinyint(4)","null":"YES","key":"","default":"None","extra":"","output":"True","export_name":"Is_Multiply","length":"1","precision":"0","quote":"False","format":"%d","isid":"False","iscode":"False","isdescription":"False"}
+    ,{"name":"Factor","type":"int(11)","null":"YES","key":"","default":"None","extra":"","output":"True","export_name":"Factor","length":"11","precision":"0","quote":"False","format":"%011d","isid":"False","iscode":"False","isdescription":"False"}
+ ]
+}

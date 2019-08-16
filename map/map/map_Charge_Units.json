@@ -1,0 +1,22 @@
+{
+  "metadata":{
+             "name":"Charge_Units full map",
+             "table_name":"Charge_Units"
+             },
+  "fields":[
+     {"name":"CU_Id","type":"int(11)","null":"NO","key":"PRI","default":"None","extra":"auto_increment","output":"True","export_name":"CU_Id","length":"11","precision":"0","quote":"False","format":"%011d","isid":"True","iscode":"False","isdescription":"False"}
+    ,{"name":"CI_Id","type":"int(11)","null":"NO","key":"MUL","default":"None","extra":"","output":"True","export_name":"CI_Id","length":"11","precision":"0","quote":"False","format":"%011d","isid":"True","iscode":"False","isdescription":"False"}
+    ,{"name":"CU_Description","type":"varchar(45)","null":"YES","key":"","default":"None","extra":"","output":"True","export_name":"CU_Description","length":"45","precision":"0","quote":"True","format":"%-45s","isid":"False","iscode":"False","isdescription":"True"}
+    ,{"name":"CU_UUID","type":"varchar(45)","null":"YES","key":"","default":"None","extra":"","output":"True","export_name":"CU_UUID","length":"45","precision":"0","quote":"True","format":"%-45s","isid":"False","iscode":"False","isdescription":"False"}
+    ,{"name":"CU_Is_Billeable","type":"tinyint(4)","null":"YES","key":"","default":"0","extra":"","output":"True","export_name":"CU_Is_Billeable","length":"1","precision":"0","quote":"False","format":"%d","isid":"False","iscode":"False","isdescription":"False"}
+    ,{"name":"CU_Is_Always_Billeable","type":"tinyint(4)","null":"YES","key":"","default":"0","extra":"","output":"True","export_name":"CU_Is_Always_Billeable","length":"1","precision":"0","quote":"False","format":"%d","isid":"False","iscode":"False","isdescription":"False"}
+    ,{"name":"CU_Quantity","type":"decimal(20,6)","null":"YES","key":"","default":"None","extra":"","output":"True","export_name":"CU_Quantity","length":"20","precision":"6","quote":"False","format":"%020.6f","isid":"False","iscode":"False","isdescription":"False"}
+    ,{"name":"CU_Operation","type":"varchar(10)","null":"NO","key":"MUL","default":"None","extra":"","output":"True","export_name":"CU_Operation","length":"10","precision":"0","quote":"True","format":"%-10s","isid":"False","iscode":"False","isdescription":"False"}
+    ,{"name":"Typ_Code","type":"varchar(10)","null":"NO","key":"MUL","default":"None","extra":"","output":"True","export_name":"Typ_Code","length":"10","precision":"0","quote":"True","format":"%-10s","isid":"False","iscode":"True","isdescription":"False"}
+    ,{"name":"CIT_Generation","type":"int(11)","null":"NO","key":"MUL","default":"None","extra":"","output":"True","export_name":"CIT_Generation","length":"11","precision":"0","quote":"False","format":"%011d","isid":"False","iscode":"False","isdescription":"False"}
+    ,{"name":"Rat_Id","type":"int(11)","null":"YES","key":"","default":"None","extra":"","output":"True","export_name":"Rat_Id","length":"11","precision":"0","quote":"False","format":"%011d","isid":"True","iscode":"False","isdescription":"False"}
+    ,{"name":"CU_Reference_1","type":"varchar(45)","null":"YES","key":"","default":"None","extra":"","output":"True","export_name":"CU_Reference_1","length":"45","precision":"0","quote":"True","format":"%-45s","isid":"False","iscode":"False","isdescription":"False"}
+    ,{"name":"CU_Reference_2","type":"varchar(45)","null":"YES","key":"","default":"None","extra":"","output":"True","export_name":"CU_Reference_2","length":"45","precision":"0","quote":"True","format":"%-45s","isid":"False","iscode":"False","isdescription":"False"}
+    ,{"name":"CU_Reference_3","type":"varchar(45)","null":"YES","key":"","default":"None","extra":"","output":"True","export_name":"CU_Reference_3","length":"45","precision":"0","quote":"True","format":"%-45s","isid":"False","iscode":"False","isdescription":"False"}
+ ]
+}

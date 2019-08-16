@@ -1,0 +1,20 @@
+{# ============================================================================= #}
+{# Charge CIT Status                                                             #}
+{# (c) Sertechno 2018                                                            #}
+{# GLVH @ 2018-12-06                                                             #}
+{# ============================================================================= #}
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block title %}Collector{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block page_content %}
+<div class="page-header">
+    <h2>Change CIT Status: </h2>
+    <a href="#" onclick="history.go(-1)"><img src="/static/img/back.png"  color=yellow width="32" height="32" title="" alt="Add"></a>
+</div>
+{{ wtf.quick_form(form) }}
+<hr>
+{% endblock %}
+{# ============================================================================= #}

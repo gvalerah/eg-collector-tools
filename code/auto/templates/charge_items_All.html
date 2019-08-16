@@ -1,0 +1,65 @@
+{# ============================================================================= #}
+
+{# Auto-Generated code. do not modify #}
+{# (c) Sertechno 2018 #}
+{# GLVH @ 2019-08-16 15:51:37 #}
+{# ============================================================================= #}
+
+{% extends "base.html" %}
+
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% import "_macros.html" as macros %}
+
+{% block title %}Collector{% endblock %}
+
+{% block head %}
+   {{ super() }}
+{% endblock %}
+
+{% block page_content %}
+<!-- ------------------------ -->
+<!-- gen_templates_select_all -->
+<!-- ------------------------ -->
+<div class="page-header">
+    <h2>Charge Items:<h2>
+    <a href="#" onclick="history.go(-1)"><img src="/static/img/back.png"  color=yellow width="32" height="32" title="" alt="Add"></a>
+</div>
+<table class="table">
+  <thead class="thead-dark">
+    <tr>
+        <th>Charge Unit Id</th>
+        <th>Date</th>
+        <th>Time</th>
+        <th>Quantity</th>
+        <th>Status</th>
+        <th>Is Active</th>
+        <td><a href="/forms/Charge_Items"><img src="/static/img/add.png"  color=yellow width="32" height="32" title="" alt="Add"></a></td>
+    </tr>
+  </thead>
+    <tbody>
+    {% for row in rows.items %}
+       <tr>
+           <td>{{ "{:s}".format(row.1) }}</td>
+           <td>{{ row.0.CIT_Date }}</td>
+           <td>{{ row.0.CIT_Time }}</td>
+           <td>{{ row.0.CIT_Quantity }}</td>
+           <td>{{ "{:s}".format(row.2) }}</td>
+           <td>{{ row.0.CIT_Is_Active }}</td>
+           <td><a href="/forms/Charge_Items?CU_Id={{ row.0.CU_Id }}&CIT_DateTime={{ row.0.CIT_DateTime }}"><img src="/static/img/edit.png" width="32" height="32" title="" alt="Edit"></a>
+               <a href="/forms/Charge_Items_delete?CU_Id={{ row.0.CU_Id }}&CIT_DateTime={{ row.0.CIT_DateTime }}"><img src="/static/img/delete.png" width="32" height="32" title="" alt="Edit"></a>
+           </td>
+       </tr>
+    {% endfor %}
+    </tbody>
+</table>
+<div class="pagination">
+    {{ macros.pagination_widget(rows, '.select_Charge_Items_query') }}
+</div>
+<!-- ------------------------ -->
+<!-- gen_templates_select_all -->
+<!-- ------------------------ -->
+{% endblock %}
+
+{# ============================================================================= #}
+

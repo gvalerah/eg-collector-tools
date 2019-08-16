@@ -1,0 +1,10 @@
+{
+  "metadata":{
+             "name":"Measure_Units full map",
+             "table_name":"Measure_Units"
+             },
+  "fields":[
+     {"name":"MU_Code","type":"varchar(3)","null":"NO","key":"PRI","default":"None","extra":"","output":"True","export_name":"MU_Code","length":"3","precision":"0","quote":"True","format":"%-3s","isid":"False","iscode":"True","isdescription":"False"}
+    ,{"name":"MU_Description","type":"varchar(45)","null":"YES","key":"","default":"None","extra":"","output":"True","export_name":"MU_Description","length":"45","precision":"0","quote":"True","format":"%-45s","isid":"False","iscode":"False","isdescription":"True"}
+ ]
+}

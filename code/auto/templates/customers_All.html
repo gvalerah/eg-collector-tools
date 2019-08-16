@@ -1,0 +1,63 @@
+{# ============================================================================= #}
+
+{# Auto-Generated code. do not modify #}
+{# (c) Sertechno 2018 #}
+{# GLVH @ 2019-08-16 15:51:37 #}
+{# ============================================================================= #}
+
+{% extends "base.html" %}
+
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% import "_macros.html" as macros %}
+
+{% block title %}Collector{% endblock %}
+
+{% block head %}
+   {{ super() }}
+{% endblock %}
+
+{% block page_content %}
+<!-- ------------------------ -->
+<!-- gen_templates_select_all -->
+<!-- ------------------------ -->
+<div class="page-header">
+    <h2>Customers:<h2>
+    <a href="#" onclick="history.go(-1)"><img src="/static/img/back.png"  color=yellow width="32" height="32" title="" alt="Add"></a>
+</div>
+<table class="table">
+  <thead class="thead-dark">
+    <tr>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Cost Center Id</th>
+        <td><a href="/forms/Customers"><img src="/static/img/add.png"  color=yellow width="32" height="32" title="" alt="Add"></a></td>
+         <td>Configuration Items</td>
+         <td>Rates</td>
+    </tr>
+  </thead>
+    <tbody>
+    {% for row in rows.items %}
+       <tr>
+           <td>{{ row.0.Cus_Id }}</td>
+           <td>{{ row.0.Cus_Name }}</td>
+           <td>{{ "{:s}".format(row.1) }}</td>
+           <td><a href="/forms/Customers?Cus_Id={{ row.0.Cus_Id }}"><img src="/static/img/edit.png" width="32" height="32" title="" alt="Edit"></a>
+               <a href="/forms/Customers_delete?Cus_Id={{ row.0.Cus_Id }}"><img src="/static/img/delete.png" width="32" height="32" title="" alt="Edit"></a>
+           </td>
+           <td><a href="/select/Configuration_Items_Query?field=Cus_Id&value={{row.0.Cus_Id}}">{{ row.0.configuration_items.__len__() }}</a></td>
+           <td><a href="/select/Rates_Query?field=Cus_Id&value={{row.0.Cus_Id}}">{{ row.0.rates.__len__() }}</a></td>
+       </tr>
+    {% endfor %}
+    </tbody>
+</table>
+<div class="pagination">
+    {{ macros.pagination_widget(rows, '.select_Customers_query') }}
+</div>
+<!-- ------------------------ -->
+<!-- gen_templates_select_all -->
+<!-- ------------------------ -->
+{% endblock %}
+
+{# ============================================================================= #}
+

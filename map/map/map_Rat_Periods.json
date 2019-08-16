@@ -1,0 +1,10 @@
+{
+  "metadata":{
+             "name":"Rat_Periods full map",
+             "table_name":"Rat_Periods"
+             },
+  "fields":[
+     {"name":"Rat_Period","type":"int(11)","null":"NO","key":"PRI","default":"None","extra":"","output":"True","export_name":"Rat_Period","length":"11","precision":"0","quote":"False","format":"%011d","isid":"False","iscode":"False","isdescription":"False"}
+    ,{"name":"Value","type":"varchar(45)","null":"YES","key":"","default":"None","extra":"","output":"True","export_name":"Value","length":"45","precision":"0","quote":"True","format":"%-45s","isid":"False","iscode":"False","isdescription":"False"}
+ ]
+}

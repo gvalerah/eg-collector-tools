@@ -1,0 +1,12 @@
+{
+  "metadata":{
+             "name":"Currencies full map",
+             "table_name":"Currencies"
+             },
+  "fields":[
+     {"name":"Cur_Code","type":"varchar(3)","null":"NO","key":"PRI","default":"None","extra":"","output":"True","export_name":"Cur_Code","length":"3","precision":"0","quote":"True","format":"%-3s","isid":"False","iscode":"True","isdescription":"False"}
+    ,{"name":"Cur_Name","type":"varchar(45)","null":"YES","key":"","default":"None","extra":"","output":"True","export_name":"Cur_Name","length":"45","precision":"0","quote":"True","format":"%-45s","isid":"False","iscode":"False","isdescription":"True"}
+    ,{"name":"Cur_Id","type":"int(11)","null":"YES","key":"","default":"None","extra":"","output":"True","export_name":"Cur_Id","length":"11","precision":"0","quote":"False","format":"%011d","isid":"True","iscode":"False","isdescription":"False"}
+    ,{"name":"Cur_Comment","type":"varchar(128)","null":"YES","key":"","default":"None","extra":"","output":"True","export_name":"Cur_Comment","length":"128","precision":"0","quote":"True","format":"%-128s","isid":"False","iscode":"False","isdescription":"False"}
+ ]
+}

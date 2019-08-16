@@ -1,0 +1,5 @@
+1,DEFAULT,localhost,80,user,password
+2,DC Primario Cluster P1,localhost,60000,collector,collector
+3,DC Primario Cluster P2,localhost,70000,collector,collector
+4,DC Secundario Cluster S1,localhost,80000,collector,collector
+5,DC Secundario Cluster S2,localhost,90000,collector,collector

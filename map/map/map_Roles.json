@@ -1,0 +1,12 @@
+{
+  "metadata":{
+             "name":"Roles full map",
+             "table_name":"Roles"
+             },
+  "fields":[
+     {"name":"id","type":"int(11)","null":"NO","key":"PRI","default":"None","extra":"","output":"True","export_name":"id","length":"11","precision":"0","quote":"False","format":"%011d","isid":"True","iscode":"False","isdescription":"False"}
+    ,{"name":"name","type":"varchar(64)","null":"YES","key":"UNI","default":"None","extra":"","output":"True","export_name":"name","length":"64","precision":"0","quote":"True","format":"%-64s","isid":"False","iscode":"False","isdescription":"False"}
+    ,{"name":"default","type":"tinyint(4)","null":"YES","key":"","default":"None","extra":"","output":"True","export_name":"default","length":"1","precision":"0","quote":"False","format":"%d","isid":"False","iscode":"False","isdescription":"False"}
+    ,{"name":"permissions","type":"int(11)","null":"YES","key":"","default":"None","extra":"","output":"True","export_name":"permissions","length":"11","precision":"0","quote":"False","format":"%011d","isid":"False","iscode":"False","isdescription":"False"}
+ ]
+}

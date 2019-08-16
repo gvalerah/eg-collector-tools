@@ -1,0 +1,12 @@
+{
+  "metadata":{
+             "name":"Exchange_Rates full map",
+             "table_name":"Exchange_Rates"
+             },
+  "fields":[
+     {"name":"ER_Id","type":"int(11)","null":"NO","key":"PRI","default":"None","extra":"auto_increment","output":"True","export_name":"ER_Id","length":"11","precision":"0","quote":"False","format":"%011d","isid":"True","iscode":"False","isdescription":"False"}
+    ,{"name":"Cur_Code","type":"varchar(3)","null":"NO","key":"MUL","default":"None","extra":"","output":"True","export_name":"Cur_Code","length":"3","precision":"0","quote":"True","format":"%-3s","isid":"False","iscode":"True","isdescription":"False"}
+    ,{"name":"ER_Factor","type":"decimal(20,10)","null":"NO","key":"","default":"None","extra":"","output":"True","export_name":"ER_Factor","length":"20","precision":"10","quote":"False","format":"%020.10f","isid":"False","iscode":"False","isdescription":"False"}
+    ,{"name":"ER_Date","type":"date","null":"NO","key":"","default":"None","extra":"","output":"True","export_name":"ER_Date","length":"10","precision":"0","quote":"True","format":"%Y-%m-%d","isid":"False","iscode":"False","isdescription":"False"}
+ ]
+}

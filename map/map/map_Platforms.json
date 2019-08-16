@@ -1,0 +1,14 @@
+{
+  "metadata":{
+             "name":"Platforms full map",
+             "table_name":"Platforms"
+             },
+  "fields":[
+     {"name":"Pla_Id","type":"int(11)","null":"NO","key":"PRI","default":"None","extra":"auto_increment","output":"True","export_name":"Pla_Id","length":"11","precision":"0","quote":"False","format":"%011d","isid":"True","iscode":"False","isdescription":"False"}
+    ,{"name":"Pla_Name","type":"varchar(45)","null":"NO","key":"","default":"None","extra":"","output":"True","export_name":"Pla_Name","length":"45","precision":"0","quote":"True","format":"%-45s","isid":"False","iscode":"False","isdescription":"True"}
+    ,{"name":"Pla_Host","type":"varchar(45)","null":"YES","key":"","default":"None","extra":"","output":"True","export_name":"Pla_Host","length":"45","precision":"0","quote":"True","format":"%-45s","isid":"False","iscode":"False","isdescription":"False"}
+    ,{"name":"Pla_Port","type":"varchar(45)","null":"YES","key":"","default":"None","extra":"","output":"True","export_name":"Pla_Port","length":"45","precision":"0","quote":"True","format":"%-45s","isid":"False","iscode":"False","isdescription":"False"}
+    ,{"name":"Pla_User","type":"varchar(45)","null":"YES","key":"","default":"None","extra":"","output":"True","export_name":"Pla_User","length":"45","precision":"0","quote":"True","format":"%-45s","isid":"False","iscode":"False","isdescription":"False"}
+    ,{"name":"Pla_Password","type":"varchar(45)","null":"YES","key":"","default":"None","extra":"","output":"True","export_name":"Pla_Password","length":"45","precision":"0","quote":"True","format":"%-45s","isid":"False","iscode":"False","isdescription":"False"}
+ ]
+}
