@@ -46,7 +46,7 @@ import simplejson as json
 import matplotlib.pyplot as plt
 import numpy as np
 import calendar
-from   ..common.stats_functions import Regression_Line
+from   emtec.collector.common.stats_functions import Regression_Line
 
 @main.route('/report/Graph_Use_Per_Type', methods=['GET','POST'])
 @login_required

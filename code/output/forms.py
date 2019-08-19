@@ -13,7 +13,7 @@ from wtforms.validators     import Regexp, Required
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-16 15:51:37
+# GLVH @ 2019-08-18 18:05:34
 # =============================================================================
 
 from decimal import ROUND_HALF_UP
@@ -40,7 +40,7 @@ class frm_charge_item_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-16 15:51:37
+# GLVH @ 2019-08-18 18:05:34
 # =============================================================================
 
 from decimal import ROUND_HALF_UP
@@ -96,7 +96,7 @@ class frm_charge_resume_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-16 15:51:37
+# GLVH @ 2019-08-18 18:05:34
 # =============================================================================
 
 from decimal import ROUND_HALF_UP
@@ -129,7 +129,7 @@ class frm_charge_unit_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-16 15:51:37
+# GLVH @ 2019-08-18 18:05:34
 # =============================================================================
 
 from decimal import ROUND_HALF_UP
@@ -152,7 +152,7 @@ class frm_cit_generation_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-16 15:51:37
+# GLVH @ 2019-08-18 18:05:34
 # =============================================================================
 
 from decimal import ROUND_HALF_UP
@@ -175,7 +175,7 @@ class frm_cit_status_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-16 15:51:37
+# GLVH @ 2019-08-18 18:05:34
 # =============================================================================
 
 from decimal import ROUND_HALF_UP
@@ -203,7 +203,7 @@ class frm_configuration_item_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-16 15:51:37
+# GLVH @ 2019-08-18 18:05:34
 # =============================================================================
 
 from decimal import ROUND_HALF_UP
@@ -228,7 +228,7 @@ class frm_cost_center_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-16 15:51:37
+# GLVH @ 2019-08-18 18:05:34
 # =============================================================================
 
 from decimal import ROUND_HALF_UP
@@ -252,7 +252,7 @@ class frm_country_currency_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-16 15:51:37
+# GLVH @ 2019-08-18 18:05:34
 # =============================================================================
 
 from decimal import ROUND_HALF_UP
@@ -277,7 +277,7 @@ class frm_country_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-16 15:51:37
+# GLVH @ 2019-08-18 18:05:34
 # =============================================================================
 
 from decimal import ROUND_HALF_UP
@@ -302,7 +302,7 @@ class frm_cu_operation_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-16 15:51:37
+# GLVH @ 2019-08-18 18:05:34
 # =============================================================================
 
 from decimal import ROUND_HALF_UP
@@ -327,7 +327,7 @@ class frm_currency_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-16 15:51:37
+# GLVH @ 2019-08-18 18:05:34
 # =============================================================================
 
 from decimal import ROUND_HALF_UP
@@ -350,7 +350,7 @@ class frm_customer_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-16 15:51:37
+# GLVH @ 2019-08-18 18:05:34
 # =============================================================================
 
 from decimal import ROUND_HALF_UP
@@ -373,7 +373,7 @@ class frm_cu_type_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-16 15:51:37
+# GLVH @ 2019-08-18 18:05:34
 # =============================================================================
 
 from decimal import ROUND_HALF_UP
@@ -414,7 +414,7 @@ class frm_dev_form_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-16 15:51:37
+# GLVH @ 2019-08-18 18:05:34
 # =============================================================================
 
 from decimal import ROUND_HALF_UP
@@ -456,7 +456,7 @@ class frm_dev_table_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-16 15:51:37
+# GLVH @ 2019-08-18 18:05:34
 # =============================================================================
 
 from decimal import ROUND_HALF_UP
@@ -480,7 +480,7 @@ class frm_exchange_rate_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-16 15:51:37
+# GLVH @ 2019-08-18 18:05:34
 # =============================================================================
 
 from decimal import ROUND_HALF_UP
@@ -503,7 +503,7 @@ class frm_measure_unit_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-16 15:51:37
+# GLVH @ 2019-08-18 18:05:34
 # =============================================================================
 
 from decimal import ROUND_HALF_UP
@@ -529,7 +529,7 @@ class frm_platform_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-16 15:51:37
+# GLVH @ 2019-08-18 18:05:34
 # =============================================================================
 
 from decimal import ROUND_HALF_UP
@@ -559,7 +559,7 @@ class frm_rate_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-16 15:51:37
+# GLVH @ 2019-08-18 18:05:34
 # =============================================================================
 
 from decimal import ROUND_HALF_UP
@@ -582,7 +582,7 @@ class frm_rat_period_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-16 15:51:37
+# GLVH @ 2019-08-18 18:05:34
 # =============================================================================
 
 from decimal import ROUND_HALF_UP
@@ -607,7 +607,7 @@ class frm_Role_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-16 15:51:37
+# GLVH @ 2019-08-18 18:05:34
 # =============================================================================
 
 from decimal import ROUND_HALF_UP
@@ -651,7 +651,7 @@ class frm_st_use_per_cu_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-16 15:51:37
+# GLVH @ 2019-08-18 18:05:34
 # =============================================================================
 
 from decimal import ROUND_HALF_UP
@@ -685,7 +685,7 @@ class frm_st_use_per_type_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-16 15:51:37
+# GLVH @ 2019-08-18 18:05:34
 # =============================================================================
 
 from decimal import ROUND_HALF_UP
@@ -707,7 +707,7 @@ class frm_trace_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-16 15:51:37
+# GLVH @ 2019-08-18 18:05:34
 # =============================================================================
 
 from decimal import ROUND_HALF_UP

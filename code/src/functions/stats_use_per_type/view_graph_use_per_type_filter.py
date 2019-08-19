@@ -66,7 +66,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import calendar
 import tempfile
-from   ..common.stats_functions import Regression_Line
+from   emtec.collector.common.stats_functions import Regression_Line
 
 @main.route('/report/Graph_Use_Per_Type_Filter', methods=['GET','POST'])
 @login_required

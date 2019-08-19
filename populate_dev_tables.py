@@ -25,7 +25,7 @@ from Forms   import Forms
 # Setup DB connection parameters
 
 from app                             import create_app,db,logger
-from app.common.context              import Context
+from emtec.collector.common.context              import Context
 
 C = Context("populate dev tables","collector.ini",logger)
 C.Set()

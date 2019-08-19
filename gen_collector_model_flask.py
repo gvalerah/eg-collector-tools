@@ -27,8 +27,8 @@ from flask_sqlalchemy               import SQLAlchemy
 from config                         import config
 
 # Collector application required modules
-from app.common.functions           import *
-from app.common.context             import Context
+from emtec.collector.common.functions           import *
+from emtec.collector.common.context             import Context
 
 # Import App Modules
 # Auto-Code Generation Modules

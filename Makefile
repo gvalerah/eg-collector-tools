@@ -24,6 +24,7 @@ AUTO_INCLUDES=${AUTO_FOLDER}/includes
 LIB_EMTEC=/home/gvalera/GIT/eg-libraries/emtec/src/emtec
 LIB_COLLECTOR=${LIB_EMTEC}/collector
 LIB_COLLECTOR_DB=${LIB_COLLECTOR}/db
+LIB_COLLECTOR_COMMON=${LIB_COLLECTOR}/common
 
 all:	${AUTO_TEMPLATES}/base.html classes collector 
 
@@ -72,7 +73,7 @@ collector:	${CODE_OUTPUT}/models.py ${CODE_OUTPUT}/ORM_models.py ${CODE_OUTPUT}/
 
 	echo "updating COMMON files ..."
 	echo
-	cp  ${CODE_COMMON}/*.py     			${COMMON_FOLDER}/.
+	cp  ${CODE_COMMON}/*.py     			${LIB_COLLECTOR_COMMON}/.
 
 	echo "updating error handlers ..."
 	echo

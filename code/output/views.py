@@ -95,7 +95,7 @@ def collector_about():
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-16 15:51:37
+# GLVH @ 2019-08-18 18:05:34
 # =============================================================================
 
 from emtec.collector.db.Flask_models import cit_generation
@@ -296,7 +296,7 @@ def query_orm(table_name):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-16 15:51:37
+# GLVH @ 2019-08-18 18:05:34
 # =============================================================================
 
 @main.route('/forms/Charge_Items', methods=['GET', 'POST'])
@@ -500,7 +500,7 @@ def select_Charge_Items_query():
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-16 15:51:37
+# GLVH @ 2019-08-18 18:05:34
 # =============================================================================
 
 @main.route('/forms/Charge_Resumes', methods=['GET', 'POST'])
@@ -821,7 +821,7 @@ def select_Charge_Resumes_query():
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-16 15:51:37
+# GLVH @ 2019-08-18 18:05:34
 # =============================================================================
 
 @main.route('/forms/Charge_Units', methods=['GET', 'POST'])
@@ -1099,7 +1099,7 @@ def select_Charge_Units_query():
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-16 15:51:37
+# GLVH @ 2019-08-18 18:05:34
 # =============================================================================
 
 @main.route('/forms/CIT_Generations', methods=['GET', 'POST'])
@@ -1248,7 +1248,7 @@ def select_CIT_Generations_query():
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-16 15:51:37
+# GLVH @ 2019-08-18 18:05:34
 # =============================================================================
 
 @main.route('/forms/CIT_Statuses', methods=['GET', 'POST'])
@@ -1397,7 +1397,7 @@ def select_CIT_Statuses_query():
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-16 15:51:37
+# GLVH @ 2019-08-18 18:05:34
 # =============================================================================
 
 @main.route('/forms/Configuration_Items', methods=['GET', 'POST'])
@@ -1603,7 +1603,7 @@ def select_Configuration_Items_query():
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-16 15:51:37
+# GLVH @ 2019-08-18 18:05:34
 # =============================================================================
 
 @main.route('/forms/Cost_Centers', methods=['GET', 'POST'])
@@ -1771,7 +1771,7 @@ def select_Cost_Centers_query():
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-16 15:51:37
+# GLVH @ 2019-08-18 18:05:34
 # =============================================================================
 
 @main.route('/forms/Countries_Currencies', methods=['GET', 'POST'])
@@ -1939,7 +1939,7 @@ def select_Countries_Currencies_query():
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-16 15:51:37
+# GLVH @ 2019-08-18 18:05:34
 # =============================================================================
 
 @main.route('/forms/Countries', methods=['GET', 'POST'])
@@ -2098,7 +2098,7 @@ def select_Countries_query():
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-16 15:51:37
+# GLVH @ 2019-08-18 18:05:34
 # =============================================================================
 
 @main.route('/forms/CU_Operations', methods=['GET', 'POST'])
@@ -2257,7 +2257,7 @@ def select_CU_Operations_query():
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-16 15:51:37
+# GLVH @ 2019-08-18 18:05:34
 # =============================================================================
 
 @main.route('/forms/Currencies', methods=['GET', 'POST'])
@@ -2416,7 +2416,7 @@ def select_Currencies_query():
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-16 15:51:37
+# GLVH @ 2019-08-18 18:05:34
 # =============================================================================
 
 @main.route('/forms/Customers', methods=['GET', 'POST'])
@@ -2575,7 +2575,7 @@ def select_Customers_query():
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-16 15:51:37
+# GLVH @ 2019-08-18 18:05:34
 # =============================================================================
 
 @main.route('/forms/CU_Types', methods=['GET', 'POST'])
@@ -2724,7 +2724,7 @@ def select_CU_Types_query():
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-16 15:51:37
+# GLVH @ 2019-08-18 18:05:34
 # =============================================================================
 
 @main.route('/forms/Dev_Forms', methods=['GET', 'POST'])
@@ -2966,7 +2966,7 @@ def select_Dev_Forms_query():
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-16 15:51:37
+# GLVH @ 2019-08-18 18:05:34
 # =============================================================================
 
 @main.route('/forms/Dev_Tables', methods=['GET', 'POST'])
@@ -3213,7 +3213,7 @@ def select_Dev_Tables_query():
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-16 15:51:37
+# GLVH @ 2019-08-18 18:05:34
 # =============================================================================
 
 @main.route('/forms/Exchange_Rates', methods=['GET', 'POST'])
@@ -3378,7 +3378,7 @@ def select_Exchange_Rates_query():
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-16 15:51:37
+# GLVH @ 2019-08-18 18:05:34
 # =============================================================================
 
 @main.route('/forms/Measure_Units', methods=['GET', 'POST'])
@@ -3527,7 +3527,7 @@ def select_Measure_Units_query():
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-16 15:51:37
+# GLVH @ 2019-08-18 18:05:34
 # =============================================================================
 
 @main.route('/forms/Platforms', methods=['GET', 'POST'])
@@ -3694,7 +3694,7 @@ def select_Platforms_query():
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-16 15:51:37
+# GLVH @ 2019-08-18 18:05:34
 # =============================================================================
 
 @main.route('/forms/Rates', methods=['GET', 'POST'])
@@ -3990,7 +3990,7 @@ def select_Rates_query():
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-16 15:51:37
+# GLVH @ 2019-08-18 18:05:34
 # =============================================================================
 
 @main.route('/forms/Rat_Periods', methods=['GET', 'POST'])
@@ -4139,7 +4139,7 @@ def select_Rat_Periods_query():
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-16 15:51:37
+# GLVH @ 2019-08-18 18:05:34
 # =============================================================================
 
 @main.route('/forms/Roles', methods=['GET', 'POST'])
@@ -4298,7 +4298,7 @@ def select_Roles_query():
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-16 15:51:37
+# GLVH @ 2019-08-18 18:05:34
 # =============================================================================
 
 @main.route('/forms/ST_Use_Per_CU', methods=['GET', 'POST'])
@@ -4556,7 +4556,7 @@ def select_ST_Use_Per_CU_query():
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-16 15:51:37
+# GLVH @ 2019-08-18 18:05:34
 # =============================================================================
 
 @main.route('/forms/ST_Use_Per_Type', methods=['GET', 'POST'])
@@ -4772,7 +4772,7 @@ def select_ST_Use_Per_Type_query():
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-16 15:51:37
+# GLVH @ 2019-08-18 18:05:34
 # =============================================================================
 
 @main.route('/forms/Trace', methods=['GET', 'POST'])
@@ -4919,7 +4919,7 @@ def select_Trace_query():
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-16 15:51:37
+# GLVH @ 2019-08-18 18:05:34
 # =============================================================================
 
 @main.route('/forms/Users', methods=['GET', 'POST'])
@@ -7111,7 +7111,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import calendar
 import tempfile
-from   ..common.stats_functions import Regression_Line
+from   emtec.collector.common.stats_functions import Regression_Line
 
 @main.route('/report/Graph_Use_Per_Type_Filter', methods=['GET','POST'])
 @login_required
@@ -7451,7 +7451,7 @@ import simplejson as json
 import matplotlib.pyplot as plt
 import numpy as np
 import calendar
-from   ..common.stats_functions import Regression_Line
+from   emtec.collector.common.stats_functions import Regression_Line
 
 @main.route('/report/Graph_Use_Per_Type', methods=['GET','POST'])
 @login_required
