@@ -14,7 +14,18 @@ from sqlalchemy             import ForeignKey
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
+# GLVH @ 2019-08-24 18:09:43
+# =============================================================================
+
+from sqlalchemy                 import Table, Column, MetaData, ForeignKey
+from sqlalchemy                 import Integer, String, Date, Time
+from sqlalchemy                 import Numeric, DateTime, Boolean
+
+
+# =============================================================================
+# Auto-Generated code. do not modify
+# (c) Sertechno 2018
+# GLVH @ 2019-08-24 18:09:43
 # =============================================================================
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
@@ -25,7 +36,95 @@ Base = declarative_base()
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
+# GLVH @ 2019-08-24 18:09:43
+# =============================================================================
+
+class CIT_Generations(Base):
+    __tablename__ = 'CIT_Generations'
+    engine        = None
+    CIT_Generation = Column( Integer, primary_key=True )
+    Value          = Column( String(45) )
+    
+    def __init__(self, CIT_Generation=None, Value='None'):
+        self.CIT_Generation = CIT_Generation
+        self.Value          = Value
+
+    def __repr__(self):
+        return "<CIT_Generations( CIT_Generation='%s', Value='%s')>" % \
+                ( self.CIT_Generation, self.Value)
+
+
+# =============================================================================
+# Auto-Generated code. do not modify
+# (c) Sertechno 2018
+# GLVH @ 2019-08-24 18:09:43
+# =============================================================================
+
+class CIT_Statuses(Base):
+    __tablename__ = 'CIT_Statuses'
+    engine        = None
+    CIT_Status = Column( Integer, primary_key=True )
+    Value      = Column( String(45) )
+    
+    def __init__(self, CIT_Status=None, Value='None'):
+        self.CIT_Status = CIT_Status
+        self.Value      = Value
+
+    def __repr__(self):
+        return "<CIT_Statuses( CIT_Status='%s', Value='%s')>" % \
+                ( self.CIT_Status, self.Value)
+
+
+# =============================================================================
+# Auto-Generated code. do not modify
+# (c) Sertechno 2018
+# GLVH @ 2019-08-24 18:09:43
+# =============================================================================
+
+class CU_Operations(Base):
+    __tablename__ = 'CU_Operations'
+    engine        = None
+    CU_Operation = Column( String(10), primary_key=True )
+    Value        = Column( String(45) )
+    Is_Multiply  = Column( Boolean )
+    Factor       = Column( Integer )
+    
+    def __init__(self, CU_Operation='None', Value='None', Is_Multiply=None, Factor=None):
+        self.CU_Operation = CU_Operation
+        self.Value        = Value
+        self.Is_Multiply  = Is_Multiply
+        self.Factor       = Factor
+
+    def __repr__(self):
+        return "<CU_Operations( CU_Operation='%s', Value='%s', Is_Multiply='%s', Factor='%s')>" % \
+                ( self.CU_Operation, self.Value, self.Is_Multiply, self.Factor)
+
+
+# =============================================================================
+# Auto-Generated code. do not modify
+# (c) Sertechno 2018
+# GLVH @ 2019-08-24 18:09:43
+# =============================================================================
+
+class CU_Types(Base):
+    __tablename__ = 'CU_Types'
+    engine        = None
+    Typ_Code        = Column( String(10), primary_key=True )
+    Typ_Description = Column( String(45) )
+    
+    def __init__(self, Typ_Code='None', Typ_Description='None'):
+        self.Typ_Code        = Typ_Code
+        self.Typ_Description = Typ_Description
+
+    def __repr__(self):
+        return "<CU_Types( Typ_Code='%s', Typ_Description='%s')>" % \
+                ( self.Typ_Code, self.Typ_Description)
+
+
+# =============================================================================
+# Auto-Generated code. do not modify
+# (c) Sertechno 2018
+# GLVH @ 2019-08-24 18:09:43
 # =============================================================================
 
 class Charge_Items(Base):
@@ -56,7 +155,7 @@ class Charge_Items(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
+# GLVH @ 2019-08-24 18:09:43
 # =============================================================================
 
 class Charge_Resumes(Base):
@@ -143,7 +242,7 @@ class Charge_Resumes(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
+# GLVH @ 2019-08-24 18:09:43
 # =============================================================================
 
 class Charge_Units(Base):
@@ -188,49 +287,7 @@ class Charge_Units(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
-# =============================================================================
-
-class CIT_Generations(Base):
-    __tablename__ = 'CIT_Generations'
-    engine        = None
-    CIT_Generation = Column( Integer, primary_key=True )
-    Value          = Column( String(45) )
-    
-    def __init__(self, CIT_Generation=None, Value='None'):
-        self.CIT_Generation = CIT_Generation
-        self.Value          = Value
-
-    def __repr__(self):
-        return "<CIT_Generations( CIT_Generation='%s', Value='%s')>" % \
-                ( self.CIT_Generation, self.Value)
-
-
-# =============================================================================
-# Auto-Generated code. do not modify
-# (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
-# =============================================================================
-
-class CIT_Statuses(Base):
-    __tablename__ = 'CIT_Statuses'
-    engine        = None
-    CIT_Status = Column( Integer, primary_key=True )
-    Value      = Column( String(45) )
-    
-    def __init__(self, CIT_Status=None, Value='None'):
-        self.CIT_Status = CIT_Status
-        self.Value      = Value
-
-    def __repr__(self):
-        return "<CIT_Statuses( CIT_Status='%s', Value='%s')>" % \
-                ( self.CIT_Status, self.Value)
-
-
-# =============================================================================
-# Auto-Generated code. do not modify
-# (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
+# GLVH @ 2019-08-24 18:09:43
 # =============================================================================
 
 class Configuration_Items(Base):
@@ -263,7 +320,7 @@ class Configuration_Items(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
+# GLVH @ 2019-08-24 18:09:43
 # =============================================================================
 
 class Cost_Centers(Base):
@@ -290,30 +347,7 @@ class Cost_Centers(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
-# =============================================================================
-
-class Countries_Currencies(Base):
-    __tablename__ = 'Countries_Currencies'
-    engine        = None
-    Cou_Code        = Column( String(2), ForeignKey('Countries.Cou_Code'), primary_key=True )
-    Cur_Code        = Column( String(3), ForeignKey('Currencies.Cur_Code'), primary_key=True )
-    Cou_Cur_Comment = Column( String(45) )
-    
-    def __init__(self, Cou_Code='None', Cur_Code='None', Cou_Cur_Comment='None'):
-        self.Cou_Code        = Cou_Code
-        self.Cur_Code        = Cur_Code
-        self.Cou_Cur_Comment = Cou_Cur_Comment
-
-    def __repr__(self):
-        return "<Countries_Currencies( Cou_Code='%s', Cur_Code='%s', Cou_Cur_Comment='%s')>" % \
-                ( self.Cou_Code, self.Cur_Code, self.Cou_Cur_Comment)
-
-
-# =============================================================================
-# Auto-Generated code. do not modify
-# (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
+# GLVH @ 2019-08-24 18:09:43
 # =============================================================================
 
 class Countries(Base):
@@ -338,32 +372,30 @@ class Countries(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
+# GLVH @ 2019-08-24 18:09:43
 # =============================================================================
 
-class CU_Operations(Base):
-    __tablename__ = 'CU_Operations'
+class Countries_Currencies(Base):
+    __tablename__ = 'Countries_Currencies'
     engine        = None
-    CU_Operation = Column( String(10), primary_key=True )
-    Value        = Column( String(45) )
-    Is_Multiply  = Column( Boolean )
-    Factor       = Column( Integer )
+    Cou_Code        = Column( String(2), ForeignKey('Countries.Cou_Code'), primary_key=True )
+    Cur_Code        = Column( String(3), ForeignKey('Currencies.Cur_Code'), primary_key=True )
+    Cou_Cur_Comment = Column( String(45) )
     
-    def __init__(self, CU_Operation='None', Value='None', Is_Multiply=None, Factor=None):
-        self.CU_Operation = CU_Operation
-        self.Value        = Value
-        self.Is_Multiply  = Is_Multiply
-        self.Factor       = Factor
+    def __init__(self, Cou_Code='None', Cur_Code='None', Cou_Cur_Comment='None'):
+        self.Cou_Code        = Cou_Code
+        self.Cur_Code        = Cur_Code
+        self.Cou_Cur_Comment = Cou_Cur_Comment
 
     def __repr__(self):
-        return "<CU_Operations( CU_Operation='%s', Value='%s', Is_Multiply='%s', Factor='%s')>" % \
-                ( self.CU_Operation, self.Value, self.Is_Multiply, self.Factor)
+        return "<Countries_Currencies( Cou_Code='%s', Cur_Code='%s', Cou_Cur_Comment='%s')>" % \
+                ( self.Cou_Code, self.Cur_Code, self.Cou_Cur_Comment)
 
 
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
+# GLVH @ 2019-08-24 18:09:43
 # =============================================================================
 
 class Currencies(Base):
@@ -388,7 +420,7 @@ class Currencies(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
+# GLVH @ 2019-08-24 18:09:43
 # =============================================================================
 
 class Customers(Base):
@@ -411,148 +443,7 @@ class Customers(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
-# =============================================================================
-
-class CU_Types(Base):
-    __tablename__ = 'CU_Types'
-    engine        = None
-    Typ_Code        = Column( String(10), primary_key=True )
-    Typ_Description = Column( String(45) )
-    
-    def __init__(self, Typ_Code='None', Typ_Description='None'):
-        self.Typ_Code        = Typ_Code
-        self.Typ_Description = Typ_Description
-
-    def __repr__(self):
-        return "<CU_Types( Typ_Code='%s', Typ_Description='%s')>" % \
-                ( self.Typ_Code, self.Typ_Description)
-
-
-# =============================================================================
-# Auto-Generated code. do not modify
-# (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
-# =============================================================================
-
-class Dev_Forms(Base):
-    __tablename__ = 'Dev_Forms'
-    engine        = None
-    Id                = Column( Integer, primary_key=True, autoincrement=True )
-    Table             = Column( String(45) )
-    Field             = Column( String(45) )
-    Type              = Column( String(45) )
-    Null              = Column( String(45) )
-    Key               = Column( String(45) )
-    Default           = Column( String(45) )
-    Extra             = Column( String(45) )
-    Foreign_Key       = Column( String(45) )
-    Referenced_Table  = Column( String(45) )
-    Foreign_Field     = Column( String(45) )
-    Foreign_Value     = Column( String(45) )
-    Length            = Column( Integer )
-    Validation        = Column( Boolean )
-    Validation_Type   = Column( String(45) )
-    Validation_String = Column( String(128) )
-    Caption_String    = Column( String(45) )
-    Field_Order       = Column( Integer )
-    Field_Format      = Column( String(45) )
-    Form_Editable     = Column( Boolean )
-    ORM_Schema        = Column( Boolean )
-    
-    def __init__(self, Id=0, Table='None', Field='None', Type='None', Null='None', Key='None', Default='None', Extra='None', Foreign_Key='None', Referenced_Table='None', Foreign_Field='None', Foreign_Value='None', Length=None, Validation=None, Validation_Type='None', Validation_String='None', Caption_String='None', Field_Order=None, Field_Format='None', Form_Editable=1, ORM_Schema=1):
-        self.Id                = Id
-        self.Table             = Table
-        self.Field             = Field
-        self.Type              = Type
-        self.Null              = Null
-        self.Key               = Key
-        self.Default           = Default
-        self.Extra             = Extra
-        self.Foreign_Key       = Foreign_Key
-        self.Referenced_Table  = Referenced_Table
-        self.Foreign_Field     = Foreign_Field
-        self.Foreign_Value     = Foreign_Value
-        self.Length            = Length
-        self.Validation        = Validation
-        self.Validation_Type   = Validation_Type
-        self.Validation_String = Validation_String
-        self.Caption_String    = Caption_String
-        self.Field_Order       = Field_Order
-        self.Field_Format      = Field_Format
-        self.Form_Editable     = Form_Editable
-        self.ORM_Schema        = ORM_Schema
-
-    def __repr__(self):
-        return "<Dev_Forms( Id='%s', Table='%s', Field='%s', Type='%s', Null='%s', Key='%s', Default='%s', Extra='%s', Foreign_Key='%s', Referenced_Table='%s', Foreign_Field='%s', Foreign_Value='%s', Length='%s', Validation='%s', Validation_Type='%s', Validation_String='%s', Caption_String='%s', Field_Order='%s', Field_Format='%s', Form_Editable='%s', ORM_Schema='%s')>" % \
-                ( self.Id, self.Table, self.Field, self.Type, self.Null, self.Key, self.Default, self.Extra, self.Foreign_Key, self.Referenced_Table, self.Foreign_Field, self.Foreign_Value, self.Length, self.Validation, self.Validation_Type, self.Validation_String, self.Caption_String, self.Field_Order, self.Field_Format, self.Form_Editable, self.ORM_Schema)
-
-
-# =============================================================================
-# Auto-Generated code. do not modify
-# (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
-# =============================================================================
-
-class Dev_Tables(Base):
-    __tablename__ = 'Dev_Tables'
-    engine        = None
-    Id                        = Column( Integer, primary_key=True, autoincrement=True )
-    Name                      = Column( String(45) )
-    Caption                   = Column( String(45) )
-    Entity                    = Column( String(45) )
-    Class_Name                = Column( String(45) )
-    Child_Table               = Column( String(45) )
-    Parent_Table              = Column( String(45) )
-    Use_Pagination            = Column( Boolean )
-    Use_Children_Pagination   = Column( Boolean )
-    Generate_Form_One         = Column( Boolean )
-    Generate_Form_All         = Column( Boolean )
-    Generate_Form_Filter      = Column( Boolean )
-    Generate_Children         = Column( Boolean )
-    Generate_Foreign_Fields   = Column( Boolean )
-    Permission_View           = Column( Boolean )
-    Permission_Delete         = Column( Boolean )
-    Permission_Modify         = Column( Boolean )
-    Permission_Report         = Column( Boolean )
-    Permission_Export         = Column( Boolean )
-    Permission_View_Private   = Column( Boolean )
-    Permission_Modify_Private = Column( Boolean )
-    Permission_Administer     = Column( Boolean )
-    
-    def __init__(self, Id=0, Name='None', Caption='None', Entity='None', Class_Name='None', Child_Table='None', Parent_Table='None', Use_Pagination=None, Use_Children_Pagination=None, Generate_Form_One=None, Generate_Form_All=None, Generate_Form_Filter=None, Generate_Children=None, Generate_Foreign_Fields=None, Permission_View=None, Permission_Delete=None, Permission_Modify=None, Permission_Report=None, Permission_Export=None, Permission_View_Private=None, Permission_Modify_Private=None, Permission_Administer=None):
-        self.Id                        = Id
-        self.Name                      = Name
-        self.Caption                   = Caption
-        self.Entity                    = Entity
-        self.Class_Name                = Class_Name
-        self.Child_Table               = Child_Table
-        self.Parent_Table              = Parent_Table
-        self.Use_Pagination            = Use_Pagination
-        self.Use_Children_Pagination   = Use_Children_Pagination
-        self.Generate_Form_One         = Generate_Form_One
-        self.Generate_Form_All         = Generate_Form_All
-        self.Generate_Form_Filter      = Generate_Form_Filter
-        self.Generate_Children         = Generate_Children
-        self.Generate_Foreign_Fields   = Generate_Foreign_Fields
-        self.Permission_View           = Permission_View
-        self.Permission_Delete         = Permission_Delete
-        self.Permission_Modify         = Permission_Modify
-        self.Permission_Report         = Permission_Report
-        self.Permission_Export         = Permission_Export
-        self.Permission_View_Private   = Permission_View_Private
-        self.Permission_Modify_Private = Permission_Modify_Private
-        self.Permission_Administer     = Permission_Administer
-
-    def __repr__(self):
-        return "<Dev_Tables( Id='%s', Name='%s', Caption='%s', Entity='%s', Class_Name='%s', Child_Table='%s', Parent_Table='%s', Use_Pagination='%s', Use_Children_Pagination='%s', Generate_Form_One='%s', Generate_Form_All='%s', Generate_Form_Filter='%s', Generate_Children='%s', Generate_Foreign_Fields='%s', Permission_View='%s', Permission_Delete='%s', Permission_Modify='%s', Permission_Report='%s', Permission_Export='%s', Permission_View_Private='%s', Permission_Modify_Private='%s', Permission_Administer='%s')>" % \
-                ( self.Id, self.Name, self.Caption, self.Entity, self.Class_Name, self.Child_Table, self.Parent_Table, self.Use_Pagination, self.Use_Children_Pagination, self.Generate_Form_One, self.Generate_Form_All, self.Generate_Form_Filter, self.Generate_Children, self.Generate_Foreign_Fields, self.Permission_View, self.Permission_Delete, self.Permission_Modify, self.Permission_Report, self.Permission_Export, self.Permission_View_Private, self.Permission_Modify_Private, self.Permission_Administer)
-
-
-# =============================================================================
-# Auto-Generated code. do not modify
-# (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
+# GLVH @ 2019-08-24 18:09:43
 # =============================================================================
 
 class Exchange_Rates(Base):
@@ -577,7 +468,7 @@ class Exchange_Rates(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
+# GLVH @ 2019-08-24 18:09:43
 # =============================================================================
 
 class Measure_Units(Base):
@@ -598,7 +489,7 @@ class Measure_Units(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
+# GLVH @ 2019-08-24 18:09:43
 # =============================================================================
 
 class Platforms(Base):
@@ -627,52 +518,7 @@ class Platforms(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
-# =============================================================================
-
-class Rates(Base):
-    __tablename__ = 'Rates'
-    engine        = None
-    Rat_Id     = Column( Integer, primary_key=True, autoincrement=True )
-    Typ_Code   = Column( String(10), ForeignKey('CU_Types.Typ_Code') )
-    Cus_Id     = Column( Integer, ForeignKey('Customers.Cus_Id') )
-    Pla_Id     = Column( Integer, ForeignKey('Platforms.Pla_Id') )
-    CC_Id      = Column( Integer, ForeignKey('Cost_Centers.CC_Id') )
-    CI_Id      = Column( Integer, ForeignKey('Configuration_Items.CI_Id') )
-    Rat_Price  = Column( Numeric(20,6) )
-    Cur_Code   = Column( String(3), ForeignKey('Currencies.Cur_Code') )
-    MU_Code    = Column( String(3), ForeignKey('Measure_Units.MU_Code') )
-    Rat_Period = Column( Integer, ForeignKey('Rat_Periods.Rat_Period') )
-    Rat_Type   = Column( Integer )
-    # @property
-    #
-    
-    
-    def __init__(self, Rat_Id=0, Typ_Code='None', Cus_Id=None, Pla_Id=None, CC_Id=None, CI_Id=None, Rat_Price=None, Cur_Code='None', MU_Code='None', Rat_Period=None, Rat_Type=None):
-        self.Rat_Id     = Rat_Id
-        self.Typ_Code   = Typ_Code
-        self.Cus_Id     = Cus_Id
-        self.Pla_Id     = Pla_Id
-        self.CC_Id      = CC_Id
-        self.CI_Id      = CI_Id
-        self.Rat_Price  = Rat_Price
-        self.Cur_Code   = Cur_Code
-        self.MU_Code    = MU_Code
-        self.Rat_Period = Rat_Period
-        self.Rat_Type   = Rat_Type
-
-    def __repr__(self):
-        return "<Rates( Rat_Id='%s', Typ_Code='%s', Cus_Id='%s', Pla_Id='%s', CC_Id='%s', CI_Id='%s', Rat_Price='%s', Cur_Code='%s', MU_Code='%s', Rat_Period='%s', Rat_Type='%s')>" % \
-                ( self.Rat_Id, self.Typ_Code, self.Cus_Id, self.Pla_Id, self.CC_Id, self.CI_Id, self.Rat_Price, self.Cur_Code, self.MU_Code, self.Rat_Period, self.Rat_Type)
-
-    # method
-    def method(self):
-        pass
-
-# =============================================================================
-# Auto-Generated code. do not modify
-# (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
+# GLVH @ 2019-08-24 18:09:43
 # =============================================================================
 
 class Rat_Periods(Base):
@@ -693,7 +539,46 @@ class Rat_Periods(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
+# GLVH @ 2019-08-24 18:09:43
+# =============================================================================
+
+class Rates(Base):
+    __tablename__ = 'Rates'
+    engine        = None
+    Rat_Id     = Column( Integer, primary_key=True, autoincrement=True )
+    Typ_Code   = Column( String(10), ForeignKey('CU_Types.Typ_Code') )
+    Cus_Id     = Column( Integer, ForeignKey('Customers.Cus_Id') )
+    Pla_Id     = Column( Integer, ForeignKey('Platforms.Pla_Id') )
+    CC_Id      = Column( Integer, ForeignKey('Cost_Centers.CC_Id') )
+    CI_Id      = Column( Integer, ForeignKey('Configuration_Items.CI_Id') )
+    Rat_Price  = Column( Numeric(20,6) )
+    Cur_Code   = Column( String(3), ForeignKey('Currencies.Cur_Code') )
+    MU_Code    = Column( String(3), ForeignKey('Measure_Units.MU_Code') )
+    Rat_Period = Column( Integer, ForeignKey('Rat_Periods.Rat_Period') )
+    Rat_Type   = Column( Integer )
+    
+    def __init__(self, Rat_Id=0, Typ_Code='None', Cus_Id=None, Pla_Id=None, CC_Id=None, CI_Id=None, Rat_Price=None, Cur_Code='None', MU_Code='None', Rat_Period=None, Rat_Type=None):
+        self.Rat_Id     = Rat_Id
+        self.Typ_Code   = Typ_Code
+        self.Cus_Id     = Cus_Id
+        self.Pla_Id     = Pla_Id
+        self.CC_Id      = CC_Id
+        self.CI_Id      = CI_Id
+        self.Rat_Price  = Rat_Price
+        self.Cur_Code   = Cur_Code
+        self.MU_Code    = MU_Code
+        self.Rat_Period = Rat_Period
+        self.Rat_Type   = Rat_Type
+
+    def __repr__(self):
+        return "<Rates( Rat_Id='%s', Typ_Code='%s', Cus_Id='%s', Pla_Id='%s', CC_Id='%s', CI_Id='%s', Rat_Price='%s', Cur_Code='%s', MU_Code='%s', Rat_Period='%s', Rat_Type='%s')>" % \
+                ( self.Rat_Id, self.Typ_Code, self.Cus_Id, self.Pla_Id, self.CC_Id, self.CI_Id, self.Rat_Price, self.Cur_Code, self.MU_Code, self.Rat_Period, self.Rat_Type)
+
+
+# =============================================================================
+# Auto-Generated code. do not modify
+# (c) Sertechno 2018
+# GLVH @ 2019-08-24 18:09:43
 # =============================================================================
 
 class Roles(Base):
@@ -718,7 +603,7 @@ class Roles(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
+# GLVH @ 2019-08-24 18:09:43
 # =============================================================================
 
 class ST_Use_Per_CU(Base):
@@ -781,7 +666,7 @@ class ST_Use_Per_CU(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
+# GLVH @ 2019-08-24 18:09:43
 # =============================================================================
 
 class ST_Use_Per_Type(Base):
@@ -824,7 +709,7 @@ class ST_Use_Per_Type(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
+# GLVH @ 2019-08-24 18:09:43
 # =============================================================================
 
 class Trace(Base):
@@ -845,7 +730,94 @@ class Trace(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
+# GLVH @ 2019-08-24 18:09:43
+# =============================================================================
+
+class User_Resumes(Base):
+    __tablename__ = 'User_Resumes'
+    engine        = None
+    Cus_Id                 = Column( Integer )
+    CR_Date_From           = Column( Date, primary_key=True )
+    CR_Date_To             = Column( Date, primary_key=True )
+    CIT_Status             = Column( Integer, primary_key=True )
+    Cur_Code               = Column( String(3), primary_key=True )
+    CIT_Count              = Column( Integer )
+    CIT_Quantity           = Column( Numeric(20,6) )
+    CIT_Generation         = Column( Integer )
+    CU_Id                  = Column( Integer, primary_key=True )
+    CI_CC_Id               = Column( Integer )
+    CU_Operation           = Column( String(10) )
+    Typ_Code               = Column( String(10) )
+    CC_Cur_Code            = Column( String(3) )
+    CI_Id                  = Column( Integer, primary_key=True )
+    Rat_Id                 = Column( Integer )
+    Rat_Price              = Column( Numeric(20,6) )
+    Rat_MU_Code            = Column( String(3) )
+    Rat_Cur_Code           = Column( String(3) )
+    Rat_Period             = Column( Integer )
+    Rat_Hourly             = Column( Numeric(20,6) )
+    Rat_Daily              = Column( Numeric(20,6) )
+    Rat_Monthly            = Column( Numeric(20,6) )
+    CR_Quantity            = Column( Numeric(20,6) )
+    CR_Quantity_at_Rate    = Column( Numeric(20,6) )
+    CC_XR                  = Column( Numeric(20,10) )
+    CR_Cur_XR              = Column( Numeric(20,10) )
+    CR_ST_at_Rate_Cur      = Column( Numeric(20,6) )
+    CR_ST_at_CC_Cur        = Column( Numeric(20,6) )
+    CR_ST_at_Cur           = Column( Numeric(20,6) )
+    Cus_Name               = Column( String(45) )
+    CI_Name                = Column( String(45) )
+    CU_Description         = Column( String(45) )
+    CC_Description         = Column( String(45) )
+    Rat_Period_Description = Column( String(10) )
+    CC_Code                = Column( String(45) )
+    
+    def __init__(self, Cus_Id=None, CR_Date_From=None, CR_Date_To=None, CIT_Status=None, Cur_Code='None', CIT_Count=None, CIT_Quantity=None, CIT_Generation=1, CU_Id=None, CI_CC_Id=None, CU_Operation='None', Typ_Code='None', CC_Cur_Code='None', CI_Id=None, Rat_Id=None, Rat_Price=None, Rat_MU_Code='None', Rat_Cur_Code='None', Rat_Period=None, Rat_Hourly=None, Rat_Daily=None, Rat_Monthly=None, CR_Quantity=None, CR_Quantity_at_Rate=None, CC_XR=None, CR_Cur_XR=None, CR_ST_at_Rate_Cur=None, CR_ST_at_CC_Cur=None, CR_ST_at_Cur=None, Cus_Name='None', CI_Name='None', CU_Description='None', CC_Description='None', Rat_Period_Description='None', CC_Code='None'):
+        self.Cus_Id                 = Cus_Id
+        self.CR_Date_From           = CR_Date_From
+        self.CR_Date_To             = CR_Date_To
+        self.CIT_Status             = CIT_Status
+        self.Cur_Code               = Cur_Code
+        self.CIT_Count              = CIT_Count
+        self.CIT_Quantity           = CIT_Quantity
+        self.CIT_Generation         = CIT_Generation
+        self.CU_Id                  = CU_Id
+        self.CI_CC_Id               = CI_CC_Id
+        self.CU_Operation           = CU_Operation
+        self.Typ_Code               = Typ_Code
+        self.CC_Cur_Code            = CC_Cur_Code
+        self.CI_Id                  = CI_Id
+        self.Rat_Id                 = Rat_Id
+        self.Rat_Price              = Rat_Price
+        self.Rat_MU_Code            = Rat_MU_Code
+        self.Rat_Cur_Code           = Rat_Cur_Code
+        self.Rat_Period             = Rat_Period
+        self.Rat_Hourly             = Rat_Hourly
+        self.Rat_Daily              = Rat_Daily
+        self.Rat_Monthly            = Rat_Monthly
+        self.CR_Quantity            = CR_Quantity
+        self.CR_Quantity_at_Rate    = CR_Quantity_at_Rate
+        self.CC_XR                  = CC_XR
+        self.CR_Cur_XR              = CR_Cur_XR
+        self.CR_ST_at_Rate_Cur      = CR_ST_at_Rate_Cur
+        self.CR_ST_at_CC_Cur        = CR_ST_at_CC_Cur
+        self.CR_ST_at_Cur           = CR_ST_at_Cur
+        self.Cus_Name               = Cus_Name
+        self.CI_Name                = CI_Name
+        self.CU_Description         = CU_Description
+        self.CC_Description         = CC_Description
+        self.Rat_Period_Description = Rat_Period_Description
+        self.CC_Code                = CC_Code
+
+    def __repr__(self):
+        return "<User_Resumes( Cus_Id='%s', CR_Date_From='%s', CR_Date_To='%s', CIT_Status='%s', Cur_Code='%s', CIT_Count='%s', CIT_Quantity='%s', CIT_Generation='%s', CU_Id='%s', CI_CC_Id='%s', CU_Operation='%s', Typ_Code='%s', CC_Cur_Code='%s', CI_Id='%s', Rat_Id='%s', Rat_Price='%s', Rat_MU_Code='%s', Rat_Cur_Code='%s', Rat_Period='%s', Rat_Hourly='%s', Rat_Daily='%s', Rat_Monthly='%s', CR_Quantity='%s', CR_Quantity_at_Rate='%s', CC_XR='%s', CR_Cur_XR='%s', CR_ST_at_Rate_Cur='%s', CR_ST_at_CC_Cur='%s', CR_ST_at_Cur='%s', Cus_Name='%s', CI_Name='%s', CU_Description='%s', CC_Description='%s', Rat_Period_Description='%s', CC_Code='%s')>" % \
+                ( self.Cus_Id, self.CR_Date_From, self.CR_Date_To, self.CIT_Status, self.Cur_Code, self.CIT_Count, self.CIT_Quantity, self.CIT_Generation, self.CU_Id, self.CI_CC_Id, self.CU_Operation, self.Typ_Code, self.CC_Cur_Code, self.CI_Id, self.Rat_Id, self.Rat_Price, self.Rat_MU_Code, self.Rat_Cur_Code, self.Rat_Period, self.Rat_Hourly, self.Rat_Daily, self.Rat_Monthly, self.CR_Quantity, self.CR_Quantity_at_Rate, self.CC_XR, self.CR_Cur_XR, self.CR_ST_at_Rate_Cur, self.CR_ST_at_CC_Cur, self.CR_ST_at_Cur, self.Cus_Name, self.CI_Name, self.CU_Description, self.CC_Description, self.Rat_Period_Description, self.CC_Code)
+
+
+# =============================================================================
+# Auto-Generated code. do not modify
+# (c) Sertechno 2018
+# GLVH @ 2019-08-24 18:09:43
 # =============================================================================
 
 class Users(Base):
@@ -871,5 +843,6 @@ class Users(Base):
     def __repr__(self):
         return "<Users( id='%s', username='%s', role_id='%s', email='%s', password_hash='%s', confirmed='%s', CC_Id='%s')>" % \
                 ( self.id, self.username, self.role_id, self.email, self.password_hash, self.confirmed, self.CC_Id)
+
 
 

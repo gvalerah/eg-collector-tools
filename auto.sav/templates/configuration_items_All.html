@@ -1,0 +1,73 @@
+{# ============================================================================= #}
+
+{# Auto-Generated code. do not modify #}
+{# (c) Sertechno 2018 #}
+{# GLVH @ 2019-08-20 18:43:44 #}
+{# ============================================================================= #}
+
+{% extends "base.html" %}
+
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% import "_macros.html" as macros %}
+
+{% block title %}Collector{% endblock %}
+
+{% block head %}
+   {{ super() }}
+{% endblock %}
+
+{% block page_content %}
+<!-- ------------------------ -->
+<!-- gen_templates_select_all -->
+<!-- ------------------------ -->
+<div class="page-header">
+    <h2>Configuration Items:<h2>
+    <a href="#" onclick="history.go(-1)"><img src="/static/img/back.png"  color=yellow width="32" height="32" title="" alt="Add"></a>
+</div>
+<table class="table">
+  <thead class="thead-dark">
+    <tr>
+        <th>Id</th>
+        <th>Name</th>
+        <th>UUID</th>
+        <th>Platform Id</th>
+        <th>Cost Center Id</th>
+        <th>Customer Id</th>
+        <th>Commissioning Date and Time</th>
+        <th>Decommissioning Date and Time</th>
+        <td><a href="/forms/Configuration_Items"><img src="/static/img/add.png"  color=yellow width="32" height="32" title="" alt="Add"></a></td>
+         <td>Charge Units</td>
+         <td>Rates</td>
+    </tr>
+  </thead>
+    <tbody>
+    {% for row in rows.items %}
+       <tr>
+           <td>{{ row.0.CI_Id }}</td>
+           <td>{{ row.0.CI_Name }}</td>
+           <td>{{ row.0.CI_UUID }}</td>
+           <td>{{ "{:s}".format(row.1) }}</td>
+           <td>{{ "{:s}".format(row.2) }}</td>
+           <td>{{ "{:s}".format(row.3) }}</td>
+           <td>{{ row.0.CI_Commissioning_DateTime }}</td>
+           <td>{{ row.0.CI_Decommissioning_DateTime }}</td>
+           <td><a href="/forms/Configuration_Items?CI_Id={{ row.0.CI_Id }}"><img src="/static/img/edit.png" width="32" height="32" title="" alt="Edit"></a>
+               <a href="/forms/Configuration_Items_delete?CI_Id={{ row.0.CI_Id }}"><img src="/static/img/delete.png" width="32" height="32" title="" alt="Edit"></a>
+           </td>
+           <td><a href="/select/Charge_Units_Query?field=CI_Id&value={{row.0.CI_Id}}">{{ row.0.charge_units.__len__() }}</a></td>
+           <td><a href="/select/Rates_Query?field=CI_Id&value={{row.0.CI_Id}}">{{ row.0.rates.__len__() }}</a></td>
+       </tr>
+    {% endfor %}
+    </tbody>
+</table>
+<div class="pagination">
+    {{ macros.pagination_widget(rows, '.select_Configuration_Items_query') }}
+</div>
+<!-- ------------------------ -->
+<!-- gen_templates_select_all -->
+<!-- ------------------------ -->
+{% endblock %}
+
+{# ============================================================================= #}
+

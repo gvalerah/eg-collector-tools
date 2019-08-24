@@ -2,10 +2,14 @@
 # View for Get Charging Resume from DB
 # (c) Sertechno 2018
 # GLVH @ 2019-08-16
+# GLVH @ 2019-08-18 Refactoring to ORM DB Only
 # =============================================================================
+
+#from    sqlalchemy.orm             import sessionmaker
 
 from emtec.collector.forms       import frm_charging_resume
 from babel.numbers  import format_number, format_decimal, format_percent
+from emtec.collector.db.ORM_models      import Configuration_Items
 
 @main.route('/forms/Get_Charging_Resume', methods=['GET', 'POST'])
 @login_required
@@ -60,6 +64,7 @@ def forms_Get_Charging_Resume():
             for i in range(len(form.Cur_Code.choices)):
                 if form.Cur_Code.choices[i][0]==form.Cur_Code.data:
                     cur_index=i
+            #flash('WILL USE FULL ORM DB VERSION ...')
             return redirect(url_for('.report_Charging_Resume',
                                 Cus_Id          = form.Cus_Id.data,
                                 Cus_Name        = form.Cus_Id.choices[cus_index][1],
@@ -116,33 +121,81 @@ def report_Charging_Resume():
         # resume_records = db.engine.execute(query).scalar()                                                             #
         # -------------------------------------------------------------------------------------------------------------- #
         # 20181228 GV query = "SELECT DISTINCT CI_Id FROM Configuration_Items WHERE Cus_Id=%d"%(Cus_Id)
-        query = "SELECT CI_Id FROM Configuration_Items WHERE Cus_Id=%d ORDER BY CC_Id,CI_Id"%(Cus_Id)
+        """ 20190819 GV
+        #query = "SELECT CI_Id FROM Configuration_Items WHERE Cus_Id=%d ORDER BY CC_Id,CI_Id"%(Cus_Id)
         
         logger.debug ("report_Changing_Resume: query: %s"%(query))
 
         CI = db.engine.execute(query)
-
-        logger.debug ("report_Changing_Resume: %d CI's found for customer %d"%(CI.rowcount,Cus_Id))
+        """
+        """
+        from pprint import pprint
+        print("globals")
+        #pprint(globals())
+        print("current_app")
+        pprint(current_app)
+        print("current_app dir")
+        #pprint(dir(current_app))
+        print("db=",db)
+        #print("db dir =",dir(db))
+        """
+        """
+        current_app.db.Connect()
+        print("current_app.ormdb=",current_app.ormdb)
+        #print("current_app.ormdb dir =",dir(current_app.ormdb))
+        print("current_app.ormdb rdbms    =",current_app.db.rdbms)
+        print("current_app.ormdb dialect  =",current_app.db.dialect)
+        print("current_app.ormdb host     =",current_app.db.host)
+        print("current_app.ormdb port     =",current_app.db.port)
+        print("current_app.ormdb user     =",current_app.db.user)
+        print("current_app.ormdb password =",current_app.db.password)
+        print("current_app.ormdb instance =",current_app.db.instance)
+        print("current_app.ormdb engine   =",current_app.db.engine)
+        print("current_app.ormdb string   =",current_app.db.connection_string)
+        print("current_app.ormdb session  =",current_app.db.session)
+        #ormdb=current_app.ormdb
+        #print("ormdb dir =",dir(current_app.ormdb))
+        """
+        CI = db.session.query(Configuration_Items.CI_Id).\
+                filter(Configuration_Items.Cus_Id==Cus_Id).\
+                order_by(Configuration_Items.CC_Id,Configuration_Items.CI_Id).all()
+        #print("CI=",CI,type(CI),dir(CI))
+        #logger.debug ("report_Changing_Resume: %d CI's found for customer %d"%(CI.count(),Cus_Id))
+        logger.debug ("report_Changing_Resume: %d CI's found for customer %d"%(len(CI),Cus_Id))
+        #flash        ("report_Changing_Resume: %d CI's found for customer %d"%(len(CI),Cus_Id))
+        
         
         resume_records=0
 
         for ci in CI:
+            """ 20190819 GV
             query="CALL Update_Charge_Resume_CI(%s,'%s','%s',%s,'%s',%s)"%\
                     (Cus_Id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code,ci.CI_Id)
             logger.debug ("report_Changing_Resume: query: %s"%query)
             records=db.engine.execute(query)
-            resume_records += records.scalar()
+            """
+            records = db.Update_Charge_Resume_CI(Cus_Id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code,ci.CI_Id)
+            #resume_records += records.scalar()
+            resume_records += records
 
         logger.debug ("report_Changing_Resume: resume_records = %s"%resume_records)
+        #flash        ("report_Changing_Resume: resume_records = %s"%resume_records)
         
     # Get Actual Remume Data from Database
     # NOTE: Here needs some Sand-Clock Message or something in case it takes so long ...
+    """ 20190819 GV
     query="CALL Get_Charge_Resume(%d,'%s','%s',%d,'%s')"%(Cus_Id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code)
     
     logger.debug ("report_Changing_Resume: query: %s"%query)
     
     rows =  db.engine.execute(query).fetchall()
-    
+    """
+    rows = db.Get_Charge_Resume(Cus_Id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code)
+    #flash("rows = db.Get_Charge_Resume(%s,%s,%s,%s,%s)"%(Cus_Id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code))
+    #flash("type rows = %s)"%(type(rows)))
+    #flash("dir rows = %s)"%(dir(rows)))
+    #flash("len rows = %s)"%(len(rows)))
+
     return render_template('report_charging_resume.html',rows=rows,
                 Cus_Id=Cus_Id,
                 Cus_Name=Cus_Name,

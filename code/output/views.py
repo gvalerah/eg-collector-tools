@@ -95,7 +95,7 @@ def collector_about():
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
+# GLVH @ 2019-08-24 18:09:43
 # =============================================================================
 
 from emtec.collector.db.Flask_models import cit_generation
@@ -124,10 +124,6 @@ from emtec.collector.db.Flask_models import currency
 from emtec.collector.forms  import frm_currency,frm_currency_delete
 from emtec.collector.db.Flask_models import customer
 from emtec.collector.forms  import frm_customer,frm_customer_delete
-from emtec.collector.db.Flask_models import dev_form
-from emtec.collector.forms  import frm_dev_form,frm_dev_form_delete
-from emtec.collector.db.Flask_models import dev_table
-from emtec.collector.forms  import frm_dev_table,frm_dev_table_delete
 from emtec.collector.db.Flask_models import exchange_rate
 from emtec.collector.forms  import frm_exchange_rate,frm_exchange_rate_delete
 from emtec.collector.db.Flask_models import measure_unit
@@ -146,157 +142,15 @@ from emtec.collector.db.Flask_models import st_use_per_type
 from emtec.collector.forms  import frm_st_use_per_type,frm_st_use_per_type_delete
 from emtec.collector.db.Flask_models import trace
 from emtec.collector.forms  import frm_trace,frm_trace_delete
+from emtec.collector.db.Flask_models import user_resumes
+from emtec.collector.forms  import frm_user_resumes,frm_user_resumes_delete
 from emtec.collector.db.Flask_models import User
 from emtec.collector.forms  import frm_User,frm_User_delete
 
-""" Application decorators for routes """
-""" Decorators specify main routes to be handled by Collector Solution """
-
-"""
-@main.route('/', methods=['GET', 'POST'])
-def index():
-    # Espera a capitulo 3 para mejorar procedimiento de respuesta, hard coding mucho aqui
-    logger.debug("index() IN")
-
-    data =  {   "name":current_app.name,
-                "app_name":C.app_name,
-                "date_time":strftime('%Y-%m-%d %H:%M:%S'),
-                "user_agent":request.headers.get('User-Agent'),
-                "current_time":datetime.utcnow()
-            }
-    name = None
-    password = None
-    form = NameForm()
-    if form.validate_on_submit():
-        name = form.name.data
-        password = form.password.data
-        form.name.data = ''            
-        form.password.data = ''            
-    logger.debug("index() OUT")
-    return render_template('collector.html',data=data, form=form, name=name,password=password)
-"""
-       
-@main.route('/user/<name>')
-def user(name):
-    return '<h1>Hello, %s!</h1>' % name
-
-@main.route('/reports/<report>&<customer>&<fromx>&<tox>&<currency>')
-def reports(report,customer,fromx,tox,currency):
-    logger.debug("reports() IN %s,%s,%s,%s,%s"% (report,customer,fromx,tox,currency))
-
-    r = page_header()
-    r+= '<h1>Get \'%s\' for customer %s in period %s to %s cur=%s</h1>' % (report,customer,fromx,tox,currency)
-    # SQL Query call here
-    query = text("CALL Get_Billing_Resume(%s,'%s','%s',1,'%s')"%(customer,fromx,tox,currency))
-    try:
-        result = C.db.execute(query).fetchall()
-    except Exception as e:
-        r+="<h2>EXCEPTION:%s</h2>"%e
-    r+="<table>"
-    sum=0.0
-    for row in result:
-        r+='<tr>'
-        for c in range(len(row)):
-            r+="<td>%s</td>"%str(row[c])
-        sum+=row[25]
-        r+="<td>%.2f</td>"%sum
-        r+='</tr>'
-    r+="</table>"
-    r+="<p>Total in %s = %10.2f<p>"%(currency,sum)
-    r+=page_footer()
-    logger.debug("reports() OUT %s"% (r))
-    return r
-
-@main.route('/table/<name>')
-def table(name):
-    logger.debug("table() IN %s"% (name))
-
-    r = page_header()
-    r+= '<h1>Get \'%s\' data</h1>' % (name)
-
-    # SQL Query call here
-    
-    try:
-        # Build Query
-        query = text("SELECT * FROM %s"%(name))
-
-        # Get keys (column names) from Query        
-        keys=C.db.execute(query).keys()
-
-        r+="<p>Query=%s</p>"%str(query)
-        r+="<p>Keys =%s</p>"%str(keys)
-        r+="<table>"
-        r+='<tr style="border:2px solid blue ; background-color:blue; color:yellow">'
-        for key in keys:
-           r+="<td><b>%s</b></td>"%key
-        r+='</tr>'           
-               
-        result=None
-        result = C.db.execute(query).fetchall()
-        rc = 0
-        for row in result:
-            if (rc%2):
-                r+='<tr style="background-color:cyan">'
-                #r+='<tr id="tr01">'
-            else:
-                r+='<tr style="background-color:white">'
-                #r+='<tr id="tr02">'
-            
-            for c in range(len(row)):
-                r+="<td>%s</td>"%str(row[c])
-            r+='</tr>'
-            rc+=1
-        r+="</table>"
-        if rc:
-            r+="<p>Count=%s</p>"%str(rc)
-    except Exception as e:
-        r+="<h2>EXCEPTION:%s</h2>"%e
-    r+=page_footer()
-    logger.debug("table() out %s"% (r))
-    return r
-
-@main.route('/query/<name>')
-def query(name):
-    logger.debug("query() IN %s"% (name))
-
-    # SQL Query call here    
-    try:
-        # Build Query
-        query = text("SELECT * FROM %s"%(name))
-
-        # Get keys (column names) from Query        
-        keys=C.db.execute(query).keys()
-
-        rows = C.db.execute(query).fetchall()
-    except Exception as e:
-        msg="EXCEPTION: %s"%e
-        logger.error("query() %s"% (msg))
-        return "<h2>%s</h2>"%msg
-    
-    logger.debug("query() out")
-    return render_template('query.html',name=name,keys=keys,rows=rows,count=len(rows))
-
-@main.route('/query_orm/<table_name>')
-def query_orm(table_name):
-    logger.debug("query() IN %s"% (table_name))
-    # SQL Query call here    
-    try:
-        Session = sessionmaker(bind=C.db)  
-        session=Session()
-        keys = ("ID","NOMBRE","CC")
-        rows = session.query(Customers.Cus_Id,Customers.Cus_Name,Customers.CC_Id).all()
-    except Exception as e:
-        msg="EXCEPTION: %s"%e
-        logger.error("query() %s"% (msg))
-        return "<h2>%s</h2>"%msg
-    
-    logger.debug("query() out")
-    return render_template('query_orm.html',name=table_name,keys=keys,rows=rows,count=len(rows))
-    
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
+# GLVH @ 2019-08-24 18:09:43
 # =============================================================================
 
 @main.route('/forms/Charge_Items', methods=['GET', 'POST'])
@@ -500,7 +354,7 @@ def select_Charge_Items_query():
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
+# GLVH @ 2019-08-24 18:09:43
 # =============================================================================
 
 @main.route('/forms/Charge_Resumes', methods=['GET', 'POST'])
@@ -821,11 +675,12 @@ def select_Charge_Resumes_query():
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
+# GLVH @ 2019-08-24 18:09:43
 # =============================================================================
 
 @main.route('/forms/Charge_Units', methods=['GET', 'POST'])
 @login_required
+@admin_required
 def forms_Charge_Units():
     """ Form handling function for table Charge_Units """
 
@@ -926,6 +781,7 @@ def forms_Charge_Units():
 @main.route('/forms/Charge_Units_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
+@admin_required
 def forms_Charge_Units_delete():
     """ Delete record handling function for table Charge_Units """
 
@@ -967,6 +823,7 @@ def forms_Charge_Units_delete():
 # =============================================================================
 @main.route('/select/Charge_Units_Query', methods=['GET','POST'])
 @login_required
+@admin_required
 def select_Charge_Units_query():
     """ Select rows handling function for table Charge_Units """
 
@@ -1099,7 +956,7 @@ def select_Charge_Units_query():
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
+# GLVH @ 2019-08-24 18:09:43
 # =============================================================================
 
 @main.route('/forms/CIT_Generations', methods=['GET', 'POST'])
@@ -1248,7 +1105,7 @@ def select_CIT_Generations_query():
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
+# GLVH @ 2019-08-24 18:09:43
 # =============================================================================
 
 @main.route('/forms/CIT_Statuses', methods=['GET', 'POST'])
@@ -1397,11 +1254,12 @@ def select_CIT_Statuses_query():
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
+# GLVH @ 2019-08-24 18:09:43
 # =============================================================================
 
 @main.route('/forms/Configuration_Items', methods=['GET', 'POST'])
 @login_required
+@admin_required
 def forms_Configuration_Items():
     """ Form handling function for table Configuration_Items """
 
@@ -1481,6 +1339,7 @@ def forms_Configuration_Items():
 @main.route('/forms/Configuration_Items_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
+@admin_required
 def forms_Configuration_Items_delete():
     """ Delete record handling function for table Configuration_Items """
 
@@ -1522,6 +1381,7 @@ def forms_Configuration_Items_delete():
 # =============================================================================
 @main.route('/select/Configuration_Items_Query', methods=['GET','POST'])
 @login_required
+@admin_required
 def select_Configuration_Items_query():
     """ Select rows handling function for table Configuration_Items """
 
@@ -1603,11 +1463,12 @@ def select_Configuration_Items_query():
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
+# GLVH @ 2019-08-24 18:09:43
 # =============================================================================
 
 @main.route('/forms/Cost_Centers', methods=['GET', 'POST'])
 @login_required
+@admin_required
 def forms_Cost_Centers():
     """ Form handling function for table Cost_Centers """
 
@@ -1679,6 +1540,7 @@ def forms_Cost_Centers():
 @main.route('/forms/Cost_Centers_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
+@admin_required
 def forms_Cost_Centers_delete():
     """ Delete record handling function for table Cost_Centers """
 
@@ -1720,6 +1582,7 @@ def forms_Cost_Centers_delete():
 # =============================================================================
 @main.route('/select/Cost_Centers_Query', methods=['GET','POST'])
 @login_required
+@admin_required
 def select_Cost_Centers_query():
     """ Select rows handling function for table Cost_Centers """
 
@@ -1771,7 +1634,7 @@ def select_Cost_Centers_query():
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
+# GLVH @ 2019-08-24 18:09:43
 # =============================================================================
 
 @main.route('/forms/Countries_Currencies', methods=['GET', 'POST'])
@@ -1939,7 +1802,7 @@ def select_Countries_Currencies_query():
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
+# GLVH @ 2019-08-24 18:09:43
 # =============================================================================
 
 @main.route('/forms/Countries', methods=['GET', 'POST'])
@@ -2098,7 +1961,7 @@ def select_Countries_query():
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
+# GLVH @ 2019-08-24 18:09:43
 # =============================================================================
 
 @main.route('/forms/CU_Operations', methods=['GET', 'POST'])
@@ -2257,7 +2120,7 @@ def select_CU_Operations_query():
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
+# GLVH @ 2019-08-24 18:09:43
 # =============================================================================
 
 @main.route('/forms/Currencies', methods=['GET', 'POST'])
@@ -2416,7 +2279,7 @@ def select_Currencies_query():
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
+# GLVH @ 2019-08-24 18:09:43
 # =============================================================================
 
 @main.route('/forms/Customers', methods=['GET', 'POST'])
@@ -2575,7 +2438,7 @@ def select_Customers_query():
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
+# GLVH @ 2019-08-24 18:09:43
 # =============================================================================
 
 @main.route('/forms/CU_Types', methods=['GET', 'POST'])
@@ -2724,496 +2587,7 @@ def select_CU_Types_query():
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
-# =============================================================================
-
-@main.route('/forms/Dev_Forms', methods=['GET', 'POST'])
-@login_required
-@admin_required
-def forms_Dev_Forms():
-    """ Form handling function for table Dev_Forms """
-
-    logger.debug('Enter: forms_Dev_Forms()')
-    Id  =  request.args.get('Id',0,type=int)
-    row =  dev_form.query.filter(dev_form.Id == Id).first()
-    if row is None:
-        row=dev_form()
-        session['is_new_row']=True
-
-    session['data'] =  { 'Id':row.Id, 'Table':row.Table, 'Field':row.Field, 'Type':row.Type, 'Null':row.Null, 'Key':row.Key, 'Default':row.Default, 'Extra':row.Extra, 'Foreign_Key':row.Foreign_Key, 'Referenced_Table':row.Referenced_Table, 'Foreign_Field':row.Foreign_Field, 'Foreign_Value':row.Foreign_Value, 'Length':row.Length, 'Validation':row.Validation, 'Validation_Type':row.Validation_Type, 'Validation_String':row.Validation_String, 'Caption_String':row.Caption_String, 'Field_Order':row.Field_Order, 'Field_Format':row.Field_Format, 'Form_Editable':row.Form_Editable, 'ORM_Schema':row.ORM_Schema}
-    form = frm_dev_form()
-
-    if form.validate_on_submit():
-        if     form.submit_Save.data and current_user.role_id>1:
-            row.Table = form.Table.data
-            row.Field = form.Field.data
-            row.Type = form.Type.data
-            row.Null = form.Null.data
-            row.Key = form.Key.data
-            row.Default = form.Default.data
-            row.Extra = form.Extra.data
-            row.Foreign_Key = form.Foreign_Key.data
-            row.Referenced_Table = form.Referenced_Table.data
-            row.Foreign_Field = form.Foreign_Field.data
-            row.Foreign_Value = form.Foreign_Value.data
-            row.Length = form.Length.data
-            row.Validation = form.Validation.data
-            row.Validation_Type = form.Validation_Type.data
-            row.Validation_String = form.Validation_String.data
-            row.Caption_String = form.Caption_String.data
-            row.Field_Order = form.Field_Order.data
-            row.Field_Format = form.Field_Format.data
-            row.Form_Editable = form.Form_Editable.data
-            row.ORM_Schema = form.ORM_Schema.data
-            try:
-               session['new_row']=str(row)
-               db.session.close()
-               db.session.add(row)
-               db.session.commit()
-               if session['is_new_row']==True:
-                   logger.audit ( '%s:NEW:%s' % (current_user.username,session['new_row'] ) )
-                   flash('New Form created OK')
-               else:
-                   logger.audit ( '%s:OLD:%s' % (current_user.username,session['prev_row']) )
-                   logger.audit ( '%s:UPD:%s' % (current_user.username,session['new_row'] ) )
-                   message=Markup('<b>Form %s saved OK</b>'%(Id))
-                   flash(message)
-               db.session.close()
-            except Exception as e:
-               db.session.rollback()
-               db.session.close()
-               message=Markup('ERROR saving Form record : %s'%(e))
-               flash(message)
-            return redirect(url_for('.select_Dev_Forms_query'))
-        elif   form.submit_New.data and current_user.role_id>1:
-            #print('New Data Here ...')
-            session['is_new_row']=True
-            db.session.close()
-            row=dev_form()
-            return redirect(url_for('.forms_Dev_Forms',Id=row.Id))
-
-        elif   form.submit_Cancel.data:
-            #print('Cancel Data Here ... does nothing')
-            message=Markup('Form Record modifications discarded ...')
-            flash(message)
-        else:
-            #print('form validated but not submited ???')
-            message=Markup('<b>Form data modifications not allowed for user \'%s\'. Please contact Collector\'s Administrator ...</b>'%(current_user.username))
-            flash(message)
-            return redirect(url_for('.forms_Dev_Forms',Id=row.Id))
-
-    form.Table.data = row.Table
-    form.Field.data = row.Field
-    form.Type.data = row.Type
-    form.Null.data = row.Null
-    form.Key.data = row.Key
-    form.Default.data = row.Default
-    form.Extra.data = row.Extra
-    form.Foreign_Key.data = row.Foreign_Key
-    form.Referenced_Table.data = row.Referenced_Table
-    form.Foreign_Field.data = row.Foreign_Field
-    form.Foreign_Value.data = row.Foreign_Value
-    form.Length.data = row.Length
-    form.Validation.data = row.Validation
-    form.Validation_Type.data = row.Validation_Type
-    form.Validation_String.data = row.Validation_String
-    form.Caption_String.data = row.Caption_String
-    form.Field_Order.data = row.Field_Order
-    form.Field_Format.data = row.Field_Format
-    form.Form_Editable.data = row.Form_Editable
-    form.ORM_Schema.data = row.ORM_Schema
-    session['prev_row']=str(row)
-    session['is_new_row']=False
-    return render_template('dev_forms.html', form=form, row=row)
-
-# =============================================================================
-@main.route('/forms/Dev_Forms_delete', methods=['GET', 'POST'])
-@login_required
-@permission_required(Permission.DELETE)
-@admin_required
-def forms_Dev_Forms_delete():
-    """ Delete record handling function for table Dev_Forms """
-
-    logger.debug('Enter: forms_Dev_Forms_delete()')
-    Id  =  request.args.get('Id',0,type=int)
-    row =  dev_form.query.filter(dev_form.Id == Id).first()
-    if row is None:
-        row=dev_form()
-    session['data'] =  { 'Id':row.Id, 'Table':row.Table, 'Field':row.Field, 'Type':row.Type, 'Null':row.Null, 'Key':row.Key, 'Default':row.Default, 'Extra':row.Extra, 'Foreign_Key':row.Foreign_Key, 'Referenced_Table':row.Referenced_Table, 'Foreign_Field':row.Foreign_Field, 'Foreign_Value':row.Foreign_Value, 'Length':row.Length, 'Validation':row.Validation, 'Validation_Type':row.Validation_Type, 'Validation_String':row.Validation_String, 'Caption_String':row.Caption_String, 'Field_Order':row.Field_Order, 'Field_Format':row.Field_Format, 'Form_Editable':row.Form_Editable, 'ORM_Schema':row.ORM_Schema}
-    form = frm_dev_form_delete()
-
-    if form.validate_on_submit():
-        if  form.submit_Delete.data:
-            print('Delete Data Here...')
-            try:
-                session['deleted_row']=str(row)
-                db.session.close()
-                db.session.delete(row)
-                db.session.commit()
-                logger.audit ( '%s:DEL:%s' % (current_user.username,session['deleted_row']) )
-                flash('Form %s deleted OK'%(Id))
-            except exc.IntegrityError as e:
-                db.session.rollback()
-                flash('INTEGRITY ERROR: Are you sure there are no dependant records in other tables?')
-                return redirect(url_for('.forms_Dev_Forms_delete',Id=session['data']['Id']))
-
-            return redirect(url_for('.select_Dev_Forms_query'))
-        elif   form.submit_Cancel.data:
-            print('Cancel Data Here ... does nothing')
-            flash('Record modifications discarded ...')
-            return redirect(url_for('.select_Dev_Forms_query'))
-        else:
-            print('form validated but not submited ???')
-            return redirect(url_for('.select_Dev_Forms_query'))
-
-
-    return render_template('dev_forms_delete.html', form=form, data=session.get('data'),row=row)
-
-# =============================================================================
-@main.route('/select/Dev_Forms_Query', methods=['GET','POST'])
-@login_required
-@admin_required
-def select_Dev_Forms_query():
-    """ Select rows handling function for table Dev_Forms """
-
-    logger.debug('Enter: select_Dev_Forms_query()')
-    field =  request.args.get('field',None,type=str)
-    value =  request.args.get('value',0,type=str)
-    page  =  request.args.get('page',1,type=int)
-
-    if field is not None:
-        if   field == 'Id':
-            rows =  dev_form.query.filter_by(Id=value)\
-               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
-        elif field == 'Table':
-            rows =  dev_form.query.filter_by(Table=value)\
-               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
-        elif field == 'Field':
-            rows =  dev_form.query.filter_by(Field=value)\
-               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
-        elif field == 'Type':
-            rows =  dev_form.query.filter_by(Type=value)\
-               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
-        elif field == 'Null':
-            rows =  dev_form.query.filter_by(Null=value)\
-               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
-        elif field == 'Key':
-            rows =  dev_form.query.filter_by(Key=value)\
-               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
-        elif field == 'Default':
-            rows =  dev_form.query.filter_by(Default=value)\
-               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
-        elif field == 'Extra':
-            rows =  dev_form.query.filter_by(Extra=value)\
-               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
-        elif field == 'Foreign_Key':
-            rows =  dev_form.query.filter_by(Foreign_Key=value)\
-               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
-        elif field == 'Referenced_Table':
-            rows =  dev_form.query.filter_by(Referenced_Table=value)\
-               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
-        elif field == 'Foreign_Field':
-            rows =  dev_form.query.filter_by(Foreign_Field=value)\
-               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
-        elif field == 'Foreign_Value':
-            rows =  dev_form.query.filter_by(Foreign_Value=value)\
-               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
-        elif field == 'Length':
-            rows =  dev_form.query.filter_by(Length=value)\
-               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
-        elif field == 'Validation':
-            rows =  dev_form.query.filter_by(Validation=value)\
-               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
-        elif field == 'Validation_Type':
-            rows =  dev_form.query.filter_by(Validation_Type=value)\
-               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
-        elif field == 'Validation_String':
-            rows =  dev_form.query.filter_by(Validation_String=value)\
-               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
-        elif field == 'Caption_String':
-            rows =  dev_form.query.filter_by(Caption_String=value)\
-               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
-        elif field == 'Field_Order':
-            rows =  dev_form.query.filter_by(Field_Order=value)\
-               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
-        elif field == 'Field_Format':
-            rows =  dev_form.query.filter_by(Field_Format=value)\
-               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
-        elif field == 'Form_Editable':
-            rows =  dev_form.query.filter_by(Form_Editable=value)\
-               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
-        elif field == 'ORM_Schema':
-            rows =  dev_form.query.filter_by(ORM_Schema=value)\
-               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
-    else:
-       rows =  dev_form.query\
-               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
-
-    if field is not None:
-       next_url = url_for('.select_Dev_Forms_query', field=field, value=value, page=rows.next_num) \
-           if rows.has_next else None
-       prev_url = url_for('.select_Dev_Forms_query', field=field, value=value, page=rows.prev_num) \
-           if rows.has_prev else None
-
-    else:
-       next_url = url_for('.select_Dev_Forms_query', page=rows.next_num) \
-           if rows.has_next else None
-       prev_url = url_for('.select_Dev_Forms_query', page=rows.prev_num) \
-           if rows.has_prev else None
-
-    return render_template('dev_forms_All.html',rows=rows)
-# =============================================================================
-# =============================================================================
-# Auto-Generated code. do not modify
-# (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
-# =============================================================================
-
-@main.route('/forms/Dev_Tables', methods=['GET', 'POST'])
-@login_required
-@admin_required
-def forms_Dev_Tables():
-    """ Form handling function for table Dev_Tables """
-
-    logger.debug('Enter: forms_Dev_Tables()')
-    Id  =  request.args.get('Id',0,type=int)
-    row =  dev_table.query.filter(dev_table.Id == Id).first()
-    if row is None:
-        row=dev_table()
-        session['is_new_row']=True
-
-    session['data'] =  { 'Id':row.Id, 'Name':row.Name, 'Caption':row.Caption, 'Entity':row.Entity, 'Class_Name':row.Class_Name, 'Child_Table':row.Child_Table, 'Parent_Table':row.Parent_Table, 'Use_Pagination':row.Use_Pagination, 'Use_Children_Pagination':row.Use_Children_Pagination, 'Generate_Form_One':row.Generate_Form_One, 'Generate_Form_All':row.Generate_Form_All, 'Generate_Form_Filter':row.Generate_Form_Filter, 'Generate_Children':row.Generate_Children, 'Generate_Foreign_Fields':row.Generate_Foreign_Fields, 'Permission_View':row.Permission_View, 'Permission_Delete':row.Permission_Delete, 'Permission_Modify':row.Permission_Modify, 'Permission_Report':row.Permission_Report, 'Permission_Export':row.Permission_Export, 'Permission_View_Private':row.Permission_View_Private, 'Permission_Modify_Private':row.Permission_Modify_Private, 'Permission_Administer':row.Permission_Administer}
-    form = frm_dev_table()
-
-    if form.validate_on_submit():
-        if     form.submit_Save.data and current_user.role_id>1:
-            row.Name = form.Name.data
-            row.Caption = form.Caption.data
-            row.Entity = form.Entity.data
-            row.Class_Name = form.Class_Name.data
-            row.Child_Table = form.Child_Table.data
-            row.Parent_Table = form.Parent_Table.data
-            row.Use_Pagination = form.Use_Pagination.data
-            row.Use_Children_Pagination = form.Use_Children_Pagination.data
-            row.Generate_Form_One = form.Generate_Form_One.data
-            row.Generate_Form_All = form.Generate_Form_All.data
-            row.Generate_Form_Filter = form.Generate_Form_Filter.data
-            row.Generate_Children = form.Generate_Children.data
-            row.Generate_Foreign_Fields = form.Generate_Foreign_Fields.data
-            row.Permission_View = form.Permission_View.data
-            row.Permission_Delete = form.Permission_Delete.data
-            row.Permission_Modify = form.Permission_Modify.data
-            row.Permission_Report = form.Permission_Report.data
-            row.Permission_Export = form.Permission_Export.data
-            row.Permission_View_Private = form.Permission_View_Private.data
-            row.Permission_Modify_Private = form.Permission_Modify_Private.data
-            row.Permission_Administer = form.Permission_Administer.data
-            try:
-               session['new_row']=str(row)
-               db.session.close()
-               db.session.add(row)
-               db.session.commit()
-               if session['is_new_row']==True:
-                   logger.audit ( '%s:NEW:%s' % (current_user.username,session['new_row'] ) )
-                   flash('New Table created OK')
-               else:
-                   logger.audit ( '%s:OLD:%s' % (current_user.username,session['prev_row']) )
-                   logger.audit ( '%s:UPD:%s' % (current_user.username,session['new_row'] ) )
-                   message=Markup('<b>Table %s saved OK</b>'%(Id))
-                   flash(message)
-               db.session.close()
-            except Exception as e:
-               db.session.rollback()
-               db.session.close()
-               message=Markup('ERROR saving Table record : %s'%(e))
-               flash(message)
-            return redirect(url_for('.select_Dev_Tables_query'))
-        elif   form.submit_New.data and current_user.role_id>1:
-            #print('New Data Here ...')
-            session['is_new_row']=True
-            db.session.close()
-            row=dev_table()
-            return redirect(url_for('.forms_Dev_Tables',Id=row.Id))
-
-        elif   form.submit_Cancel.data:
-            #print('Cancel Data Here ... does nothing')
-            message=Markup('Table Record modifications discarded ...')
-            flash(message)
-        else:
-            #print('form validated but not submited ???')
-            message=Markup('<b>Table data modifications not allowed for user \'%s\'. Please contact Collector\'s Administrator ...</b>'%(current_user.username))
-            flash(message)
-            return redirect(url_for('.forms_Dev_Tables',Id=row.Id))
-
-    form.Name.data = row.Name
-    form.Caption.data = row.Caption
-    form.Entity.data = row.Entity
-    form.Class_Name.data = row.Class_Name
-    form.Child_Table.data = row.Child_Table
-    form.Parent_Table.data = row.Parent_Table
-    form.Use_Pagination.data = row.Use_Pagination
-    form.Use_Children_Pagination.data = row.Use_Children_Pagination
-    form.Generate_Form_One.data = row.Generate_Form_One
-    form.Generate_Form_All.data = row.Generate_Form_All
-    form.Generate_Form_Filter.data = row.Generate_Form_Filter
-    form.Generate_Children.data = row.Generate_Children
-    form.Generate_Foreign_Fields.data = row.Generate_Foreign_Fields
-    form.Permission_View.data = row.Permission_View
-    form.Permission_Delete.data = row.Permission_Delete
-    form.Permission_Modify.data = row.Permission_Modify
-    form.Permission_Report.data = row.Permission_Report
-    form.Permission_Export.data = row.Permission_Export
-    form.Permission_View_Private.data = row.Permission_View_Private
-    form.Permission_Modify_Private.data = row.Permission_Modify_Private
-    form.Permission_Administer.data = row.Permission_Administer
-    session['prev_row']=str(row)
-    session['is_new_row']=False
-    return render_template('dev_tables.html', form=form, row=row)
-
-# =============================================================================
-@main.route('/forms/Dev_Tables_delete', methods=['GET', 'POST'])
-@login_required
-@permission_required(Permission.DELETE)
-@admin_required
-def forms_Dev_Tables_delete():
-    """ Delete record handling function for table Dev_Tables """
-
-    logger.debug('Enter: forms_Dev_Tables_delete()')
-    Id  =  request.args.get('Id',0,type=int)
-    row =  dev_table.query.filter(dev_table.Id == Id).first()
-    if row is None:
-        row=dev_table()
-    session['data'] =  { 'Id':row.Id, 'Name':row.Name, 'Caption':row.Caption, 'Entity':row.Entity, 'Class_Name':row.Class_Name, 'Child_Table':row.Child_Table, 'Parent_Table':row.Parent_Table, 'Use_Pagination':row.Use_Pagination, 'Use_Children_Pagination':row.Use_Children_Pagination, 'Generate_Form_One':row.Generate_Form_One, 'Generate_Form_All':row.Generate_Form_All, 'Generate_Form_Filter':row.Generate_Form_Filter, 'Generate_Children':row.Generate_Children, 'Generate_Foreign_Fields':row.Generate_Foreign_Fields, 'Permission_View':row.Permission_View, 'Permission_Delete':row.Permission_Delete, 'Permission_Modify':row.Permission_Modify, 'Permission_Report':row.Permission_Report, 'Permission_Export':row.Permission_Export, 'Permission_View_Private':row.Permission_View_Private, 'Permission_Modify_Private':row.Permission_Modify_Private, 'Permission_Administer':row.Permission_Administer}
-    form = frm_dev_table_delete()
-
-    if form.validate_on_submit():
-        if  form.submit_Delete.data:
-            print('Delete Data Here...')
-            try:
-                session['deleted_row']=str(row)
-                db.session.close()
-                db.session.delete(row)
-                db.session.commit()
-                logger.audit ( '%s:DEL:%s' % (current_user.username,session['deleted_row']) )
-                flash('Table %s deleted OK'%(Id))
-            except exc.IntegrityError as e:
-                db.session.rollback()
-                flash('INTEGRITY ERROR: Are you sure there are no dependant records in other tables?')
-                return redirect(url_for('.forms_Dev_Tables_delete',Id=session['data']['Id']))
-
-            return redirect(url_for('.select_Dev_Tables_query'))
-        elif   form.submit_Cancel.data:
-            print('Cancel Data Here ... does nothing')
-            flash('Record modifications discarded ...')
-            return redirect(url_for('.select_Dev_Tables_query'))
-        else:
-            print('form validated but not submited ???')
-            return redirect(url_for('.select_Dev_Tables_query'))
-
-
-    return render_template('dev_tables_delete.html', form=form, data=session.get('data'),row=row)
-
-# =============================================================================
-@main.route('/select/Dev_Tables_Query', methods=['GET','POST'])
-@login_required
-@admin_required
-def select_Dev_Tables_query():
-    """ Select rows handling function for table Dev_Tables """
-
-    logger.debug('Enter: select_Dev_Tables_query()')
-    field =  request.args.get('field',None,type=str)
-    value =  request.args.get('value',0,type=str)
-    page  =  request.args.get('page',1,type=int)
-
-    if field is not None:
-        if   field == 'Id':
-            rows =  dev_table.query.filter_by(Id=value)\
-               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
-        elif field == 'Name':
-            rows =  dev_table.query.filter_by(Name=value)\
-               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
-        elif field == 'Caption':
-            rows =  dev_table.query.filter_by(Caption=value)\
-               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
-        elif field == 'Entity':
-            rows =  dev_table.query.filter_by(Entity=value)\
-               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
-        elif field == 'Class_Name':
-            rows =  dev_table.query.filter_by(Class_Name=value)\
-               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
-        elif field == 'Child_Table':
-            rows =  dev_table.query.filter_by(Child_Table=value)\
-               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
-        elif field == 'Parent_Table':
-            rows =  dev_table.query.filter_by(Parent_Table=value)\
-               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
-        elif field == 'Use_Pagination':
-            rows =  dev_table.query.filter_by(Use_Pagination=value)\
-               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
-        elif field == 'Use_Children_Pagination':
-            rows =  dev_table.query.filter_by(Use_Children_Pagination=value)\
-               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
-        elif field == 'Generate_Form_One':
-            rows =  dev_table.query.filter_by(Generate_Form_One=value)\
-               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
-        elif field == 'Generate_Form_All':
-            rows =  dev_table.query.filter_by(Generate_Form_All=value)\
-               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
-        elif field == 'Generate_Form_Filter':
-            rows =  dev_table.query.filter_by(Generate_Form_Filter=value)\
-               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
-        elif field == 'Generate_Children':
-            rows =  dev_table.query.filter_by(Generate_Children=value)\
-               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
-        elif field == 'Generate_Foreign_Fields':
-            rows =  dev_table.query.filter_by(Generate_Foreign_Fields=value)\
-               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
-        elif field == 'Permission_View':
-            rows =  dev_table.query.filter_by(Permission_View=value)\
-               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
-        elif field == 'Permission_Delete':
-            rows =  dev_table.query.filter_by(Permission_Delete=value)\
-               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
-        elif field == 'Permission_Modify':
-            rows =  dev_table.query.filter_by(Permission_Modify=value)\
-               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
-        elif field == 'Permission_Report':
-            rows =  dev_table.query.filter_by(Permission_Report=value)\
-               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
-        elif field == 'Permission_Export':
-            rows =  dev_table.query.filter_by(Permission_Export=value)\
-               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
-        elif field == 'Permission_View_Private':
-            rows =  dev_table.query.filter_by(Permission_View_Private=value)\
-               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
-        elif field == 'Permission_Modify_Private':
-            rows =  dev_table.query.filter_by(Permission_Modify_Private=value)\
-               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
-        elif field == 'Permission_Administer':
-            rows =  dev_table.query.filter_by(Permission_Administer=value)\
-               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
-    else:
-       rows =  dev_table.query\
-               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
-
-    if field is not None:
-       next_url = url_for('.select_Dev_Tables_query', field=field, value=value, page=rows.next_num) \
-           if rows.has_next else None
-       prev_url = url_for('.select_Dev_Tables_query', field=field, value=value, page=rows.prev_num) \
-           if rows.has_prev else None
-
-    else:
-       next_url = url_for('.select_Dev_Tables_query', page=rows.next_num) \
-           if rows.has_next else None
-       prev_url = url_for('.select_Dev_Tables_query', page=rows.prev_num) \
-           if rows.has_prev else None
-
-    return render_template('dev_tables_All.html',rows=rows)
-# =============================================================================
-# =============================================================================
-# Auto-Generated code. do not modify
-# (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
+# GLVH @ 2019-08-24 18:09:43
 # =============================================================================
 
 @main.route('/forms/Exchange_Rates', methods=['GET', 'POST'])
@@ -3378,7 +2752,7 @@ def select_Exchange_Rates_query():
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
+# GLVH @ 2019-08-24 18:09:43
 # =============================================================================
 
 @main.route('/forms/Measure_Units', methods=['GET', 'POST'])
@@ -3527,7 +2901,7 @@ def select_Measure_Units_query():
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
+# GLVH @ 2019-08-24 18:09:43
 # =============================================================================
 
 @main.route('/forms/Platforms', methods=['GET', 'POST'])
@@ -3694,7 +3068,7 @@ def select_Platforms_query():
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
+# GLVH @ 2019-08-24 18:09:43
 # =============================================================================
 
 @main.route('/forms/Rates', methods=['GET', 'POST'])
@@ -3990,7 +3364,7 @@ def select_Rates_query():
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
+# GLVH @ 2019-08-24 18:09:43
 # =============================================================================
 
 @main.route('/forms/Rat_Periods', methods=['GET', 'POST'])
@@ -4139,7 +3513,7 @@ def select_Rat_Periods_query():
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
+# GLVH @ 2019-08-24 18:09:43
 # =============================================================================
 
 @main.route('/forms/Roles', methods=['GET', 'POST'])
@@ -4298,12 +3672,11 @@ def select_Roles_query():
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
+# GLVH @ 2019-08-24 18:09:43
 # =============================================================================
 
 @main.route('/forms/ST_Use_Per_CU', methods=['GET', 'POST'])
 @login_required
-@admin_required
 def forms_ST_Use_Per_CU():
     """ Form handling function for table ST_Use_Per_CU """
 
@@ -4351,17 +3724,17 @@ def forms_ST_Use_Per_CU():
                db.session.commit()
                if session['is_new_row']==True:
                    logger.audit ( '%s:NEW:%s' % (current_user.username,session['new_row'] ) )
-                   flash('New ST_Use_Per_CU created OK')
+                   flash('New ST Use Per CU created OK')
                else:
                    logger.audit ( '%s:OLD:%s' % (current_user.username,session['prev_row']) )
                    logger.audit ( '%s:UPD:%s' % (current_user.username,session['new_row'] ) )
-                   message=Markup('<b>ST_Use_Per_CU %s saved OK</b>'%(CU_Id,From,To))
+                   message=Markup('<b>ST Use Per CU %s saved OK</b>'%(CU_Id,From,To))
                    flash(message)
                db.session.close()
             except Exception as e:
                db.session.rollback()
                db.session.close()
-               message=Markup('ERROR saving ST_Use_Per_CU record : %s'%(e))
+               message=Markup('ERROR saving ST Use Per CU record : %s'%(e))
                flash(message)
             return redirect(url_for('.select_ST_Use_Per_CU_query'))
         elif   form.submit_New.data and current_user.role_id>1:
@@ -4373,11 +3746,11 @@ def forms_ST_Use_Per_CU():
 
         elif   form.submit_Cancel.data:
             #print('Cancel Data Here ... does nothing')
-            message=Markup('ST_Use_Per_CU Record modifications discarded ...')
+            message=Markup('ST Use Per CU Record modifications discarded ...')
             flash(message)
         else:
             #print('form validated but not submited ???')
-            message=Markup('<b>ST_Use_Per_CU data modifications not allowed for user \'%s\'. Please contact Collector\'s Administrator ...</b>'%(current_user.username))
+            message=Markup('<b>ST Use Per CU data modifications not allowed for user \'%s\'. Please contact Collector\'s Administrator ...</b>'%(current_user.username))
             flash(message)
             return redirect(url_for('.forms_ST_Use_Per_CU'))
 
@@ -4412,7 +3785,6 @@ def forms_ST_Use_Per_CU():
 @main.route('/forms/ST_Use_Per_CU_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
-@admin_required
 def forms_ST_Use_Per_CU_delete():
     """ Delete record handling function for table ST_Use_Per_CU """
 
@@ -4435,7 +3807,7 @@ def forms_ST_Use_Per_CU_delete():
                 db.session.delete(row)
                 db.session.commit()
                 logger.audit ( '%s:DEL:%s' % (current_user.username,session['deleted_row']) )
-                flash('ST_Use_Per_CU %s deleted OK'%(CU_Id,From,To))
+                flash('ST Use Per CU %s deleted OK'%(CU_Id,From,To))
             except exc.IntegrityError as e:
                 db.session.rollback()
                 flash('INTEGRITY ERROR: Are you sure there are no dependant records in other tables?')
@@ -4456,7 +3828,6 @@ def forms_ST_Use_Per_CU_delete():
 # =============================================================================
 @main.route('/select/ST_Use_Per_CU_Query', methods=['GET','POST'])
 @login_required
-@admin_required
 def select_ST_Use_Per_CU_query():
     """ Select rows handling function for table ST_Use_Per_CU """
 
@@ -4556,12 +3927,11 @@ def select_ST_Use_Per_CU_query():
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
+# GLVH @ 2019-08-24 18:09:43
 # =============================================================================
 
 @main.route('/forms/ST_Use_Per_Type', methods=['GET', 'POST'])
 @login_required
-@admin_required
 def forms_ST_Use_Per_Type():
     """ Form handling function for table ST_Use_Per_Type """
 
@@ -4603,17 +3973,17 @@ def forms_ST_Use_Per_Type():
                db.session.commit()
                if session['is_new_row']==True:
                    logger.audit ( '%s:NEW:%s' % (current_user.username,session['new_row'] ) )
-                   flash('New ST_Use_Per_Type created OK')
+                   flash('New ST Use Per Type created OK')
                else:
                    logger.audit ( '%s:OLD:%s' % (current_user.username,session['prev_row']) )
                    logger.audit ( '%s:UPD:%s' % (current_user.username,session['new_row'] ) )
-                   message=Markup('<b>ST_Use_Per_Type %s saved OK</b>'%(Typ_Code,Cus_Id,Pla_Id,CC_Id,CI_Id,Year,Month))
+                   message=Markup('<b>ST Use Per Type %s saved OK</b>'%(Typ_Code,Cus_Id,Pla_Id,CC_Id,CI_Id,Year,Month))
                    flash(message)
                db.session.close()
             except Exception as e:
                db.session.rollback()
                db.session.close()
-               message=Markup('ERROR saving ST_Use_Per_Type record : %s'%(e))
+               message=Markup('ERROR saving ST Use Per Type record : %s'%(e))
                flash(message)
             return redirect(url_for('.select_ST_Use_Per_Type_query'))
         elif   form.submit_New.data and current_user.role_id>1:
@@ -4625,11 +3995,11 @@ def forms_ST_Use_Per_Type():
 
         elif   form.submit_Cancel.data:
             #print('Cancel Data Here ... does nothing')
-            message=Markup('ST_Use_Per_Type Record modifications discarded ...')
+            message=Markup('ST Use Per Type Record modifications discarded ...')
             flash(message)
         else:
             #print('form validated but not submited ???')
-            message=Markup('<b>ST_Use_Per_Type data modifications not allowed for user \'%s\'. Please contact Collector\'s Administrator ...</b>'%(current_user.username))
+            message=Markup('<b>ST Use Per Type data modifications not allowed for user \'%s\'. Please contact Collector\'s Administrator ...</b>'%(current_user.username))
             flash(message)
             return redirect(url_for('.forms_ST_Use_Per_Type'))
 
@@ -4654,7 +4024,6 @@ def forms_ST_Use_Per_Type():
 @main.route('/forms/ST_Use_Per_Type_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
-@admin_required
 def forms_ST_Use_Per_Type_delete():
     """ Delete record handling function for table ST_Use_Per_Type """
 
@@ -4681,7 +4050,7 @@ def forms_ST_Use_Per_Type_delete():
                 db.session.delete(row)
                 db.session.commit()
                 logger.audit ( '%s:DEL:%s' % (current_user.username,session['deleted_row']) )
-                flash('ST_Use_Per_Type %s deleted OK'%(Typ_Code,Cus_Id,Pla_Id,CC_Id,CI_Id,Year,Month))
+                flash('ST Use Per Type %s deleted OK'%(Typ_Code,Cus_Id,Pla_Id,CC_Id,CI_Id,Year,Month))
             except exc.IntegrityError as e:
                 db.session.rollback()
                 flash('INTEGRITY ERROR: Are you sure there are no dependant records in other tables?')
@@ -4702,7 +4071,6 @@ def forms_ST_Use_Per_Type_delete():
 # =============================================================================
 @main.route('/select/ST_Use_Per_Type_Query', methods=['GET','POST'])
 @login_required
-@admin_required
 def select_ST_Use_Per_Type_query():
     """ Select rows handling function for table ST_Use_Per_Type """
 
@@ -4772,7 +4140,7 @@ def select_ST_Use_Per_Type_query():
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
+# GLVH @ 2019-08-24 18:09:43
 # =============================================================================
 
 @main.route('/forms/Trace', methods=['GET', 'POST'])
@@ -4919,7 +4287,328 @@ def select_Trace_query():
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
+# GLVH @ 2019-08-24 18:09:43
+# =============================================================================
+
+@main.route('/forms/User_Resumes', methods=['GET', 'POST'])
+@login_required
+def forms_User_Resumes():
+    """ Form handling function for table User_Resumes """
+
+    logger.debug('Enter: forms_User_Resumes()')
+    CR_Date_From  =  request.args.get('CR_Date_From',0,type=int)
+    CR_Date_To  =  request.args.get('CR_Date_To',0,type=int)
+    CIT_Status  =  request.args.get('CIT_Status',0,type=int)
+    Cur_Code  =  request.args.get('Cur_Code',0,type=int)
+    CU_Id  =  request.args.get('CU_Id',0,type=int)
+    CI_Id  =  request.args.get('CI_Id',0,type=int)
+    row =  user_resumes.query.filter(user_resumes.CR_Date_From == CR_Date_From,user_resumes.CR_Date_To == CR_Date_To,user_resumes.CIT_Status == CIT_Status,user_resumes.Cur_Code == Cur_Code,user_resumes.CU_Id == CU_Id,user_resumes.CI_Id == CI_Id).first()
+    if row is None:
+        row=user_resumes()
+        session['is_new_row']=True
+
+    session['data'] =  { 'Cus_Id':row.Cus_Id, 'CR_Date_From':row.CR_Date_From, 'CR_Date_To':row.CR_Date_To, 'CIT_Status':row.CIT_Status, 'Cur_Code':row.Cur_Code, 'CIT_Count':row.CIT_Count, 'CIT_Quantity':row.CIT_Quantity, 'CIT_Generation':row.CIT_Generation, 'CU_Id':row.CU_Id, 'CI_CC_Id':row.CI_CC_Id, 'CU_Operation':row.CU_Operation, 'Typ_Code':row.Typ_Code, 'CC_Cur_Code':row.CC_Cur_Code, 'CI_Id':row.CI_Id, 'Rat_Id':row.Rat_Id, 'Rat_Price':row.Rat_Price, 'Rat_MU_Code':row.Rat_MU_Code, 'Rat_Cur_Code':row.Rat_Cur_Code, 'Rat_Period':row.Rat_Period, 'Rat_Hourly':row.Rat_Hourly, 'Rat_Daily':row.Rat_Daily, 'Rat_Monthly':row.Rat_Monthly, 'CR_Quantity':row.CR_Quantity, 'CR_Quantity_at_Rate':row.CR_Quantity_at_Rate, 'CC_XR':row.CC_XR, 'CR_Cur_XR':row.CR_Cur_XR, 'CR_ST_at_Rate_Cur':row.CR_ST_at_Rate_Cur, 'CR_ST_at_CC_Cur':row.CR_ST_at_CC_Cur, 'CR_ST_at_Cur':row.CR_ST_at_Cur, 'Cus_Name':row.Cus_Name, 'CI_Name':row.CI_Name, 'CU_Description':row.CU_Description, 'CC_Description':row.CC_Description, 'Rat_Period_Description':row.Rat_Period_Description, 'CC_Code':row.CC_Code}
+    form = frm_user_resumes()
+
+    if form.validate_on_submit():
+        if     form.submit_Save.data and current_user.role_id>1:
+            row.Cus_Id = form.Cus_Id.data
+            row.CR_Date_From = form.CR_Date_From.data
+            row.CR_Date_To = form.CR_Date_To.data
+            row.CIT_Status = form.CIT_Status.data
+            row.Cur_Code = form.Cur_Code.data
+            row.CIT_Count = form.CIT_Count.data
+            row.CIT_Quantity = form.CIT_Quantity.data
+            row.CIT_Generation = form.CIT_Generation.data
+            row.CU_Id = form.CU_Id.data
+            row.CI_CC_Id = form.CI_CC_Id.data
+            row.CU_Operation = form.CU_Operation.data
+            row.Typ_Code = form.Typ_Code.data
+            row.CC_Cur_Code = form.CC_Cur_Code.data
+            row.CI_Id = form.CI_Id.data
+            row.Rat_Id = form.Rat_Id.data
+            row.Rat_Price = form.Rat_Price.data
+            row.Rat_MU_Code = form.Rat_MU_Code.data
+            row.Rat_Cur_Code = form.Rat_Cur_Code.data
+            row.Rat_Period = form.Rat_Period.data
+            row.Rat_Hourly = form.Rat_Hourly.data
+            row.Rat_Daily = form.Rat_Daily.data
+            row.Rat_Monthly = form.Rat_Monthly.data
+            row.CR_Quantity = form.CR_Quantity.data
+            row.CR_Quantity_at_Rate = form.CR_Quantity_at_Rate.data
+            row.CC_XR = form.CC_XR.data
+            row.CR_Cur_XR = form.CR_Cur_XR.data
+            row.CR_ST_at_Rate_Cur = form.CR_ST_at_Rate_Cur.data
+            row.CR_ST_at_CC_Cur = form.CR_ST_at_CC_Cur.data
+            row.CR_ST_at_Cur = form.CR_ST_at_Cur.data
+            row.Cus_Name = form.Cus_Name.data
+            row.CI_Name = form.CI_Name.data
+            row.CU_Description = form.CU_Description.data
+            row.CC_Description = form.CC_Description.data
+            row.Rat_Period_Description = form.Rat_Period_Description.data
+            row.CC_Code = form.CC_Code.data
+            try:
+               session['new_row']=str(row)
+               db.session.close()
+               db.session.add(row)
+               db.session.commit()
+               if session['is_new_row']==True:
+                   logger.audit ( '%s:NEW:%s' % (current_user.username,session['new_row'] ) )
+                   flash('New User Resume created OK')
+               else:
+                   logger.audit ( '%s:OLD:%s' % (current_user.username,session['prev_row']) )
+                   logger.audit ( '%s:UPD:%s' % (current_user.username,session['new_row'] ) )
+                   message=Markup('<b>User Resume %s saved OK</b>'%(CR_Date_From,CR_Date_To,CIT_Status,Cur_Code,CU_Id,CI_Id))
+                   flash(message)
+               db.session.close()
+            except Exception as e:
+               db.session.rollback()
+               db.session.close()
+               message=Markup('ERROR saving User Resume record : %s'%(e))
+               flash(message)
+            return redirect(url_for('.select_User_Resumes_query'))
+        elif   form.submit_New.data and current_user.role_id>1:
+            #print('New Data Here ...')
+            session['is_new_row']=True
+            db.session.close()
+            row=user_resumes()
+            return redirect(url_for('.forms_User_Resumes'))
+
+        elif   form.submit_Cancel.data:
+            #print('Cancel Data Here ... does nothing')
+            message=Markup('User Resume Record modifications discarded ...')
+            flash(message)
+        else:
+            #print('form validated but not submited ???')
+            message=Markup('<b>User Resume data modifications not allowed for user \'%s\'. Please contact Collector\'s Administrator ...</b>'%(current_user.username))
+            flash(message)
+            return redirect(url_for('.forms_User_Resumes'))
+
+    form.Cus_Id.data = row.Cus_Id
+    form.CR_Date_From.data = row.CR_Date_From
+    form.CR_Date_To.data = row.CR_Date_To
+    form.CIT_Status.data = row.CIT_Status
+    form.Cur_Code.data = row.Cur_Code
+    form.CIT_Count.data = row.CIT_Count
+    form.CIT_Quantity.data = row.CIT_Quantity
+    form.CIT_Generation.data = row.CIT_Generation
+    form.CU_Id.data = row.CU_Id
+    form.CI_CC_Id.data = row.CI_CC_Id
+    form.CU_Operation.data = row.CU_Operation
+    form.Typ_Code.data = row.Typ_Code
+    form.CC_Cur_Code.data = row.CC_Cur_Code
+    form.CI_Id.data = row.CI_Id
+    form.Rat_Id.data = row.Rat_Id
+    form.Rat_Price.data = row.Rat_Price
+    form.Rat_MU_Code.data = row.Rat_MU_Code
+    form.Rat_Cur_Code.data = row.Rat_Cur_Code
+    form.Rat_Period.data = row.Rat_Period
+    form.Rat_Hourly.data = row.Rat_Hourly
+    form.Rat_Daily.data = row.Rat_Daily
+    form.Rat_Monthly.data = row.Rat_Monthly
+    form.CR_Quantity.data = row.CR_Quantity
+    form.CR_Quantity_at_Rate.data = row.CR_Quantity_at_Rate
+    form.CC_XR.data = row.CC_XR
+    form.CR_Cur_XR.data = row.CR_Cur_XR
+    form.CR_ST_at_Rate_Cur.data = row.CR_ST_at_Rate_Cur
+    form.CR_ST_at_CC_Cur.data = row.CR_ST_at_CC_Cur
+    form.CR_ST_at_Cur.data = row.CR_ST_at_Cur
+    form.Cus_Name.data = row.Cus_Name
+    form.CI_Name.data = row.CI_Name
+    form.CU_Description.data = row.CU_Description
+    form.CC_Description.data = row.CC_Description
+    form.Rat_Period_Description.data = row.Rat_Period_Description
+    form.CC_Code.data = row.CC_Code
+    session['prev_row']=str(row)
+    session['is_new_row']=False
+    return render_template('user_resumes.html', form=form, row=row)
+
+# =============================================================================
+@main.route('/forms/User_Resumes_delete', methods=['GET', 'POST'])
+@login_required
+@permission_required(Permission.DELETE)
+def forms_User_Resumes_delete():
+    """ Delete record handling function for table User_Resumes """
+
+    logger.debug('Enter: forms_User_Resumes_delete()')
+    CR_Date_From  =  request.args.get('CR_Date_From',0,type=int)
+    CR_Date_To  =  request.args.get('CR_Date_To',0,type=int)
+    CIT_Status  =  request.args.get('CIT_Status',0,type=int)
+    Cur_Code  =  request.args.get('Cur_Code',0,type=int)
+    CU_Id  =  request.args.get('CU_Id',0,type=int)
+    CI_Id  =  request.args.get('CI_Id',0,type=int)
+    row =  user_resumes.query.filter(user_resumes.CR_Date_From == CR_Date_From,user_resumes.CR_Date_To == CR_Date_To,user_resumes.CIT_Status == CIT_Status,user_resumes.Cur_Code == Cur_Code,user_resumes.CU_Id == CU_Id,user_resumes.CI_Id == CI_Id).first()
+    if row is None:
+        row=user_resumes()
+    session['data'] =  { 'Cus_Id':row.Cus_Id, 'CR_Date_From':row.CR_Date_From, 'CR_Date_To':row.CR_Date_To, 'CIT_Status':row.CIT_Status, 'Cur_Code':row.Cur_Code, 'CIT_Count':row.CIT_Count, 'CIT_Quantity':row.CIT_Quantity, 'CIT_Generation':row.CIT_Generation, 'CU_Id':row.CU_Id, 'CI_CC_Id':row.CI_CC_Id, 'CU_Operation':row.CU_Operation, 'Typ_Code':row.Typ_Code, 'CC_Cur_Code':row.CC_Cur_Code, 'CI_Id':row.CI_Id, 'Rat_Id':row.Rat_Id, 'Rat_Price':row.Rat_Price, 'Rat_MU_Code':row.Rat_MU_Code, 'Rat_Cur_Code':row.Rat_Cur_Code, 'Rat_Period':row.Rat_Period, 'Rat_Hourly':row.Rat_Hourly, 'Rat_Daily':row.Rat_Daily, 'Rat_Monthly':row.Rat_Monthly, 'CR_Quantity':row.CR_Quantity, 'CR_Quantity_at_Rate':row.CR_Quantity_at_Rate, 'CC_XR':row.CC_XR, 'CR_Cur_XR':row.CR_Cur_XR, 'CR_ST_at_Rate_Cur':row.CR_ST_at_Rate_Cur, 'CR_ST_at_CC_Cur':row.CR_ST_at_CC_Cur, 'CR_ST_at_Cur':row.CR_ST_at_Cur, 'Cus_Name':row.Cus_Name, 'CI_Name':row.CI_Name, 'CU_Description':row.CU_Description, 'CC_Description':row.CC_Description, 'Rat_Period_Description':row.Rat_Period_Description, 'CC_Code':row.CC_Code}
+    form = frm_user_resumes_delete()
+
+    if form.validate_on_submit():
+        if  form.submit_Delete.data:
+            print('Delete Data Here...')
+            try:
+                session['deleted_row']=str(row)
+                db.session.close()
+                db.session.delete(row)
+                db.session.commit()
+                logger.audit ( '%s:DEL:%s' % (current_user.username,session['deleted_row']) )
+                flash('User Resume %s deleted OK'%(CR_Date_From,CR_Date_To,CIT_Status,Cur_Code,CU_Id,CI_Id))
+            except exc.IntegrityError as e:
+                db.session.rollback()
+                flash('INTEGRITY ERROR: Are you sure there are no dependant records in other tables?')
+                return redirect(url_for('.forms_User_Resumes_delete',CR_Date_From=session['data']['CR_Date_From'],CR_Date_To=session['data']['CR_Date_To'],CIT_Status=session['data']['CIT_Status'],Cur_Code=session['data']['Cur_Code'],CU_Id=session['data']['CU_Id'],CI_Id=session['data']['CI_Id']))
+
+            return redirect(url_for('.select_User_Resumes_query'))
+        elif   form.submit_Cancel.data:
+            print('Cancel Data Here ... does nothing')
+            flash('Record modifications discarded ...')
+            return redirect(url_for('.select_User_Resumes_query'))
+        else:
+            print('form validated but not submited ???')
+            return redirect(url_for('.select_User_Resumes_query'))
+
+
+    return render_template('user_resumes_delete.html', form=form, data=session.get('data'),row=row)
+
+# =============================================================================
+@main.route('/select/User_Resumes_Query', methods=['GET','POST'])
+@login_required
+def select_User_Resumes_query():
+    """ Select rows handling function for table User_Resumes """
+
+    logger.debug('Enter: select_User_Resumes_query()')
+    field =  request.args.get('field',None,type=str)
+    value =  request.args.get('value',0,type=str)
+    page  =  request.args.get('page',1,type=int)
+
+    if field is not None:
+        if   field == 'Cus_Id':
+            rows =  user_resumes.query.filter_by(Cus_Id=value)\
+               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
+        elif field == 'CR_Date_From':
+            rows =  user_resumes.query.filter_by(CR_Date_From=value)\
+               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
+        elif field == 'CR_Date_To':
+            rows =  user_resumes.query.filter_by(CR_Date_To=value)\
+               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
+        elif field == 'CIT_Status':
+            rows =  user_resumes.query.filter_by(CIT_Status=value)\
+               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
+        elif field == 'Cur_Code':
+            rows =  user_resumes.query.filter_by(Cur_Code=value)\
+               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
+        elif field == 'CIT_Count':
+            rows =  user_resumes.query.filter_by(CIT_Count=value)\
+               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
+        elif field == 'CIT_Quantity':
+            rows =  user_resumes.query.filter_by(CIT_Quantity=value)\
+               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
+        elif field == 'CIT_Generation':
+            rows =  user_resumes.query.filter_by(CIT_Generation=value)\
+               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
+        elif field == 'CU_Id':
+            rows =  user_resumes.query.filter_by(CU_Id=value)\
+               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
+        elif field == 'CI_CC_Id':
+            rows =  user_resumes.query.filter_by(CI_CC_Id=value)\
+               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
+        elif field == 'CU_Operation':
+            rows =  user_resumes.query.filter_by(CU_Operation=value)\
+               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
+        elif field == 'Typ_Code':
+            rows =  user_resumes.query.filter_by(Typ_Code=value)\
+               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
+        elif field == 'CC_Cur_Code':
+            rows =  user_resumes.query.filter_by(CC_Cur_Code=value)\
+               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
+        elif field == 'CI_Id':
+            rows =  user_resumes.query.filter_by(CI_Id=value)\
+               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
+        elif field == 'Rat_Id':
+            rows =  user_resumes.query.filter_by(Rat_Id=value)\
+               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
+        elif field == 'Rat_Price':
+            rows =  user_resumes.query.filter_by(Rat_Price=value)\
+               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
+        elif field == 'Rat_MU_Code':
+            rows =  user_resumes.query.filter_by(Rat_MU_Code=value)\
+               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
+        elif field == 'Rat_Cur_Code':
+            rows =  user_resumes.query.filter_by(Rat_Cur_Code=value)\
+               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
+        elif field == 'Rat_Period':
+            rows =  user_resumes.query.filter_by(Rat_Period=value)\
+               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
+        elif field == 'Rat_Hourly':
+            rows =  user_resumes.query.filter_by(Rat_Hourly=value)\
+               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
+        elif field == 'Rat_Daily':
+            rows =  user_resumes.query.filter_by(Rat_Daily=value)\
+               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
+        elif field == 'Rat_Monthly':
+            rows =  user_resumes.query.filter_by(Rat_Monthly=value)\
+               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
+        elif field == 'CR_Quantity':
+            rows =  user_resumes.query.filter_by(CR_Quantity=value)\
+               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
+        elif field == 'CR_Quantity_at_Rate':
+            rows =  user_resumes.query.filter_by(CR_Quantity_at_Rate=value)\
+               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
+        elif field == 'CC_XR':
+            rows =  user_resumes.query.filter_by(CC_XR=value)\
+               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
+        elif field == 'CR_Cur_XR':
+            rows =  user_resumes.query.filter_by(CR_Cur_XR=value)\
+               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
+        elif field == 'CR_ST_at_Rate_Cur':
+            rows =  user_resumes.query.filter_by(CR_ST_at_Rate_Cur=value)\
+               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
+        elif field == 'CR_ST_at_CC_Cur':
+            rows =  user_resumes.query.filter_by(CR_ST_at_CC_Cur=value)\
+               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
+        elif field == 'CR_ST_at_Cur':
+            rows =  user_resumes.query.filter_by(CR_ST_at_Cur=value)\
+               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
+        elif field == 'Cus_Name':
+            rows =  user_resumes.query.filter_by(Cus_Name=value)\
+               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
+        elif field == 'CI_Name':
+            rows =  user_resumes.query.filter_by(CI_Name=value)\
+               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
+        elif field == 'CU_Description':
+            rows =  user_resumes.query.filter_by(CU_Description=value)\
+               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
+        elif field == 'CC_Description':
+            rows =  user_resumes.query.filter_by(CC_Description=value)\
+               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
+        elif field == 'Rat_Period_Description':
+            rows =  user_resumes.query.filter_by(Rat_Period_Description=value)\
+               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
+        elif field == 'CC_Code':
+            rows =  user_resumes.query.filter_by(CC_Code=value)\
+               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
+    else:
+       rows =  user_resumes.query\
+               .paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
+
+    if field is not None:
+       next_url = url_for('.select_User_Resumes_query', field=field, value=value, page=rows.next_num) \
+           if rows.has_next else None
+       prev_url = url_for('.select_User_Resumes_query', field=field, value=value, page=rows.prev_num) \
+           if rows.has_prev else None
+
+    else:
+       next_url = url_for('.select_User_Resumes_query', page=rows.next_num) \
+           if rows.has_next else None
+       prev_url = url_for('.select_User_Resumes_query', page=rows.prev_num) \
+           if rows.has_prev else None
+
+    return render_template('user_resumes_All.html',rows=rows)
+# =============================================================================
+# =============================================================================
+# Auto-Generated code. do not modify
+# (c) Sertechno 2018
+# GLVH @ 2019-08-24 18:09:43
 # =============================================================================
 
 @main.route('/forms/Users', methods=['GET', 'POST'])
@@ -5899,10 +5588,14 @@ def report_Charging_Resume_Platform():
 # View for Get Charging Resume from DB
 # (c) Sertechno 2018
 # GLVH @ 2019-08-16
+# GLVH @ 2019-08-18 Refactoring to ORM DB Only
 # =============================================================================
+
+#from    sqlalchemy.orm             import sessionmaker
 
 from emtec.collector.forms       import frm_charging_resume
 from babel.numbers  import format_number, format_decimal, format_percent
+from emtec.collector.db.ORM_models      import Configuration_Items
 
 @main.route('/forms/Get_Charging_Resume', methods=['GET', 'POST'])
 @login_required
@@ -5957,6 +5650,7 @@ def forms_Get_Charging_Resume():
             for i in range(len(form.Cur_Code.choices)):
                 if form.Cur_Code.choices[i][0]==form.Cur_Code.data:
                     cur_index=i
+            #flash('WILL USE FULL ORM DB VERSION ...')
             return redirect(url_for('.report_Charging_Resume',
                                 Cus_Id          = form.Cus_Id.data,
                                 Cus_Name        = form.Cus_Id.choices[cus_index][1],
@@ -6013,33 +5707,81 @@ def report_Charging_Resume():
         # resume_records = db.engine.execute(query).scalar()                                                             #
         # -------------------------------------------------------------------------------------------------------------- #
         # 20181228 GV query = "SELECT DISTINCT CI_Id FROM Configuration_Items WHERE Cus_Id=%d"%(Cus_Id)
-        query = "SELECT CI_Id FROM Configuration_Items WHERE Cus_Id=%d ORDER BY CC_Id,CI_Id"%(Cus_Id)
+        """ 20190819 GV
+        #query = "SELECT CI_Id FROM Configuration_Items WHERE Cus_Id=%d ORDER BY CC_Id,CI_Id"%(Cus_Id)
         
         logger.debug ("report_Changing_Resume: query: %s"%(query))
 
         CI = db.engine.execute(query)
-
-        logger.debug ("report_Changing_Resume: %d CI's found for customer %d"%(CI.rowcount,Cus_Id))
+        """
+        """
+        from pprint import pprint
+        print("globals")
+        #pprint(globals())
+        print("current_app")
+        pprint(current_app)
+        print("current_app dir")
+        #pprint(dir(current_app))
+        print("db=",db)
+        #print("db dir =",dir(db))
+        """
+        """
+        current_app.db.Connect()
+        print("current_app.ormdb=",current_app.ormdb)
+        #print("current_app.ormdb dir =",dir(current_app.ormdb))
+        print("current_app.ormdb rdbms    =",current_app.db.rdbms)
+        print("current_app.ormdb dialect  =",current_app.db.dialect)
+        print("current_app.ormdb host     =",current_app.db.host)
+        print("current_app.ormdb port     =",current_app.db.port)
+        print("current_app.ormdb user     =",current_app.db.user)
+        print("current_app.ormdb password =",current_app.db.password)
+        print("current_app.ormdb instance =",current_app.db.instance)
+        print("current_app.ormdb engine   =",current_app.db.engine)
+        print("current_app.ormdb string   =",current_app.db.connection_string)
+        print("current_app.ormdb session  =",current_app.db.session)
+        #ormdb=current_app.ormdb
+        #print("ormdb dir =",dir(current_app.ormdb))
+        """
+        CI = db.session.query(Configuration_Items.CI_Id).\
+                filter(Configuration_Items.Cus_Id==Cus_Id).\
+                order_by(Configuration_Items.CC_Id,Configuration_Items.CI_Id).all()
+        #print("CI=",CI,type(CI),dir(CI))
+        #logger.debug ("report_Changing_Resume: %d CI's found for customer %d"%(CI.count(),Cus_Id))
+        logger.debug ("report_Changing_Resume: %d CI's found for customer %d"%(len(CI),Cus_Id))
+        #flash        ("report_Changing_Resume: %d CI's found for customer %d"%(len(CI),Cus_Id))
+        
         
         resume_records=0
 
         for ci in CI:
+            """ 20190819 GV
             query="CALL Update_Charge_Resume_CI(%s,'%s','%s',%s,'%s',%s)"%\
                     (Cus_Id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code,ci.CI_Id)
             logger.debug ("report_Changing_Resume: query: %s"%query)
             records=db.engine.execute(query)
-            resume_records += records.scalar()
+            """
+            records = db.Update_Charge_Resume_CI(Cus_Id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code,ci.CI_Id)
+            #resume_records += records.scalar()
+            resume_records += records
 
         logger.debug ("report_Changing_Resume: resume_records = %s"%resume_records)
+        #flash        ("report_Changing_Resume: resume_records = %s"%resume_records)
         
     # Get Actual Remume Data from Database
     # NOTE: Here needs some Sand-Clock Message or something in case it takes so long ...
+    """ 20190819 GV
     query="CALL Get_Charge_Resume(%d,'%s','%s',%d,'%s')"%(Cus_Id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code)
     
     logger.debug ("report_Changing_Resume: query: %s"%query)
     
     rows =  db.engine.execute(query).fetchall()
-    
+    """
+    rows = db.Get_Charge_Resume(Cus_Id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code)
+    #flash("rows = db.Get_Charge_Resume(%s,%s,%s,%s,%s)"%(Cus_Id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code))
+    #flash("type rows = %s)"%(type(rows)))
+    #flash("dir rows = %s)"%(dir(rows)))
+    #flash("len rows = %s)"%(len(rows)))
+
     return render_template('report_charging_resume.html',rows=rows,
                 Cus_Id=Cus_Id,
                 Cus_Name=Cus_Name,

@@ -1,30 +1,38 @@
 import os
 
 # General folder definitions
-home_folder         =   "/home/gvalera"
-collector_folder    =   home_folder+"/collector"
-tools_folder        =   home_folder+"/GIT/EG-Collector-Tools"
-code_folder         =   tools_folder+"/code"
+app_name                =   "Collector"
+home_folder             =   "/home/gvalera"
+suite_folder            =   home_folder         + "/GIT/EG-Suite-Tools/" + app_name
+suite_code_folder       =   suite_folder        + "/code"
+tools_folder            =   home_folder         + "/GIT/EG-Collector-Tools"
+collector_folder        =   home_folder         + "/collector"
+code_folder             =   tools_folder        + "/code"
 
 # Auto Code main folders
-auto_folder         =   code_folder+"/auto"
-auto_views          =   auto_folder+"/views"
-auto_templates      =   auto_folder+"/templates"
-auto_models         =   auto_folder+"/models"
-auto_forms          =   auto_folder+"/forms"
-auto_includes       =   auto_folder+"/includes"
+suite_auto_folder       =   suite_code_folder   + "/auto"
+suite_auto_views        =   suite_auto_folder         + "/views"
+suite_auto_templates    =   suite_auto_folder         + "/templates"
+suite_auto_models       =   suite_auto_folder         + "/models"
+suite_auto_forms        =   suite_auto_folder         + "/forms"
+suite_auto_includes     =   suite_auto_folder         + "/includes"
 
 # Source Folders
-source_folder       =   code_folder+"/src"
-source_includes     =   source_folder+"/include"
+auto_folder             =   code_folder         + "/auto"
+auto_templates          =   auto_folder         + "/templates"
+source_folder           =   code_folder         + "/src"
+source_includes         =   source_folder       + "/include"
 
 # Output Final versions
-output_folder       =   code_folder+"/output"
+output_folder           =   code_folder         + "/output"
 
-style_file_name     =   auto_includes+"/collector_style.css"
-navbar_file_name    =   auto_includes+"/collector_navbar.html" 
-menu_file_name      =   auto_includes+"/menu.html"
-base_file_name      =   auto_templates+"/base.html"
+#style_file_name        =   suite_auto_includes+"/collector_style.css"
+#navbar_file_name    =   suite_auto_includes+"/collector_navbar.html" 
+#menu_file_name      =   suite_auto_includes+"/menu.html"
+style_file_name         =   source_includes+"/collector_style.css"
+navbar_file_name        =   source_includes+"/collector_navbar.html" 
+menu_file_name          =   source_includes+"/menu.html"
+base_file_name          =   auto_templates+"/base.html"
 
 f=None
 #open(menu_file_name,'w')

@@ -1,0 +1,1132 @@
+# Import system modules
+import sys
+import os
+
+# Import SQL Alchemy related functions
+from sqlalchemy import create_engine
+from sqlalchemy import text
+# SQL Alchemy imports
+#from sqlalchemy            import Column, String, Integer, Numeric, Date, Time, Boolean
+#from sqlalchemy            import ForeignKey
+#from sqlalchemy.orm        import exc
+from sqlalchemy.orm         import sessionmaker
+
+# Import logging functions
+import logging
+
+# Import time formatter fuctions
+from time import strftime
+
+#from copy                  import copy, deepcopy
+
+from models                import create_app,C,db,logger
+
+# Import App Modules
+from common.log             import Log
+from models.Forms           import Forms
+from models.Tables          import Tables
+
+from gen.gen_functions      import print_log, Mensaje, Build_Iterations
+
+
+
+
+print("10 manage.py creating app ...")
+
+print("11 manage.py: app     = create_app(os.getenv('COLLECTOR_CONFIG') or 'default')")
+print("11.1 manage.py: app   = COLLECTOR_CONFIG='%s'"%os.getenv('COLLECTOR_CONFIG'),"read fom env.")
+
+app     = create_app('development' or 'default')
+
+C.app_ini_file="collector.ini"
+C.Set()
+print("logger=",logger)
+    
+db=C.db
+
+print("C",C)
+print("db",db)
+print("logger",logger)
+
+
+
+# PUSH app context in order to make it visible 
+app_ctx = app.app_context()
+app_ctx.push()
+
+# Setup DB connection parameters
+driver = "mysql+pymysql"
+user =  "root"
+password = "Zj1245//$$"
+host = "127.0.0.1"
+port = 3306
+schema = "collector"
+schema_dev = "collector_development"
+app_folder = "/home/gvalera/CODE/Python/collector"
+log_folder = "/home/gvalera/CODE/Python/collector/log"
+log_format = "col_%Y-%m-%d.log"
+charset="utf8mb4"
+
+from flask_sqlalchemy import SQLAlchemy
+logger = Log('gen_collector_db_classes',log_folder,log_format,logging.DEBUG).logger
+
+print_log ('Number of arguments: %s arguments.'%(len(sys.argv)))
+print_log ('Argument List      : %s'%(str(sys.argv)))
+
+if (len(sys.argv) > 1):
+    schema = sys.argv[1]
+    
+print_log ('Generating code for schema: [%s]'%schema)
+
+# 'application' code
+
+print_log("Start Execution")
+
+# Connect to DB
+engine_string       =   str("%s://%s:%s@%s:%s/%s?charset=%s"%(driver,user,password,host,port,schema,charset))
+engine              =   create_engine(engine_string)
+engine_string_dev   =   str("%s://%s:%s@%s:%s/%s?charset=%s"%(driver,user,password,host,port,schema_dev,charset))
+engine_dev          =   create_engine(engine_string_dev)
+
+# General variables
+Dash = "# "+"="*77+"\n"
+Do_not_modify="# Auto-Generated code. do not modify\n# (c) Sertechno 2018\n# GLVH @ %s\n"%strftime("%Y-%m-%d %H:%M:%S")
+
+Dash_Jinja = "{# "+"="*77+" #}\n"
+Do_not_modify_Jinja ="{# Auto-Generated code. do not modify #}\n{# (c) Sertechno 2018 #}\n{# GLVH @ %s #}\n"%strftime("%Y-%m-%d %H:%M:%S")
+
+
+# Get Table Names using text SQL Command
+print_log("Getting Schema Tables ...")
+query = text("SHOW TABLES")
+
+Mensaje("Carga Tablas con engine=%s y query=%s"%(engine,query))
+
+TABLES = engine.execute(query).fetchall()
+print_log("{} Tables in schema ...".format(len(TABLES)))
+
+Mensaje("%d Tablas cargadas ..."%(len(TABLES)))
+
+# Get Schema relationships
+print_log("Getting Schema Relationships ...")
+query = text("SELECT " 
+               "`TABLE_SCHEMA`,"                           # -- Foreign key schema
+               "`TABLE_NAME`,"                             # -- Foreign key table
+               "`COLUMN_NAME`,"                            # -- Foreign key column
+               "`REFERENCED_TABLE_SCHEMA`,"                # -- Origin key schema
+               "`REFERENCED_TABLE_NAME`,"                  # -- Origin key table
+               "`REFERENCED_COLUMN_NAME` "                 # -- Origin key column
+             "FROM"
+               "`INFORMATION_SCHEMA`.`KEY_COLUMN_USAGE` "  # -- Will fail if user don't have privilege
+             "WHERE"
+                   "`TABLE_SCHEMA` = SCHEMA() "            # -- Detect current schema in USE 
+               "AND `REFERENCED_TABLE_NAME` IS NOT NULL;") # -- Only tables with foreign keys
+
+
+RELATIONS = engine.execute(query).fetchall()
+
+
+print_log("{} Schema Relationships ...".format(len(RELATIONS)))
+
+
+
+
+file_name = app_folder+"/tools/src/models_py_imports.py"
+print_log("Creating '%s'..."%(file_name))
+
+f2 = open(file_name,"w")
+f2.write(Dash)
+f2.write(Do_not_modify)
+f2.write(Dash)
+f2.write("\n")
+
+# Loop required for mapping class names to tables prior code generation
+
+Table={}
+
+Session = sessionmaker(bind=engine)
+session = Session()
+
+for t in range(len(TABLES)):
+
+    name                                = TABLES[t][0]
+    Table[name]                         = {}
+    #GV 20181113 table_row                           = table.query.filter(Tables.Name==name).first()
+    table   = session.query(Tables).filter(Tables.Name == name).one()
+
+    #print('name',name)
+    #print('table',name)
+    
+
+    Table[name].update({'table':table.Name})
+    Table[name].update({'caption':table.Caption})
+    Table[name].update({'entity':table.Entity})
+    Table[name].update({'class':table.Class_Name})
+    Table[name].update({'pagination':table.Use_Pagination})
+    Table[name].update({'has_child':False})
+    Table[name].update({'has_parent':False})
+    Table[name].update({'columns':[]})
+    Table[name].update({'keys':[]})
+    Table[name].update({'relations':[]})
+    Table[name].update({'code':{}})
+    
+    # Get Metadata from Table
+    query                               = text("SHOW COLUMNS FROM "+name)
+    columns                             = engine.execute(query).fetchall()
+    # Populate table's columns data
+    for c in range(len(columns)):
+        Table[name]['columns'].append({})    
+        Table[name]['columns'][c]['field']     = columns[c][0]
+        Table[name]['columns'][c]['type']      = columns[c][1]
+        Table[name]['columns'][c]['null']      = columns[c][2]
+        Table[name]['columns'][c]['key']       = columns[c][3]
+        Table[name]['columns'][c]['default']   = columns[c][4]
+        Table[name]['columns'][c]['extra']     = columns[c][5]        
+        if  Table[name]['columns'][c]['key'] == 'PRI':
+            Table[name]['keys'].append(Table[name]['columns'][c]['field'])
+        if  Table[name]['columns'][c]['key'] == 'PRI' and Table[name]['columns'][c]['extra'] == 'auto_increment':
+            Table[name]['columns'][c]['is_id']     = True
+        else:
+            Table[name]['columns'][c]['is_id']     = False
+        Table[name]['columns'][c]['header']     = Table[name]['columns'][c]['field']        
+
+    Table[name].update({'key':Table[name]['keys'][0]})  # Primer componente de la llave compuesta sera siempre el Key Primario
+
+
+    if table.Parent_Table != 'NULL':
+        Table[name]['has_parent']        = True
+        parent   = session.query(Tables).filter(Tables.Name == table.Parent_Table).first()
+        Table[name].update({'parent':{}})
+        Table[name]['parent'].update({'table':parent.Name})
+        Table[name]['parent'].update({'key':''})
+        form_field = session.query(Forms).filter(Forms.Table==Table[name]['parent']['table'],Forms.Key=='PRI',Forms.Extra=='auto_increment').one()
+        Table[name]['parent'].update({'key':form_field.Field})
+        print("***********************************************")
+        print("Table %s has_parents = %s"%(name,Table[name]['has_parent']))
+        print("Table %s has parent %s and parent key is %s"%(name,Table[name]['parent']['table'],Table[name]['parent']['key']))
+        print("***********************************************")
+    print("Table %s has_parents = %s"%(name,Table[name]['has_parent']))
+            
+    # Populate Child Table info if required       
+    #if table.Child_Table is not None:
+    if table.Child_Table != 'NULL':
+        #print('name',name)
+        #print('Table',Table)
+        Table[name]['has_child']        = True
+
+        # GV 20181113 child                           = table.query.filter(Tables.Name==table.Child_Table).first()
+        child   = session.query(Tables).filter(Tables.Name == table.Child_Table).first()
+        Table[name].update({'child':{}})
+        Table[name]['child'].update({'table':table.Child_Table})
+        Table[name]['child'].update({'class':child.Class_Name})
+        Table[name]['child'].update({'pagination':table.Use_Children_Pagination})
+        Table[name]['child'].update({'columns':[]})
+        Table[name]['child'].update({'headers':[]})
+        Table[name]['child'].update({'key':''})
+        query                               = text("SHOW COLUMNS FROM "+Table[name]['child']['table'])
+        columns                             = engine.execute(query).fetchall()
+        # Generate Child Data
+        for c in range(len(columns)):
+            # GV 20181113 form_field = Forms.query.filter(Forms.Table==Table[name]['child']['table'],Forms.Field==columns[c][0]).first()
+            print("Table[name]['child']['table']",Table[name]['child']['table'],
+            "columns[c][0]",columns[c][0])
+            form_field = session.query(Forms).filter(Forms.Table==Table[name]['child']['table'],Forms.Field==columns[c][0]).one()
+            Table[name]['child']['columns'].append(form_field.Field) 
+            Table[name]['child']['headers'].append(form_field.Caption_String) 
+            if form_field.Key == 'PRI':
+                Table[name]['child']['key'] = form_field.Field 
+
+    Build_Iterations(Table[name])
+
+
+# Look for BACK REFERENCES (all tables need to be loaded)
+
+for t in range(len(TABLES)):
+    name = TABLES[t][0]
+    for r in range(len(RELATIONS)):
+        rel=RELATIONS[r]
+        if rel[4] == name:
+            # configuration_items   = db.relationship('configuration_item',backref='platform')
+            ref=Table[rel[1]]
+            Table[name]['relations'].append({'name':ref['table'].lower(),'class':ref['class'],'backref':Table[name]['class'],'caption':ref['caption'],'table':ref['table']})
+
+
+
+    #print('*******************************************')
+    #print('Table[name][\'relations\']',Table[name]['relations'])
+    #print('*******************************************')
+
+
+for t in Table:
+    table_name = Table[t]['table']
+    file_name = app_folder+"/tools/models/"+table_name.lower()+".py"
+    print_log("Creating '%s'..."%(file_name))
+    
+    class_name=Table[table_name]['class']
+    
+    f = open(file_name,"w")
+    f.write(Dash)
+    f.write(Do_not_modify)
+    f.write(Dash)
+    f.write('\n')
+    
+    f.write("class %s(db.Model):\n"%(class_name))
+    f.write("    __tablename__ = '%s'\n"%(table_name))
+    
+    # Here needs to be replaced by parameter use, next test
+    query = text("SHOW COLUMNS FROM "+table_name)
+    COLUMNS = engine.execute(query).fetchall()
+    max_column_name = 0
+    for c in range(len(COLUMNS)):
+        if (len(COLUMNS[c][0]) > max_column_name):
+            max_column_name = len(COLUMNS[c][0])
+    
+    has_fks = False       
+    key_fields = ''        
+    key_params = ''        
+    key_redirs = ''        
+    non_key_fields = ''        
+    key_filter = ''        
+    row_keys = ''
+
+    has_relations = False
+    my_relations = []
+    my_joins = ''
+    type = []
+    is_time =[]
+    
+    num_key_fields = 0
+    
+    primary_key_auto_increment=''
+    
+    for c in range(len(COLUMNS)):
+        field   = COLUMNS[c][0]        
+        type.append(COLUMNS[c][1])
+        null    = COLUMNS[c][2]
+        key     = COLUMNS[c][3]
+        default = COLUMNS[c][4]
+        extra   = COLUMNS[c][5]
+        
+        if  type[c] == 'time':
+            is_time.append(True)
+        else:
+            is_time.append(False)
+            
+            
+        type[c]=type[c].replace("int(11)","db.Integer")
+        type[c]=type[c].replace("tinyint(4)","db.Boolean")
+        type[c]=type[c].replace("varchar","db.String")
+        type[c]=type[c].replace("date","db.Date")
+        type[c]=type[c].replace("time","db.String(10)")        # Necesary to avoid problem with Time Field in Forms (DateTime?)
+        type[c]=type[c].replace("float","db.Numeric")
+        type[c]=type[c].replace("decimal","db.Numeric")
+        
+        if (key == "PRI"):
+            xkey=", primary_key=True"
+            if (len(key_fields) == 0):
+                key_fields = key_fields + "%s"%(field)
+                key_filter = key_filter + "%s.%s == %s"%(class_name,field,field)
+                key_params = key_params + "<%s>"%(field)
+                key_redirs = key_redirs + "%s=session['data']['%s']"%(field,field)
+                row_keys   = row_keys   + "{{ row.%s }}"%(field)
+            else:
+                key_fields = key_fields + ",%s"%(field)
+                key_filter = key_filter + ",%s.%s == %s"%(class_name,field,field)
+                key_params = key_params + "&<%s>"%(field)
+                key_redirs = key_redirs + ",%s=session['data']['%s']"%(field,field)
+                row_keys   = row_keys   + "&{{ row.%s }}"%(field)
+            num_key_fields += 1
+        else:
+            xkey=""
+            if (len(non_key_fields) == 0):
+                non_key_fields = non_key_fields + "%s.%s : %s"%(table_name,field,field)
+            else:
+                non_key_fields = non_key_fields + ",%s.%s : %s"%(table_name,field,field)
+        
+        xrel= ""
+        xref= ""
+        has_relations  = False
+        has_references = False
+            
+        for r in range(len(RELATIONS)):
+            rel=RELATIONS[r]
+            if rel[1] == table_name and rel[2] == field:
+                xrel=str(", db.ForeignKey('%s.%s')"%(rel[4],rel[2]))   # rel[4] = Referenced Table rel[2] = FK field
+                my_relations.append((rel[4],rel[2]))
+                my_joins = my_joins + ".join(%s)"%rel[4]
+                has_relations = True
+                break
+            else:
+                xrel =""
+               
+        if (extra.find('auto_increment') != -1):
+            xextra=", autoincrement=True"
+        else:
+            xextra=""
+    
+        f.write(str("    %-*s = db.Column( %s%s%s%s )\n"%(max_column_name,field,type[c],xrel,xkey,xextra)))
+    f.write("\n")
+
+    # Look for BACK REFERENCES
+    for R in Table[table_name]['relations']:
+        f.write("    %-*s = db.relationship('%s',backref='%s')\n"%(max_column_name,R['name'],R['class'],R['backref']))
+    f.write("\n")
+   
+    # ------------------------------------------------------------------
+    # Class Methods
+    # ------------------------------------------------------------------
+                    
+    # Create Initialization method
+    f.write(    "    def __init__(self,%s):\n"          % ( Table[table_name]['code']['default_fields'] ) )
+    f.write(            "%s\n"                          % ( Table[table_name]['code']['init_fields']    ) )
+     
+    # Create Representation method
+    f.write(    "    def __repr__(self):\n")
+    f.write(    '        return "<%s('                  % ( table_name) )
+    f.write('%s)>" %% \\\n                (%s)\n\n'     % ( Table[table_name]['code']['parameters'], \
+                                                            Table[table_name]['code']['self_fields']    ) )
+    
+    f.write(Dash)
+
+    # ------------------------------------------------------------------
+    # Create Class Form
+    # ------------------------------------------------------------------
+        
+    HEADERS = []
+    
+    
+    has_fks = False
+    
+    f.write(    "class frm_%s(Form):\n"%(class_name))
+
+    s=''
+    xchoices = []
+    Get_Choices = ''
+    for c in range(len(COLUMNS)):
+        x=''
+        xchoices.append("")
+        
+        #GV 20181113 form_field = Forms.query.filter(Forms.Table==table_name,Forms.Field==COLUMNS[c][0]).first()
+        #print("table_name=",table_name)
+        #print("COLUMNS[%d][0]="%(c),COLUMNS[c][0])
+        
+        form_field = session.query(Forms).filter(Forms.Table==table_name,Forms.Field==COLUMNS[c][0]).one()
+
+        if form_field is not None:
+            # Checking for Basic Form Field Type
+            if      type[c].find('db.Integer') != -1:
+                field_type='IntegerField '
+            elif    type[c].find('db.String') != -1:
+                field_type='StringField  '
+            elif    type[c].find('db.Boolean') != -1:
+                field_type='BooleanField '
+            elif    type[c].find('db.Date') != -1:
+                field_type='DateField    '
+            elif    type[c].find('db.Time') != -1:
+                field_type='DateTimeField'
+            elif    type[c].find('db.DateTime') != -1:
+                field_type='DateTimeField'
+            elif    type[c].find('db.Numeric') != -1:
+                field_type='DecimalField '
+        
+            # Check for Foreign Keys
+            if form_field.Foreign_Key is not None:
+                if form_field.Foreign_Key != 'NULL':
+                    has_fks = True
+                    field_type='SelectField  '
+                    Get_Choices = Get_Choices + "        form.%s.choices = db.session.query(%s.%s,%s.%s).all()\n"%(
+                                form_field.Field,
+                                Table[form_field.Referenced_Table]['class'],form_field.Foreign_Key,
+                                Table[form_field.Referenced_Table]['class'],form_field.Foreign_Field
+                                )
+                        
+           # Check for validators
+            validators = ''
+            if form_field.Validation:               # Incluir aqui codigo si se necesita mas de una validacion, incluyendo FKs
+                validators = ", validators=[%s]"%form_field.Validation_String
+                if    form_field.Validation_Type == "RF":
+                    # Field will be a selection of the valid values only , depends on Valid Options 
+                    field_type='RadioField  '
+                    
+            coerce = ''
+            # Creating form field depending on Field Type
+            if field_type == "SelectField  " or field_type == "RadioField  ":
+                if type[c] == "db.Integer":
+                    coerce = ", coerce=int"
+            # Avoid Generation of Primary Key fields edition field       
+            if form_field.Key=='PRI' and form_field.Extra=='auto_increment':
+                primary_key_auto_increment=form_field.Field
+            else:
+                f.write("    %-*s = %s(\"%s?\"%s%s)\n"%( max_column_name+8,COLUMNS[c][0], 
+                        field_type, 
+                        form_field.Caption_String,
+                        coerce,
+                        validators)
+                        )
+                
+            HEADERS.append(form_field.Caption_String)
+        else:
+            HEADERS.append(COLUMNS[c][0])
+            
+    f.write(    "\n" )
+    f.write(    "    %-*s = SubmitField  ('Save')\n"%(max_column_name+8,"submit_Save"))
+    f.write(    "    %-*s = SubmitField  ('New')\n"%(max_column_name+8,"submit_New"))
+    #f.write(    "    %-*s = SubmitField('New',label=\"<img src='/static/img/add.png'' width='32' height='32' title='' alt='New'>\")\n"%(max_column_name+8,"submit_New"))
+    
+    #from markupsafe import Markup
+    #submit_value = Markup('<span class="oi oi-check" title="Submit"></span>')
+    #submit_value = Markup("<img src='/static/img/add.png' width='3' height='32' title='' alt='New'>")
+    #submit = SubmitField(submit_value)
+    #f.write(    "    %-*s = SubmitField(\"%s\")\n"%(max_column_name+8,"submit_New",submit_value))
+    
+    f.write(    "    %-*s = SubmitField  ('Cancel')\n\n"%(max_column_name+8,"submit_Cancel"))
+    f.write(    "    %-*s = %s\n\n"%(max_column_name+8,"has_FKs",has_fks))
+
+    f.write(Dash)
+
+    # ------------------------------------------------------------------
+    # Create Class Form Delete
+    # ------------------------------------------------------------------
+
+    f.write(    "class frm_%s_delete(Form):\n"              % (class_name) )
+    f.write(    "    %-*s = SubmitField  ('Delete')\n"      % (max_column_name+8,"submit_Delete") )
+    f.write(    "    %-*s = SubmitField  ('Cancel')\n\n"    % (max_column_name+8,"submit_Cancel") )
+
+    f.write(Dash)
+
+
+    # ------------------------------------------------------------------------
+    # Create Flask decorator code
+    # ------------------------------------------------------------------------    
+
+    # ------------------------------------------------------------------------ 
+    # Create VIEW FORM 
+    # ------------------------------------------------------------------------ 
+    
+    file_name = app_folder+"/tools/views/view_"+table_name.lower()+".py"
+    print_log("Creating '%s'..."%(file_name))
+    f = open(file_name,"w")
+
+    f.write(Dash)
+    f.write(Do_not_modify)
+    f.write(Dash)
+
+    f2.write(    "from ..models import %s,frm_%s,frm_%s_delete\n"                         % (class_name,class_name,class_name) )
+    
+    # GV 20181115 f.write(    "@main.route('/forms/%s/%s', methods=['GET', 'POST'])\n"    % (table_name,key_params) )
+    f.write(    "@main.route('/forms/%s', methods=['GET', 'POST'])\n"    % (table_name) )
+    # GV 20181115 f.write(    "def forms_%s(%s):\n"%(table_name,key_fields))
+    f.write(    "def forms_%s():\n"%(table_name))
+    # GV 20181115 f.write(    "    logger.debug('Enter: forms_%s(%s)'%%(%s))\n"           % (table_name,"%s,"*num_key_fields,key_fields) )
+    f.write(    "    logger.debug('Enter: forms_%s()')\n"           % (table_name) )
+
+    for key in Table[table_name]['keys']:
+        f.write(    "    %s  =  request.args.get('%s',0,type=int)\n"%(key,key))
+
+    if Table[table_name]['has_parent']:
+        f.write(    "    parent_key  =  request.args.get('parent_key',None,type=str)\n")
+        f.write(    "    parent_value=  request.args.get('parent_value',0,type=int)\n\n")
+
+    f.write(    "    row =  %s.query.filter(%s).first()\n"                  % (class_name,key_filter) )    
+
+    f.write(    "    if row is None:\n")
+    f.write(    "        row=%s()\n\n"                                        % (class_name) )    
+
+    f.write(    "    session['data'] =  {%s}\n"                             % (Table[table_name]['code']['dict_fields']) )
+
+    if Table[table_name]['has_parent']:
+        f.write(    "    if parent_key is not None:\n")
+        f.write(    "       session['data'][parent_key] = parent_value\n\n")
+        f.write(    "       print('parent_key  = ',parent_key)\n")
+        f.write(    "       print('parent_value= ',parent_value)\n")    
+        f.write(    "       print('session[\"data\"][parent_key] = %s'%(parent_key,session['data'][parent_key]))\n\n")
+                       
+    f.write(    "    form = frm_%s()\n\n"                                   % (class_name) )
+
+    if has_fks:
+        f.write(    "    if form.has_FKs:\n")
+        f.write(        "%s\n"%(Get_Choices))
+    
+            
+    # Actual Form activation here
+    f.write(        "    if form.validate_on_submit():\n")
+    for c in Table[table_name]['columns']:
+        if c['is_id'] is not True:
+            f.write("        session['data']['%s'] = form.%s.data\n"        % (c['field'],c['field']))
+    # Code for SAVE option
+    f.write(        "        if     form.submit_Save.data:\n")
+    f.write(        "            print('Save Data Here...')\n")
+    for c in Table[table_name]['columns']:
+        if not c['is_id']:
+            f.write("            row.%s = form.%s.data\n"                   % (c['field'],c['field']))
+    f.write(        "            db.session.close()\n")
+    f.write(        "            db.session.add(row)\n")
+    f.write(        "            db.session.commit()\n")
+    f.write(        "            db.session.close()\n")
+    f.write(        "            flash('Record %%s saved OK'%%(%s))\n"      % (key_fields))
+    f.write(        "            return redirect(url_for('.select_%s'))\n"  % (table_name))    
+
+    # Code for NEW option
+    f.write(        "        elif   form.submit_New.data:\n")
+    f.write(        "            print('New Data Here...')\n")
+    f.write(        "            db.session.close()\n")
+    f.write(        "            row=%s()\n"                                % (class_name))
+    #f.write(        "            session['data'] =  {%s}\n"                 % (dict_fields) )
+    f.write(        "            session['data'] =  {%s}\n"                 % (Table[table_name]['code']['dict_fields']) )
+    for c in Table[table_name]['columns']:
+        if not c['is_id']:
+            f.write("            form.%s.data = session['data']['%s']\n"%(c['field'],c['field']))            
+    #f.write(        "            print('%s: New row = %s'%(__name__,row))\n" )
+    #f.write(        "            print('%s: New session data = %s'%(__name__,session['data']))\n")
+    f.write(        "            return redirect(url_for('.forms_%s',%s))\n\n"%(table_name,key_redirs))    
+
+    # Code for CANCEL option 
+    f.write(        "        elif   form.submit_Cancel.data:\n")
+    f.write(        "            print('Cancel Data Here ... does nothing')\n")
+    f.write(        "            flash('Record modifications discarded ...')\n")
+
+    # Code for ANY OTHER option should never get here
+    f.write(        "        else:\n")
+    f.write(        "            print('form validated but not submited ???')\n")
+    f.write(        "        return redirect(url_for('.forms_%s',%s))\n\n"%(table_name,key_redirs))    
+    for c in Table[table_name]['columns']:
+        if not c['is_id']:
+            f.write("    form.%s.data = session['data']['%s']\n"%(c['field'],c['field']))            
+
+    f.write(        "\n")    
+
+    f.write(        "\n")    
+
+    f.write(        "    return render_template('%s.html',C=C, form=form, data=session.get('data'),row=row)\n\n"%(table_name.lower()))    
+    f.write(Dash)
+    
+    # ------------------------------------------------------------------------ 
+    # Create DELETE FORM 
+    # ------------------------------------------------------------------------ 
+        
+    f.write(    "@main.route('/forms/%s_delete/%s', methods=['GET', 'POST'])\n"    % (table_name,key_params) )
+    f.write(    "def forms_%s_delete(%s):\n"%(table_name,key_fields))
+    f.write(    "    logger.debug('Enter: forms_%s(%s)'%%(%s))\n"           % (table_name,"%s,"*num_key_fields,key_fields) )
+    f.write(    "    row =  %s.query.filter(%s).first()\n"                  % (class_name,key_filter) )    
+
+    f.write(    "    if row is None:\n")
+    f.write(    "        row=%s()\n"                                        % (class_name) )    
+    f.write(    "    session['data'] =  {%s}\n"                             % (Table[table_name]['code']['dict_fields']) )
+                       
+    f.write(    "    form = frm_%s_delete()\n\n"                                   % (class_name) )
+
+    if has_fks:
+        #f.write(    "    if form.has_FKs:\n")
+        #f.write(        "%s\n"%(Get_Choices))
+        pass
+            
+    # Actual Form activation here
+    f.write(        "    if form.validate_on_submit():\n")
+    for c in Table[table_name]['columns']:
+        if c['is_id'] is not True:
+            #f.write("        session['data']['%s'] = form.%s.data\n"        % (c['field'],c['field']))
+            pass
+    # Code for SAVE option
+    f.write(        "        if  form.submit_Delete.data:\n")
+    f.write(        "            print('Delete Data Here...')\n")
+    for c in Table[table_name]['columns']:
+        if not c['is_id']:
+            #f.write("            row.%s = form.%s.data\n"                   % (c['field'],c['field']))
+            pass
+    f.write(        "            print('Delete Data Here...')\n")
+    f.write(        "            try:\n")
+    f.write(        "                db.session.close()\n")
+    f.write(        "                db.session.delete(row)\n")
+    f.write(        "                db.session.commit()\n")
+    f.write(        "                db.session.close()\n")
+    f.write(        "                flash('Record %%s deleted OK'%%(%s))\n"      % (key_fields))
+    f.write(        "            except Exception as e:\n")
+    f.write(        "                db.session.rollback()\n")    
+    f.write(        "                flash('ERROR: %s'%(e))\n")
+    f.write(        "                return redirect(url_for('.forms_%s_delete',%s))\n\n"%(table_name,key_redirs))    
+    #f.write(        "            return redirect(url_for('.select_%s'))\n"  % (table_name))    
+
+    for c in Table[table_name]['columns']:
+        if not c['is_id']:
+            #f.write("            form.%s.data = session['data']['%s']\n"%(c['field'],c['field']))            
+            pass
+    f.write(        "            return redirect(url_for('.select_%s'))\n"  % (table_name))    
+
+    # Code for CANCEL option 
+    f.write(        "        elif   form.submit_Cancel.data:\n")
+    f.write(        "            print('Cancel Data Here ... does nothing')\n")
+    f.write(        "            flash('Record modifications discarded ...')\n")
+    f.write(        "            return redirect(url_for('.select_%s'))\n"  % (table_name))    
+
+    # Code for ANY OTHER option should never get here
+    f.write(        "        else:\n")
+    f.write(        "            print('form validated but not submited ???')\n")
+    # GV 20181113 f.write(        "        return redirect(url_for('.forms_%s_delete',%s))\n\n"%(table_name,key_redirs))    
+    # GV 20181113 f.write(        "            return render_template('%s.html',C=C, form=form, data=session.get('data'),row=row)\n\n"%(table_name.lower()))    
+    f.write(        "            return redirect(url_for('.select_%s'))\n"  % (table_name))    
+
+    for c in Table[table_name]['columns']:
+        if not c['is_id']:
+            #f.write("    form.%s.data = session['data']['%s']\n"%(c['field'],c['field']))
+            pass           
+
+    f.write(        "\n")    
+
+    f.write(        "\n")    
+
+    f.write(        "    return render_template('%s_delete.html',C=C, form=form, data=session.get('data'),row=row)\n\n"%(table_name.lower()))    
+    f.write(Dash)
+
+
+
+
+    # ------------------------------------------------------------------------    
+    # Create SELECT ALL VIEWER (PAGINATED)
+    # ------------------------------------------------------------------------    
+    f.write(    "@main.route('/select/%s', methods=['GET','POST'])\n"                          % (table_name))
+    f.write(    "def select_%s():\n"                                                    % (table_name))
+    f.write(    "    logger.debug('Enter: select_%s()')\n"                              % (table_name) )
+    
+    #if False:
+    #    f.write(    "    rows =  %s.query.all()\n"                                      % (class_name))
+    #    f.write(    "    return render_template('%s_All.html',C=C,rows=rows)\n"         % (table_name.lower()))
+    #else:
+    f.write(    "    query=  request.args.get('query',None,type=str)\n")
+    f.write(    "    print('%s: query=%s'%(__name__,query))\n")
+    
+    f.write(    "    page =  request.args.get('page',1,type=int)\n")
+    f.write(    "    if query is not None:\n")
+    f.write(    "       rows =  %s.query.filter_by(query).paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)\n"%(class_name))
+    f.write(    "    else:\n")
+    f.write(    "       rows =  %s.query.paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)\n"%(class_name))
+    f.write(    "    next_url = url_for('.select_%s', page=rows.next_num) \\\n"      % (table_name))
+    f.write(    "        if rows.has_next else None\n")
+    f.write(    "    prev_url = url_for('.select_%s', page=rows.prev_num) \\\n"      % (table_name))
+    f.write(    "        if rows.has_prev else None\n")
+    f.write(    "    return render_template('%s_All.html',C=C,rows=rows.items,next_url=next_url,prev_url=prev_url)\n" % \
+                    (table_name.lower()))
+    f.write(Dash)
+    #f.close()
+
+    # ------------------------------------------------------------------------    
+    # Create SELECT QUERY VIEWER (PAGINATED)
+    # ------------------------------------------------------------------------    
+    f.write(    "@main.route('/select/%s_Query', methods=['GET','POST'])\n"                          % (table_name))
+    f.write(    "def select_%s_query():\n"                                                    % (table_name))
+    f.write(    "    logger.debug('Enter: select_%s()')\n"                              % (table_name) )
+    
+    f.write(    "    field =  request.args.get('field',None,type=str)\n")
+    f.write(    "    value =  request.args.get('value',0,type=str)\n")
+    
+    f.write(    "    print('%s: query=%s'%(__name__,query))\n")
+    
+    f.write(    "    page =  request.args.get('page',1,type=int)\n")
+    f.write(    "    if field is not None:\n")
+    for c in Table[table_name]['columns']:    
+        f.write("        if field == '%s':\n"%(c['field']))
+        f.write("            rows =  %s.query.filter_by(%s=value)" \
+            ".paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)\n"%(class_name,c['field']))
+    f.write(    "    else:\n")
+    f.write(    "       rows =  %s.query.paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)\n"%(class_name))
+    f.write(    "    next_url = url_for('.select_%s_query', page=rows.next_num) \\\n"      % (table_name))
+    f.write(    "        if rows.has_next else None\n")
+    f.write(    "    prev_url = url_for('.select_%s_query', page=rows.prev_num) \\\n"      % (table_name))
+    f.write(    "        if rows.has_prev else None\n")
+    f.write(    "    return render_template('%s_All.html',C=C,rows=rows.items,next_url=next_url,prev_url=prev_url)\n" % \
+                    (table_name.lower()))
+    f.write(Dash)
+    f.close()
+
+    # ------------------------------------------------------------------------
+    # Create HTML Templates
+    # ------------------------------------------------------------------------
+    
+    # ------------------------------------------------------------------------
+    # Unit Record Template
+    # ------------------------------------------------------------------------
+
+    file_name = app_folder+"/app/templates/"+table_name.lower()+".html"
+    print_log("Creating '%s'..."%(file_name))
+    f = open(file_name,"w")
+    
+    f.write(Dash_Jinja)
+    f.write(Do_not_modify_Jinja)
+    f.write(Dash_Jinja)    
+    f.write('{% extends "base.html" %}\n')
+    f.write('{% import "bootstrap/wtf.html" as wtf %}\n')
+    # GV 20181110 code for pagination -->
+    #f.write('{% import "_macros.html" as macros %}\n\n')
+    # GV 20181110 <--
+
+    f.write('{% block title %}Collector{% endblock %}\n')
+
+    f.write('{% block head %}\n')
+    f.write('{{ super() }}\n')
+    #f.write('<link rel="shortcut icon" href="{{ url_for(\'static\', filename = \'favicon.ico\') }}"\n')
+    #f.write('type="image/x-icon">\n')
+    #f.write('<link rel="icon" href="{{ url_for(\'static\', filename = \'img/favicon.ico\') }}"\n')
+    #f.write('type="image/x-icon">\n')
+    f.write('{% endblock %}\n')
+
+    f.write('{% block page_content %}\n')
+    f.write('<div class="page-header">\n')
+    
+    if len(primary_key_auto_increment)>0:
+        f.write('    <h2>%s: {{ row.%s }}</h2>\n'%(Table[table_name]['entity'],primary_key_auto_increment))
+    else:
+        f.write('    <h2>%s: </h2>\n'%(Table[table_name]['entity']))
+
+    f.write(    '    <a href="#" onclick="history.go(-1)"><img src="/static/img/back.png"  color=yellow width="32" height="32" title="" alt="Add"></a>\n')        
+    
+    f.write('</div>\n')
+    
+    # FLASH Generation Code
+    f.write('{% with messages = get_flashed_messages() %}\n')
+    f.write('  {% if messages %}\n')
+    f.write('    <ul class=flashes>\n')
+    f.write('    {% for message in messages %}\n')
+    f.write('      <li>{{ message }}</li>\n')
+    f.write('    {% endfor %}\n')
+    f.write('    </ul>\n')
+    f.write('  {% endif %}\n')
+    f.write('{% endwith %}\n')
+    
+    # FORM Rendering Code
+    f.write('{{ wtf.quick_form(form) }}\n')
+    
+    # Conditional code includes Child Data Table
+    
+    if Table[table_name]['has_child']:
+
+        f.write(    '<hr>\n')
+        f.write(    '<div>\n')
+        f.write(    '<h2>%s(s) found {{row.%s.__len__()}} records</h2>\n' % (
+                    Table[Table[table_name]['child']['table']]['caption'],
+                    Table[table_name]['child']['table'].lower()
+                    ))
+        f.write(    '   {%% for crow in row.%s %%}\n'%(Table[table_name]['child']['table'].lower()))
+        f.write(    '   {% if loop.first %}\n')
+        f.write(    '       <table class="table">\n')
+        f.write(    '           <thead class="thead-dark">\n')
+        
+        f.write(    '               <tr id="header">\n')
+
+        for c in range(len(Table[table_name]['child']['columns'])):
+            if Table[table_name]['child']['columns'][c] not in Table[table_name]['keys']:
+                f.write('                   <th>%s</th>\n'%(Table[table_name]['child']['headers'][c]))
+                
+        f.write(    '                           <td><a href="/forms/%s?%s&parent_field=%s&parent_value={{crow.%s}}"><img src="/static/img/add.png"  color=yellow width="32" height="32" title="" alt="Add"></a></td>\n'%(Table[table_name]['child']['table'],0,primary_key_auto_increment,primary_key_auto_increment))        
+
+        f.write(    '               </tr>\n')
+        f.write(    '           </thead>\n')
+        
+        f.write(    '           <tbody>\n')
+        f.write(    '   {% endif %}\n')
+
+        f.write(    '       <tr>\n')
+
+        for c in range(len(Table[table_name]['child']['columns'])):     
+            if Table[table_name]['child']['columns'][c] not in Table[table_name]['keys']:
+                f.write('           <td>{{ crow.%s }}</td>\n'%((Table[table_name]['child']['columns'][c])))
+
+
+        link_keys = ''
+        s=''
+
+        for k in Table[Table[table_name]['child']['table']]['keys']:
+            link_keys = link_keys + "%s{{crow.%s}}"%(s,k)
+            s='&'
+
+        f.write('           <td>'\
+                                '<a href="/forms/%s?%s=%s"><img src="/static/img/edit.png" width="32" height="32" title="" alt="Edit"></a>'\
+                                '<a href="/forms/%s_delete/%s"><img src="/static/img/delete.png" width="32" height="32" title="" alt="Edit"></a>'\
+                            '</td>\n'%\
+                            (   Table[table_name]['child']['table'],Table[Table[table_name]['child']['table']]['key'] ,link_keys,\
+                                Table[table_name]['child']['table'],link_keys) )      
+        f.write(    '       </tr>\n')
+        f.write(    '    {% endfor %}\n')    
+        f.write(    '  </tbody>\n')
+        f.write(    '</table>\n')    
+        f.write(    '</div>\n')
+    
+    f.write(    '<hr>\n')
+    # GV 20181110 include Pagination code -->
+    #f.write(    '<div class="pagination">\n')
+    #f.write(    '   {{ macros.pagination_widget(pagination, \'.index\') }}\n')
+    #f.write(    '</div>\n')
+    # GV 20181110 include Pagination code <--
+   
+    f.write('{% endblock %}\n')
+
+    f.write(Dash_Jinja)       
+    f.close()
+
+
+
+    # ------------------------------------------------------------------------
+    # Unit Record DELETE Template
+    # ------------------------------------------------------------------------
+    
+    file_name = app_folder+"/app/templates/"+table_name.lower()+"_delete.html"
+    print_log("Creating '%s'..."%(file_name))
+    f = open(file_name,"w")
+    
+    f.write(Dash_Jinja)
+    f.write(Do_not_modify_Jinja)
+    f.write(Dash_Jinja)    
+    f.write('{% extends "base.html" %}\n')
+    f.write('{% import "bootstrap/wtf.html" as wtf %}\n')
+
+    f.write('{% block title %}Collector{% endblock %}\n')
+
+    f.write('{% block head %}\n')
+    f.write('{{ super() }}\n')
+    f.write('{% endblock %}\n')
+
+    f.write('{% block page_content %}\n')
+    f.write('<div class="page-header">\n')
+    
+    if len(primary_key_auto_increment)>0:
+        f.write('    <h2>%s: {{ row.%s }}</h2>\n'%(Table[table_name]['entity'],primary_key_auto_increment))
+    else:
+        f.write('    <h2>%s: </h2>\n'%(Table[table_name]['entity']))
+
+    f.write(    '    <a href="#" onclick="history.go(-1)"><img src="/static/img/back.png"  color=yellow width="32" height="32" title="" alt="Add"></a>\n')        
+    
+    f.write('</div>\n')
+    
+    # FLASH Generation Code
+    f.write('{% with messages = get_flashed_messages() %}\n')
+    f.write('  {% if messages %}\n')
+    f.write('    <ul class=flashes>\n')
+    f.write('    {% for message in messages %}\n')
+    f.write('      <li>{{ message }}</li>\n')
+    f.write('    {% endfor %}\n')
+    f.write('    </ul>\n')
+    f.write('  {% endif %}\n')
+    f.write('{% endwith %}\n')
+
+    f.write('<table>\n')  
+    f.write('   {% for d in session.data %}\n')
+    f.write('   <tr><td>{{d}}</td><td>:</td><td>{{session.data[d]}}</td></tr>\n')    
+    f.write('   {% endfor %}\n')
+    f.write('<table>\n')
+    
+    # FORM Rendering Code
+    f.write('{{ wtf.quick_form(form) }}\n')
+    
+    # Conditional code includes Child Data Table
+    
+    if Table[table_name]['has_child']:
+
+        f.write(    '<hr>\n')
+        f.write(    '<div>\n')
+        f.write(    '<h2>%s(s) found {{row.%s.__len__()}} records</h2>\n' % (
+                    Table[Table[table_name]['child']['table']]['caption'],
+                    Table[table_name]['child']['table'].lower()
+                    ))
+        f.write(    '<table class="table">\n')
+        f.write(    '  <thead class="thead-dark">\n')
+        
+        f.write(    '    <tr id="header">\n')
+
+        for c in range(len(Table[table_name]['child']['columns'])):
+            if Table[table_name]['child']['columns'][c] not in Table[table_name]['keys']:
+                f.write('        <th>%s</th>\n'%(Table[table_name]['child']['headers'][c]))
+        f.write(    '        <td><a href="/forms/%s/%s"><img src="/static/img/add.png"  color=yellow width="32" height="32" title="" alt="Add"></a></td>\n'%(Table[table_name]['child']['table'],0))        
+
+        f.write(    '    </tr>\n')
+        f.write(    '  </thead>\n')
+        
+        f.write(    '  <tbody>\n')
+
+        f.write(    '    {%% for crow in row.%s %%}\n'%(Table[table_name]['child']['table'].lower()))
+        f.write(    '       <tr>\n')
+
+        for c in range(len(Table[table_name]['child']['columns'])):     
+            if Table[table_name]['child']['columns'][c] not in Table[table_name]['keys']:
+                f.write('           <td>{{ crow.%s }}</td>\n'%((Table[table_name]['child']['columns'][c])))
+
+
+        link_keys = ''
+        s=''
+
+        for k in Table[Table[table_name]['child']['table']]['keys']:
+            link_keys = link_keys + "%s{{crow.%s}}"%(s,k)
+            s='&'
+
+        f.write('           <td>'\
+                                '<a href="/forms/%s/%s"><img src="/static/img/edit.png" width="32" height="32" title="" alt="Edit"></a>'\
+                                '<a href="/forms/%s_delete/%s"><img src="/static/img/delete.png" width="32" height="32" title="" alt="Edit"></a></td>\n'\
+                                %(Table[table_name]['child']['table'],link_keys,Table[table_name]['child']['table'],link_keys) )      
+        f.write(    '       </tr>\n')
+        f.write(    '    {% endfor %}\n')    
+        f.write(    '  </tbody>\n')
+        f.write(    '</table>\n')    
+        f.write(    '</div>\n')
+    
+    f.write(    '<hr>\n')
+   
+    f.write('{% endblock %}\n')
+
+    f.write(Dash_Jinja)       
+    f.close()
+
+
+
+
+
+    # ------------------------------------------------------------------------
+    # SELECT ALL HTML template with pagination
+    # ------------------------------------------------------------------------
+    
+    file_name = app_folder+"/app/templates/"+table_name.lower()+"_All.html"
+    print_log("Creating '%s'..."%(file_name))
+    f = open(file_name,"w")
+    
+    f.write(Dash_Jinja)
+    f.write(Do_not_modify_Jinja)
+    f.write(Dash_Jinja)    
+
+    f.write(    '{% extends "base.html" %}\n\n')
+    f.write(    '{% import "bootstrap/wtf.html" as wtf %}\n\n')
+    # GV 20181110 code for pagination -->
+    f.write(    '{% import "_macros.html" as macros %}\n\n')
+    # GV 20181110 <--
+    f.write(    '{% block title %}Collector{% endblock %}\n\n')
+    f.write(    '{% block head %}\n')
+    f.write(    '   {{ super() }}\n')
+    f.write(    '   <link rel="shortcut icon" href="{{ url_for(\'static\', filename = \'favicon.ico\') }}"\n')
+    f.write(    '   type="image/x-icon">\n')
+    f.write(    '   <link rel="icon" href="{{ url_for(\'static\', filename = \'img/favicon.ico\') }}"\n')
+    f.write(    '   type="image/x-icon">\n')
+    f.write(    '{% endblock %}\n\n')
+    f.write(    '{% block page_content %}\n')
+    f.write(    '<div class="page-header">\n')
+    #f.write(    '    <h2>%s:<h2> <p>{{ rows.__len__() }} records found.</p>\n'%(Table[table_name]['caption']))
+    f.write(    '    <h2>%s:<h2>\n'%(Table[table_name]['caption']))
+    f.write(    '    <a href="#" onclick="history.go(-1)"><img src="/static/img/back.png"  color=yellow width="32" height="32" title="" alt="Add"></a>\n')        
+    f.write(    '</div>\n')
+    f.write(    '<table class="table">\n')
+    
+    f.write(    '  <thead class="thead-dark">\n')
+    f.write(    '    <tr>\n')
+    for c in range(len(COLUMNS)):     
+        f.write('        <th>%s</th>\n'%(HEADERS[c]))
+    # Note in following code "0" is hard coded, may be replaced by default value ???? 
+    #f.write(    '        <td><a href="/forms/%s/%s"><img src="/static/img/add.png"  color=yellow width="32" height="32" title="" alt="Add"></a></td>\n'%(table_name,0))        
+    f.write(    '        <td><a href="/forms/%s"><img src="/static/img/add.png"  color=yellow width="32" height="32" title="" alt="Add"></a></td>\n'%(table_name))        
+    for r in Table[table_name]['relations']:
+        f.write('         <td>%s</td>\n'%(r['caption']))
+    f.write(    '    </tr>\n')
+    f.write(    '  </thead>\n')
+
+    f.write(    '    <tbody>\n')
+    
+    f.write(    '    {% for row in rows %}\n')
+    f.write(    '       <tr>\n')
+    for c in Table[table_name]['columns']:
+        f.write('           <td>{{ row.%s }}</td>\n'%(c['field']))
+                  
+    f.write('           <td>'\
+                            '<a href="/forms/%s?%s=%s"><img src="/static/img/edit.png" width="32" height="32" title="" alt="Edit"></a>'\
+                            '<a href="/forms/%s_delete/%s"><img src="/static/img/delete.png" width="32" height="32" title="" alt="Edit"></a>'\
+                       '</td>\n'%(table_name,Table[table_name]['key'],row_keys,table_name,row_keys) ) 
+    for r in Table[table_name]['relations']:
+        keys=Table[table_name]['keys']
+        query=''
+        y=''
+        for k in keys:
+            query   =   "field=%s&value={{row.%s}}"%(k,k)
+            y       =   ','
+        href    =   "/select/%s_Query?%s"%(r['table'],query)
+        f.write('           <td><a href="%s">{{ row.%s.__len__() }}</a></td>\n'%(href,r['name']))
+    f.write(    '       </tr>\n')
+    f.write(    '    {% endfor %}\n')
+
+    f.write(    '    </tbody>\n')
+
+    f.write(    '</table>\n')
+    f.write(    '<p>')
+    f.write(    '    {% if prev_url != None %}\n')    
+    f.write(    '       <a href="{{prev_url}}"><img src="/static/img/prev.png"  color=yellow width="32" height="32" title="" alt="Previous"></a>\n')
+    f.write(    '    {% endif %}\n')    
+    f.write(    '    {% if next_url != None %}\n')    
+    f.write(    '       <a href="{{next_url}}"><img src="/static/img/next.png"  color=yellow width="32" height="32" title="" alt="Next"></a>\n')
+    f.write(    '    {% endif %}\n')    
+    f.write(    '</p>\n')
+    
+    f.write(    '{% endblock %}\n\n')
+
+    # GV 20181110 include Pagination code -->
+    f.write(    '<div class="pagination">\n')
+    f.write(    '   {{ macros.pagination_widget(pagination, \'.index\') }}\n')
+    f.write(    '</div>\n')
+    # GV 20181110 include Pagination code <--
+
+    f.write(Dash_Jinja)    
+
+    # <a href="/howto/howto_css_dropdown.asp">Dropdowns</a>
+
+
+    f.close()          
+
+f2.write("\n")
+f2.close()
+print_log("End Execution")
+
+"""    
+    # Define fields loop variables
+    fields          = ''
+    default_fields  = ''
+    init_fields     = ''
+    none_fields     = ''
+    dict_fields     = ''
+    dict_nones      = ''
+    self_fields     = ''
+    deep_fields     = ''
+    parameters      = ''
+    self_parameters = ''
+    nones           = ''
+
+
+    # Iteration to build code string components
+    #for c in range(len(COLUMNS)):
+    s = ''
+    for c in Table[table_name]['columns']:
+        colum   = c['field']
+        default = c['default']
+        #if (c):
+        #    s=','
+        #else:
+        #    s=''
+        parameters      = parameters        + str("%s %s='%%s'"                         %(s,colum))
+        fields          = fields            + str("%s %s"                               %(s,colum))
+        if c['type'] in "time/date":
+            default_fields  = default_fields    + str("%s %s='%s'"                            %(s,colum,'None' if default=='NULL' else default))
+        else:
+            if c['is_id']:
+                default_fields  = default_fields    + str("%s %s=0"                            %(s,colum))
+            else:
+                default_fields  = default_fields    + str("%s %s=%s"                            %(s,colum,'None' if default=='NULL' else default))
+        
+#        if is_time[c]:
+        if c['type'] == 'time':
+            dict_fields     = dict_fields       + str("%s '%s':str(row.%s)"             %(s,colum,colum))
+        else:
+            dict_fields     = dict_fields       + str("%s '%s':row.%s"                  %(s,colum,colum))
+        
+        dict_nones      = dict_nones        + str("%s '%s':None"                        %(s,colum))
+        nones           = nones             + str("%s None"                             %(s,))
+        init_fields     = init_fields       + str("%sself.%-*s = %s\n"                  %(' '*8,max_column_name,colum,colum))
+        none_fields     = none_fields       + str("%sself.%-*s = None\n"                %(' '*8,max_column_name,colum))
+        self_fields     = self_fields       + str("%s self.%s"                          %(s,colum))
+        self_parameters = self_parameters   + str("%s %s='%%s'"                         %(s,colum))
+        deep_fields     = deep_fields       + str("%s%sdeepcopy(self.%-*s , memo)\n"    %(' '*16,s,max_column_name,colum))
+        s = ','
+        
+"""
+
+
+
+

@@ -1,19 +1,27 @@
 # Application folders
+APP_NAME=Collector
 COLLECTOR_FOLDER=/home/gvalera/collector
 APP_FOLDER=${COLLECTOR_FOLDER}/app
 SERVICE_FOLDER=${COLLECTOR_FOLDER}/service
 MAIN_FOLDER=${APP_FOLDER}/main
-COMMON_FOLDER=${APP_FOLDER}/common
 TEMPLATES_FOLDER=${APP_FOLDER}/templates
 
-# Auto Code Folders
+# Tools structure folders
+SUITE_TOOLS_FOLDER=/home/gvalera/GIT/EG-Suite-Tools
+SUITE_APP_FOLDER=${SUITE_TOOLS_FOLDER}/${APP_NAME}
+SUITE_CODE_FOLDER=${SUITE_APP_FOLDER}/code
+
 TOOLS_FOLDER=/home/gvalera/GIT/EG-Collector-Tools
 CODE_FOLDER=${TOOLS_FOLDER}/code
 CODE_SRC=${CODE_FOLDER}/src
 CODE_COMMON=${CODE_SRC}/common
 CODE_OUTPUT=${CODE_FOLDER}/output
+CODE_AUTO=${CODE_FOLDER}/auto
+CODE_AUTO_TEMPLATES=${CODE_FOLDER}/auto
 
-AUTO_FOLDER=${CODE_FOLDER}/auto
+
+# Auto Code Folders
+AUTO_FOLDER=${SUITE_CODE_FOLDER}/auto
 AUTO_MODELS=${AUTO_FOLDER}/models
 AUTO_FORMS=${AUTO_FOLDER}/forms
 AUTO_VIEWS=${AUTO_FOLDER}/views
@@ -22,6 +30,7 @@ AUTO_INCLUDES=${AUTO_FOLDER}/includes
 
 # Emtec Library updates for Collector App
 LIB_EMTEC=/home/gvalera/GIT/eg-libraries/emtec/src/emtec
+LIB_EMTEC_COMMON=${LIB_EMTEC}/common
 LIB_COLLECTOR=${LIB_EMTEC}/collector
 LIB_COLLECTOR_DB=${LIB_COLLECTOR}/db
 LIB_COLLECTOR_COMMON=${LIB_COLLECTOR}/common
@@ -73,7 +82,8 @@ collector:	${CODE_OUTPUT}/models.py ${CODE_OUTPUT}/ORM_models.py ${CODE_OUTPUT}/
 
 	echo "updating COMMON files ..."
 	echo
-	cp  ${CODE_COMMON}/*.py     			${LIB_COLLECTOR_COMMON}/.
+	cp  ${CODE_COMMON}/collector/*.py     			${LIB_COLLECTOR_COMMON}/.
+	#cp  ${CODE_COMMON}/emtec/*.py     			${LIB_EMTEC_COMMON}/.
 
 	echo "updating error handlers ..."
 	echo
@@ -96,11 +106,16 @@ classes:
 	echo "***********************************"
 	echo
 	python gen_collector_menu.py
-	python populate_dev_tables.py
-	python gen_collector_model_flask.py
+	touch ${CODE_SRC}/*.py 
+	touch ${CODE_SRC}/models/*.py
+	cd ${SUITE_TOOLS_FOLDER}
+	python ${SUITE_TOOLS_FOLDER}/populate_dev_tables.py ${SUITE_TOOLS_FOLDER}/gen_collector.ini
+	python ${SUITE_TOOLS_FOLDER}/gen_models_code.py ${SUITE_TOOLS_FOLDER}/gen_collector.ini
+	cd ${TOOLS_FOLDER}
 
 
-${CODE_OUTPUT}/models.py:	${AUTO_MODELS}/*.py ${CODE_SRC}/*.py ${CODE_SRC}/models/*.py
+#${CODE_OUTPUT}/models.py:	${AUTO_MODELS}/*.py ${CODE_SRC}/*.py ${CODE_SRC}/models/*.py
+${CODE_OUTPUT}/models.py:	${CODE_SRC}/*.py ${CODE_SRC}/models/*.py
 	echo
 	echo "***********************************"
 	echo "* Creating models.py *"
@@ -110,20 +125,24 @@ ${CODE_OUTPUT}/models.py:	${AUTO_MODELS}/*.py ${CODE_SRC}/*.py ${CODE_SRC}/model
 	cat ${CODE_SRC}/models_py_header_auth.py  	>> ${CODE_OUTPUT}/models.py
 	cat ${AUTO_MODELS}/flask_*.py  				>> ${CODE_OUTPUT}/models.py
 	cat ${CODE_SRC}/models/*.py            		>> ${CODE_OUTPUT}/models.py
+	cat ${CODE_SRC}/models_py_User_footer.py  	>> ${CODE_OUTPUT}/models.py
 	ls -l ${CODE_OUTPUT}/models.py
 
-${CODE_OUTPUT}/ORM_models.py:	${AUTO_MODELS}/orm_*.py ${CODE_SRC}/*.py 
+#${CODE_OUTPUT}/ORM_models.py:	${AUTO_MODELS}/orm_*.py ${CODE_SRC}/*.py 
+${CODE_OUTPUT}/ORM_models.py:	${CODE_SRC}/*.py 
 	echo
 	echo "***********************************"
 	echo "* Creating ORM_models.py *"
 	echo "***********************************"
 	echo
 	cat ${CODE_SRC}/orm_models_py_header.py		>  ${CODE_OUTPUT}/ORM_models.py
-	cat ${AUTO_MODELS}/base.py					>> ${CODE_OUTPUT}/ORM_models.py
-	cat ${AUTO_MODELS}/orm_*.py  				>> ${CODE_OUTPUT}/ORM_models.py
+	#cat ${AUTO_MODELS}/base.py					>> ${CODE_OUTPUT}/ORM_models.py
+	#cat ${AUTO_MODELS}/orm_*.py  				>> ${CODE_OUTPUT}/ORM_models.py
+	cat ${AUTO_MODELS}/ORM_model.py  			>> ${CODE_OUTPUT}/ORM_models.py
 	ls -l ${CODE_OUTPUT}/ORM_models.py
 
-${CODE_OUTPUT}/forms.py:	${AUTO_FORMS}/*.py ${CODE_SRC}/*.py ${CODE_SRC}/forms/*.py
+#${CODE_OUTPUT}/forms.py:	${AUTO_FORMS}/*.py ${CODE_SRC}/*.py ${CODE_SRC}/forms/*.py
+${CODE_OUTPUT}/forms.py:	${CODE_SRC}/*.py ${CODE_SRC}/forms/*.py
 	echo
 	echo "***********************************"
 	echo "* Creating forms.py *"
@@ -140,7 +159,8 @@ ${CODE_SRC}/forms/*.py:
 	./link_functions.sh
 
 
-${CODE_OUTPUT}/views.py:	${AUTO_VIEWS}/*.py ${CODE_OUTPUT}/models.py
+#${CODE_OUTPUT}/views.py:	${AUTO_VIEWS}/*.py ${CODE_OUTPUT}/models.py
+${CODE_OUTPUT}/views.py:	${CODE_OUTPUT}/models.py
 	echo
 	echo "***********************************"
 	echo "* Creating views.py *"
@@ -148,7 +168,7 @@ ${CODE_OUTPUT}/views.py:	${AUTO_VIEWS}/*.py ${CODE_OUTPUT}/models.py
 	echo
 	cat ${CODE_SRC}/views_py_header.py    		>  ${CODE_OUTPUT}/views.py
 	cat ${AUTO_INCLUDES}/models_py_imports.py	>> ${CODE_OUTPUT}/views.py
-	cat ${CODE_SRC}/views_py_collector.py 		>> ${CODE_OUTPUT}/views.py
+	#cat ${CODE_SRC}/views_py_collector.py 		>> ${CODE_OUTPUT}/views.py
 	cat ${AUTO_VIEWS}/*.py                		>> ${CODE_OUTPUT}/views.py
 	cat ${CODE_SRC}/views/*.py            		>> ${CODE_OUTPUT}/views.py
 	ls -l ${CODE_OUTPUT}/views.py
@@ -156,7 +176,7 @@ ${CODE_OUTPUT}/views.py:	${AUTO_VIEWS}/*.py ${CODE_OUTPUT}/models.py
 ${AUTO_TEMPLATES}/base.html:
 	echo
 	echo "***********************************"
-	echo "* Generating base.html            *"
+	echo "* Generating ${AUTO_TEMPLATES}/base.html"
 	echo "***********************************"
 	echo
 	python gen_collector_menu.py

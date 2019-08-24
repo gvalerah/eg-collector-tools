@@ -61,7 +61,7 @@ def load_user(user_id):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
+# GLVH @ 2019-08-24 18:09:43
 # =============================================================================
 
 class charge_item(db.Model):
@@ -91,7 +91,7 @@ class charge_item(db.Model):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
+# GLVH @ 2019-08-24 18:09:43
 # =============================================================================
 
 class charge_resume(db.Model):
@@ -177,7 +177,7 @@ class charge_resume(db.Model):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
+# GLVH @ 2019-08-24 18:09:43
 # =============================================================================
 
 class charge_unit(db.Model):
@@ -222,7 +222,7 @@ class charge_unit(db.Model):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
+# GLVH @ 2019-08-24 18:09:43
 # =============================================================================
 
 class cit_generation(db.Model):
@@ -243,7 +243,7 @@ class cit_generation(db.Model):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
+# GLVH @ 2019-08-24 18:09:43
 # =============================================================================
 
 class cit_status(db.Model):
@@ -264,7 +264,7 @@ class cit_status(db.Model):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
+# GLVH @ 2019-08-24 18:09:43
 # =============================================================================
 
 class configuration_item(db.Model):
@@ -298,7 +298,7 @@ class configuration_item(db.Model):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
+# GLVH @ 2019-08-24 18:09:43
 # =============================================================================
 
 class cost_center(db.Model):
@@ -328,7 +328,7 @@ class cost_center(db.Model):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
+# GLVH @ 2019-08-24 18:09:43
 # =============================================================================
 
 class country_currency(db.Model):
@@ -350,7 +350,7 @@ class country_currency(db.Model):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
+# GLVH @ 2019-08-24 18:09:43
 # =============================================================================
 
 class country(db.Model):
@@ -375,7 +375,7 @@ class country(db.Model):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
+# GLVH @ 2019-08-24 18:09:43
 # =============================================================================
 
 class cu_operation(db.Model):
@@ -400,7 +400,7 @@ class cu_operation(db.Model):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
+# GLVH @ 2019-08-24 18:09:43
 # =============================================================================
 
 class currency(db.Model):
@@ -428,7 +428,7 @@ class currency(db.Model):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
+# GLVH @ 2019-08-24 18:09:43
 # =============================================================================
 
 class customer(db.Model):
@@ -452,7 +452,7 @@ class customer(db.Model):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
+# GLVH @ 2019-08-24 18:09:43
 # =============================================================================
 
 class cu_type(db.Model):
@@ -474,125 +474,7 @@ class cu_type(db.Model):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
-# =============================================================================
-
-class dev_form(db.Model):
-    __tablename__ = 'Dev_Forms'
-    Id                = db.Column( db.Integer, primary_key=True, autoincrement=True )
-    Table             = db.Column( db.String(45) )
-    Field             = db.Column( db.String(45) )
-    Type              = db.Column( db.String(45) )
-    Null              = db.Column( db.String(45) )
-    Key               = db.Column( db.String(45) )
-    Default           = db.Column( db.String(45) )
-    Extra             = db.Column( db.String(45) )
-    Foreign_Key       = db.Column( db.String(45) )
-    Referenced_Table  = db.Column( db.String(45) )
-    Foreign_Field     = db.Column( db.String(45) )
-    Foreign_Value     = db.Column( db.String(45) )
-    Length            = db.Column( db.Integer )
-    Validation        = db.Column( db.Boolean )
-    Validation_Type   = db.Column( db.String(45) )
-    Validation_String = db.Column( db.String(128) )
-    Caption_String    = db.Column( db.String(45) )
-    Field_Order       = db.Column( db.Integer )
-    Field_Format      = db.Column( db.String(45) )
-    Form_Editable     = db.Column( db.Boolean, default=1 )
-    ORM_Schema        = db.Column( db.Boolean, default=1 )
-
-
-    def __init__(self, Id=0, Table='None', Field='None', Type='None', Null='None', Key='None', Default='None', Extra='None', Foreign_Key='None', Referenced_Table='None', Foreign_Field='None', Foreign_Value='None', Length=None, Validation=None, Validation_Type='None', Validation_String='None', Caption_String='None', Field_Order=None, Field_Format='None', Form_Editable=1, ORM_Schema=1):
-        self.Id                = Id
-        self.Table             = Table
-        self.Field             = Field
-        self.Type              = Type
-        self.Null              = Null
-        self.Key               = Key
-        self.Default           = Default
-        self.Extra             = Extra
-        self.Foreign_Key       = Foreign_Key
-        self.Referenced_Table  = Referenced_Table
-        self.Foreign_Field     = Foreign_Field
-        self.Foreign_Value     = Foreign_Value
-        self.Length            = Length
-        self.Validation        = Validation
-        self.Validation_Type   = Validation_Type
-        self.Validation_String = Validation_String
-        self.Caption_String    = Caption_String
-        self.Field_Order       = Field_Order
-        self.Field_Format      = Field_Format
-        self.Form_Editable     = Form_Editable
-        self.ORM_Schema        = ORM_Schema
-
-    def __repr__(self):
-        return "<Dev_Forms( Id='%s', Table='%s', Field='%s', Type='%s', Null='%s', Key='%s', Default='%s', Extra='%s', Foreign_Key='%s', Referenced_Table='%s', Foreign_Field='%s', Foreign_Value='%s', Length='%s', Validation='%s', Validation_Type='%s', Validation_String='%s', Caption_String='%s', Field_Order='%s', Field_Format='%s', Form_Editable='%s', ORM_Schema='%s')>" % \
-                ( self.Id, self.Table, self.Field, self.Type, self.Null, self.Key, self.Default, self.Extra, self.Foreign_Key, self.Referenced_Table, self.Foreign_Field, self.Foreign_Value, self.Length, self.Validation, self.Validation_Type, self.Validation_String, self.Caption_String, self.Field_Order, self.Field_Format, self.Form_Editable, self.ORM_Schema)
-
-# =============================================================================
-# Auto-Generated code. do not modify
-# (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
-# =============================================================================
-
-class dev_table(db.Model):
-    __tablename__ = 'Dev_Tables'
-    Id                        = db.Column( db.Integer, primary_key=True, autoincrement=True )
-    Name                      = db.Column( db.String(45) )
-    Caption                   = db.Column( db.String(45) )
-    Entity                    = db.Column( db.String(45) )
-    Class_Name                = db.Column( db.String(45) )
-    Child_Table               = db.Column( db.String(45) )
-    Parent_Table              = db.Column( db.String(45) )
-    Use_Pagination            = db.Column( db.Boolean )
-    Use_Children_Pagination   = db.Column( db.Boolean )
-    Generate_Form_One         = db.Column( db.Boolean )
-    Generate_Form_All         = db.Column( db.Boolean )
-    Generate_Form_Filter      = db.Column( db.Boolean )
-    Generate_Children         = db.Column( db.Boolean )
-    Generate_Foreign_Fields   = db.Column( db.Boolean )
-    Permission_View           = db.Column( db.Boolean )
-    Permission_Delete         = db.Column( db.Boolean )
-    Permission_Modify         = db.Column( db.Boolean )
-    Permission_Report         = db.Column( db.Boolean )
-    Permission_Export         = db.Column( db.Boolean )
-    Permission_View_Private   = db.Column( db.Boolean )
-    Permission_Modify_Private = db.Column( db.Boolean )
-    Permission_Administer     = db.Column( db.Boolean )
-
-
-    def __init__(self, Id=0, Name='None', Caption='None', Entity='None', Class_Name='None', Child_Table='None', Parent_Table='None', Use_Pagination=None, Use_Children_Pagination=None, Generate_Form_One=None, Generate_Form_All=None, Generate_Form_Filter=None, Generate_Children=None, Generate_Foreign_Fields=None, Permission_View=None, Permission_Delete=None, Permission_Modify=None, Permission_Report=None, Permission_Export=None, Permission_View_Private=None, Permission_Modify_Private=None, Permission_Administer=None):
-        self.Id                        = Id
-        self.Name                      = Name
-        self.Caption                   = Caption
-        self.Entity                    = Entity
-        self.Class_Name                = Class_Name
-        self.Child_Table               = Child_Table
-        self.Parent_Table              = Parent_Table
-        self.Use_Pagination            = Use_Pagination
-        self.Use_Children_Pagination   = Use_Children_Pagination
-        self.Generate_Form_One         = Generate_Form_One
-        self.Generate_Form_All         = Generate_Form_All
-        self.Generate_Form_Filter      = Generate_Form_Filter
-        self.Generate_Children         = Generate_Children
-        self.Generate_Foreign_Fields   = Generate_Foreign_Fields
-        self.Permission_View           = Permission_View
-        self.Permission_Delete         = Permission_Delete
-        self.Permission_Modify         = Permission_Modify
-        self.Permission_Report         = Permission_Report
-        self.Permission_Export         = Permission_Export
-        self.Permission_View_Private   = Permission_View_Private
-        self.Permission_Modify_Private = Permission_Modify_Private
-        self.Permission_Administer     = Permission_Administer
-
-    def __repr__(self):
-        return "<Dev_Tables( Id='%s', Name='%s', Caption='%s', Entity='%s', Class_Name='%s', Child_Table='%s', Parent_Table='%s', Use_Pagination='%s', Use_Children_Pagination='%s', Generate_Form_One='%s', Generate_Form_All='%s', Generate_Form_Filter='%s', Generate_Children='%s', Generate_Foreign_Fields='%s', Permission_View='%s', Permission_Delete='%s', Permission_Modify='%s', Permission_Report='%s', Permission_Export='%s', Permission_View_Private='%s', Permission_Modify_Private='%s', Permission_Administer='%s')>" % \
-                ( self.Id, self.Name, self.Caption, self.Entity, self.Class_Name, self.Child_Table, self.Parent_Table, self.Use_Pagination, self.Use_Children_Pagination, self.Generate_Form_One, self.Generate_Form_All, self.Generate_Form_Filter, self.Generate_Children, self.Generate_Foreign_Fields, self.Permission_View, self.Permission_Delete, self.Permission_Modify, self.Permission_Report, self.Permission_Export, self.Permission_View_Private, self.Permission_Modify_Private, self.Permission_Administer)
-
-# =============================================================================
-# Auto-Generated code. do not modify
-# (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
+# GLVH @ 2019-08-24 18:09:43
 # =============================================================================
 
 class exchange_rate(db.Model):
@@ -616,7 +498,7 @@ class exchange_rate(db.Model):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
+# GLVH @ 2019-08-24 18:09:43
 # =============================================================================
 
 class measure_unit(db.Model):
@@ -637,7 +519,7 @@ class measure_unit(db.Model):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
+# GLVH @ 2019-08-24 18:09:43
 # =============================================================================
 
 class platform(db.Model):
@@ -667,7 +549,7 @@ class platform(db.Model):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
+# GLVH @ 2019-08-24 18:09:43
 # =============================================================================
 
 class rate(db.Model):
@@ -685,9 +567,6 @@ class rate(db.Model):
     Rat_Type   = db.Column( db.Integer )
 
 
-    # @property
-    #
-    
     def __init__(self, Rat_Id=0, Typ_Code='None', Cus_Id=None, Pla_Id=None, CC_Id=None, CI_Id=None, Rat_Price=None, Cur_Code='None', MU_Code='None', Rat_Period=None, Rat_Type=None):
         self.Rat_Id     = Rat_Id
         self.Typ_Code   = Typ_Code
@@ -705,13 +584,10 @@ class rate(db.Model):
         return "<Rates( Rat_Id='%s', Typ_Code='%s', Cus_Id='%s', Pla_Id='%s', CC_Id='%s', CI_Id='%s', Rat_Price='%s', Cur_Code='%s', MU_Code='%s', Rat_Period='%s', Rat_Type='%s')>" % \
                 ( self.Rat_Id, self.Typ_Code, self.Cus_Id, self.Pla_Id, self.CC_Id, self.CI_Id, self.Rat_Price, self.Cur_Code, self.MU_Code, self.Rat_Period, self.Rat_Type)
 
-    # method
-    def method(self):
-        pass
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
+# GLVH @ 2019-08-24 18:09:43
 # =============================================================================
 
 class rat_period(db.Model):
@@ -732,7 +608,7 @@ class rat_period(db.Model):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
+# GLVH @ 2019-08-24 18:09:43
 # =============================================================================
 
 class Role(db.Model):
@@ -754,37 +630,10 @@ class Role(db.Model):
         return "<Roles( id='%s', name='%s', default='%s', permissions='%s')>" % \
                 ( self.id, self.name, self.default, self.permissions)
 
-    @staticmethod
-    def insert_roles():
-        roles = {
-            'Customer': (   Permission.CUSTOMER, False),
-            'Reporter': (   Permission.VIEW |
-                            Permission.REPORT |
-                            Permission.EXPORT, True),
-            'Charger': (    Permission.VIEW |
-                            Permission.DELETE |
-                            Permission.MODIFY |
-                            Permission.REPORT, False),
-            'Administrator':    (0xfe, False),                      # Administrator does not have 'Customer' permisions
-            'Auditor':          (0x1fe, False),                      # Auditor does not have 'Customer' permissions
-            'God':              (0xfff, False)
-        }
-        for r in roles:
-            role = Role.query.filter_by(name=r).first()
-            if role is None:
-                role = Role(name=r)
-            role.permissions = roles[r][0]
-            role.default = roles[r][1]
-            db.session.add(role)
-        db.session.commit()
-    """
-    def __repr__(self):
-        return '<Role %r>' % self.name
-    """
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
+# GLVH @ 2019-08-24 18:09:43
 # =============================================================================
 
 class st_use_per_cu(db.Model):
@@ -846,7 +695,7 @@ class st_use_per_cu(db.Model):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
+# GLVH @ 2019-08-24 18:09:43
 # =============================================================================
 
 class st_use_per_type(db.Model):
@@ -888,7 +737,7 @@ class st_use_per_type(db.Model):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
+# GLVH @ 2019-08-24 18:09:43
 # =============================================================================
 
 class trace(db.Model):
@@ -908,7 +757,93 @@ class trace(db.Model):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-18 18:05:34
+# GLVH @ 2019-08-24 18:09:43
+# =============================================================================
+
+class user_resumes(db.Model):
+    __tablename__ = 'User_Resumes'
+    Cus_Id                 = db.Column( db.Integer )
+    CR_Date_From           = db.Column( db.Date, primary_key=True )
+    CR_Date_To             = db.Column( db.Date, primary_key=True )
+    CIT_Status             = db.Column( db.Integer, primary_key=True )
+    Cur_Code               = db.Column( db.String(3), primary_key=True )
+    CIT_Count              = db.Column( db.Integer )
+    CIT_Quantity           = db.Column( db.Numeric(20,6) )
+    CIT_Generation         = db.Column( db.Integer, default=1 )
+    CU_Id                  = db.Column( db.Integer, primary_key=True )
+    CI_CC_Id               = db.Column( db.Integer )
+    CU_Operation           = db.Column( db.String(10) )
+    Typ_Code               = db.Column( db.String(10) )
+    CC_Cur_Code            = db.Column( db.String(3) )
+    CI_Id                  = db.Column( db.Integer, primary_key=True )
+    Rat_Id                 = db.Column( db.Integer )
+    Rat_Price              = db.Column( db.Numeric(20,6) )
+    Rat_MU_Code            = db.Column( db.String(3) )
+    Rat_Cur_Code           = db.Column( db.String(3) )
+    Rat_Period             = db.Column( db.Integer )
+    Rat_Hourly             = db.Column( db.Numeric(20,6) )
+    Rat_Daily              = db.Column( db.Numeric(20,6) )
+    Rat_Monthly            = db.Column( db.Numeric(20,6) )
+    CR_Quantity            = db.Column( db.Numeric(20,6) )
+    CR_Quantity_at_Rate    = db.Column( db.Numeric(20,6) )
+    CC_XR                  = db.Column( db.Numeric(20,10) )
+    CR_Cur_XR              = db.Column( db.Numeric(20,10) )
+    CR_ST_at_Rate_Cur      = db.Column( db.Numeric(20,6) )
+    CR_ST_at_CC_Cur        = db.Column( db.Numeric(20,6) )
+    CR_ST_at_Cur           = db.Column( db.Numeric(20,6) )
+    Cus_Name               = db.Column( db.String(45) )
+    CI_Name                = db.Column( db.String(45) )
+    CU_Description         = db.Column( db.String(45) )
+    CC_Description         = db.Column( db.String(45) )
+    Rat_Period_Description = db.Column( db.String(10) )
+    CC_Code                = db.Column( db.String(45) )
+
+
+    def __init__(self, Cus_Id=None, CR_Date_From=None, CR_Date_To=None, CIT_Status=None, Cur_Code='None', CIT_Count=None, CIT_Quantity=None, CIT_Generation=1, CU_Id=None, CI_CC_Id=None, CU_Operation='None', Typ_Code='None', CC_Cur_Code='None', CI_Id=None, Rat_Id=None, Rat_Price=None, Rat_MU_Code='None', Rat_Cur_Code='None', Rat_Period=None, Rat_Hourly=None, Rat_Daily=None, Rat_Monthly=None, CR_Quantity=None, CR_Quantity_at_Rate=None, CC_XR=None, CR_Cur_XR=None, CR_ST_at_Rate_Cur=None, CR_ST_at_CC_Cur=None, CR_ST_at_Cur=None, Cus_Name='None', CI_Name='None', CU_Description='None', CC_Description='None', Rat_Period_Description='None', CC_Code='None'):
+        self.Cus_Id                 = Cus_Id
+        self.CR_Date_From           = CR_Date_From
+        self.CR_Date_To             = CR_Date_To
+        self.CIT_Status             = CIT_Status
+        self.Cur_Code               = Cur_Code
+        self.CIT_Count              = CIT_Count
+        self.CIT_Quantity           = CIT_Quantity
+        self.CIT_Generation         = CIT_Generation
+        self.CU_Id                  = CU_Id
+        self.CI_CC_Id               = CI_CC_Id
+        self.CU_Operation           = CU_Operation
+        self.Typ_Code               = Typ_Code
+        self.CC_Cur_Code            = CC_Cur_Code
+        self.CI_Id                  = CI_Id
+        self.Rat_Id                 = Rat_Id
+        self.Rat_Price              = Rat_Price
+        self.Rat_MU_Code            = Rat_MU_Code
+        self.Rat_Cur_Code           = Rat_Cur_Code
+        self.Rat_Period             = Rat_Period
+        self.Rat_Hourly             = Rat_Hourly
+        self.Rat_Daily              = Rat_Daily
+        self.Rat_Monthly            = Rat_Monthly
+        self.CR_Quantity            = CR_Quantity
+        self.CR_Quantity_at_Rate    = CR_Quantity_at_Rate
+        self.CC_XR                  = CC_XR
+        self.CR_Cur_XR              = CR_Cur_XR
+        self.CR_ST_at_Rate_Cur      = CR_ST_at_Rate_Cur
+        self.CR_ST_at_CC_Cur        = CR_ST_at_CC_Cur
+        self.CR_ST_at_Cur           = CR_ST_at_Cur
+        self.Cus_Name               = Cus_Name
+        self.CI_Name                = CI_Name
+        self.CU_Description         = CU_Description
+        self.CC_Description         = CC_Description
+        self.Rat_Period_Description = Rat_Period_Description
+        self.CC_Code                = CC_Code
+
+    def __repr__(self):
+        return "<User_Resumes( Cus_Id='%s', CR_Date_From='%s', CR_Date_To='%s', CIT_Status='%s', Cur_Code='%s', CIT_Count='%s', CIT_Quantity='%s', CIT_Generation='%s', CU_Id='%s', CI_CC_Id='%s', CU_Operation='%s', Typ_Code='%s', CC_Cur_Code='%s', CI_Id='%s', Rat_Id='%s', Rat_Price='%s', Rat_MU_Code='%s', Rat_Cur_Code='%s', Rat_Period='%s', Rat_Hourly='%s', Rat_Daily='%s', Rat_Monthly='%s', CR_Quantity='%s', CR_Quantity_at_Rate='%s', CC_XR='%s', CR_Cur_XR='%s', CR_ST_at_Rate_Cur='%s', CR_ST_at_CC_Cur='%s', CR_ST_at_Cur='%s', Cus_Name='%s', CI_Name='%s', CU_Description='%s', CC_Description='%s', Rat_Period_Description='%s', CC_Code='%s')>" % \
+                ( self.Cus_Id, self.CR_Date_From, self.CR_Date_To, self.CIT_Status, self.Cur_Code, self.CIT_Count, self.CIT_Quantity, self.CIT_Generation, self.CU_Id, self.CI_CC_Id, self.CU_Operation, self.Typ_Code, self.CC_Cur_Code, self.CI_Id, self.Rat_Id, self.Rat_Price, self.Rat_MU_Code, self.Rat_Cur_Code, self.Rat_Period, self.Rat_Hourly, self.Rat_Daily, self.Rat_Monthly, self.CR_Quantity, self.CR_Quantity_at_Rate, self.CC_XR, self.CR_Cur_XR, self.CR_ST_at_Rate_Cur, self.CR_ST_at_CC_Cur, self.CR_ST_at_Cur, self.Cus_Name, self.CI_Name, self.CU_Description, self.CC_Description, self.Rat_Period_Description, self.CC_Code)
+
+# =============================================================================
+# Auto-Generated code. do not modify
+# (c) Sertechno 2018
+# GLVH @ 2019-08-24 18:09:43
 # =============================================================================
 
 class User(UserMixin, db.Model):
@@ -920,15 +855,6 @@ class User(UserMixin, db.Model):
     password_hash = db.Column( db.String(128) )
     confirmed     = db.Column( db.Boolean, default=0 )
     CC_Id         = db.Column( db.Integer, db.ForeignKey('Cost_Centers.CC_Id'), default=1 )
-
-
-    def __init__(self, **kwargs):
-        super(User, self).__init__(**kwargs)
-        if self.role is None:
-            if self.username == current_app.config['COLLECTOR_ADMIN']:
-                self.role = Role.query.filter_by(permissions=0xfe).first()
-            if self.role is None:
-                self.role = Role.query.filter_by(default=True).first()
 
 
     @property

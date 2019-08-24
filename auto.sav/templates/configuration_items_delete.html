@@ -1,0 +1,78 @@
+{# ============================================================================= #}
+
+{# Auto-Generated code. do not modify #}
+{# (c) Sertechno 2018 #}
+{# GLVH @ 2019-08-20 18:43:44 #}
+{# ============================================================================= #}
+
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block title %}Collector{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block page_content %}
+<!-- -------------------- -->
+<!-- gen_templates_delete -->
+<!-- -------------------- -->
+<div class="page-header">
+<table>
+   {% for d in session.data %}
+   <tr><td>{{d}}</td><td>:</td><td>{{session.data[d]}}</td></tr>
+   {% endfor %}
+<table>
+    <h2>Configuration Item: {{ row.CI_Id }}</h2>
+    <a href="#" onclick="history.go(-1)"><img src="/static/img/back.png"  color=yellow width="32" height="32" title="" alt="Add"></a>
+</div>
+{{ wtf.quick_form(form) }}
+<hr>
+<div>
+<h2>Charge Units(s) found {{row.charge_units.__len__()}} records</h2>
+<table class="table">
+  <thead class="thead-dark">
+    <tr id="header">
+        <th>Id</th>
+        <th>Description</th>
+        <th>UUID</th>
+        <th>Is Billeable</th>
+        <th>Is Always Billeable</th>
+        <th>Quantity</th>
+        <th>Conversion Operation</th>
+        <th>Type</th>
+        <th>Item Generation Type</th>
+        <th>Rate Id</th>
+        <th>Reference 1</th>
+        <th>Reference 2</th>
+        <th>Reference 3</th>
+        <td><a href="/forms/Charge_Units/0"><img src="/static/img/add.png"  color=yellow width="32" height="32" title="" alt="Add"></a></td>
+    </tr>
+  </thead>
+  <tbody>
+    {% for crow in row.charge_units %}
+       <tr>
+           <td>{{ crow.CU_Id }}</td>
+           <td>{{ crow.CU_Description }}</td>
+           <td>{{ crow.CU_UUID }}</td>
+           <td>{{ crow.CU_Is_Billeable }}</td>
+           <td>{{ crow.CU_Is_Always_Billeable }}</td>
+           <td>{{ crow.CU_Quantity }}</td>
+           <td>{{ crow.CU_Operation }}</td>
+           <td>{{ crow.Typ_Code }}</td>
+           <td>{{ crow.CIT_Generation }}</td>
+           <td>{{ crow.Rat_Id }}</td>
+           <td>{{ crow.CU_Reference_1 }}</td>
+           <td>{{ crow.CU_Reference_2 }}</td>
+           <td>{{ crow.CU_Reference_3 }}</td>
+           <td><a href="/forms/Charge_Units/{{crow.CU_Id}}"><img src="/static/img/edit.png" width="32" height="32" title="" alt="Edit"></a><a href="/forms/Charge_Units_delete/{{crow.CU_Id}}"><img src="/static/img/delete.png" width="32" height="32" title="" alt="Edit"></a></td>
+       </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+<hr>
+<!-- -------------------- -->
+<!-- gen_templates_delete -->
+<!-- -------------------- -->
+{% endblock %}
+{# ============================================================================= #}
+
