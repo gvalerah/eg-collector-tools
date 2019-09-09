@@ -96,38 +96,23 @@ def report_Charging_Resume_All():
     
     # Updated cached data for this specific query if requested 
     if Update == 1:
-        # -------------------------------------------------------------------------------------------------------------- #
-        # Previous Code faster but requires more memory will be replaced by an by CI loop                                #
-        # query="CALL Update_Charge_Resume(%d,'%s','%s',%d,'%s')"%(Pla_Id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code) #
-        # resume_records = db.engine.execute(query).scalar()                                                             #
-        # -------------------------------------------------------------------------------------------------------------- #
-        # 20181228 GV query = "SELECT DISTINCT CI_Id FROM Configuration_Items WHERE Pla_Id=%d"%(Pla_Id)
-        query = "SELECT CI_Id FROM Configuration_Items ORDER BY CC_Id,CI_Id"
+        CI = db.session.query(Configuration_Items.CI_Id).\
+                distinct().\
+                order_by(Configuration_Items.CC_Id,Configuration_Items.CI_Id).all()
         
-        logger.debug ("report_Changing_Resume_All: query: %s"%(query))
-
-        CI = db.engine.execute(query)
-
         logger.debug ("report_Changing_Resume_All: %d CI's found "%(CI.rowcount))
         
         resume_records=0
 
         for ci in CI:
-            query="CALL Update_Charge_Resume_CI2('%s','%s',%s,'%s',%s)"%\
-                    (CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code,ci.CI_Id)
-            logger.debug ("report_Changing_Resume_All: query: %s"%query)
-            records=db.engine.execute(query)
-            resume_records += records.scalar()
+            records = db.Update_Charge_Resume_CI2(CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code,ci.CI_Id)
+            resume_records += records # OJO AQUI ME QUEDE 
 
         logger.debug ("report_Changing_Resume_All: resume_records = %s"%resume_records)
         
     # Get Actual Remume Data from Database
     # NOTE: Here needs some Sand-Clock Message or something in case it takes so long ...
-    query="CALL Get_Charge_Resume2(4,%d,'%s','%s',%d,'%s')"%(0,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code)
-    
-    logger.debug ("report_Changing_Resume_All: query: %s"%query)
-    
-    rows =  db.engine.execute(query).fetchall()
+    rows = db.Get_Charge_Resume2(4,0,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code)
     
     return render_template('report_charging_resume_all.html',rows=rows,
                 CIT_Date_From=CIT_Date_From,

@@ -30,7 +30,7 @@ output_folder           =   code_folder         + "/output"
 #navbar_file_name    =   suite_auto_includes+"/collector_navbar.html" 
 #menu_file_name      =   suite_auto_includes+"/menu.html"
 style_file_name         =   source_includes+"/collector_style.css"
-navbar_file_name        =   source_includes+"/collector_navbar.html" 
+navbar_file_name        =   source_includes+"/html/collector_navbar.html" 
 menu_file_name          =   source_includes+"/menu.html"
 base_file_name          =   auto_templates+"/base.html"
 
@@ -40,21 +40,21 @@ oc="<!--"
 cc="-->"
 
 # Constants
-HOME=0
-CUSTOMER=1
-TABLES=2
-PROCESSES=3
-REPORTS=4
-OPTIONS=5
-HELP=6
-ACCOUNT=7
+HOME                = 0
+CUSTOMER            = 1
+TABLES              = 2
+PROCESSES           = 3
+REPORTS             = 4
+OPTIONS             = 5
+HELP                = 6
+ACCOUNT             = 7
 
-ROLE_CUSTOMER=1
-ROLE_REPORTER=2
-ROLE_CHARGER=3
-ROLE_ADMINISTRATOR=4
-ROLE_AUDITOR=5
-ROLE_GOD=6
+ROLE_CUSTOMER       = 1
+ROLE_REPORTER       = 2
+ROLE_CHARGER        = 3
+ROLE_ADMINISTRATOR  = 4
+ROLE_AUDITOR        = 5
+ROLE_GOD            = 6
 
 def Include_File(file_name,f):
     with open(file_name,'r') as fp:
@@ -98,8 +98,6 @@ def Gen_Option(option,f):
         f.write('                <!-- Dropdown -->\n')
         f.write('                  <li class="nav-item dropdown">\n')
         f.write('                    <a class="nav-link dropdown-toggle" href="/" id="navbardrop" data-toggle="dropdown">%s</a>\n'%(option['name']))
-#        f.write('                    %s\n'%(option['name']))
-#        f.write('                    </a>\n')
         f.write('                    <div class="dropdown-menu">\n')
         c=0
         for suboption in option['options']:
@@ -110,8 +108,11 @@ def Gen_Option(option,f):
     f.write(    '            {%- endif -%}\n')
     f.write(    '          {%- endif -%}\n')
     
-def Gen_Menu(Menu,ACCOUNT):
-    f=open(navbar_file_name,'w')
+def Gen_Menu(Menu,ACCOUNT,filename=None):
+    if filename is None:
+        filename=navbar_file_name
+    f=open(filename,'w')
+    print("%s: Gen_Menu() is writing file '%s' ..."%(__name__,filename))
     f.write('    <!-- ----------------------------- -->\n')
     f.write('    <!-- gen_menu_functions - Gen_Menu -->\n')
     f.write('    <!-- ----------------------------- -->\n')
@@ -154,13 +155,8 @@ def Gen_Menu(Menu,ACCOUNT):
     f.write('          {%- endif -%}\n')
     f.write('        </ul>\n')
 
-    # GV 20190514 Remove Sertechno Logo
-    #f.write('        <!-- Brand -->\n')
-    #f.write('        <a class="navbar-brand" href="http://www.sertechno.com"><img src="/static/img/logo_sertechno.png" title="" alt="Sertechno" width="200" height="100"></a>\n')    
-
     # GV 20190408
     f.write('      </div>\n')
-
 
     f.write('      </div>\n')
     f.write('    </nav>\n')

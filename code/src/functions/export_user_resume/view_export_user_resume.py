@@ -16,16 +16,18 @@ def forms_Export_User_Resume():
 
     form = frm_export_User_Resume()
     """
-    query = "SELECT COUNT(*) AS RECORDS,Cus_Id,CR_Date_From,CR_Date_To,CIT_Status,Cur_Code,Cus_Name FROM User_Resumes "\
-                "WHERE CI_CC_Id IN (SELECT CC_Id from Cost_Centers WHERE usercancc(%s,CC_Id)) "\
+    query = "S*ELECT COUNT(*) AS RECORDS,Cus_Id,CR_Date_From,CR_Date_To,CIT_Status,Cur_Code,Cus_Name FROM User_Resumes "\
+                "WHERE CI_CC_Id IN (S*ELECT CC_Id from Cost_Centers WHERE usercancc(%s,CC_Id)) "\
                 "GROUP BY Cus_Id,CR_Date_From,CR_Date_To,CIT_Status,Cur_Code,Cus_Name "\
                 "ORDER BY Cus_Id,CR_Date_From,CR_Date_To,CIT_Status,Cur_Code"%current_user.id
     """
-    query = "SELECT COUNT(*) AS RECORDS,CI_CC_Id,CR_Date_From,CR_Date_To,CIT_Status,Cur_Code,CC_Description FROM User_Resumes "\
-                "WHERE CI_CC_Id IN (SELECT CC_Id from Cost_Centers WHERE usercancc(%s,CC_Id)) "\
+    """ GV 20190907
+    query = "S*ELECT COUNT(*) AS RECORDS,CI_CC_Id,CR_Date_From,CR_Date_To,CIT_Status,Cur_Code,CC_Description FROM User_Resumes "\
+                "WHERE CI_CC_Id IN (S*ELECT CC_Id from Cost_Centers WHERE usercancc(%s,CC_Id)) "\
                 "GROUP BY CI_CC_Id,CR_Date_From,CR_Date_To,CIT_Status,Cur_Code,CC_Description "\
                 "ORDER BY CI_CC_Id,CR_Date_From,CR_Date_To,CIT_Status,Cur_Code"%current_user.id
-
+    """
+    
 
 
     """
@@ -33,8 +35,28 @@ select count(*),CC_Description,CR_Date_From,CR_Date_To,CIT_Status,Cur_Code
 from User_Resumes
 group by CC_Description,CR_Date_From,CR_Date_To,CIT_Status,Cur_Code;
     """                
-    rows=db.engine.execute(query).fetchall()
+    #rows=db.engine.execute(query).fetchall()
 
+    USERCAN = get_user_cost_centers(current_user.id,1) ## OJO OJO OJO NO ESTOY SEGURO DEL CC A USAR AQUI 
+    rows = db.query(    func.count(CI_CC_Id).label('RECORDS'),
+                        User_Resumes.CI_CC_Id,
+                        User_Resumes.CR_Date_From,
+                        User_Resumes.CR_Date_To,
+                        User_Resumes.CIT_Status,
+                        User_Resumes.Cur_Code,
+                        User_Resumes.CC_Description).\
+                    filter(     User_Resumes.CI_CC.in_(USERCAN)).\
+                    group_by(   User_Resumes.CI_CC_Id,
+                                User_Resumes.CR_Date_From,
+                                User_Resumes.CR_Date_To,
+                                User_Resumes.CIT_Status,
+                                User_Resumes.Cur_Code,
+                                User_Resumes.CC_Description).\
+                    order_by(   User_Resumes.CI_CC_Id,
+                                User_Resumes.CR_Date_From,
+                                User_Resumes.CR_Date_To,
+                                User_Resumes.CIT_Status,
+                                User_Resumes.Cur_Code)
     # Load Statuses
     statuses=cit_status.query.all()
     dstatuses={}
@@ -404,10 +426,13 @@ def export_User_Resume():
     Format          =  request.args.get('Format',None,type=str)
     # Get Actual Data from Database
     # NOTE: Here needs some Sand-Clock Message or something in case it takes so long ...
-    query="CALL Get_User_Resume(%d,'%s','%s',%d,'%s','%d')"%(current_user.id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code,CC_Id)
+    """
+    query="C*ALL Get_User_Resume(%d,'%s','%s',%d,'%s','%d')"%(current_user.id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code,CC_Id)
     
     rows =  db.engine.execute(query).fetchall()
-
+    """
+    rows = db.Get_User_Resume(current_user.id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code,CC_Id)
+    
     # Aqui hace la conversion 
     output_file = "CR_%s_%s_%s_%s_%s.%s"%(CC_Code,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code,Format)
     if      Format == 'pdf':

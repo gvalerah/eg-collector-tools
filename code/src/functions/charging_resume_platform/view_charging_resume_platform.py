@@ -111,36 +111,48 @@ def report_Charging_Resume_Platform():
     if Update == 1:
         # -------------------------------------------------------------------------------------------------------------- #
         # Previous Code faster but requires more memory will be replaced by an by CI loop                                #
-        # query="CALL Update_Charge_Resume(%d,'%s','%s',%d,'%s')"%(Pla_Id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code) #
+        # query="C*ALL Update_Charge_Resume(%d,'%s','%s',%d,'%s')"%(Pla_Id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code) #
         # resume_records = db.engine.execute(query).scalar()                                                             #
         # -------------------------------------------------------------------------------------------------------------- #
-        # 20181228 GV query = "SELECT DISTINCT CI_Id FROM Configuration_Items WHERE Pla_Id=%d"%(Pla_Id)
-        query = "SELECT CI_Id FROM Configuration_Items WHERE Pla_Id=%d ORDER BY CC_Id,CI_Id"%(Pla_Id)
+        # 20181228 GV query = "S*ELECT DISTINCT CI_Id FROM Configuration_Items WHERE Pla_Id=%d"%(Pla_Id)
+        """
+        query = "S*ELECT CI_Id FROM Configuration_Items WHERE Pla_Id=%d ORDER BY CC_Id,CI_Id"%(Pla_Id)
         
         logger.debug ("report_Changing_Resume_Platform: query: %s"%(query))
 
         CI = db.engine.execute(query)
-
+        """
+        
+        CI = db.query(Configuration_Items.CI_Id).\
+                filter(Configuration_Items.Pla_Id==Pla_Id).\
+                order_by(Configuration_Items.CC_Id,Configuration_Items.CI_Id)
+        
         logger.debug ("report_Changing_Resume_Platform: %d CI's found for platform %d"%(CI.rowcount,Pla_Id))
         
         resume_records=0
 
         for ci in CI:
-            query="CALL Update_Charge_Resume_CI2('%s','%s',%s,'%s',%s)"%\
+            """
+            query="C*ALL Update_Charge_Resume_CI2('%s','%s',%s,'%s',%s)"%\
                     (CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code,ci.CI_Id)
             logger.debug ("report_Changing_Resume_Platform: query: %s"%query)
             records=db.engine.execute(query)
             resume_records += records.scalar()
-
+            """
+            records = db.Update_Charge_Resume_CI2(CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code,ci.CI_Id)
+            resume_records += records
         logger.debug ("report_Changing_Resume_Platform: resume_records = %s"%resume_records)
         
     # Get Actual Remume Data from Database
     # NOTE: Here needs some Sand-Clock Message or something in case it takes so long ...
-    query="CALL Get_Charge_Resume2(3,%d,'%s','%s',%d,'%s')"%(Pla_Id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code)
+    """
+    query="C*ALL Get_Charge_Resume2(3,%d,'%s','%s',%d,'%s')"%(Pla_Id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code)
     
     logger.debug ("report_Changing_Resume: query: %s"%query)
     
     rows =  db.engine.execute(query).fetchall()
+    """
+    rows = db.Get_Charge_Resume2(3,Pla_Id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code)
     
     return render_template('report_charging_resume_platform.html',rows=rows,
                 Pla_Id=Pla_Id,

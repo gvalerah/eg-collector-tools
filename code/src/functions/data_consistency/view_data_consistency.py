@@ -88,6 +88,7 @@ def reports_Data_Consistency():
                 .order_by(rate.Pla_Id,rate.Cus_Id,rate.CC_Id,rate.CI_Id,rate.Typ_Code)\
                 .all()
     """
+    """
     query = "SELECT * "\
                 "FROM Rates "\
                     "JOIN Customers             USING   (Cus_Id) "\
@@ -95,7 +96,19 @@ def reports_Data_Consistency():
                     "JOIN Configuration_Items   USING   (CI_Id) "\
                     "JOIN Cost_Centers          ON      Cost_Centers.CC_Id=Rates.CC_id "\
                 "ORDER BY Typ_Code,Rates.Pla_Id,Rates.Cus_Id,Rates.CC_Id,Rates.CI_Id"
-    
+    """
+    # GV 20190907
+    query = db.query(Rates,Customers,Platforms,Configuration_Items,Cost_Centes).\
+                join(Customers          , Rates.Cus_Id == Customers.Cus_Id).\
+                join(Platforms          , Rates.Pla_Id == Platforms.Pla_Id).\
+                join(Configuration_Items, Rates.CI_Id  == Configuration_Items.CI_Id).\
+                join(Cost_Centers       , Rates.CC_Id  == Cost_Centers.CC_Id).\
+                order_by(   Rates.Typ_Code,
+                            Rates.Pla_Id,
+                            Rates.Cus_Id,
+                            Rates.CC_Id,
+                            Rates.CI_Id)
+                 
     rate_rows=[]
 
     try:
@@ -107,6 +120,7 @@ def reports_Data_Consistency():
 
     data.update({'rate_rows': rate_rows})
 
+    """ GV 20190907 AQUI AUN HAY QUE CONSTRUIR UN ALGORITMO EQUIVALENTE
     query = "SELECT CU_Id,CU_Description,Typ_Code,Pla_Id,Cus_Id,CI.CC_Id AS CC_ID,Rat_Id,"\
                     "Get_Rate_Id (Typ_Code,Pla_Id,Cus_Id,CI.CC_Id,CU_Id) AS RATE, "\
                     "Pla_Name,Cus_Name,CC_Description,CI_Name "\
@@ -116,6 +130,7 @@ def reports_Data_Consistency():
                     "JOIN Customers           AS CUS USING (Cus_Id) "\
                     "JOIN Cost_Centers        AS CC  ON CC.CC_Id = CI.CC_Id "\
                 "WHERE Rat_Id != Get_Rate_Id(Typ_Code,Pla_Id,Cus_Id,CI.CC_Id,CU_Id)"
+    """
 
     cu_rows = []
     

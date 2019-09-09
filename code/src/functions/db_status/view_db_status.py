@@ -4,12 +4,15 @@
 # GLVH @ 2018-11-11
 # =============================================================================
 
+# NOTE: THOS IS FULL MYSQL CODE NEEDS TO BE VARIABLE ADAPTED FOR
+# AGNOSTIC DB STATUS REPORT
 
 from babel.numbers  import format_number, format_decimal, format_percent
 
 @main.route('/reports/DB_Status', methods=['GET'])
 @login_required
 def reports_DB_Status():
+    
     logger.debug('Enter: reports_DB_Status()'%())
 
 

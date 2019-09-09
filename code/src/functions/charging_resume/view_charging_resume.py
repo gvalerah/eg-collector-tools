@@ -9,7 +9,7 @@
 
 from emtec.collector.forms       import frm_charging_resume
 from babel.numbers  import format_number, format_decimal, format_percent
-from emtec.collector.db.ORM_models      import Configuration_Items
+from emtec.collector.db.orm_model      import Configuration_Items
 
 @main.route('/forms/Get_Charging_Resume', methods=['GET', 'POST'])
 @login_required
@@ -117,44 +117,16 @@ def report_Charging_Resume():
     if Update == 1:
         # -------------------------------------------------------------------------------------------------------------- #
         # Previous Code faster but requires more memory will be replaced by an by CI loop                                #
-        # query="CALL Update_Charge_Resume(%d,'%s','%s',%d,'%s')"%(Cus_Id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code) #
+        # query="C*ALL Update_Charge_Resume(%d,'%s','%s',%d,'%s')"%(Cus_Id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code) #
         # resume_records = db.engine.execute(query).scalar()                                                             #
         # -------------------------------------------------------------------------------------------------------------- #
-        # 20181228 GV query = "SELECT DISTINCT CI_Id FROM Configuration_Items WHERE Cus_Id=%d"%(Cus_Id)
+        # 20181228 GV query = "S*ELECT DISTINCT CI_Id FROM Configuration_Items WHERE Cus_Id=%d"%(Cus_Id)
         """ 20190819 GV
-        #query = "SELECT CI_Id FROM Configuration_Items WHERE Cus_Id=%d ORDER BY CC_Id,CI_Id"%(Cus_Id)
+        #query = "S*ELECT CI_Id FROM Configuration_Items WHERE Cus_Id=%d ORDER BY CC_Id,CI_Id"%(Cus_Id)
         
         logger.debug ("report_Changing_Resume: query: %s"%(query))
 
         CI = db.engine.execute(query)
-        """
-        """
-        from pprint import pprint
-        print("globals")
-        #pprint(globals())
-        print("current_app")
-        pprint(current_app)
-        print("current_app dir")
-        #pprint(dir(current_app))
-        print("db=",db)
-        #print("db dir =",dir(db))
-        """
-        """
-        current_app.db.Connect()
-        print("current_app.ormdb=",current_app.ormdb)
-        #print("current_app.ormdb dir =",dir(current_app.ormdb))
-        print("current_app.ormdb rdbms    =",current_app.db.rdbms)
-        print("current_app.ormdb dialect  =",current_app.db.dialect)
-        print("current_app.ormdb host     =",current_app.db.host)
-        print("current_app.ormdb port     =",current_app.db.port)
-        print("current_app.ormdb user     =",current_app.db.user)
-        print("current_app.ormdb password =",current_app.db.password)
-        print("current_app.ormdb instance =",current_app.db.instance)
-        print("current_app.ormdb engine   =",current_app.db.engine)
-        print("current_app.ormdb string   =",current_app.db.connection_string)
-        print("current_app.ormdb session  =",current_app.db.session)
-        #ormdb=current_app.ormdb
-        #print("ormdb dir =",dir(current_app.ormdb))
         """
         CI = db.session.query(Configuration_Items.CI_Id).\
                 filter(Configuration_Items.Cus_Id==Cus_Id).\
@@ -169,7 +141,7 @@ def report_Charging_Resume():
 
         for ci in CI:
             """ 20190819 GV
-            query="CALL Update_Charge_Resume_CI(%s,'%s','%s',%s,'%s',%s)"%\
+            query="C*ALL Update_Charge_Resume_CI(%s,'%s','%s',%s,'%s',%s)"%\
                     (Cus_Id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code,ci.CI_Id)
             logger.debug ("report_Changing_Resume: query: %s"%query)
             records=db.engine.execute(query)
@@ -184,7 +156,7 @@ def report_Charging_Resume():
     # Get Actual Remume Data from Database
     # NOTE: Here needs some Sand-Clock Message or something in case it takes so long ...
     """ 20190819 GV
-    query="CALL Get_Charge_Resume(%d,'%s','%s',%d,'%s')"%(Cus_Id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code)
+    query="C*ALL Get_Charge_Resume(%d,'%s','%s',%d,'%s')"%(Cus_Id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code)
     
     logger.debug ("report_Changing_Resume: query: %s"%query)
     

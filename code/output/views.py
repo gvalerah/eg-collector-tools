@@ -18,8 +18,8 @@ from ..decorators   import admin_required, permission_required
 #from ..models       import User
 #from ..models       import Permission
 
-from emtec.collector.db.Flask_models       import User
-from emtec.collector.db.Flask_models       import Permission
+from emtec.collector.db.flask_models       import User
+from emtec.collector.db.flask_models       import Permission
 
 """ Application decorators for routes """
 """ Decorators specify main routes to be handled by Collector Solution """
@@ -95,62 +95,86 @@ def collector_about():
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-24 18:09:43
+# GLVH @ 2019-09-09 13:44:02
 # =============================================================================
 
-from emtec.collector.db.Flask_models import cit_generation
-from emtec.collector.forms  import frm_cit_generation,frm_cit_generation_delete
-from emtec.collector.db.Flask_models import cit_status
-from emtec.collector.forms  import frm_cit_status,frm_cit_status_delete
-from emtec.collector.db.Flask_models import cu_operation
-from emtec.collector.forms  import frm_cu_operation,frm_cu_operation_delete
-from emtec.collector.db.Flask_models import cu_type
-from emtec.collector.forms  import frm_cu_type,frm_cu_type_delete
-from emtec.collector.db.Flask_models import charge_item
-from emtec.collector.forms  import frm_charge_item,frm_charge_item_delete
-from emtec.collector.db.Flask_models import charge_resume
-from emtec.collector.forms  import frm_charge_resume,frm_charge_resume_delete
-from emtec.collector.db.Flask_models import charge_unit
-from emtec.collector.forms  import frm_charge_unit,frm_charge_unit_delete
-from emtec.collector.db.Flask_models import configuration_item
-from emtec.collector.forms  import frm_configuration_item,frm_configuration_item_delete
-from emtec.collector.db.Flask_models import cost_center
-from emtec.collector.forms  import frm_cost_center,frm_cost_center_delete
-from emtec.collector.db.Flask_models import country
-from emtec.collector.forms  import frm_country,frm_country_delete
-from emtec.collector.db.Flask_models import country_currency
-from emtec.collector.forms  import frm_country_currency,frm_country_currency_delete
-from emtec.collector.db.Flask_models import currency
-from emtec.collector.forms  import frm_currency,frm_currency_delete
-from emtec.collector.db.Flask_models import customer
-from emtec.collector.forms  import frm_customer,frm_customer_delete
-from emtec.collector.db.Flask_models import exchange_rate
-from emtec.collector.forms  import frm_exchange_rate,frm_exchange_rate_delete
-from emtec.collector.db.Flask_models import measure_unit
-from emtec.collector.forms  import frm_measure_unit,frm_measure_unit_delete
-from emtec.collector.db.Flask_models import platform
-from emtec.collector.forms  import frm_platform,frm_platform_delete
-from emtec.collector.db.Flask_models import rat_period
-from emtec.collector.forms  import frm_rat_period,frm_rat_period_delete
-from emtec.collector.db.Flask_models import rate
-from emtec.collector.forms  import frm_rate,frm_rate_delete
-from emtec.collector.db.Flask_models import Role
-from emtec.collector.forms  import frm_Role,frm_Role_delete
-from emtec.collector.db.Flask_models import st_use_per_cu
-from emtec.collector.forms  import frm_st_use_per_cu,frm_st_use_per_cu_delete
-from emtec.collector.db.Flask_models import st_use_per_type
-from emtec.collector.forms  import frm_st_use_per_type,frm_st_use_per_type_delete
-from emtec.collector.db.Flask_models import trace
-from emtec.collector.forms  import frm_trace,frm_trace_delete
-from emtec.collector.db.Flask_models import user_resumes
-from emtec.collector.forms  import frm_user_resumes,frm_user_resumes_delete
-from emtec.collector.db.Flask_models import User
-from emtec.collector.forms  import frm_User,frm_User_delete
+# gen.gen_views_form:Gen_Views_Form:AG 2019-09-09 13:44:03.775732
+from emtec.collector.db.flask_models import cit_generation
+from emtec.collector.forms           import frm_cit_generation,frm_cit_generation_delete
+# gen.gen_views_form:Gen_Views_Form:AG 2019-09-09 13:44:03.787854
+from emtec.collector.db.flask_models import cit_status
+from emtec.collector.forms           import frm_cit_status,frm_cit_status_delete
+# gen.gen_views_form:Gen_Views_Form:AG 2019-09-09 13:44:03.808111
+from emtec.collector.db.flask_models import cu_operation
+from emtec.collector.forms           import frm_cu_operation,frm_cu_operation_delete
+# gen.gen_views_form:Gen_Views_Form:AG 2019-09-09 13:44:03.820592
+from emtec.collector.db.flask_models import cu_type
+from emtec.collector.forms           import frm_cu_type,frm_cu_type_delete
+# gen.gen_views_form:Gen_Views_Form:AG 2019-09-09 13:44:03.863911
+from emtec.collector.db.flask_models import charge_item
+from emtec.collector.forms           import frm_charge_item,frm_charge_item_delete
+# gen.gen_views_form:Gen_Views_Form:AG 2019-09-09 13:44:04.046826
+from emtec.collector.db.flask_models import charge_resume
+from emtec.collector.forms           import frm_charge_resume,frm_charge_resume_delete
+# gen.gen_views_form:Gen_Views_Form:AG 2019-09-09 13:44:04.128675
+from emtec.collector.db.flask_models import charge_unit
+from emtec.collector.forms           import frm_charge_unit,frm_charge_unit_delete
+# gen.gen_views_form:Gen_Views_Form:AG 2019-09-09 13:44:04.179126
+from emtec.collector.db.flask_models import configuration_item
+from emtec.collector.forms           import frm_configuration_item,frm_configuration_item_delete
+# gen.gen_views_form:Gen_Views_Form:AG 2019-09-09 13:44:04.207989
+from emtec.collector.db.flask_models import cost_center
+from emtec.collector.forms           import frm_cost_center,frm_cost_center_delete
+# gen.gen_views_form:Gen_Views_Form:AG 2019-09-09 13:44:04.229266
+from emtec.collector.db.flask_models import country
+from emtec.collector.forms           import frm_country,frm_country_delete
+# gen.gen_views_form:Gen_Views_Form:AG 2019-09-09 13:44:04.258593
+from emtec.collector.db.flask_models import country_currency
+from emtec.collector.forms           import frm_country_currency,frm_country_currency_delete
+# gen.gen_views_form:Gen_Views_Form:AG 2019-09-09 13:44:04.281323
+from emtec.collector.db.flask_models import currency
+from emtec.collector.forms           import frm_currency,frm_currency_delete
+# gen.gen_views_form:Gen_Views_Form:AG 2019-09-09 13:44:04.300930
+from emtec.collector.db.flask_models import customer
+from emtec.collector.forms           import frm_customer,frm_customer_delete
+# gen.gen_views_form:Gen_Views_Form:AG 2019-09-09 13:44:04.326846
+from emtec.collector.db.flask_models import exchange_rate
+from emtec.collector.forms           import frm_exchange_rate,frm_exchange_rate_delete
+# gen.gen_views_form:Gen_Views_Form:AG 2019-09-09 13:44:04.338718
+from emtec.collector.db.flask_models import measure_unit
+from emtec.collector.forms           import frm_measure_unit,frm_measure_unit_delete
+# gen.gen_views_form:Gen_Views_Form:AG 2019-09-09 13:44:04.368012
+from emtec.collector.db.flask_models import platform
+from emtec.collector.forms           import frm_platform,frm_platform_delete
+# gen.gen_views_form:Gen_Views_Form:AG 2019-09-09 13:44:04.380316
+from emtec.collector.db.flask_models import rat_period
+from emtec.collector.forms           import frm_rat_period,frm_rat_period_delete
+# gen.gen_views_form:Gen_Views_Form:AG 2019-09-09 13:44:04.465649
+from emtec.collector.db.flask_models import rate
+from emtec.collector.forms           import frm_rate,frm_rate_delete
+# gen.gen_views_form:Gen_Views_Form:AG 2019-09-09 13:44:04.487318
+from emtec.collector.db.flask_models import Role
+from emtec.collector.forms           import frm_Role,frm_Role_delete
+# gen.gen_views_form:Gen_Views_Form:AG 2019-09-09 13:44:04.580154
+from emtec.collector.db.flask_models import st_use_per_cu
+from emtec.collector.forms           import frm_st_use_per_cu,frm_st_use_per_cu_delete
+# gen.gen_views_form:Gen_Views_Form:AG 2019-09-09 13:44:04.666004
+from emtec.collector.db.flask_models import st_use_per_type
+from emtec.collector.forms           import frm_st_use_per_type,frm_st_use_per_type_delete
+# gen.gen_views_form:Gen_Views_Form:AG 2019-09-09 13:44:04.677339
+from emtec.collector.db.flask_models import trace
+from emtec.collector.forms           import frm_trace,frm_trace_delete
+# gen.gen_views_form:Gen_Views_Form:AG 2019-09-09 13:44:04.832026
+from emtec.collector.db.flask_models import user_resumes
+from emtec.collector.forms           import frm_user_resumes,frm_user_resumes_delete
+# gen.gen_views_form:Gen_Views_Form:AG 2019-09-09 13:44:04.870329
+from emtec.collector.db.flask_models import User
+from emtec.collector.forms           import frm_User,frm_User_delete
 
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-24 18:09:43
+# GLVH @ 2019-09-09 13:44:02
 # =============================================================================
 
 @main.route('/forms/Charge_Items', methods=['GET', 'POST'])
@@ -240,6 +264,7 @@ def forms_Charge_Items():
     return render_template('charge_items.html', form=form, row=row)
 
 # =============================================================================
+# gen.gen_views_delete:Gen_Views_Delete:AG 2019-09-09 13:44:03.863997
 @main.route('/forms/Charge_Items_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -284,6 +309,7 @@ def forms_Charge_Items_delete():
     return render_template('charge_items_delete.html', form=form, data=session.get('data'),row=row)
 
 # =============================================================================
+# gen.gen_views_select_query:Gen_Views_Select_Query:AG 2019-09-09 13:44:03.864038
 @main.route('/select/Charge_Items_Query', methods=['GET','POST'])
 @login_required
 @admin_required
@@ -354,7 +380,7 @@ def select_Charge_Items_query():
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-24 18:09:43
+# GLVH @ 2019-09-09 13:44:02
 # =============================================================================
 
 @main.route('/forms/Charge_Resumes', methods=['GET', 'POST'])
@@ -491,6 +517,7 @@ def forms_Charge_Resumes():
     return render_template('charge_resumes.html', form=form, row=row)
 
 # =============================================================================
+# gen.gen_views_delete:Gen_Views_Delete:AG 2019-09-09 13:44:04.047009
 @main.route('/forms/Charge_Resumes_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -538,6 +565,7 @@ def forms_Charge_Resumes_delete():
     return render_template('charge_resumes_delete.html', form=form, data=session.get('data'),row=row)
 
 # =============================================================================
+# gen.gen_views_select_query:Gen_Views_Select_Query:AG 2019-09-09 13:44:04.047100
 @main.route('/select/Charge_Resumes_Query', methods=['GET','POST'])
 @login_required
 def select_Charge_Resumes_query():
@@ -675,7 +703,7 @@ def select_Charge_Resumes_query():
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-24 18:09:43
+# GLVH @ 2019-09-09 13:44:02
 # =============================================================================
 
 @main.route('/forms/Charge_Units', methods=['GET', 'POST'])
@@ -778,6 +806,7 @@ def forms_Charge_Units():
     return render_template('charge_units.html', form=form, row=row)
 
 # =============================================================================
+# gen.gen_views_delete:Gen_Views_Delete:AG 2019-09-09 13:44:04.128885
 @main.route('/forms/Charge_Units_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -821,6 +850,7 @@ def forms_Charge_Units_delete():
     return render_template('charge_units_delete.html', form=form, data=session.get('data'),row=row)
 
 # =============================================================================
+# gen.gen_views_select_query:Gen_Views_Select_Query:AG 2019-09-09 13:44:04.128928
 @main.route('/select/Charge_Units_Query', methods=['GET','POST'])
 @login_required
 @admin_required
@@ -956,7 +986,7 @@ def select_Charge_Units_query():
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-24 18:09:43
+# GLVH @ 2019-09-09 13:44:02
 # =============================================================================
 
 @main.route('/forms/CIT_Generations', methods=['GET', 'POST'])
@@ -1023,6 +1053,7 @@ def forms_CIT_Generations():
     return render_template('cit_generations.html', form=form, row=row)
 
 # =============================================================================
+# gen.gen_views_delete:Gen_Views_Delete:AG 2019-09-09 13:44:03.775794
 @main.route('/forms/CIT_Generations_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -1066,6 +1097,7 @@ def forms_CIT_Generations_delete():
     return render_template('cit_generations_delete.html', form=form, data=session.get('data'),row=row)
 
 # =============================================================================
+# gen.gen_views_select_query:Gen_Views_Select_Query:AG 2019-09-09 13:44:03.775874
 @main.route('/select/CIT_Generations_Query', methods=['GET','POST'])
 @login_required
 @admin_required
@@ -1105,7 +1137,7 @@ def select_CIT_Generations_query():
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-24 18:09:43
+# GLVH @ 2019-09-09 13:44:02
 # =============================================================================
 
 @main.route('/forms/CIT_Statuses', methods=['GET', 'POST'])
@@ -1172,6 +1204,7 @@ def forms_CIT_Statuses():
     return render_template('cit_statuses.html', form=form, row=row)
 
 # =============================================================================
+# gen.gen_views_delete:Gen_Views_Delete:AG 2019-09-09 13:44:03.787910
 @main.route('/forms/CIT_Statuses_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -1215,6 +1248,7 @@ def forms_CIT_Statuses_delete():
     return render_template('cit_statuses_delete.html', form=form, data=session.get('data'),row=row)
 
 # =============================================================================
+# gen.gen_views_select_query:Gen_Views_Select_Query:AG 2019-09-09 13:44:03.787945
 @main.route('/select/CIT_Statuses_Query', methods=['GET','POST'])
 @login_required
 @admin_required
@@ -1254,7 +1288,7 @@ def select_CIT_Statuses_query():
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-24 18:09:43
+# GLVH @ 2019-09-09 13:44:02
 # =============================================================================
 
 @main.route('/forms/Configuration_Items', methods=['GET', 'POST'])
@@ -1336,6 +1370,7 @@ def forms_Configuration_Items():
     return render_template('configuration_items.html', form=form, row=row)
 
 # =============================================================================
+# gen.gen_views_delete:Gen_Views_Delete:AG 2019-09-09 13:44:04.179198
 @main.route('/forms/Configuration_Items_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -1379,6 +1414,7 @@ def forms_Configuration_Items_delete():
     return render_template('configuration_items_delete.html', form=form, data=session.get('data'),row=row)
 
 # =============================================================================
+# gen.gen_views_select_query:Gen_Views_Select_Query:AG 2019-09-09 13:44:04.179236
 @main.route('/select/Configuration_Items_Query', methods=['GET','POST'])
 @login_required
 @admin_required
@@ -1463,7 +1499,7 @@ def select_Configuration_Items_query():
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-24 18:09:43
+# GLVH @ 2019-09-09 13:44:02
 # =============================================================================
 
 @main.route('/forms/Cost_Centers', methods=['GET', 'POST'])
@@ -1537,6 +1573,7 @@ def forms_Cost_Centers():
     return render_template('cost_centers.html', form=form, row=row)
 
 # =============================================================================
+# gen.gen_views_delete:Gen_Views_Delete:AG 2019-09-09 13:44:04.208087
 @main.route('/forms/Cost_Centers_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -1580,6 +1617,7 @@ def forms_Cost_Centers_delete():
     return render_template('cost_centers_delete.html', form=form, data=session.get('data'),row=row)
 
 # =============================================================================
+# gen.gen_views_select_query:Gen_Views_Select_Query:AG 2019-09-09 13:44:04.208139
 @main.route('/select/Cost_Centers_Query', methods=['GET','POST'])
 @login_required
 @admin_required
@@ -1634,7 +1672,7 @@ def select_Cost_Centers_query():
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-24 18:09:43
+# GLVH @ 2019-09-09 13:44:02
 # =============================================================================
 
 @main.route('/forms/Countries_Currencies', methods=['GET', 'POST'])
@@ -1708,6 +1746,7 @@ def forms_Countries_Currencies():
     return render_template('countries_currencies.html', form=form, row=row)
 
 # =============================================================================
+# gen.gen_views_delete:Gen_Views_Delete:AG 2019-09-09 13:44:04.258655
 @main.route('/forms/Countries_Currencies_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -1752,6 +1791,7 @@ def forms_Countries_Currencies_delete():
     return render_template('countries_currencies_delete.html', form=form, data=session.get('data'),row=row)
 
 # =============================================================================
+# gen.gen_views_select_query:Gen_Views_Select_Query:AG 2019-09-09 13:44:04.258692
 @main.route('/select/Countries_Currencies_Query', methods=['GET','POST'])
 @login_required
 @admin_required
@@ -1802,7 +1842,7 @@ def select_Countries_Currencies_query():
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-24 18:09:43
+# GLVH @ 2019-09-09 13:44:02
 # =============================================================================
 
 @main.route('/forms/Countries', methods=['GET', 'POST'])
@@ -1873,6 +1913,7 @@ def forms_Countries():
     return render_template('countries.html', form=form, row=row)
 
 # =============================================================================
+# gen.gen_views_delete:Gen_Views_Delete:AG 2019-09-09 13:44:04.229336
 @main.route('/forms/Countries_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -1916,6 +1957,7 @@ def forms_Countries_delete():
     return render_template('countries_delete.html', form=form, data=session.get('data'),row=row)
 
 # =============================================================================
+# gen.gen_views_select_query:Gen_Views_Select_Query:AG 2019-09-09 13:44:04.229374
 @main.route('/select/Countries_Query', methods=['GET','POST'])
 @login_required
 @admin_required
@@ -1961,7 +2003,7 @@ def select_Countries_query():
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-24 18:09:43
+# GLVH @ 2019-09-09 13:44:02
 # =============================================================================
 
 @main.route('/forms/CU_Operations', methods=['GET', 'POST'])
@@ -2032,6 +2074,7 @@ def forms_CU_Operations():
     return render_template('cu_operations.html', form=form, row=row)
 
 # =============================================================================
+# gen.gen_views_delete:Gen_Views_Delete:AG 2019-09-09 13:44:03.808178
 @main.route('/forms/CU_Operations_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -2075,6 +2118,7 @@ def forms_CU_Operations_delete():
     return render_template('cu_operations_delete.html', form=form, data=session.get('data'),row=row)
 
 # =============================================================================
+# gen.gen_views_select_query:Gen_Views_Select_Query:AG 2019-09-09 13:44:03.808217
 @main.route('/select/CU_Operations_Query', methods=['GET','POST'])
 @login_required
 @admin_required
@@ -2120,7 +2164,7 @@ def select_CU_Operations_query():
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-24 18:09:43
+# GLVH @ 2019-09-09 13:44:02
 # =============================================================================
 
 @main.route('/forms/Currencies', methods=['GET', 'POST'])
@@ -2191,6 +2235,7 @@ def forms_Currencies():
     return render_template('currencies.html', form=form, row=row)
 
 # =============================================================================
+# gen.gen_views_delete:Gen_Views_Delete:AG 2019-09-09 13:44:04.281385
 @main.route('/forms/Currencies_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -2234,6 +2279,7 @@ def forms_Currencies_delete():
     return render_template('currencies_delete.html', form=form, data=session.get('data'),row=row)
 
 # =============================================================================
+# gen.gen_views_select_query:Gen_Views_Select_Query:AG 2019-09-09 13:44:04.281424
 @main.route('/select/Currencies_Query', methods=['GET','POST'])
 @login_required
 @admin_required
@@ -2279,7 +2325,7 @@ def select_Currencies_query():
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-24 18:09:43
+# GLVH @ 2019-09-09 13:44:02
 # =============================================================================
 
 @main.route('/forms/Customers', methods=['GET', 'POST'])
@@ -2349,6 +2395,7 @@ def forms_Customers():
     return render_template('customers.html', form=form, row=row)
 
 # =============================================================================
+# gen.gen_views_delete:Gen_Views_Delete:AG 2019-09-09 13:44:04.301008
 @main.route('/forms/Customers_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -2392,6 +2439,7 @@ def forms_Customers_delete():
     return render_template('customers_delete.html', form=form, data=session.get('data'),row=row)
 
 # =============================================================================
+# gen.gen_views_select_query:Gen_Views_Select_Query:AG 2019-09-09 13:44:04.301044
 @main.route('/select/Customers_Query', methods=['GET','POST'])
 @login_required
 @admin_required
@@ -2438,7 +2486,7 @@ def select_Customers_query():
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-24 18:09:43
+# GLVH @ 2019-09-09 13:44:02
 # =============================================================================
 
 @main.route('/forms/CU_Types', methods=['GET', 'POST'])
@@ -2505,6 +2553,7 @@ def forms_CU_Types():
     return render_template('cu_types.html', form=form, row=row)
 
 # =============================================================================
+# gen.gen_views_delete:Gen_Views_Delete:AG 2019-09-09 13:44:03.820668
 @main.route('/forms/CU_Types_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -2548,6 +2597,7 @@ def forms_CU_Types_delete():
     return render_template('cu_types_delete.html', form=form, data=session.get('data'),row=row)
 
 # =============================================================================
+# gen.gen_views_select_query:Gen_Views_Select_Query:AG 2019-09-09 13:44:03.820716
 @main.route('/select/CU_Types_Query', methods=['GET','POST'])
 @login_required
 @admin_required
@@ -2587,7 +2637,7 @@ def select_CU_Types_query():
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-24 18:09:43
+# GLVH @ 2019-09-09 13:44:02
 # =============================================================================
 
 @main.route('/forms/Exchange_Rates', methods=['GET', 'POST'])
@@ -2659,6 +2709,7 @@ def forms_Exchange_Rates():
     return render_template('exchange_rates.html', form=form, row=row)
 
 # =============================================================================
+# gen.gen_views_delete:Gen_Views_Delete:AG 2019-09-09 13:44:04.326911
 @main.route('/forms/Exchange_Rates_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -2702,6 +2753,7 @@ def forms_Exchange_Rates_delete():
     return render_template('exchange_rates_delete.html', form=form, data=session.get('data'),row=row)
 
 # =============================================================================
+# gen.gen_views_select_query:Gen_Views_Select_Query:AG 2019-09-09 13:44:04.326950
 @main.route('/select/Exchange_Rates_Query', methods=['GET','POST'])
 @login_required
 @admin_required
@@ -2752,7 +2804,7 @@ def select_Exchange_Rates_query():
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-24 18:09:43
+# GLVH @ 2019-09-09 13:44:02
 # =============================================================================
 
 @main.route('/forms/Measure_Units', methods=['GET', 'POST'])
@@ -2819,6 +2871,7 @@ def forms_Measure_Units():
     return render_template('measure_units.html', form=form, row=row)
 
 # =============================================================================
+# gen.gen_views_delete:Gen_Views_Delete:AG 2019-09-09 13:44:04.338776
 @main.route('/forms/Measure_Units_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -2862,6 +2915,7 @@ def forms_Measure_Units_delete():
     return render_template('measure_units_delete.html', form=form, data=session.get('data'),row=row)
 
 # =============================================================================
+# gen.gen_views_select_query:Gen_Views_Select_Query:AG 2019-09-09 13:44:04.338811
 @main.route('/select/Measure_Units_Query', methods=['GET','POST'])
 @login_required
 @admin_required
@@ -2901,7 +2955,7 @@ def select_Measure_Units_query():
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-24 18:09:43
+# GLVH @ 2019-09-09 13:44:02
 # =============================================================================
 
 @main.route('/forms/Platforms', methods=['GET', 'POST'])
@@ -2974,6 +3028,7 @@ def forms_Platforms():
     return render_template('platforms.html', form=form, row=row)
 
 # =============================================================================
+# gen.gen_views_delete:Gen_Views_Delete:AG 2019-09-09 13:44:04.368141
 @main.route('/forms/Platforms_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -3017,6 +3072,7 @@ def forms_Platforms_delete():
     return render_template('platforms_delete.html', form=form, data=session.get('data'),row=row)
 
 # =============================================================================
+# gen.gen_views_select_query:Gen_Views_Select_Query:AG 2019-09-09 13:44:04.368281
 @main.route('/select/Platforms_Query', methods=['GET','POST'])
 @login_required
 @admin_required
@@ -3068,7 +3124,7 @@ def select_Platforms_query():
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-24 18:09:43
+# GLVH @ 2019-09-09 13:44:02
 # =============================================================================
 
 @main.route('/forms/Rates', methods=['GET', 'POST'])
@@ -3159,6 +3215,7 @@ def forms_Rates():
     return render_template('rates.html', form=form, row=row)
 
 # =============================================================================
+# gen.gen_views_delete:Gen_Views_Delete:AG 2019-09-09 13:44:04.465732
 @main.route('/forms/Rates_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -3202,6 +3259,7 @@ def forms_Rates_delete():
     return render_template('rates_delete.html', form=form, data=session.get('data'),row=row)
 
 # =============================================================================
+# gen.gen_views_select_query:Gen_Views_Select_Query:AG 2019-09-09 13:44:04.465771
 @main.route('/select/Rates_Query', methods=['GET','POST'])
 @login_required
 @admin_required
@@ -3364,7 +3422,7 @@ def select_Rates_query():
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-24 18:09:43
+# GLVH @ 2019-09-09 13:44:02
 # =============================================================================
 
 @main.route('/forms/Rat_Periods', methods=['GET', 'POST'])
@@ -3431,6 +3489,7 @@ def forms_Rat_Periods():
     return render_template('rat_periods.html', form=form, row=row)
 
 # =============================================================================
+# gen.gen_views_delete:Gen_Views_Delete:AG 2019-09-09 13:44:04.380374
 @main.route('/forms/Rat_Periods_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -3474,6 +3533,7 @@ def forms_Rat_Periods_delete():
     return render_template('rat_periods_delete.html', form=form, data=session.get('data'),row=row)
 
 # =============================================================================
+# gen.gen_views_select_query:Gen_Views_Select_Query:AG 2019-09-09 13:44:04.380440
 @main.route('/select/Rat_Periods_Query', methods=['GET','POST'])
 @login_required
 @admin_required
@@ -3513,7 +3573,7 @@ def select_Rat_Periods_query():
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-24 18:09:43
+# GLVH @ 2019-09-09 13:44:02
 # =============================================================================
 
 @main.route('/forms/Roles', methods=['GET', 'POST'])
@@ -3584,6 +3644,7 @@ def forms_Roles():
     return render_template('roles.html', form=form, row=row)
 
 # =============================================================================
+# gen.gen_views_delete:Gen_Views_Delete:AG 2019-09-09 13:44:04.487381
 @main.route('/forms/Roles_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -3627,6 +3688,7 @@ def forms_Roles_delete():
     return render_template('roles_delete.html', form=form, data=session.get('data'),row=row)
 
 # =============================================================================
+# gen.gen_views_select_query:Gen_Views_Select_Query:AG 2019-09-09 13:44:04.487416
 @main.route('/select/Roles_Query', methods=['GET','POST'])
 @login_required
 @admin_required
@@ -3672,7 +3734,7 @@ def select_Roles_query():
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-24 18:09:43
+# GLVH @ 2019-09-09 13:44:02
 # =============================================================================
 
 @main.route('/forms/ST_Use_Per_CU', methods=['GET', 'POST'])
@@ -3782,6 +3844,7 @@ def forms_ST_Use_Per_CU():
     return render_template('st_use_per_cu.html', form=form, row=row)
 
 # =============================================================================
+# gen.gen_views_delete:Gen_Views_Delete:AG 2019-09-09 13:44:04.580273
 @main.route('/forms/ST_Use_Per_CU_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -3826,6 +3889,7 @@ def forms_ST_Use_Per_CU_delete():
     return render_template('st_use_per_cu_delete.html', form=form, data=session.get('data'),row=row)
 
 # =============================================================================
+# gen.gen_views_select_query:Gen_Views_Select_Query:AG 2019-09-09 13:44:04.580345
 @main.route('/select/ST_Use_Per_CU_Query', methods=['GET','POST'])
 @login_required
 def select_ST_Use_Per_CU_query():
@@ -3927,7 +3991,7 @@ def select_ST_Use_Per_CU_query():
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-24 18:09:43
+# GLVH @ 2019-09-09 13:44:02
 # =============================================================================
 
 @main.route('/forms/ST_Use_Per_Type', methods=['GET', 'POST'])
@@ -4021,6 +4085,7 @@ def forms_ST_Use_Per_Type():
     return render_template('st_use_per_type.html', form=form, row=row)
 
 # =============================================================================
+# gen.gen_views_delete:Gen_Views_Delete:AG 2019-09-09 13:44:04.666103
 @main.route('/forms/ST_Use_Per_Type_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -4069,6 +4134,7 @@ def forms_ST_Use_Per_Type_delete():
     return render_template('st_use_per_type_delete.html', form=form, data=session.get('data'),row=row)
 
 # =============================================================================
+# gen.gen_views_select_query:Gen_Views_Select_Query:AG 2019-09-09 13:44:04.666155
 @main.route('/select/ST_Use_Per_Type_Query', methods=['GET','POST'])
 @login_required
 def select_ST_Use_Per_Type_query():
@@ -4140,7 +4206,7 @@ def select_ST_Use_Per_Type_query():
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-24 18:09:43
+# GLVH @ 2019-09-09 13:44:02
 # =============================================================================
 
 @main.route('/forms/Trace', methods=['GET', 'POST'])
@@ -4205,6 +4271,7 @@ def forms_Trace():
     return render_template('trace.html', form=form, row=row)
 
 # =============================================================================
+# gen.gen_views_delete:Gen_Views_Delete:AG 2019-09-09 13:44:04.677398
 @main.route('/forms/Trace_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -4248,6 +4315,7 @@ def forms_Trace_delete():
     return render_template('trace_delete.html', form=form, data=session.get('data'),row=row)
 
 # =============================================================================
+# gen.gen_views_select_query:Gen_Views_Select_Query:AG 2019-09-09 13:44:04.677436
 @main.route('/select/Trace_Query', methods=['GET','POST'])
 @login_required
 @admin_required
@@ -4287,7 +4355,7 @@ def select_Trace_query():
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-24 18:09:43
+# GLVH @ 2019-09-09 13:44:02
 # =============================================================================
 
 @main.route('/forms/User_Resumes', methods=['GET', 'POST'])
@@ -4424,6 +4492,7 @@ def forms_User_Resumes():
     return render_template('user_resumes.html', form=form, row=row)
 
 # =============================================================================
+# gen.gen_views_delete:Gen_Views_Delete:AG 2019-09-09 13:44:04.832181
 @main.route('/forms/User_Resumes_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -4471,6 +4540,7 @@ def forms_User_Resumes_delete():
     return render_template('user_resumes_delete.html', form=form, data=session.get('data'),row=row)
 
 # =============================================================================
+# gen.gen_views_select_query:Gen_Views_Select_Query:AG 2019-09-09 13:44:04.832261
 @main.route('/select/User_Resumes_Query', methods=['GET','POST'])
 @login_required
 def select_User_Resumes_query():
@@ -4608,7 +4678,7 @@ def select_User_Resumes_query():
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-08-24 18:09:43
+# GLVH @ 2019-09-09 13:44:02
 # =============================================================================
 
 @main.route('/forms/Users', methods=['GET', 'POST'])
@@ -4687,6 +4757,7 @@ def forms_Users():
     return render_template('users.html', form=form, row=row)
 
 # =============================================================================
+# gen.gen_views_delete:Gen_Views_Delete:AG 2019-09-09 13:44:04.870433
 @main.route('/forms/Users_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -4730,6 +4801,7 @@ def forms_Users_delete():
     return render_template('users_delete.html', form=form, data=session.get('data'),row=row)
 
 # =============================================================================
+# gen.gen_views_select_query:Gen_Views_Select_Query:AG 2019-09-09 13:44:04.870476
 @main.route('/select/Users_Query', methods=['GET','POST'])
 @login_required
 @admin_required
@@ -5060,38 +5132,23 @@ def report_Charging_Resume_All():
     
     # Updated cached data for this specific query if requested 
     if Update == 1:
-        # -------------------------------------------------------------------------------------------------------------- #
-        # Previous Code faster but requires more memory will be replaced by an by CI loop                                #
-        # query="CALL Update_Charge_Resume(%d,'%s','%s',%d,'%s')"%(Pla_Id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code) #
-        # resume_records = db.engine.execute(query).scalar()                                                             #
-        # -------------------------------------------------------------------------------------------------------------- #
-        # 20181228 GV query = "SELECT DISTINCT CI_Id FROM Configuration_Items WHERE Pla_Id=%d"%(Pla_Id)
-        query = "SELECT CI_Id FROM Configuration_Items ORDER BY CC_Id,CI_Id"
+        CI = db.session.query(Configuration_Items.CI_Id).\
+                distinct().\
+                order_by(Configuration_Items.CC_Id,Configuration_Items.CI_Id).all()
         
-        logger.debug ("report_Changing_Resume_All: query: %s"%(query))
-
-        CI = db.engine.execute(query)
-
         logger.debug ("report_Changing_Resume_All: %d CI's found "%(CI.rowcount))
         
         resume_records=0
 
         for ci in CI:
-            query="CALL Update_Charge_Resume_CI2('%s','%s',%s,'%s',%s)"%\
-                    (CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code,ci.CI_Id)
-            logger.debug ("report_Changing_Resume_All: query: %s"%query)
-            records=db.engine.execute(query)
-            resume_records += records.scalar()
+            records = db.Update_Charge_Resume_CI2(CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code,ci.CI_Id)
+            resume_records += records # OJO AQUI ME QUEDE 
 
         logger.debug ("report_Changing_Resume_All: resume_records = %s"%resume_records)
         
     # Get Actual Remume Data from Database
     # NOTE: Here needs some Sand-Clock Message or something in case it takes so long ...
-    query="CALL Get_Charge_Resume2(4,%d,'%s','%s',%d,'%s')"%(0,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code)
-    
-    logger.debug ("report_Changing_Resume_All: query: %s"%query)
-    
-    rows =  db.engine.execute(query).fetchall()
+    rows = db.Get_Charge_Resume2(4,0,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code)
     
     return render_template('report_charging_resume_all.html',rows=rows,
                 CIT_Date_From=CIT_Date_From,
@@ -5215,39 +5272,52 @@ def report_Charging_Resume_CC():
     if Update == 1:
         # -------------------------------------------------------------------------------------------------------------- #
         # Previous Code faster but requires more memory will be replaced by an by CI loop                                #
-        # query="CALL Update_Charge_Resume(%d,'%s','%s',%d,'%s')"%(CC_Id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code) #
+        # query="C*ALL Update_Charge_Resume(%d,'%s','%s',%d,'%s')"%(CC_Id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code) #
         # resume_records = db.engine.execute(query).scalar()                                                             #
         # -------------------------------------------------------------------------------------------------------------- #
-        # 20181228 GV query = "SELECT DISTINCT CI_Id FROM Configuration_Items WHERE CC_Id=%d"%(CC_Id)
-        query = "SELECT CI_Id "\
+        # 20181228 GV query = "S*ELECT DISTINCT CI_Id FROM Configuration_Items WHERE CC_Id=%d"%(CC_Id)
+        """
+        query = "S*ELECT CI_Id "\
                     "FROM Configuration_Items "\
-                        "WHERE CC_Id IN (SELECT CC_Id FROM Cost_Centers WHERE ccisbelow(CC_Id,%d)) "\
+                        "WHERE CC_Id IN (S*ELECT CC_Id FROM Cost_Centers WHERE ccisbelow(CC_Id,%d)) "\
                         "ORDER BY CC_Id,CI_Id"%(CC_Id)
         
         logger.debug ("report_Changing_Resume: query: %s"%(query))
 
         CI = db.engine.execute(query)
-
+        """
+        LISTA = get_cost_centers(CC_Id)
+        CI = db.query(Configuration_Items.CI_Id).\
+                filter(Configuration_Items.CI_Id.in_(LISTA)).\
+                order_by(Configuration_Items.CC_Id,Configuration_Items.CI_Id)
+        
         logger.debug ("report_Changing_Resume: %d CI's found for cost center %d"%(CI.rowcount,CC_Id))
         
         resume_records=0
 
         for ci in CI:
-            query="CALL Update_Charge_Resume_CI2('%s','%s',%s,'%s',%s)"%\
+            """
+            query="C*ALL Update_Charge_Resume_CI2('%s','%s',%s,'%s',%s)"%\
                     (CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code,ci.CI_Id)
             logger.debug ("report_Changing_Resume: query: %s"%query)
             records=db.engine.execute(query)
             resume_records += records.scalar()
-
+            """
+            records = db.Update_Charge_Resume_CI2(CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code,ci.CI_Id)
+            resume_records += records
+            
         logger.debug ("report_Changing_Resume: resume_records = %s"%resume_records)
         
     # Get Actual Remume Data from Database
     # NOTE: Here needs some Sand-Clock Message or something in case it takes so long ...
-    query="CALL Get_Charge_Resume2(2,%d,'%s','%s',%d,'%s')"%(CC_Id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code)
+    """
+    query="C*ALL Get_Charge_Resume2(2,%d,'%s','%s',%d,'%s')"%(CC_Id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code)
     
     logger.debug ("report_Changing_Resume: query: %s"%query)
     
     rows =  db.engine.execute(query).fetchall()
+    """
+    rows = db.Get_Charge_Resume2(2,CC_Id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code)
     
     return render_template('report_charging_resume_cc.html',rows=rows,
                 CC_Id=CC_Id,
@@ -5259,7 +5329,6 @@ def report_Charging_Resume_CC():
                 Cur_Code=Cur_Code,
                 Cur_Name=Cur_Name
                 )
-
 # =============================================================================
 # View for Get Charging Resume from DB
 # (c) Sertechno 2018
@@ -5381,41 +5450,24 @@ def report_Charging_Resume_Level():
     Level           =  request.args.get('Level',None,type=str)
     Update          =  request.args.get('Update',0,type=int)
     
-    
     # Updated cached data for this specific query if requested 
     if Update == 1:
-        # -------------------------------------------------------------------------------------------------------------- #
-        # Previous Code faster but requires more memory will be replaced by an by CI loop                                #
-        # query="CALL Update_Charge_Resume(%d,'%s','%s',%d,'%s')"%(Cus_Id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code) #
-        # resume_records = db.engine.execute(query).scalar()                                                             #
-        # -------------------------------------------------------------------------------------------------------------- #
-        # 20181228 GV query = "SELECT DISTINCT CI_Id FROM Configuration_Items WHERE Cus_Id=%d"%(Cus_Id)
-        query = "SELECT CI_Id FROM Configuration_Items WHERE Cus_Id=%d ORDER BY CC_Id,CI_Id"%(Cus_Id)
-        
-        logger.debug ("report_Changing_Resume_Level: query: %s"%(query))
-
-        CI = db.engine.execute(query)
-
+        CI = db.query(Configuration_Items.CI_id.distinct()).\
+                filter(Configuration_Items.Cus_Id==Cus_Id).\
+                order_by(Configuration_Items.CC_Id,Configuration_Items.CI_Id)
         logger.debug ("report_Changing_Resume_Level: %d CI's found for customer %d"%(CI.rowcount,Cus_Id))
         
         resume_records=0
 
         for ci in CI:
-            query="CALL Update_Charge_Resume_CI(%s,'%s','%s',%s,'%s',%s)"%\
-                    (Cus_Id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code,ci.CI_Id)
-            logger.debug ("report_Changing_Resume_Level: query: %s"%query)
-            records=db.engine.execute(query)
-            resume_records += records.scalar()
-
+            records = db.Update_Charge_Resume_CI(Cus_Id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code,ci.CI_Id)
+            resume_records += records
+            
         logger.debug ("report_Changing_Resume_Level: resume_records = %s"%resume_records)
         
     # Get Actual Remume Data from Database
     # NOTE: Here needs some Sand-Clock Message or something in case it takes so long ...
-    query="CALL Get_Charge_Resume(%d,'%s','%s',%d,'%s')"%(Cus_Id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code)
-    
-    logger.debug ("report_Changing_Resume_Level: query: %s"%query)
-    
-    rows =  db.engine.execute(query).fetchall()
+    rows =  db.Get_Charge_Resume(Cus_Id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code)
     
     return render_template('report_charging_resume_level.html',rows=rows,
                 Cus_Id=Cus_Id,
@@ -5428,7 +5480,6 @@ def report_Charging_Resume_Level():
                 Cur_Name=Cur_Name,
                 Level=Level
                 )
-
 # =============================================================================
 # View for Get Charging Resume from DB
 # (c) Sertechno 2018
@@ -5542,36 +5593,48 @@ def report_Charging_Resume_Platform():
     if Update == 1:
         # -------------------------------------------------------------------------------------------------------------- #
         # Previous Code faster but requires more memory will be replaced by an by CI loop                                #
-        # query="CALL Update_Charge_Resume(%d,'%s','%s',%d,'%s')"%(Pla_Id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code) #
+        # query="C*ALL Update_Charge_Resume(%d,'%s','%s',%d,'%s')"%(Pla_Id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code) #
         # resume_records = db.engine.execute(query).scalar()                                                             #
         # -------------------------------------------------------------------------------------------------------------- #
-        # 20181228 GV query = "SELECT DISTINCT CI_Id FROM Configuration_Items WHERE Pla_Id=%d"%(Pla_Id)
-        query = "SELECT CI_Id FROM Configuration_Items WHERE Pla_Id=%d ORDER BY CC_Id,CI_Id"%(Pla_Id)
+        # 20181228 GV query = "S*ELECT DISTINCT CI_Id FROM Configuration_Items WHERE Pla_Id=%d"%(Pla_Id)
+        """
+        query = "S*ELECT CI_Id FROM Configuration_Items WHERE Pla_Id=%d ORDER BY CC_Id,CI_Id"%(Pla_Id)
         
         logger.debug ("report_Changing_Resume_Platform: query: %s"%(query))
 
         CI = db.engine.execute(query)
-
+        """
+        
+        CI = db.query(Configuration_Items.CI_Id).\
+                filter(Configuration_Items.Pla_Id==Pla_Id).\
+                order_by(Configuration_Items.CC_Id,Configuration_Items.CI_Id)
+        
         logger.debug ("report_Changing_Resume_Platform: %d CI's found for platform %d"%(CI.rowcount,Pla_Id))
         
         resume_records=0
 
         for ci in CI:
-            query="CALL Update_Charge_Resume_CI2('%s','%s',%s,'%s',%s)"%\
+            """
+            query="C*ALL Update_Charge_Resume_CI2('%s','%s',%s,'%s',%s)"%\
                     (CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code,ci.CI_Id)
             logger.debug ("report_Changing_Resume_Platform: query: %s"%query)
             records=db.engine.execute(query)
             resume_records += records.scalar()
-
+            """
+            records = db.Update_Charge_Resume_CI2(CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code,ci.CI_Id)
+            resume_records += records
         logger.debug ("report_Changing_Resume_Platform: resume_records = %s"%resume_records)
         
     # Get Actual Remume Data from Database
     # NOTE: Here needs some Sand-Clock Message or something in case it takes so long ...
-    query="CALL Get_Charge_Resume2(3,%d,'%s','%s',%d,'%s')"%(Pla_Id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code)
+    """
+    query="C*ALL Get_Charge_Resume2(3,%d,'%s','%s',%d,'%s')"%(Pla_Id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code)
     
     logger.debug ("report_Changing_Resume: query: %s"%query)
     
     rows =  db.engine.execute(query).fetchall()
+    """
+    rows = db.Get_Charge_Resume2(3,Pla_Id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code)
     
     return render_template('report_charging_resume_platform.html',rows=rows,
                 Pla_Id=Pla_Id,
@@ -5595,7 +5658,7 @@ def report_Charging_Resume_Platform():
 
 from emtec.collector.forms       import frm_charging_resume
 from babel.numbers  import format_number, format_decimal, format_percent
-from emtec.collector.db.ORM_models      import Configuration_Items
+from emtec.collector.db.orm_model      import Configuration_Items
 
 @main.route('/forms/Get_Charging_Resume', methods=['GET', 'POST'])
 @login_required
@@ -5703,44 +5766,16 @@ def report_Charging_Resume():
     if Update == 1:
         # -------------------------------------------------------------------------------------------------------------- #
         # Previous Code faster but requires more memory will be replaced by an by CI loop                                #
-        # query="CALL Update_Charge_Resume(%d,'%s','%s',%d,'%s')"%(Cus_Id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code) #
+        # query="C*ALL Update_Charge_Resume(%d,'%s','%s',%d,'%s')"%(Cus_Id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code) #
         # resume_records = db.engine.execute(query).scalar()                                                             #
         # -------------------------------------------------------------------------------------------------------------- #
-        # 20181228 GV query = "SELECT DISTINCT CI_Id FROM Configuration_Items WHERE Cus_Id=%d"%(Cus_Id)
+        # 20181228 GV query = "S*ELECT DISTINCT CI_Id FROM Configuration_Items WHERE Cus_Id=%d"%(Cus_Id)
         """ 20190819 GV
-        #query = "SELECT CI_Id FROM Configuration_Items WHERE Cus_Id=%d ORDER BY CC_Id,CI_Id"%(Cus_Id)
+        #query = "S*ELECT CI_Id FROM Configuration_Items WHERE Cus_Id=%d ORDER BY CC_Id,CI_Id"%(Cus_Id)
         
         logger.debug ("report_Changing_Resume: query: %s"%(query))
 
         CI = db.engine.execute(query)
-        """
-        """
-        from pprint import pprint
-        print("globals")
-        #pprint(globals())
-        print("current_app")
-        pprint(current_app)
-        print("current_app dir")
-        #pprint(dir(current_app))
-        print("db=",db)
-        #print("db dir =",dir(db))
-        """
-        """
-        current_app.db.Connect()
-        print("current_app.ormdb=",current_app.ormdb)
-        #print("current_app.ormdb dir =",dir(current_app.ormdb))
-        print("current_app.ormdb rdbms    =",current_app.db.rdbms)
-        print("current_app.ormdb dialect  =",current_app.db.dialect)
-        print("current_app.ormdb host     =",current_app.db.host)
-        print("current_app.ormdb port     =",current_app.db.port)
-        print("current_app.ormdb user     =",current_app.db.user)
-        print("current_app.ormdb password =",current_app.db.password)
-        print("current_app.ormdb instance =",current_app.db.instance)
-        print("current_app.ormdb engine   =",current_app.db.engine)
-        print("current_app.ormdb string   =",current_app.db.connection_string)
-        print("current_app.ormdb session  =",current_app.db.session)
-        #ormdb=current_app.ormdb
-        #print("ormdb dir =",dir(current_app.ormdb))
         """
         CI = db.session.query(Configuration_Items.CI_Id).\
                 filter(Configuration_Items.Cus_Id==Cus_Id).\
@@ -5755,7 +5790,7 @@ def report_Charging_Resume():
 
         for ci in CI:
             """ 20190819 GV
-            query="CALL Update_Charge_Resume_CI(%s,'%s','%s',%s,'%s',%s)"%\
+            query="C*ALL Update_Charge_Resume_CI(%s,'%s','%s',%s,'%s',%s)"%\
                     (Cus_Id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code,ci.CI_Id)
             logger.debug ("report_Changing_Resume: query: %s"%query)
             records=db.engine.execute(query)
@@ -5770,7 +5805,7 @@ def report_Charging_Resume():
     # Get Actual Remume Data from Database
     # NOTE: Here needs some Sand-Clock Message or something in case it takes so long ...
     """ 20190819 GV
-    query="CALL Get_Charge_Resume(%d,'%s','%s',%d,'%s')"%(Cus_Id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code)
+    query="C*ALL Get_Charge_Resume(%d,'%s','%s',%d,'%s')"%(Cus_Id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code)
     
     logger.debug ("report_Changing_Resume: query: %s"%query)
     
@@ -5883,6 +5918,7 @@ def reports_Data_Consistency():
                 .order_by(rate.Pla_Id,rate.Cus_Id,rate.CC_Id,rate.CI_Id,rate.Typ_Code)\
                 .all()
     """
+    """
     query = "SELECT * "\
                 "FROM Rates "\
                     "JOIN Customers             USING   (Cus_Id) "\
@@ -5890,7 +5926,19 @@ def reports_Data_Consistency():
                     "JOIN Configuration_Items   USING   (CI_Id) "\
                     "JOIN Cost_Centers          ON      Cost_Centers.CC_Id=Rates.CC_id "\
                 "ORDER BY Typ_Code,Rates.Pla_Id,Rates.Cus_Id,Rates.CC_Id,Rates.CI_Id"
-    
+    """
+    # GV 20190907
+    query = db.query(Rates,Customers,Platforms,Configuration_Items,Cost_Centes).\
+                join(Customers          , Rates.Cus_Id == Customers.Cus_Id).\
+                join(Platforms          , Rates.Pla_Id == Platforms.Pla_Id).\
+                join(Configuration_Items, Rates.CI_Id  == Configuration_Items.CI_Id).\
+                join(Cost_Centers       , Rates.CC_Id  == Cost_Centers.CC_Id).\
+                order_by(   Rates.Typ_Code,
+                            Rates.Pla_Id,
+                            Rates.Cus_Id,
+                            Rates.CC_Id,
+                            Rates.CI_Id)
+                 
     rate_rows=[]
 
     try:
@@ -5902,6 +5950,7 @@ def reports_Data_Consistency():
 
     data.update({'rate_rows': rate_rows})
 
+    """ GV 20190907 AQUI AUN HAY QUE CONSTRUIR UN ALGORITMO EQUIVALENTE
     query = "SELECT CU_Id,CU_Description,Typ_Code,Pla_Id,Cus_Id,CI.CC_Id AS CC_ID,Rat_Id,"\
                     "Get_Rate_Id (Typ_Code,Pla_Id,Cus_Id,CI.CC_Id,CU_Id) AS RATE, "\
                     "Pla_Name,Cus_Name,CC_Description,CI_Name "\
@@ -5911,6 +5960,7 @@ def reports_Data_Consistency():
                     "JOIN Customers           AS CUS USING (Cus_Id) "\
                     "JOIN Cost_Centers        AS CC  ON CC.CC_Id = CI.CC_Id "\
                 "WHERE Rat_Id != Get_Rate_Id(Typ_Code,Pla_Id,Cus_Id,CI.CC_Id,CU_Id)"
+    """
 
     cu_rows = []
     
@@ -5934,12 +5984,15 @@ def reports_Data_Consistency():
 # GLVH @ 2018-11-11
 # =============================================================================
 
+# NOTE: THOS IS FULL MYSQL CODE NEEDS TO BE VARIABLE ADAPTED FOR
+# AGNOSTIC DB STATUS REPORT
 
 from babel.numbers  import format_number, format_decimal, format_percent
 
 @main.route('/reports/DB_Status', methods=['GET'])
 @login_required
 def reports_DB_Status():
+    
     logger.debug('Enter: reports_DB_Status()'%())
 
 
@@ -5979,17 +6032,41 @@ from babel.numbers  import format_number, format_decimal, format_percent
 @login_required
 def forms_Export_Charging_Resume():
     logger.debug('Enter: forms_Export_Charging_Resume()'%())
+    flash('Enter: forms_Export_Charging_Resume()'%())
 
     session['data'] =  { 'Cus_Id': None, 'CIT_Date_From':None, 'CIT_Date_To':None, 'CIT_Status':1,'Cur_Code':'USD'}
 
     form = frm_export_Charging_Resume()
 
-    query = "SELECT COUNT(*) AS RECORDS,Cus_Id,CR_Date_From,CR_Date_To,CIT_Status,Cur_Code,Cus_Name FROM Charge_Resumes "\
+    """
+    query = "S*ELECT COUNT(*) AS RECORDS,Cus_Id,CR_Date_From,CR_Date_To,CIT_Status,Cur_Code,Cus_Name FROM Charge_Resumes "\
                 "GROUP BY Cus_Id,CR_Date_From,CR_Date_To,CIT_Status,Cur_Code,Cus_Name "\
                 "ORDER BY Cus_Name,CR_Date_From,CR_Date_To,CIT_Status,Cur_Code"
                 
     rows=db.engine.execute(query).fetchall()
-
+    """
+    
+    row = db.query( func.count(Charge_Resumes.Cus_Id).label('RECORDS'),
+                    Charge_Resumes.Cus_Id,
+                    Charge_Resumes.CR_Date_From,
+                    Charge_Resumes.CR_Date_To,
+                    Charge_Resumes.CIT_Status,
+                    Charge_Resumes.Cur_Code,
+                    Charge_Resumes.Cus_Name
+                    ).\
+                group_by(   Charge_Resumes.Cus_Id,
+                            Charge_Resumes.CR_Date_From,
+                            Charge_Resumes.CR_Date_To,
+                            Charge_Resumes.CIT_Status,
+                            Charge_Resumes.Cur_Code,
+                            Charge_Resumes.Cus_Name).\
+                order_by(   Charge_Resumes.Cus_Name,
+                            Charge_Resumes.CR_Date_From,
+                            Charge_Resumes.CR_Date_To,
+                            Charge_Resumes.CIT_Status,
+                            Charge_Resumes.Cur_Code)
+    
+    
     # Load Statuses
     statuses=cit_status.query.all()
     dstatuses={}
@@ -6331,10 +6408,12 @@ def export_Charging_Resume():
     Format          =  request.args.get('Format',None,type=str)
     # Get Actual Data from Database
     # NOTE: Here needs some Sand-Clock Message or something in case it takes so long ...
-    query="CALL Get_Charge_Resume(%d,'%s','%s',%d,'%s')"%(Cus_Id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code)
+    """
+    query="C*ALL Get_Charge_Resume(%d,'%s','%s',%d,'%s')"%(Cus_Id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code)
     
     rows =  db.engine.execute(query).fetchall()
-
+    """
+    rows = Get_Charge_Resume(Cus_Id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code)
     # Aqui hace la conversion 
     output_file = "CR_%d_%s_%s_%s_%s.%s"%(Cus_Id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code,Format)
     if      Format == 'pdf':
@@ -6373,16 +6452,18 @@ def forms_Export_User_Resume():
 
     form = frm_export_User_Resume()
     """
-    query = "SELECT COUNT(*) AS RECORDS,Cus_Id,CR_Date_From,CR_Date_To,CIT_Status,Cur_Code,Cus_Name FROM User_Resumes "\
-                "WHERE CI_CC_Id IN (SELECT CC_Id from Cost_Centers WHERE usercancc(%s,CC_Id)) "\
+    query = "S*ELECT COUNT(*) AS RECORDS,Cus_Id,CR_Date_From,CR_Date_To,CIT_Status,Cur_Code,Cus_Name FROM User_Resumes "\
+                "WHERE CI_CC_Id IN (S*ELECT CC_Id from Cost_Centers WHERE usercancc(%s,CC_Id)) "\
                 "GROUP BY Cus_Id,CR_Date_From,CR_Date_To,CIT_Status,Cur_Code,Cus_Name "\
                 "ORDER BY Cus_Id,CR_Date_From,CR_Date_To,CIT_Status,Cur_Code"%current_user.id
     """
-    query = "SELECT COUNT(*) AS RECORDS,CI_CC_Id,CR_Date_From,CR_Date_To,CIT_Status,Cur_Code,CC_Description FROM User_Resumes "\
-                "WHERE CI_CC_Id IN (SELECT CC_Id from Cost_Centers WHERE usercancc(%s,CC_Id)) "\
+    """ GV 20190907
+    query = "S*ELECT COUNT(*) AS RECORDS,CI_CC_Id,CR_Date_From,CR_Date_To,CIT_Status,Cur_Code,CC_Description FROM User_Resumes "\
+                "WHERE CI_CC_Id IN (S*ELECT CC_Id from Cost_Centers WHERE usercancc(%s,CC_Id)) "\
                 "GROUP BY CI_CC_Id,CR_Date_From,CR_Date_To,CIT_Status,Cur_Code,CC_Description "\
                 "ORDER BY CI_CC_Id,CR_Date_From,CR_Date_To,CIT_Status,Cur_Code"%current_user.id
-
+    """
+    
 
 
     """
@@ -6390,8 +6471,28 @@ select count(*),CC_Description,CR_Date_From,CR_Date_To,CIT_Status,Cur_Code
 from User_Resumes
 group by CC_Description,CR_Date_From,CR_Date_To,CIT_Status,Cur_Code;
     """                
-    rows=db.engine.execute(query).fetchall()
+    #rows=db.engine.execute(query).fetchall()
 
+    USERCAN = get_user_cost_centers(current_user.id,1) ## OJO OJO OJO NO ESTOY SEGURO DEL CC A USAR AQUI 
+    rows = db.query(    func.count(CI_CC_Id).label('RECORDS'),
+                        User_Resumes.CI_CC_Id,
+                        User_Resumes.CR_Date_From,
+                        User_Resumes.CR_Date_To,
+                        User_Resumes.CIT_Status,
+                        User_Resumes.Cur_Code,
+                        User_Resumes.CC_Description).\
+                    filter(     User_Resumes.CI_CC.in_(USERCAN)).\
+                    group_by(   User_Resumes.CI_CC_Id,
+                                User_Resumes.CR_Date_From,
+                                User_Resumes.CR_Date_To,
+                                User_Resumes.CIT_Status,
+                                User_Resumes.Cur_Code,
+                                User_Resumes.CC_Description).\
+                    order_by(   User_Resumes.CI_CC_Id,
+                                User_Resumes.CR_Date_From,
+                                User_Resumes.CR_Date_To,
+                                User_Resumes.CIT_Status,
+                                User_Resumes.Cur_Code)
     # Load Statuses
     statuses=cit_status.query.all()
     dstatuses={}
@@ -6761,10 +6862,13 @@ def export_User_Resume():
     Format          =  request.args.get('Format',None,type=str)
     # Get Actual Data from Database
     # NOTE: Here needs some Sand-Clock Message or something in case it takes so long ...
-    query="CALL Get_User_Resume(%d,'%s','%s',%d,'%s','%d')"%(current_user.id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code,CC_Id)
+    """
+    query="C*ALL Get_User_Resume(%d,'%s','%s',%d,'%s','%d')"%(current_user.id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code,CC_Id)
     
     rows =  db.engine.execute(query).fetchall()
-
+    """
+    rows = db.Get_User_Resume(current_user.id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code,CC_Id)
+    
     # Aqui hace la conversion 
     output_file = "CR_%s_%s_%s_%s_%s.%s"%(CC_Code,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code,Format)
     if      Format == 'pdf':
@@ -7634,9 +7738,15 @@ def forms_Get_User_Resume():
     # Will setup filter to consider only User's visible Cost Centers
     # Prepare query
     if current_user.CC_Id == 1:
-        query = db.session.execute("SELECT CC_Id FROM Cost_Centers WHERE CC_Parent_Code='DEFAULT-CC-CODE' AND CC_Id>1")
+        #query = db.session.execute("S*ELECT CC_Id FROM Cost_Centers WHERE CC_Parent_Code='DEFAULT-CC-CODE' AND CC_Id>1")
+        query = db.query(Cost_Centers.CC_Id).\
+                    filter(Cost_Centers.CC_Parent_Code=='DEFAULT-CC-CODE').\
+                    filter(Cost_Centers.CC_Id > 1).all()
     else:
-        query = db.session.execute("SELECT CC_Id FROM Cost_Centers WHERE usercancc(%s,CC_Id)"%current_user.id)
+        #query = db.session.execute("S*ELECT CC_Id FROM Cost_Centers WHERE usercancc(%s,CC_Id)"%current_user.id)
+        USERCAN = db.get_user_cost_centers(current_user.id,CC_Id)
+        query = db.query(Cost_Centers.CC_Id).\
+                    filter(Cost_Centers.CC_Id.in_(USERCAN)).all
     # Execute query and convert in list for further use in choices selection
     cc_choices = [row.CC_Id for row in query]
 
@@ -7731,48 +7841,70 @@ def report_User_Resume():
     if Update == 1:
         # -------------------------------------------------------------------------------------------------------------- #
         # Previous Code faster but requires more memory will be replaced by an by CI loop                                #
-        # query="CALL Update_Charge_Resume(%d,'%s','%s',%d,'%s')"%(Cus_Id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code) #
+        # query="C*ALL Update_Charge_Resume(%d,'%s','%s',%d,'%s')"%(Cus_Id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code) #
         # resume_records = db.engine.execute(query).scalar()                                                             #
         # -------------------------------------------------------------------------------------------------------------- #
-        # 20181228 GV query = "SELECT DISTINCT CI_Id FROM Configuration_Items WHERE Cus_Id=%d"%(Cus_Id)
+        # 20181228 GV query = "S*ELECT DISTINCT CI_Id FROM Configuration_Items WHERE Cus_Id=%d"%(Cus_Id)
+        CCISBELOW=get_cost_centers(CC_Id)
         if current_user.CC_Id == 1:        
-            query = "SELECT CI_Id FROM Configuration_Items WHERE CC_Id IN (SELECT CC_Id FROM Cost_Centers WHERE ccisbelow(CC_Id,%d)) ORDER BY CC_Id,CI_Id"%(CC_Id)
+            """
+            query = "S*ELECT CI_Id FROM Configuration_Items WHERE CC_Id IN (S*ELECT CC_Id FROM Cost_Centers WHERE ccisbelow(CC_Id,%d)) ORDER BY CC_Id,CI_Id"%(CC_Id)
             print("query=",query)
+            """
+            query = db.query(Configuration_Items.CI).\
+                        filter(Configuration_Items.CC_Id.in_(CCISBELOW)).\
+                        order_by(Configuration_Items.CC_Id,Configuration_Items.CI_Id)
         else:
-            query = "SELECT CI_Id FROM Configuration_Items WHERE CC_Id IN (SELECT CC_Id FROM Cost_Centers WHERE usercancc(%d,CC_Id) AND ccisbelow(CC_Id,%d)) ORDER BY CC_Id,CI_Id"%(current_user.id,CC_Id)
-        
+            """
+            query = "S*ELECT CI_Id FROM Configuration_Items WHERE CC_Id IN (S*ELECT CC_Id FROM Cost_Centers WHERE usercancc(%d,CC_Id) AND ccisbelow(CC_Id,%d)) ORDER BY CC_Id,CI_Id"%(current_user.id,CC_Id)
+            """
+            USERCAN=get_user_cost_centers(CC_Id)
+            query = db.query(Configuration_Items.CI).\
+                        filter(Configuration_Items.CC_Id.in_(USERCAN)).\
+                        filter(Configuration_Items.CC_Id.in_(CCISBELOW)).\
+                        order_by(Configuration_Items.CC_Id,Configuration_Items.CI_Id)
+            
+        """
         logger.debug ("report_User_Resume: query: %s"%(query))
 
         CI = db.engine.execute(query)
-
+        """
+        CI = query.all()
+        
         print ("report_User_Resume: %d CI's found for user %d"%(CI.rowcount,current_user.id))
         logger.debug ("report_User_Resume: %d CI's found for user %d"%(CI.rowcount,current_user.id))
         
         resume_records=0
 
         for ci in CI:
-            query="CALL Update_User_Resume_CI('%s','%s',%s,'%s',%s)"%\
+            """
+            query="C*ALL Update_User_Resume_CI('%s','%s',%s,'%s',%s)"%\
                     (CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code,ci.CI_Id)
             logger.debug ("report_User_Resume: query: %s"%query)
             records=db.engine.execute(query)
             resume_records += records.scalar()
-
+            """
+            records = db.Update_User_Resume_CI(CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code,ci.CI_Id)
+            resume_records += records
+            
         logger.debug ("report_User_Resume: resume_records = %s"%resume_records)
         
     # Get Actual Resume Data from Database
     # NOTE: Here needs some Sand-Clock Message or something in case it takes so long ...
     if current_user.CC_Id == 1:
         user_id=db.session.query(User.id).filter(User.CC_Id==CC_Id).one()      
-        #query="CALL Get_User_Resume(%d,'%s','%s',%d,'%s',%d)"%(current_user.id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code,CC_Id)
-        query="CALL Get_User_Resume(%d,'%s','%s',%d,'%s',%d)"%(user_id.id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code,CC_Id)
+        #query="C*ALL Get_User_Resume(%d,'%s','%s',%d,'%s',%d)"%(current_user.id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code,CC_Id)
+        #query="C*ALL Get_User_Resume(%d,'%s','%s',%d,'%s',%d)"%(user_id.id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code,CC_Id)
+        rows = db.Get_User_Resume(user_id.id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code,CC_Id)
     else:
-        query="CALL Get_User_Resume(%d,'%s','%s',%d,'%s',%d)"%(current_user.id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code,CC_Id)
-    
+        #query="C*ALL Get_User_Resume(%d,'%s','%s',%d,'%s',%d)"%(current_user.id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code,CC_Id)
+        rows = db.Get_User_Resume(current_user.id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code,CC_Id)
+    """
     logger.debug ("report_User_Resume: query: %s"%query)
     print ("report_User_Resume: query: %s"%query)
     
     rows =  db.engine.execute(query).fetchall()
-    
+    """
     return render_template('report_user_resume.html',rows=rows,
                 #Cus_Id=Cus_Id,
                 #Cus_Name=Cus_Name,

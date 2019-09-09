@@ -315,7 +315,7 @@ def export_Billing_Resume():
     Format          =  request.args.get('Format',None,type=str)
     # Get Actual Data from Database
     # NOTE: Here needs some Sand-Clock Message or something in case it takes so long ...
-    query="CALL Get_Billing_Resume(%d,'%s','%s',%d,'%s')"%(Cus_Id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code)
+    query="C*ALL Get_Billing_Resume(%d,'%s','%s',%d,'%s')"%(Cus_Id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code)
     
     rows =  db.engine.execute(query).fetchall()
 

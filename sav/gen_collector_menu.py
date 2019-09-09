@@ -1,6 +1,4 @@
-import  simplejson  as      json
-import  datetime
-from    pprint      import  pprint
+
 # --------------------------------------------
 # Collector Menu Auto-Generator
 # --------------------------------------------
@@ -12,42 +10,8 @@ print()
 
 from gen.gen_menu_functions import *
 
-
-with open('collector_menu.json', 'r') as f:
-    menu_data = json.load(f)
-
-for key in menu_data.keys():
-    #print("key=",key)
-    #print(menu_data[key]['roles'])
-    for i in range(len(menu_data[key]['roles'])):
-        menu_data[key]['roles'][i]=eval(menu_data[key]['roles'][i])
-
-#pprint(menu_data)
-#base_file_name   = "base_file_name.html"
-#navbar_file_name = "navbar_file_name.html"
-#print("base_file_name  =",base_file_name);
-#print("navbar_file_name=",navbar_file_name);
-
 # define Menu Options
 Menu=[]
-menu_index = 0
-for option in menu_data.keys():
-    Menu.append(Option('<h3>%s</h3>'%option))
-    Menu[menu_index]['roles']=menu_data[option]['roles']
-    for suboption in menu_data[option]['options']:
-        #print("SUBOPTION=",suboption)
-        hr = None
-        header = None
-        if 'hr' in suboption.keys():
-            hr = suboption['hr']
-        if 'header' in suboption.keys():
-            header = suboption['header']
-        Menu[menu_index]['options'].append(Sub_Option(suboption['suboption'],suboption['url'],hr=hr,header=header))
-    menu_index += 1
-
-#pprint(Menu)
-
-"""
 Menu.append(Option('<h3>Collector</h3>'))
 Menu.append(Option('<h3>Customer</h3>'))
 Menu.append(Option('<h3>Tables</h3>'))
@@ -55,9 +19,7 @@ Menu.append(Option('<h3>Charging Data</h3>'))
 Menu.append(Option('<h3>Reports</h3>'))
 Menu.append(Option('<h3>Options</h3>'))
 Menu.append(Option('<h3>Help</h3>'))
-"""
 
-"""
 # define Menu Sub Options (cero Based)
 # Home
 # roles key indicate which Roles will be presented this dub-menu to ...
@@ -146,10 +108,10 @@ Menu[OPTIONS]['options'].append(Sub_Option('Statistics: Graph: Use Per Type Adva
 Menu[HELP]['roles']=(ROLE_CUSTOMER,ROLE_REPORTER,ROLE_CHARGER,ROLE_ADMINISTRATOR,ROLE_AUDITOR,ROLE_GOD)
 Menu[HELP]['options'].append(Sub_Option('FAQ',url='/collector_faq',hr=True))
 Menu[HELP]['options'].append(Sub_Option('About Collector',url='/collector_about'))
-"""
+
 # --------------------------------------------
 print('gen_collector_menu: creating',navbar_file_name,"...")
-Gen_Menu(Menu,ACCOUNT,filename=navbar_file_name)
+Gen_Menu(Menu,ACCOUNT)
 print('gen_collector_menu:',navbar_file_name,"generated.")
 
 """
@@ -206,11 +168,10 @@ f.write('    {%- endblock -%}\n')
 f.write('</div>\n')
 
 
-f.write('<!-- Example indicates that those scripts should run near the </body> tag -->\n')
+f.write('<!-- Exaple indicates that those scripts should run near the </body> tag -->\n')
 f.write('<script src="/static/js/jquery-3.3.1.js"      crossorigin="anonymous"></script>\n')
 f.write('<script src="/static/js/popper.min.js"      crossorigin="anonymous"></script>\n')
 f.write('<script src="/static/js/bootstrap.min.js"   crossorigin="anonymous"></script>\n')
-f.write('<!-- gen_collector_menu:%s AUTOGEN Signature @ %s -->\n'%(__name__,datetime.datetime.now()))
 
 f.write('{%- endblock -%}\n')
 
@@ -218,3 +179,11 @@ f.close()
 print('gen_collector_menu:',base_file_name,"generated.")
 # --------------------------------------------
 print('gen_collector_menu:',"Completed.")
+
+
+
+
+
+
+
+

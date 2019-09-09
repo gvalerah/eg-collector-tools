@@ -119,41 +119,24 @@ def report_Charging_Resume_Level():
     Level           =  request.args.get('Level',None,type=str)
     Update          =  request.args.get('Update',0,type=int)
     
-    
     # Updated cached data for this specific query if requested 
     if Update == 1:
-        # -------------------------------------------------------------------------------------------------------------- #
-        # Previous Code faster but requires more memory will be replaced by an by CI loop                                #
-        # query="CALL Update_Charge_Resume(%d,'%s','%s',%d,'%s')"%(Cus_Id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code) #
-        # resume_records = db.engine.execute(query).scalar()                                                             #
-        # -------------------------------------------------------------------------------------------------------------- #
-        # 20181228 GV query = "SELECT DISTINCT CI_Id FROM Configuration_Items WHERE Cus_Id=%d"%(Cus_Id)
-        query = "SELECT CI_Id FROM Configuration_Items WHERE Cus_Id=%d ORDER BY CC_Id,CI_Id"%(Cus_Id)
-        
-        logger.debug ("report_Changing_Resume_Level: query: %s"%(query))
-
-        CI = db.engine.execute(query)
-
+        CI = db.query(Configuration_Items.CI_id.distinct()).\
+                filter(Configuration_Items.Cus_Id==Cus_Id).\
+                order_by(Configuration_Items.CC_Id,Configuration_Items.CI_Id)
         logger.debug ("report_Changing_Resume_Level: %d CI's found for customer %d"%(CI.rowcount,Cus_Id))
         
         resume_records=0
 
         for ci in CI:
-            query="CALL Update_Charge_Resume_CI(%s,'%s','%s',%s,'%s',%s)"%\
-                    (Cus_Id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code,ci.CI_Id)
-            logger.debug ("report_Changing_Resume_Level: query: %s"%query)
-            records=db.engine.execute(query)
-            resume_records += records.scalar()
-
+            records = db.Update_Charge_Resume_CI(Cus_Id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code,ci.CI_Id)
+            resume_records += records
+            
         logger.debug ("report_Changing_Resume_Level: resume_records = %s"%resume_records)
         
     # Get Actual Remume Data from Database
     # NOTE: Here needs some Sand-Clock Message or something in case it takes so long ...
-    query="CALL Get_Charge_Resume(%d,'%s','%s',%d,'%s')"%(Cus_Id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code)
-    
-    logger.debug ("report_Changing_Resume_Level: query: %s"%query)
-    
-    rows =  db.engine.execute(query).fetchall()
+    rows =  db.Get_Charge_Resume(Cus_Id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code)
     
     return render_template('report_charging_resume_level.html',rows=rows,
                 Cus_Id=Cus_Id,
@@ -166,4 +149,3 @@ def report_Charging_Resume_Level():
                 Cur_Name=Cur_Name,
                 Level=Level
                 )
-

@@ -36,9 +36,10 @@ def reports(report,customer,fromx,tox,currency):
     r = page_header()
     r+= '<h1>Get \'%s\' for customer %s in period %s to %s cur=%s</h1>' % (report,customer,fromx,tox,currency)
     # SQL Query call here
-    query = text("CALL Get_Billing_Resume(%s,'%s','%s',1,'%s')"%(customer,fromx,tox,currency))
+    #query = text("C*ALL Get_Billing_Resume(%s,'%s','%s',1,'%s')"%(customer,fromx,tox,currency))
     try:
-        result = C.db.execute(query).fetchall()
+        #result = C.db.execute(query).fetchall()
+        result = C.db.Get_Billing_Resume(customer,fromx,tox,1,currency)
     except Exception as e:
         r+="<h2>EXCEPTION:%s</h2>"%e
     r+="<table>"
@@ -71,7 +72,7 @@ def table(name):
 
         # Get keys (column names) from Query        
         keys=C.db.execute(query).keys()
-
+        
         r+="<p>Query=%s</p>"%str(query)
         r+="<p>Keys =%s</p>"%str(keys)
         r+="<table>"

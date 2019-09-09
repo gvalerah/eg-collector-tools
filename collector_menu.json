@@ -1,0 +1,91 @@
+{
+ "Collector":{
+    "roles":["ROLE_CUSTOMER","ROLE_REPORTER","ROLE_CHARGER","ROLE_ADMINISTRATOR","ROLE_AUDITOR","ROLE_GOD"],
+    "options":[
+        {"suboption":"login",                               "url":"/auth/login"},
+        {"suboption":"logout",                              "url":"/auth/logout"}
+        ]
+    },
+ "Customer":{
+    "roles":["ROLE_CUSTOMER","ROLE_GOD"],
+    "options":[
+        {"suboption":"Query User Data",                     "url":"/forms/User_Data_View",              "hr":true},
+        {"suboption":"View Charging Data",                  "url":"/forms/Get_User_Resume"             },
+        {"suboption":"Report Charging Data",                "url":"/forms/Export_User_Resume",          "hr":true},
+        {"suboption":"Claims",                              "url":"/demo"                              }
+        ]
+    },
+ "Tables":{
+    "roles":["ROLE_CHARGER","ROLE_ADMINISTRATOR","ROLE_GOD"],
+    "options":[
+        {"suboption":"Platforms",                           "url":"/select/Platforms_Query"            },
+        {"suboption":"Customers",                           "url":"/select/Customers_Query"            },
+        {"suboption":"Cost Centers",                        "url":"/select/Cost_Centers_Query",         "hr":true},
+        {"suboption":"Configuration Items",                 "url":"/select/Configuration_Items_Query"  },
+        {"suboption":"Charge Units",                        "url":"/select/Charge_Units_Query"         },
+        {"suboption":"Charge Items",                        "url":"/select/Charge_Items_Query"         },
+        {"suboption":"Rates",                               "url":"/select/Rates_Query",                "hr":true},
+        {"suboption":"Countries",                           "url":"/select/Countries_Query"            },
+        {"suboption":"Currencies",                          "url":"/select/Currencies_Query"           },
+        {"suboption":"Countries & Currencies",              "url":"/select/Countries_Currencies_Query", "hr":true},
+        {"suboption":"Exchange Rates",                      "url":"/select/Exchange_Rates_Query"       },
+        {"suboption":"Measure Units",                       "url":"/select/Measure_Units_Query",        "hr":true},
+        {"suboption":"Charge Items Generation Types",       "url":"/select/CIT_Generations_Query"      },
+        {"suboption":"Charge Items Status Types",           "url":"/select/CIT_Statuses_Query"         },
+        {"suboption":"Charge Unit Types",                   "url":"/select/CU_Types_Query"             },
+        {"suboption":"Charge Unit Conversion Operations",   "url":"/select/CU_Operations_Query"        },
+        {"suboption":"Rate Periods",                        "url":"/select/Rat_Periods_Query",          "hr":true},
+        {"suboption":"Trace records",                       "url":"/select/Trace_Query",                "header":"Demo Version Only"},
+        {"suboption":"Tables",                              "url":"/select/Dev_Tables_Query"           },
+        {"suboption":"Forms",                               "url":"/select/Dev_Forms_Query"            },
+        {"suboption":"DB Status",                           "url":"/reports/DB_Status"                 }
+        ]
+    },
+ "Charging Data":{
+    "roles":["ROLE_CHARGER","ROLE_ADMINISTRATOR","ROLE_GOD"],
+    "options":[
+        {"suboption":"Data Consistency Check",                      "url":"/reports/Data_Consistency",          "hr":true},
+        {"suboption":"Monthly Pre-Charging View [Customer]",        "url":"/forms/Get_Charging_Resume"},
+        {"suboption":"Monthly Pre-Charging View [Customer] Resume", "url":"/forms/Get_Charging_Resume_Level",   "hr":true},
+        {"suboption":"Monthly Pre-Charging View [Cost Center]",     "url":"/forms/Get_Charging_Resume_CC"},
+        {"suboption":"Monthly Pre-Charging View [Platform]",        "url":"/forms/Get_Charging_Resume_Platform"},
+        {"suboption":"Monthly Pre-Charging View [All]",             "url":"/forms/Get_Charging_Resume_All",     "hr":true},
+        {"suboption":"Delete Saved Pre-Charging Views",             "url":"/demo"},
+        {"suboption":"Change Charge Items State",                   "url":"/forms/Change_CIT_State"},
+        {"suboption":"Create Periodic Charge Unit",                 "url":"/demo"},
+        {"suboption":"Create Manual Charge Item",                   "url":"/demo",                              "hr":true},
+        {"suboption":"Inject Cost centers",                         "url":"/forms/Import_Cost_Centers"},
+        {"suboption":"Inject Configuration Items",                  "url":"/demo"},
+        {"suboption":"Inject Charge Units",                         "url":"/demo"},
+        {"suboption":"Inject Charge Items",                         "url":"/demo"},
+        {"suboption":"Inject Rates",                                "url":"/demo"}
+        ]
+    },
+ "Reports":{
+    "roles":["ROLE_REPORTER","ROLE_CHARGER","ROLE_ADMINISTRATOR","ROLE_AUDITOR","ROLE_GOD"],
+    "options":[
+        {"suboption":"Monthly Pre_Charging [Customer]",             "url":"/forms/Export_Charging_Resume"},
+        {"suboption":"Monthly Pre_Charging [Cost Center]",          "url":"/demo"},
+        {"suboption":"Monthly Pre_Charging [Platform]",             "url":"/demo"},
+        {"suboption":"Monthly Pre_Charging [All]",                  "url":"/demo","hr":true},
+        {"suboption":"Delete Saved Pre-Charging Reports",           "url":"/demo"}
+        ]
+    },
+ "Options":{
+    "roles":["ROLE_ADMINISTRATOR","ROLE_GOD"],
+    "options":[
+        {"suboption":"Custom Add Ons",                              "url":"/plugins","hr":true},
+        {"suboption":"System Status",                               "url":"/demo","header":"Administrator","hr":true},
+        {"suboption":"Statistics: Use Per Type",                    "url":"/forms/Get_Stats_Per_Type","header":"BETA VERSION"},
+        {"suboption":"Statistics: Graph: Use Per Type",             "url":"/forms/Get_Graph_Stats_Per_Type"},
+        {"suboption":"Statistics: Graph: Use Per Type Advanced",    "url":"/forms/Get_Graph_Stats_Per_Type_Filter"}
+        ]
+    },
+ "Help":{
+    "roles":["ROLE_CUSTOMER","ROLE_REPORTER","ROLE_CHARGER","ROLE_ADMINISTRATOR","ROLE_AUDITOR","ROLE_GOD"],
+    "options":[
+        {"suboption":"FAQ",                                         "url":"/collector_faq","hr":true},
+        {"suboption":"About Collector",                             "url":"/collector_about"}
+        ]
+    }
+}

@@ -1,0 +1,5 @@
+ll ./EG-Collector-Tools/code/src/include/html/collector_navbar.html ./EG-Collector-Tools/code/src/include/collector_navbar.html
+diff ./EG-Collector-Tools/code/src/include/html/collector_navbar.html ./EG-Collector-Tools/code/src/include/collector_navbar.html
+
+
+ll ./EG-Collector-Tools/code/auto/templates/base.html ./EG-Collector/app/templates/base.html ./EG-Suite-Tools/Collector/code/auto/templates/base.html

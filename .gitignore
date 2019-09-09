@@ -2,5 +2,6 @@
 *.pyc
 *.tmp
 *.log
+*.tar
 __*
 

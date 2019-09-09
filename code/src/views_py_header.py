@@ -18,8 +18,8 @@ from ..decorators   import admin_required, permission_required
 #from ..models       import User
 #from ..models       import Permission
 
-from emtec.collector.db.Flask_models       import User
-from emtec.collector.db.Flask_models       import Permission
+from emtec.collector.db.flask_models       import User
+from emtec.collector.db.flask_models       import Permission
 
 """ Application decorators for routes """
 """ Decorators specify main routes to be handled by Collector Solution """
