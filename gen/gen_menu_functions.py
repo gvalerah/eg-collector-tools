@@ -116,8 +116,8 @@ def Gen_Menu(Menu,ACCOUNT,filename=None):
     f.write('    <!-- ----------------------------- -->\n')
     f.write('    <!-- gen_menu_functions - Gen_Menu -->\n')
     f.write('    <!-- ----------------------------- -->\n')
+    f.write('    <div class="container-fluid">\n')
     f.write('    <nav class="navbar navbar-expand-sm bg-dark navbar-dark navbar-fixed-top" data-spy="affix" data-offset-top="197" style="position: fixed;top: 0;width: 100%;">\n')
-    f.write('      <div class="container-fluid">\n')
     
     #GV 20190408
     f.write('      <div id="navbarCollapse" class="collapse navbar-collapse">\n')
@@ -158,8 +158,8 @@ def Gen_Menu(Menu,ACCOUNT,filename=None):
     # GV 20190408
     f.write('      </div>\n')
 
-    f.write('      </div>\n')
     f.write('    </nav>\n')
+    f.write('    </div>\n')
     f.write('    <!-- ----------------------------- -->\n')
     f.close()
 

@@ -98,7 +98,8 @@ def reports_Data_Consistency():
                 "ORDER BY Typ_Code,Rates.Pla_Id,Rates.Cus_Id,Rates.CC_Id,Rates.CI_Id"
     """
     # GV 20190907
-    query = db.query(Rates,Customers,Platforms,Configuration_Items,Cost_Centes).\
+    """
+    query = db.session.query(Rates,Customers,Platforms,Configuration_Items,Cost_Centes).\
                 join(Customers          , Rates.Cus_Id == Customers.Cus_Id).\
                 join(Platforms          , Rates.Pla_Id == Platforms.Pla_Id).\
                 join(Configuration_Items, Rates.CI_Id  == Configuration_Items.CI_Id).\
@@ -108,7 +109,19 @@ def reports_Data_Consistency():
                             Rates.Cus_Id,
                             Rates.CC_Id,
                             Rates.CI_Id)
-                 
+    """
+    
+    query = db.session.query(rate,customer,platform,configuration_item,cost_center).\
+                join(customer          , rate.Cus_Id == customer.Cus_Id).\
+                join(platform          , rate.Pla_Id == platform.Pla_Id).\
+                join(configuration_item, rate.CI_Id  == configuration_item.CI_Id).\
+                join(cost_center       , rate.CC_Id  == cost_center.CC_Id).\
+                order_by(   rate.Typ_Code,
+                            rate.Pla_Id,
+                            rate.Cus_Id,
+                            rate.CC_Id,
+                            rate.CI_Id)
+    
     rate_rows=[]
 
     try:

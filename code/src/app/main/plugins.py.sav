@@ -1,0 +1,131 @@
+# =============================================================================
+# Plugins Fixed Code
+# (c) Sertechno 2018
+# GLVH @ 2018-11-22
+# =============================================================================
+# General Plugins imports
+from .          import main
+from datetime   import datetime                         
+from flask      import render_template, session, redirect, url_for, current_app, flash
+
+# Application required libraries/modules
+import importlib
+# Import configuration functions
+import configparser
+from configparser import ConfigParser, ExtendedInterpolation
+import json
+
+from .. import logger
+
+""" Application decorators for routes """
+""" Decorators specify main routes to be handled by Collector Solution """
+
+# Here we import al plugin specific members, classes & methods
+from .plugins_code import *
+
+@main.route('/plugins', methods=['GET', 'POST'])
+def plugins_Menu():
+    """ Show a list menu of installed plugins """    
+    if logger is not None:
+        logger.debug("index() IN")
+    else:
+        print("*** WARNING *** Route: plugins_Menu: logger is undefined. !!! No logging functions possible. !!!")
+
+    print("Configuration File =",current_app.config['COLLECTOR_CONFIG_FILE'])
+    
+    config = configparser.ConfigParser(interpolation=ExtendedInterpolation())
+    config.read(current_app.config['COLLECTOR_CONFIG_FILE'])
+    print("config =",config)
+    
+    """    
+    Installed_Plugins = int(config['Plugins']['Installed_Plugins'])
+    
+    " ""
+    print("Installed Plugins  =",Installed_Plugins)
+
+    for pi in range(Installed_Plugins):
+        pcode = config['Plugins']['Plugin_%d_Code'%pi]
+        print("Plugin Code = ",pcode)
+    " ""
+    data = []
+
+    for pi in range(Installed_Plugins):
+        pcode = config['Plugins']['Plugin_%d_Code'%pi]
+        pdesc = config['Plugins']['Plugin_%d_Description'%pi]
+        purl  ="plugins/%s"%pcode
+        data.append({'code':pcode,'description':pdesc,'url':purl})
+    """
+
+    print("plugins list=",config.get('Plugins','plugins',fallback='[]'))
+
+
+    Installed_Plugins = json.loads(config['Plugins']['plugins'])
+    
+    print("Installed Plugins  =",Installed_Plugins)
+
+    data = []
+
+    for pi in Installed_Plugins:
+        pcode = pi['code']
+        pdesc = pi['name']
+        purl  ="plugins/%s"%pcode
+        data.append({'code':pcode,'description':pdesc,'url':purl})
+    
+    return render_template('plugins.html',data=data)
+
+@main.route('/plugins/<code>', methods=['GET', 'POST'])
+def plugins_Code(code):
+    """ Calls the actual Plugin view function and renders plugins main page depending of Plugin code """
+    data = []
+    # data[0] will be populated with plugins metadata that should be used later
+    plugin_func_name = 'pi_%06d'%int(code)
+    # Will populate data depending on plugin data gathering function
+    func = globals()[plugin_func_name]
+    
+    # Data is initialized here for the plugin 
+    data=func(data)
+  
+    form = data[0]['form']
+      
+    #print("%s: Data=%s"%(__name__,data))
+
+    # ------------------------------------------------------------------------------------------------
+    # Here executes standard plugins accions
+    # Actual version supports up to 8 action buttons per plugin form
+    # Each submit form should populate data list and indicate redirection URL in data[0]['redirect']
+    # ------------------------------------------------------------------------------------------------
+    if form.validate_on_submit():
+        if     hasattr(form,'submit_0') and form.submit_0.data:
+            data=form.functions[0](data)
+        elif   hasattr(form,'submit_1') and form.submit_1.data:
+            data=form.functions[1](data)
+        elif   hasattr(form,'submit_2') and form.submit_2.data:
+            data=form.functions[2](data)
+        elif   hasattr(form,'submit_3') and form.submit_3.data:
+            data=form.functions[2](data)
+        elif   hasattr(form,'submit_4') and form.submit_4.data:
+            data=form.functions[2](data)
+        elif   hasattr(form,'submit_5') and form.submit_5.data:
+            data=form.functions[2](data)
+        elif   hasattr(form,'submit_6') and form.submit_6.data:
+            data=form.functions[2](data)
+        elif   hasattr(form,'submit_7') and form.submit_7.data:
+            data=form.functions[2](data)
+        else:
+            if logger is not None:
+                logger.error("%s: Form Validated but not submited ??? should never get here"%(__name__))
+            else:
+                print("*** ERROR *** Route: plugins_Menu: logger is undefined. !!! No logging functions possible. !!!")
+            data[0]['redirect']='.plugins'
+        return redirect(data[0]['redirect'])
+            
+    # ---------------------------------------------------------
+    # Plugin templates will live in app/main/templates/plugins
+    # name format is fixed
+    # ---------------------------------------------------------
+    template="plugins/pi_%06d.html"%int(code)
+    return render_template(template,data=data)
+# =============================================================================
+# End of Plugins Fixed Code
+# =============================================================================
+

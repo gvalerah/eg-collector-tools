@@ -12,7 +12,6 @@ print()
 
 from gen.gen_menu_functions import *
 
-
 with open('collector_menu.json', 'r') as f:
     menu_data = json.load(f)
 

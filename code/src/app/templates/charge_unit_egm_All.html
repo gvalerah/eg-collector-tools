@@ -1,0 +1,70 @@
+{# ============================================================================= #}
+
+{# Auto-Generated code. do not modify #}
+{# (c) Sertechno 2018 #}
+{# GLVH @ 2019-10-07 13:41:33 #}
+{# ============================================================================= #}
+
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% import "_macros.html" as macros %}
+{% block title %}Collector{% endblock %}
+{% block head %}
+   {{ super() }}
+{% endblock %}
+
+{% block page_content %}
+<!-- AG 2019-10-07 13:41:35.700638 -->
+<!-- ------------------------ -->
+<!-- gen_templates_select_all -->
+<!-- ------------------------ -->
+<div class="page-header">
+    <h2>Charge Unit EGM:<h2>
+    <a href="#" onclick="history.go(-1)"><img src="/static/img/back.png"  color=yellow width="32" height="32" title="" alt="Add"></a>
+</div>
+<table class="table">
+  <thead class="thead-dark">
+    <tr>
+        <th>Charge Unit Id</th>
+        <th>Archive</th>
+        <th>Path</th>
+        <th>Metric</th>
+        <th>Host</th>
+        <th>Port</th>
+        <th>User</th>
+        <th>Password</th>
+        <th>Public_Key_File</th>
+        <th>Passphrase</th>
+        <td><a href="/forms/Charge_Unit_EGM"><img src="/static/img/add.png"  color=yellow width="32" height="32" title="" alt="Add"></a></td>
+    </tr>
+  </thead>
+    <tbody>
+    {% for Charge_Unit_EGM,CU_Id in rows.items %}
+       <tr>
+           <td>{{ "{:s}".format(CU_Id) }}</td>
+           <td>{{ Charge_Unit_EGM.Archive }}</td>
+           <td>{{ Charge_Unit_EGM.Path }}</td>
+           <td>{{ Charge_Unit_EGM.Metric }}</td>
+           <td>{{ Charge_Unit_EGM.Host }}</td>
+           <td>{{ Charge_Unit_EGM.Port }}</td>
+           <td>{{ Charge_Unit_EGM.User }}</td>
+           <td>{{ Charge_Unit_EGM.Password }}</td>
+           <td>{{ Charge_Unit_EGM.Public_Key_File }}</td>
+           <td>{{ Charge_Unit_EGM.Passphrase }}</td>
+           <td><a href="/forms/Charge_Unit_EGM?CU_Id={{ Charge_Unit_EGM.CU_Id }}"><img src="/static/img/edit.png" width="32" height="32" title="" alt="Edit"></a>
+               <a href="/forms/Charge_Unit_EGM_delete?CU_Id={{ Charge_Unit_EGM.CU_Id }}"><img src="/static/img/delete.png" width="32" height="32" title="" alt="Edit"></a>
+           </td>
+       </tr>
+    {% endfor %}
+    </tbody>
+</table>
+<div class="pagination">
+    {{ macros.pagination_widget(rows, '.select_Charge_Unit_EGM_query') }}
+</div>
+<!-- ------------------------ -->
+<!-- gen_templates_select_all -->
+<!-- ------------------------ -->
+{% endblock %}
+
+{# ============================================================================= #}
+

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}Collector{% endblock %}
+
+{% block head %}
+{{ super() }}
+{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    
+    <h1>Collector v 1.1</h1>
+    <h2>Installed Plugins</h2>
+    <hr>
+    {% for d in data %}
+    <li><a href="{{ d.url }}">{{d.code}} - {{d.description}}</a></li>
+    {% endfor %}
+</div>
+{% endblock %}
+
+
+

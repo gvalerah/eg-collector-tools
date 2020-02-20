@@ -1,0 +1,19 @@
+echo
+sudo systemctl daemon-reload
+echo
+sudo systemctl stop      collector_n1pc3
+echo
+sudo systemctl stop      collector_n1pc3c
+echo
+sudo systemctl stop      collector
+echo
+sudo systemctl stop      collector_services
+echo
+sudo systemctl status -l collector_n1pc3
+echo
+sudo systemctl status -l collector_n1pc3c
+echo
+sudo systemctl status -l collector
+echo
+sudo systemctl status -l collector_services
+echo

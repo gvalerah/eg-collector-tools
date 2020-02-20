@@ -37,7 +37,7 @@ def forms_Get_Charging_Resume_All():
                 if form.Cur_Code.choices[i][0]==form.Cur_Code.data:
                     cur_index=i
             return redirect(url_for('.report_Charging_Resume_All',
-                                Pla_Name        = form.Pla_Id.choices[pla_index][1],
+                                #Pla_Name        = form.Pla_Id.choices[pla_index][1],
                                 CIT_Date_From   = form.CIT_Date_From.data,
                                 CIT_Date_To     = form.CIT_Date_To.data,
                                 CIT_Status      = form.CIT_Status.data,
@@ -52,7 +52,7 @@ def forms_Get_Charging_Resume_All():
                 if form.Cur_Code.choices[i][0]==form.Cur_Code.data:
                     cur_index=i
             return redirect(url_for('.report_Charging_Resume_All',
-                                Pla_Name        = form.Pla_Id.choices[pla_index][1],
+                                #Pla_Name        = form.Pla_Id.choices[pla_index][1],
                                 CIT_Date_From   = form.CIT_Date_From.data,
                                 CIT_Date_To     = form.CIT_Date_To.data,
                                 CIT_Status      = form.CIT_Status.data,
@@ -75,7 +75,7 @@ def forms_Get_Charging_Resume_All():
     form.CIT_Status.data    = session['data']['CIT_Status']
     form.Cur_Code.data      = session['data']['Cur_Code']
 
-    return render_template('get_charging_resume_all.html',form=form, data=session.get('data'))
+    return render_template('charging_resume_all.html',form=form, data=session.get('data'))
 
 # =============================================================================
 
@@ -100,13 +100,14 @@ def report_Charging_Resume_All():
                 distinct().\
                 order_by(Configuration_Items.CC_Id,Configuration_Items.CI_Id).all()
         
-        logger.debug ("report_Changing_Resume_All: %d CI's found "%(CI.rowcount))
+        logger.debug ("report_Changing_Resume_All: %d CI's found "%(len(CI)))
         
         resume_records=0
 
         for ci in CI:
-            records = db.Update_Charge_Resume_CI2(CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code,ci.CI_Id)
-            resume_records += records # OJO AQUI ME QUEDE 
+            records = db.Update_Charge_Resume_CI2(CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code,ci)
+            if records is not None:
+                resume_records += records # OJO AQUI ME QUEDE 
 
         logger.debug ("report_Changing_Resume_All: resume_records = %s"%resume_records)
         

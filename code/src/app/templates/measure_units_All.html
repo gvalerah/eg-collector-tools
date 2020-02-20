@@ -1,0 +1,56 @@
+{# ============================================================================= #}
+
+{# Auto-Generated code. do not modify #}
+{# (c) Sertechno 2018 #}
+{# GLVH @ 2019-10-07 13:41:33 #}
+{# ============================================================================= #}
+
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% import "_macros.html" as macros %}
+{% block title %}Collector{% endblock %}
+{% block head %}
+   {{ super() }}
+{% endblock %}
+
+{% block page_content %}
+<!-- AG 2019-10-07 13:41:35.995184 -->
+<!-- ------------------------ -->
+<!-- gen_templates_select_all -->
+<!-- ------------------------ -->
+<div class="page-header">
+    <h2>Measure Units:<h2>
+    <a href="#" onclick="history.go(-1)"><img src="/static/img/back.png"  color=yellow width="32" height="32" title="" alt="Add"></a>
+</div>
+<table class="table">
+  <thead class="thead-dark">
+    <tr>
+        <th>Code</th>
+        <th>Description</th>
+        <td><a href="/forms/Measure_Units"><img src="/static/img/add.png"  color=yellow width="32" height="32" title="" alt="Add"></a></td>
+         <td>Rates</td>
+    </tr>
+  </thead>
+    <tbody>
+    {% for Measure_Units in rows.items %}
+       <tr>
+           <td>{{ Measure_Units.MU_Code }}</td>
+           <td>{{ Measure_Units.MU_Description }}</td>
+           <td><a href="/forms/Measure_Units?MU_Code={{ MU_Code }}"><img src="/static/img/edit.png" width="32" height="32" title="" alt="Edit"></a>
+               <a href="/forms/Measure_Units_delete?MU_Code={{ MU_Code }}"><img src="/static/img/delete.png" width="32" height="32" title="" alt="Edit"></a>
+           </td>
+           <td><a href="/select/Rates_Query?field=MU_Code&value={{MU_Code}}">{{ rates.__len__() }}</a></td>
+       </tr>
+    {% endfor %}
+    </tbody>
+</table>
+<div class="pagination">
+    {{ macros.pagination_widget(rows, '.select_Measure_Units_query') }}
+</div>
+<!-- ------------------------ -->
+<!-- gen_templates_select_all -->
+<!-- ------------------------ -->
+{% endblock %}
+
+{# ============================================================================= #}
+

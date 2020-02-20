@@ -1,0 +1,64 @@
+{# ============================================================================= #}
+
+{# Auto-Generated code. do not modify #}
+{# (c) Sertechno 2018 #}
+{# GLVH @ 2019-10-07 13:41:33 #}
+{# ============================================================================= #}
+
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% import "_macros.html" as macros %}
+{% block title %}Collector{% endblock %}
+{% block head %}
+   {{ super() }}
+{% endblock %}
+
+{% block page_content %}
+<!-- AG 2019-10-07 13:41:36.546630 -->
+<!-- ------------------------ -->
+<!-- gen_templates_select_all -->
+<!-- ------------------------ -->
+<div class="page-header">
+    <h2>Users:<h2>
+    <a href="#" onclick="history.go(-1)"><img src="/static/img/back.png"  color=yellow width="32" height="32" title="" alt="Add"></a>
+</div>
+<table class="table">
+  <thead class="thead-dark">
+    <tr>
+        <th>Id</th>
+        <th>username</th>
+        <th>role_id</th>
+        <th>email</th>
+        <th>password_hash</th>
+        <th>confirmed</th>
+        <th>CC_Id</th>
+        <td><a href="/forms/Users"><img src="/static/img/add.png"  color=yellow width="32" height="32" title="" alt="Add"></a></td>
+    </tr>
+  </thead>
+    <tbody>
+    {% for Users,role_id,CC_Id in rows.items %}
+       <tr>
+           <td>{{ Users.id }}</td>
+           <td>{{ Users.username }}</td>
+           <td>{{ "{:s}".format(role_id) }}</td>
+           <td>{{ Users.email }}</td>
+           <td>{{ Users.password_hash }}</td>
+           <td>{{ Users.confirmed }}</td>
+           <td>{{ "{:s}".format(CC_Id) }}</td>
+           <td><a href="/forms/Users?id={{ Users.id }}"><img src="/static/img/edit.png" width="32" height="32" title="" alt="Edit"></a>
+               <a href="/forms/Users_delete?id={{ Users.id }}"><img src="/static/img/delete.png" width="32" height="32" title="" alt="Edit"></a>
+           </td>
+       </tr>
+    {% endfor %}
+    </tbody>
+</table>
+<div class="pagination">
+    {{ macros.pagination_widget(rows, '.select_Users_query') }}
+</div>
+<!-- ------------------------ -->
+<!-- gen_templates_select_all -->
+<!-- ------------------------ -->
+{% endblock %}
+
+{# ============================================================================= #}
+

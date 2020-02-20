@@ -121,16 +121,19 @@ def report_Charging_Resume_Level():
     
     # Updated cached data for this specific query if requested 
     if Update == 1:
-        CI = db.query(Configuration_Items.CI_id.distinct()).\
+        CI = db.session.query(Configuration_Items.CI_Id.distinct()).\
                 filter(Configuration_Items.Cus_Id==Cus_Id).\
-                order_by(Configuration_Items.CC_Id,Configuration_Items.CI_Id)
-        logger.debug ("report_Changing_Resume_Level: %d CI's found for customer %d"%(CI.rowcount,Cus_Id))
+                order_by(Configuration_Items.CI_Id)
+        print(CI)
+        CI=CI.all()
+        logger.debug ("report_Changing_Resume_Level: %d CI's found for customer %d"%(len(CI),Cus_Id))
         
         resume_records=0
 
         for ci in CI:
-            records = db.Update_Charge_Resume_CI(Cus_Id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code,ci.CI_Id)
-            resume_records += records
+            records = db.Update_Charge_Resume_CI2(CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code,ci)
+            if records is not None:
+                resume_records += records
             
         logger.debug ("report_Changing_Resume_Level: resume_records = %s"%resume_records)
         

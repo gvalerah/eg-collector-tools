@@ -4,8 +4,8 @@
 # GLVH @ 2019-08-16
 # =============================================================================
 
-from emtec.collector.forms       import frm_charging_resume_cc
-from babel.numbers  import format_number, format_decimal, format_percent
+from emtec.collector.forms  import frm_charging_resume_cc
+from babel.numbers          import format_number, format_decimal, format_percent
 
 @main.route('/forms/Get_Charging_Resume_CC', methods=['GET', 'POST'])
 @login_required
@@ -15,13 +15,13 @@ def forms_Get_Charging_Resume_CC():
     session['data'] =  { 'CC_Id': None, 'CIT_Date_From':None, 'CIT_Date_To':None, 'CIT_Status':1,'Cur_Code':'USD'}
 
     form = frm_charging_resume_cc()
-
     # ------------------------------------------------------------------------------
     # Will setup filter to consider only Currencies with actual Exchange Rates in DB
     # Prepare query
     query = db.session.query(exchange_rate.Cur_Code.distinct().label('Cur_Code'))
     # Execute query and convert in list for further use in choices selection
     cur_choices = [row.Cur_Code for row in query.all()]
+    # ------------------------------------------------------------------------------
 
     form.CC_Id.choices      = db.session.query(cost_center.CC_Id,cost_center.CC_Description).all()
     form.CIT_Status.choices = db.session.query(cit_status.CIT_Status,cit_status.Value).all()
@@ -106,56 +106,29 @@ def report_Charging_Resume_CC():
     Cur_Name        =  request.args.get('Cur_Name',None,type=str)
     Update          =  request.args.get('Update',0,type=int)
     
-    
     # Updated cached data for this specific query if requested 
     if Update == 1:
         # -------------------------------------------------------------------------------------------------------------- #
         # Previous Code faster but requires more memory will be replaced by an by CI loop                                #
-        # query="C*ALL Update_Charge_Resume(%d,'%s','%s',%d,'%s')"%(CC_Id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code) #
-        # resume_records = db.engine.execute(query).scalar()                                                             #
         # -------------------------------------------------------------------------------------------------------------- #
-        # 20181228 GV query = "S*ELECT DISTINCT CI_Id FROM Configuration_Items WHERE CC_Id=%d"%(CC_Id)
-        """
-        query = "S*ELECT CI_Id "\
-                    "FROM Configuration_Items "\
-                        "WHERE CC_Id IN (S*ELECT CC_Id FROM Cost_Centers WHERE ccisbelow(CC_Id,%d)) "\
-                        "ORDER BY CC_Id,CI_Id"%(CC_Id)
-        
-        logger.debug ("report_Changing_Resume: query: %s"%(query))
-
-        CI = db.engine.execute(query)
-        """
-        LISTA = get_cost_centers(CC_Id)
-        CI = db.query(Configuration_Items.CI_Id).\
+        LISTA = db.get_cost_centers(CC_Id)
+        CI = db.session.query(Configuration_Items.CI_Id).\
                 filter(Configuration_Items.CI_Id.in_(LISTA)).\
-                order_by(Configuration_Items.CC_Id,Configuration_Items.CI_Id)
+                order_by(Configuration_Items.CC_Id,Configuration_Items.CI_Id).all()
         
-        logger.debug ("report_Changing_Resume: %d CI's found for cost center %d"%(CI.rowcount,CC_Id))
+        logger.debug ("report_Changing_Resume: %d CI's found for cost center %d"%(len(CI),CC_Id))
         
         resume_records=0
 
         for ci in CI:
-            """
-            query="C*ALL Update_Charge_Resume_CI2('%s','%s',%s,'%s',%s)"%\
-                    (CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code,ci.CI_Id)
-            logger.debug ("report_Changing_Resume: query: %s"%query)
-            records=db.engine.execute(query)
-            resume_records += records.scalar()
-            """
             records = db.Update_Charge_Resume_CI2(CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code,ci.CI_Id)
-            resume_records += records
+            if records is not None:
+                resume_records += records
             
         logger.debug ("report_Changing_Resume: resume_records = %s"%resume_records)
         
     # Get Actual Remume Data from Database
     # NOTE: Here needs some Sand-Clock Message or something in case it takes so long ...
-    """
-    query="C*ALL Get_Charge_Resume2(2,%d,'%s','%s',%d,'%s')"%(CC_Id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code)
-    
-    logger.debug ("report_Changing_Resume: query: %s"%query)
-    
-    rows =  db.engine.execute(query).fetchall()
-    """
     rows = db.Get_Charge_Resume2(2,CC_Id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code)
     
     return render_template('report_charging_resume_cc.html',rows=rows,

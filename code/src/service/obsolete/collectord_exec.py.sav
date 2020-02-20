@@ -1,0 +1,68 @@
+# =============================================================================
+# Auto-Generated code. do not modify
+# (c) Sertechno 2018
+# GLVH @ 2019-08-15 16:02:19
+# =============================================================================
+
+import  importlib.util
+import  configparser
+from    configparser    import ConfigParser, ExtendedInterpolation
+from    time            import strftime
+from    pprint          import pprint
+from    emtec           import 
+
+
+def Execute_Collector_Daemon(C):
+    collectors_path = "%s/collector/service/collectors" % C.app_home
+    plugins_path    = "%s/collector/service/plugins"    % C.app_home
+    collectors      = Load_File_Names( collectors_path , "*.py")
+    plugins         = Load_File_Names( plugins_path    , "*.ini")
+    func={}
+    ini_file_name   = None
+    name            = None
+    collector       = None
+    
+    for c in collectors:    
+        spec = importlib.util.spec_from_file_location(c, "%s/%s.py"%(collectors_path,c))
+        foo = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(foo)
+        func.update({c:{'name':c,'module':foo,'collector':None}})
+        func[c]['collector']= getattr(foo, '%s_Collector'%c)
+        C.logger.debug("Collector '%s' found, function=%s"%(c,func[c]['collector']))
+    C.logger.info("****************************************")
+    C.logger.info("Collector Daemon Execution initiated @ %s"%strftime("%Y-%m-%d %H:%M:%S"))
+    C.logger.info("%d collectors defined"   % len(collectors))
+    C.logger.info("%d plugins defined"      % len(plugins))
+    C.logger.info("Will execute active plugins")
+        
+    try:
+        count=0
+        for plugin in plugins:
+            try:
+                config = configparser.ConfigParser(interpolation=ExtendedInterpolation())
+                ini_file_name = "%s/%s.ini"%(plugins_path,plugin)
+                config.read( ini_file_name )
+                name      = config['General']['name']
+                collector = config['General']['collector']
+                count += 1
+                if config['General']['active'].lower() in ['true','t','verdadero','verdad','v']:
+                    C.logger.info("****************************************")
+                    C.logger.info("Platform %d/%d : %s"%(count, len(plugins), name))
+                    C.logger.debug("%s: Execute_Collector_Daemon(): %d/%d execute %s(C,%s) ..."%(__name__, count, len(plugins), func[collector]['collector'].__name__, ini_file_name ))
+                    try:
+                        func[collector]['collector'](C, ini_file_name )
+                    except Exception as e:
+                        emtec_handle_general_exception(e,"execution of function %s() FAILED ..."%(func[collector]['collector'].__name__),
+                            logger=C.logger,module=__name__,function='Execute_Collector_Daemon')                    
+
+            except Exception as e:
+                #C.logger.error("execution of configuration '%s' FAILED ..."%( ini_file_name ))
+                emtec_handle_general_exception(e,"execution of configuration '%s' FAILED ..."%(ini_fle_name),
+                    logger=C.logger,module=__name__,function='Execute_Collector_Daemon')                    
+    except Exception as e:
+        #C.logger.error("collectord_exec: Exception: %s"%(e))
+        emtec_handle_general_exception(e,logger=C.logger,module=__name__,function='Execute_Collector_Daemon')                    
+    C.logger.info("****************************************")
+
+    C.logger.info("Collector Daemon Execution completed @ %s"%strftime("%Y-%m-%d %H:%M:%S"))
+# =============================================================================

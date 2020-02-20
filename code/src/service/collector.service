@@ -1,0 +1,14 @@
+[Unit]
+Description=Collector Web Service
+After=mysqld.service
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User=gvalera
+ExecStart=/home/gvalera/collector/dist/collector /home/gvalera/collector/collector.ini
+
+[Install]
+WantedBy=multi-user.target

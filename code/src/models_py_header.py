@@ -2,6 +2,7 @@
 # Models File
 # Static Header File. 
 # GLVH 2019-08-16
+# GLVH 2020-01-30 JSON Serializing code added
 # =============================================================================
 from app                    import db
 from app                    import login_manager
@@ -20,5 +21,15 @@ from itsdangerous           import TimedJSONWebSignatureSerializer as Serializer
 from flask                  import current_app
 from flask_login            import UserMixin, AnonymousUserMixin
 
+# JSON Serializing enabling code
+from sqlalchemy.inspection import inspect
 
+class Serializer(object):
+
+    def serialize(self):
+        return {c: getattr(self, c) for c in inspect(self).attrs.keys()}
+
+    @staticmethod
+    def serialize_list(l):
+        return [m.serialize() for m in l]
 

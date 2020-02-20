@@ -1,0 +1,120 @@
+{# ============================================================================= #}
+
+{# Auto-Generated code. do not modify #}
+{# (c) Sertechno 2018 #}
+{# GLVH @ 2019-10-07 13:41:33 #}
+{# ============================================================================= #}
+
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% import "_macros.html" as macros %}
+{% block title %}Collector{% endblock %}
+{% block head %}
+   {{ super() }}
+{% endblock %}
+
+{% block page_content %}
+<!-- AG 2019-10-07 13:41:36.506641 -->
+<!-- ------------------------ -->
+<!-- gen_templates_select_all -->
+<!-- ------------------------ -->
+<div class="page-header">
+    <h2>User Resumes:<h2>
+    <a href="#" onclick="history.go(-1)"><img src="/static/img/back.png"  color=yellow width="32" height="32" title="" alt="Add"></a>
+</div>
+<table class="table">
+  <thead class="thead-dark">
+    <tr>
+        <th>Cus_Id</th>
+        <th>CR_Date_From</th>
+        <th>CR_Date_To</th>
+        <th>CIT_Status</th>
+        <th>Cur_Code</th>
+        <th>CIT_Count</th>
+        <th>CIT_Quantity</th>
+        <th>CIT_Generation</th>
+        <th>CU_Id</th>
+        <th>CI_CC_Id</th>
+        <th>CU_Operation</th>
+        <th>Typ_Code</th>
+        <th>CC_Cur_Code</th>
+        <th>CI_Id</th>
+        <th>Rat_Id</th>
+        <th>Rat_Price</th>
+        <th>Rat_MU_Code</th>
+        <th>Rat_Cur_Code</th>
+        <th>Rat_Period</th>
+        <th>Rat_Hourly</th>
+        <th>Rat_Daily</th>
+        <th>Rat_Monthly</th>
+        <th>CR_Quantity</th>
+        <th>CR_Quantity_at_Rate</th>
+        <th>CC_XR</th>
+        <th>CR_Cur_XR</th>
+        <th>CR_ST_at_Rate_Cur</th>
+        <th>CR_ST_at_CC_Cur</th>
+        <th>CR_ST_at_Cur</th>
+        <th>Cus_Name</th>
+        <th>CI_Name</th>
+        <th>CU_Description</th>
+        <th>CC_Description</th>
+        <th>Rat_Period_Description</th>
+        <th>CC_Code</th>
+        <td><a href="/forms/User_Resumes"><img src="/static/img/add.png"  color=yellow width="32" height="32" title="" alt="Add"></a></td>
+    </tr>
+  </thead>
+    <tbody>
+    {% for User_Resumes in rows.items %}
+       <tr>
+           <td>{{ User_Resumes.Cus_Id }}</td>
+           <td>{{ User_Resumes.CR_Date_From }}</td>
+           <td>{{ User_Resumes.CR_Date_To }}</td>
+           <td>{{ User_Resumes.CIT_Status }}</td>
+           <td>{{ User_Resumes.Cur_Code }}</td>
+           <td>{{ User_Resumes.CIT_Count }}</td>
+           <td>{{ User_Resumes.CIT_Quantity }}</td>
+           <td>{{ User_Resumes.CIT_Generation }}</td>
+           <td>{{ User_Resumes.CU_Id }}</td>
+           <td>{{ User_Resumes.CI_CC_Id }}</td>
+           <td>{{ User_Resumes.CU_Operation }}</td>
+           <td>{{ User_Resumes.Typ_Code }}</td>
+           <td>{{ User_Resumes.CC_Cur_Code }}</td>
+           <td>{{ User_Resumes.CI_Id }}</td>
+           <td>{{ User_Resumes.Rat_Id }}</td>
+           <td>{{ User_Resumes.Rat_Price }}</td>
+           <td>{{ User_Resumes.Rat_MU_Code }}</td>
+           <td>{{ User_Resumes.Rat_Cur_Code }}</td>
+           <td>{{ User_Resumes.Rat_Period }}</td>
+           <td>{{ User_Resumes.Rat_Hourly }}</td>
+           <td>{{ User_Resumes.Rat_Daily }}</td>
+           <td>{{ User_Resumes.Rat_Monthly }}</td>
+           <td>{{ User_Resumes.CR_Quantity }}</td>
+           <td>{{ User_Resumes.CR_Quantity_at_Rate }}</td>
+           <td>{{ User_Resumes.CC_XR }}</td>
+           <td>{{ User_Resumes.CR_Cur_XR }}</td>
+           <td>{{ User_Resumes.CR_ST_at_Rate_Cur }}</td>
+           <td>{{ User_Resumes.CR_ST_at_CC_Cur }}</td>
+           <td>{{ User_Resumes.CR_ST_at_Cur }}</td>
+           <td>{{ User_Resumes.Cus_Name }}</td>
+           <td>{{ User_Resumes.CI_Name }}</td>
+           <td>{{ User_Resumes.CU_Description }}</td>
+           <td>{{ User_Resumes.CC_Description }}</td>
+           <td>{{ User_Resumes.Rat_Period_Description }}</td>
+           <td>{{ User_Resumes.CC_Code }}</td>
+           <td><a href="/forms/User_Resumes?CR_Date_From={{ CR_Date_From }}&CR_Date_To={{ CR_Date_To }}&CIT_Status={{ CIT_Status }}&Cur_Code={{ Cur_Code }}&CU_Id={{ CU_Id }}&CI_Id={{ CI_Id }}"><img src="/static/img/edit.png" width="32" height="32" title="" alt="Edit"></a>
+               <a href="/forms/User_Resumes_delete?CR_Date_From={{ CR_Date_From }}&CR_Date_To={{ CR_Date_To }}&CIT_Status={{ CIT_Status }}&Cur_Code={{ Cur_Code }}&CU_Id={{ CU_Id }}&CI_Id={{ CI_Id }}"><img src="/static/img/delete.png" width="32" height="32" title="" alt="Edit"></a>
+           </td>
+       </tr>
+    {% endfor %}
+    </tbody>
+</table>
+<div class="pagination">
+    {{ macros.pagination_widget(rows, '.select_User_Resumes_query') }}
+</div>
+<!-- ------------------------ -->
+<!-- gen_templates_select_all -->
+<!-- ------------------------ -->
+{% endblock %}
+
+{# ============================================================================= #}
+

@@ -35,6 +35,7 @@
         {"suboption":"Charge Unit Types",                   "url":"/select/CU_Types_Query"             },
         {"suboption":"Charge Unit Conversion Operations",   "url":"/select/CU_Operations_Query"        },
         {"suboption":"Rate Periods",                        "url":"/select/Rat_Periods_Query",          "hr":true},
+        {"suboption":"CU EGM",                              "url":"/select/Charge_Unit_EGM_Query",      "hr":true},
         {"suboption":"Trace records",                       "url":"/select/Trace_Query",                "header":"Demo Version Only"},
         {"suboption":"Tables",                              "url":"/select/Dev_Tables_Query"           },
         {"suboption":"Forms",                               "url":"/select/Dev_Forms_Query"            },

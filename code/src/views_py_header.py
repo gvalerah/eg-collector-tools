@@ -1,6 +1,7 @@
 from time           import strftime
 from datetime       import datetime                         
 from sqlalchemy     import exc
+from sqlalchemy     import func
 from flask          import render_template, session, redirect, url_for, current_app, flash
 from flask          import request
 from flask          import Markup
@@ -18,6 +19,7 @@ from ..decorators   import admin_required, permission_required
 #from ..models       import User
 #from ..models       import Permission
 
+from emtec                                 import *
 from emtec.collector.db.flask_models       import User
 from emtec.collector.db.flask_models       import Permission
 

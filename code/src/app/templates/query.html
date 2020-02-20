@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}Collector{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    
+    <h1>Get '{{ name }}' data</h1>
+    <table style="border: 1px solid black; border-collapse: collapse;">
+        <tr style="border:2px solid blue ; border-collapse: collapse;background-color:blue; color:yellow;">
+        {% for key in keys %}
+            <td><b> {{ key }} </b></td>
+        {% endfor %}
+        </tr>
+        {% for row in rows %}
+            {% if loop.index is divisibleby 2 %}
+                <tr style="border: 1px solid black; border-collapse: collapse; background-color: cyan">
+            {% else %}
+                <tr style="border: 1px solid black; border-collapse: collapse; background-color: white">            
+            {% endif %}
+            {% for c in row %}
+                <td style="border: 1px solid black; border-collapse: collapse;"> {{ c }} </td>
+            {% endfor %}
+            </tr>
+        {% endfor %}
+         
+    </table>
+    <p><b>{{ count }}</b> rows found.</p>
+
+</div>
+{% endblock %}
+
+        

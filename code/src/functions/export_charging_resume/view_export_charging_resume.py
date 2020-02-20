@@ -11,7 +11,6 @@ from babel.numbers  import format_number, format_decimal, format_percent
 @login_required
 def forms_Export_Charging_Resume():
     logger.debug('Enter: forms_Export_Charging_Resume()'%())
-    flash('Enter: forms_Export_Charging_Resume()'%())
 
     session['data'] =  { 'Cus_Id': None, 'CIT_Date_From':None, 'CIT_Date_To':None, 'CIT_Status':1,'Cur_Code':'USD'}
 
@@ -25,7 +24,8 @@ def forms_Export_Charging_Resume():
     rows=db.engine.execute(query).fetchall()
     """
     
-    row = db.query( func.count(Charge_Resumes.Cus_Id).label('RECORDS'),
+    """
+    row = db.session.query( func.count(Charge_Resumes.Cus_Id).label('RECORDS'),
                     Charge_Resumes.Cus_Id,
                     Charge_Resumes.CR_Date_From,
                     Charge_Resumes.CR_Date_To,
@@ -44,7 +44,26 @@ def forms_Export_Charging_Resume():
                             Charge_Resumes.CR_Date_To,
                             Charge_Resumes.CIT_Status,
                             Charge_Resumes.Cur_Code)
-    
+    """
+    rows = db.session.query( func.count(charge_resume.Cus_Id).label('RECORDS'),
+                    charge_resume.Cus_Id,
+                    charge_resume.CR_Date_From,
+                    charge_resume.CR_Date_To,
+                    charge_resume.CIT_Status,
+                    charge_resume.Cur_Code,
+                    charge_resume.Cus_Name
+                    ).\
+                group_by(   charge_resume.Cus_Id,
+                            charge_resume.CR_Date_From,
+                            charge_resume.CR_Date_To,
+                            charge_resume.CIT_Status,
+                            charge_resume.Cur_Code,
+                            charge_resume.Cus_Name).\
+                order_by(   charge_resume.Cus_Name,
+                            charge_resume.CR_Date_From,
+                            charge_resume.CR_Date_To,
+                            charge_resume.CIT_Status,
+                            charge_resume.Cur_Code)
     
     # Load Statuses
     statuses=cit_status.query.all()
@@ -392,7 +411,7 @@ def export_Charging_Resume():
     
     rows =  db.engine.execute(query).fetchall()
     """
-    rows = Get_Charge_Resume(Cus_Id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code)
+    rows = db.Get_Charge_Resume(Cus_Id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code)
     # Aqui hace la conversion 
     output_file = "CR_%d_%s_%s_%s_%s.%s"%(Cus_Id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code,Format)
     if      Format == 'pdf':

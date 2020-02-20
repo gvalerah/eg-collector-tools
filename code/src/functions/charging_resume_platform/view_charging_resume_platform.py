@@ -86,7 +86,7 @@ def forms_Get_Charging_Resume_Platform():
     form.CIT_Status.data    = session['data']['CIT_Status']
     form.Cur_Code.data      = session['data']['Cur_Code']
 
-    return render_template('get_charging_resume.html',form=form, data=session.get('data'))
+    return render_template('charging_resume_platform.html',form=form, data=session.get('data'))
 
 # =============================================================================
 
@@ -123,14 +123,15 @@ def report_Charging_Resume_Platform():
         CI = db.engine.execute(query)
         """
         
-        CI = db.query(Configuration_Items.CI_Id).\
+        CI = db.session.query(Configuration_Items.CI_Id).\
                 filter(Configuration_Items.Pla_Id==Pla_Id).\
-                order_by(Configuration_Items.CC_Id,Configuration_Items.CI_Id)
+                order_by(Configuration_Items.CC_Id,Configuration_Items.CI_Id).all()
         
-        logger.debug ("report_Changing_Resume_Platform: %d CI's found for platform %d"%(CI.rowcount,Pla_Id))
+        logger.debug ("report_Changing_Resume_Platform: %d CI's found for platform %d"%(len(CI),Pla_Id))
         
         resume_records=0
 
+        print("CI=",CI)
         for ci in CI:
             """
             query="C*ALL Update_Charge_Resume_CI2('%s','%s',%s,'%s',%s)"%\
@@ -139,8 +140,9 @@ def report_Charging_Resume_Platform():
             records=db.engine.execute(query)
             resume_records += records.scalar()
             """
-            records = db.Update_Charge_Resume_CI2(CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code,ci.CI_Id)
-            resume_records += records
+            records = db.Update_Charge_Resume_CI2(CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code,ci)
+            if records is not None:
+                resume_records += records
         logger.debug ("report_Changing_Resume_Platform: resume_records = %s"%resume_records)
         
     # Get Actual Remume Data from Database

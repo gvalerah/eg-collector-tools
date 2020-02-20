@@ -1,0 +1,14 @@
+[Unit]
+Description=Collector Service EG 1 PE v3 CI Check
+After=mysqld.service
+StartLimitInterval=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User=gvalera
+ExecStart=/home/gvalera/collector/dist/collector_drv_nutanix /home/gvalera/collector/collector.ini Nutanix_1_PC_3_Check
+
+[Install]
+WantedBy=multi-user.target

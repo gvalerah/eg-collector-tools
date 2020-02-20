@@ -15,48 +15,27 @@ def forms_Export_User_Resume():
     session['data'] =  { 'Cus_Id': None, 'CIT_Date_From':None, 'CIT_Date_To':None, 'CIT_Status':1,'Cur_Code':'USD'}
 
     form = frm_export_User_Resume()
-    """
-    query = "S*ELECT COUNT(*) AS RECORDS,Cus_Id,CR_Date_From,CR_Date_To,CIT_Status,Cur_Code,Cus_Name FROM User_Resumes "\
-                "WHERE CI_CC_Id IN (S*ELECT CC_Id from Cost_Centers WHERE usercancc(%s,CC_Id)) "\
-                "GROUP BY Cus_Id,CR_Date_From,CR_Date_To,CIT_Status,Cur_Code,Cus_Name "\
-                "ORDER BY Cus_Id,CR_Date_From,CR_Date_To,CIT_Status,Cur_Code"%current_user.id
-    """
-    """ GV 20190907
-    query = "S*ELECT COUNT(*) AS RECORDS,CI_CC_Id,CR_Date_From,CR_Date_To,CIT_Status,Cur_Code,CC_Description FROM User_Resumes "\
-                "WHERE CI_CC_Id IN (S*ELECT CC_Id from Cost_Centers WHERE usercancc(%s,CC_Id)) "\
-                "GROUP BY CI_CC_Id,CR_Date_From,CR_Date_To,CIT_Status,Cur_Code,CC_Description "\
-                "ORDER BY CI_CC_Id,CR_Date_From,CR_Date_To,CIT_Status,Cur_Code"%current_user.id
-    """
-    
 
-
-    """
-select count(*),CC_Description,CR_Date_From,CR_Date_To,CIT_Status,Cur_Code
-from User_Resumes
-group by CC_Description,CR_Date_From,CR_Date_To,CIT_Status,Cur_Code;
-    """                
-    #rows=db.engine.execute(query).fetchall()
-
-    USERCAN = get_user_cost_centers(current_user.id,1) ## OJO OJO OJO NO ESTOY SEGURO DEL CC A USAR AQUI 
-    rows = db.query(    func.count(CI_CC_Id).label('RECORDS'),
-                        User_Resumes.CI_CC_Id,
-                        User_Resumes.CR_Date_From,
-                        User_Resumes.CR_Date_To,
-                        User_Resumes.CIT_Status,
-                        User_Resumes.Cur_Code,
-                        User_Resumes.CC_Description).\
-                    filter(     User_Resumes.CI_CC.in_(USERCAN)).\
-                    group_by(   User_Resumes.CI_CC_Id,
-                                User_Resumes.CR_Date_From,
-                                User_Resumes.CR_Date_To,
-                                User_Resumes.CIT_Status,
-                                User_Resumes.Cur_Code,
-                                User_Resumes.CC_Description).\
-                    order_by(   User_Resumes.CI_CC_Id,
-                                User_Resumes.CR_Date_From,
-                                User_Resumes.CR_Date_To,
-                                User_Resumes.CIT_Status,
-                                User_Resumes.Cur_Code)
+    USERCAN = db.get_user_cost_centers(current_user.id) 
+    rows = db.session.query(    func.count(user_resumes.CI_CC_Id).label('RECORDS'),
+                        user_resumes.CI_CC_Id,
+                        user_resumes.CR_Date_From,
+                        user_resumes.CR_Date_To,
+                        user_resumes.CIT_Status,
+                        user_resumes.Cur_Code,
+                        user_resumes.CC_Description).\
+                    filter(     user_resumes.CI_CC_Id.in_(USERCAN)).\
+                    group_by(   user_resumes.CI_CC_Id,
+                                user_resumes.CR_Date_From,
+                                user_resumes.CR_Date_To,
+                                user_resumes.CIT_Status,
+                                user_resumes.Cur_Code,
+                                user_resumes.CC_Description).\
+                    order_by(   user_resumes.CI_CC_Id,
+                                user_resumes.CR_Date_From,
+                                user_resumes.CR_Date_To,
+                                user_resumes.CIT_Status,
+                                user_resumes.Cur_Code)
     # Load Statuses
     statuses=cit_status.query.all()
     dstatuses={}
@@ -68,42 +47,14 @@ group by CC_Description,CR_Date_From,CR_Date_To,CIT_Status,Cur_Code;
     for c in currencies:
         dcurrencies[c.Cur_Code]=c.Cur_Name
     
-    #print("statuses",statuses)
-    #print("currencies",currencies)
-    #print("dstatuses",dstatuses)
-    #print("dcurrencies",dcurrencies)
-    
-    
     # Load Currency Names
 
-
     export_choices = []
-    """
-    for row in rows:
-        option="%s_%s_%s_%s_%s_%s"%(row.Cus_Id,row.CR_Date_From,row.CR_Date_To,row.CIT_Status,row.Cur_Code,row.Cus_Name)
-        print("option split=",option.split("_"))
-        value ="%s from %s to %s status=%s currency=%s"%(row.Cus_Name,row.CR_Date_From,row.CR_Date_To,dstatuses[row.CIT_Status],dcurrencies[row.Cur_Code])
-        export_choices.append((option,value))
-    """
     for row in rows:
         option="%s_%s_%s_%s_%s_%s"%(row.CI_CC_Id,row.CR_Date_From,row.CR_Date_To,row.CIT_Status,row.Cur_Code,row.CC_Description)
-        print("option split=",option.split("_"))
         value ="%s from %s to %s status=%s currency=%s"%(row.CC_Description,row.CR_Date_From,row.CR_Date_To,dstatuses[row.CIT_Status],dcurrencies[row.Cur_Code])
         export_choices.append((option,value))
-     
-     
-       
-
-    #print("export_choices=",export_choices)
-
-
-
-    # Will setup filter to consider only Currencies with actual Exchange Rates in DB
-    # Prepare query
-    #query = db.session.query(exchange_rate.Cur_Code.distinct().label('Cur_Code'))
-    # Execute query an conver in list for further use in choices selection
-    #export_choices = [row.Cur_Code for row in query.all()]
-
+    
     form.Export.choices   = export_choices
 
     if form.validate_on_submit():
@@ -115,8 +66,6 @@ group by CC_Description,CR_Date_From,CR_Date_To,CIT_Status,Cur_Code;
         
         if     form.submit_PDF.data:
             return redirect(url_for('.export_User_Resume',
-                                #Cus_Id          = data[0],
-                                #Cus_Name        = data[5],
                                 CC_Id           = data[0],
                                 CC_Code         = CC_Code,
                                 CC_Description  = data[5],
@@ -160,8 +109,6 @@ group by CC_Description,CR_Date_From,CR_Date_To,CIT_Status,Cur_Code;
                                 ))
         if     form.submit_JSON.data:
             return redirect(url_for('.export_User_Resume',
-                                #Cus_Id          = data[0],
-                                #Cus_Name        = data[5],
                                 CC_Id           = data[0],
                                 CC_Code         = CC_Code,
                                 CC_Description  = data[5],
@@ -175,8 +122,6 @@ group by CC_Description,CR_Date_From,CR_Date_To,CIT_Status,Cur_Code;
                                 ))
         if     form.submit_FIX.data:
             return redirect(url_for('.export_User_Resume',
-                                #Cus_Id          = data[0],
-                                #Cus_Name        = data[5],
                                 CC_Id           = data[0],
                                 CC_Code         = CC_Code,
                                 CC_Description  = data[5],
@@ -349,17 +294,6 @@ def export_user_resume_to_csv(output_file,rows,Customer,From,To,Status,Currency)
     f.write("T,%d\n"%(count))
     f.close()
     return cvs_file
-    
-"""
-        canvas.drawCentredString ( 30,h, "%3d"       % ( row.CIT_Count          )   )
-        canvas.drawString        ( 80,h, "%s"        % ( row.CU_Description     )   )
-        canvas.drawRightString   (280,h, "%12.2f"    % ( row.Rat_Price          )   )
-        canvas.drawRightString   (350,h, "%12.2f"    % ( row.CR_Quantity        )   )
-        canvas.drawRightString   (410,h, "%12.2f"    % ( row.CR_ST_at_Rate_Cur  )   )
-        canvas.drawRightString   (490,h, "%20.6f"    % ( row.CR_Cur_XR          )   )
-        canvas.drawRightString   (570,h, "%12.2f"    % ( row.CR_ST_at_Cur       )   )    
-"""    
-    
 
 def export_user_resume_to_json(output_file,rows,Customer,From,To,Status,Currency):
     json_file="%s/%s"%(current_app.root_path,url_for('static',filename='tmp/%s'%(output_file)))
@@ -412,8 +346,6 @@ from flask import send_file
 @login_required
 def export_User_Resume():
     logger.debug('Enter: Export_User_Resume()')
-    #Cus_Id          =  request.args.get('Cus_Id',None,type=int)
-    #Cus_Name        =  request.args.get('Cus_Name',None,type=str)
     CC_Id           =  request.args.get('CC_Id',None,type=int)
     CC_Code         =  request.args.get('CC_Code',None,type=str)
     CC_Description  =  request.args.get('CC_Description',None,type=str)
@@ -426,13 +358,8 @@ def export_User_Resume():
     Format          =  request.args.get('Format',None,type=str)
     # Get Actual Data from Database
     # NOTE: Here needs some Sand-Clock Message or something in case it takes so long ...
-    """
-    query="C*ALL Get_User_Resume(%d,'%s','%s',%d,'%s','%d')"%(current_user.id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code,CC_Id)
-    
-    rows =  db.engine.execute(query).fetchall()
-    """
-    rows = db.Get_User_Resume(current_user.id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code,CC_Id)
-    
+    rows = db.Get_User_Resume(current_user.id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code)
+
     # Aqui hace la conversion 
     output_file = "CR_%s_%s_%s_%s_%s.%s"%(CC_Code,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code,Format)
     if      Format == 'pdf':
@@ -452,4 +379,3 @@ def export_User_Resume():
     print("%s: return_file   = %s"%('export_User_Resume',return_file))
     print("%s: att name      = %s"%('export_User_Resume',output_file))
     return send_file(return_file,as_attachment=True,attachment_filename=output_file)
-

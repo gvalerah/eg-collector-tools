@@ -13,7 +13,7 @@ from wtforms.validators     import Regexp, Required
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-09-09 13:44:02
+# GLVH @ 2020-02-20 16:44:35
 # =============================================================================
 
 from decimal import ROUND_HALF_UP
@@ -40,7 +40,7 @@ class frm_charge_item_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-09-09 13:44:02
+# GLVH @ 2020-02-20 16:44:35
 # =============================================================================
 
 from decimal import ROUND_HALF_UP
@@ -80,7 +80,9 @@ class frm_charge_resume(Form):
     CU_Description                 = StringField("CU_Description?")
     CC_Description                 = StringField("CC_Description?")
     Rat_Period_Description         = StringField("Rat_Period_Description?")
+    CC_Code                        = StringField("CC_Code?")
     Pla_Id                         = IntegerField("Pla_Id?")
+    Pla_Name                       = StringField("Pla_Name?")
 
     submit_Save                    = SubmitField  ('Save')
     submit_New                     = SubmitField  ('New')
@@ -96,7 +98,38 @@ class frm_charge_resume_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-09-09 13:44:02
+# GLVH @ 2020-02-20 16:44:35
+# =============================================================================
+
+from decimal import ROUND_HALF_UP
+
+class frm_charge_unit_egm(Form):
+    CU_Id                   = SelectField("Charge Unit Id?", coerce=int, validators=[Required()])
+    Archive                 = IntegerField("Archive?")
+    Path                    = StringField("Path?")
+    Metric                  = StringField("Metric?")
+    Host                    = StringField("Host?")
+    Port                    = IntegerField("Port?")
+    User                    = StringField("User?")
+    Password                = StringField("Password?")
+    Public_Key_File         = StringField("Public_Key_File?")
+    Passphrase              = StringField("Passphrase?")
+
+    submit_Save             = SubmitField  ('Save')
+    submit_New              = SubmitField  ('New')
+    submit_Cancel           = SubmitField  ('Cancel')
+
+    has_FKs                 = True
+
+class frm_charge_unit_egm_delete(Form):
+    submit_Delete           = SubmitField  ('Delete')
+    submit_Cancel           = SubmitField  ('Cancel')
+
+# =============================================================================
+# =============================================================================
+# Auto-Generated code. do not modify
+# (c) Sertechno 2018
+# GLVH @ 2020-02-20 16:44:35
 # =============================================================================
 
 from decimal import ROUND_HALF_UP
@@ -129,7 +162,7 @@ class frm_charge_unit_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-09-09 13:44:02
+# GLVH @ 2020-02-20 16:44:35
 # =============================================================================
 
 from decimal import ROUND_HALF_UP
@@ -152,7 +185,7 @@ class frm_cit_generation_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-09-09 13:44:02
+# GLVH @ 2020-02-20 16:44:35
 # =============================================================================
 
 from decimal import ROUND_HALF_UP
@@ -175,7 +208,7 @@ class frm_cit_status_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-09-09 13:44:02
+# GLVH @ 2020-02-20 16:44:35
 # =============================================================================
 
 from decimal import ROUND_HALF_UP
@@ -203,7 +236,7 @@ class frm_configuration_item_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-09-09 13:44:02
+# GLVH @ 2020-02-20 16:44:35
 # =============================================================================
 
 from decimal import ROUND_HALF_UP
@@ -212,7 +245,9 @@ class frm_cost_center(Form):
     CC_Code                = StringField("Code?")
     CC_Description         = StringField("Description?")
     Cur_Code               = SelectField("Currency Code?", validators=[Required()])
-    CC_Parent_Code         = StringField("CC_Parent_Code?")
+    CC_Parent_Code         = StringField("Parent Code?")
+    CC_Reg_Exp             = StringField("Regular Expression?")
+    CC_Reference           = StringField("Reference?")
 
     submit_Save            = SubmitField  ('Save')
     submit_New             = SubmitField  ('New')
@@ -228,7 +263,7 @@ class frm_cost_center_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-09-09 13:44:02
+# GLVH @ 2020-02-20 16:44:35
 # =============================================================================
 
 from decimal import ROUND_HALF_UP
@@ -252,7 +287,7 @@ class frm_country_currency_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-09-09 13:44:02
+# GLVH @ 2020-02-20 16:44:35
 # =============================================================================
 
 from decimal import ROUND_HALF_UP
@@ -277,7 +312,7 @@ class frm_country_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-09-09 13:44:02
+# GLVH @ 2020-02-20 16:44:35
 # =============================================================================
 
 from decimal import ROUND_HALF_UP
@@ -302,7 +337,7 @@ class frm_cu_operation_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-09-09 13:44:02
+# GLVH @ 2020-02-20 16:44:35
 # =============================================================================
 
 from decimal import ROUND_HALF_UP
@@ -327,7 +362,7 @@ class frm_currency_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-09-09 13:44:02
+# GLVH @ 2020-02-20 16:44:35
 # =============================================================================
 
 from decimal import ROUND_HALF_UP
@@ -350,7 +385,7 @@ class frm_customer_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-09-09 13:44:02
+# GLVH @ 2020-02-20 16:44:35
 # =============================================================================
 
 from decimal import ROUND_HALF_UP
@@ -373,7 +408,7 @@ class frm_cu_type_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-09-09 13:44:02
+# GLVH @ 2020-02-20 16:44:35
 # =============================================================================
 
 from decimal import ROUND_HALF_UP
@@ -397,7 +432,35 @@ class frm_exchange_rate_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-09-09 13:44:02
+# GLVH @ 2020-02-20 16:44:35
+# =============================================================================
+
+from decimal import ROUND_HALF_UP
+
+class frm_interface(Form):
+    User_Id             = IntegerField("User_Id?")
+    Table_name          = StringField("Table_name?")
+    Option_Type         = IntegerField("Option_Type?")
+    Argument_1          = StringField("Argument_1?")
+    Argument_2          = StringField("Argument_2?")
+    Argument_3          = StringField("Argument_3?")
+    Is_Active           = BooleanField("Is_Active?")
+
+    submit_Save         = SubmitField  ('Save')
+    submit_New          = SubmitField  ('New')
+    submit_Cancel       = SubmitField  ('Cancel')
+
+    has_FKs             = False
+
+class frm_interface_delete(Form):
+    submit_Delete       = SubmitField  ('Delete')
+    submit_Cancel       = SubmitField  ('Cancel')
+
+# =============================================================================
+# =============================================================================
+# Auto-Generated code. do not modify
+# (c) Sertechno 2018
+# GLVH @ 2020-02-20 16:44:35
 # =============================================================================
 
 from decimal import ROUND_HALF_UP
@@ -420,7 +483,7 @@ class frm_measure_unit_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-09-09 13:44:02
+# GLVH @ 2020-02-20 16:44:35
 # =============================================================================
 
 from decimal import ROUND_HALF_UP
@@ -446,7 +509,7 @@ class frm_platform_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-09-09 13:44:02
+# GLVH @ 2020-02-20 16:44:35
 # =============================================================================
 
 from decimal import ROUND_HALF_UP
@@ -476,7 +539,7 @@ class frm_rate_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-09-09 13:44:02
+# GLVH @ 2020-02-20 16:44:35
 # =============================================================================
 
 from decimal import ROUND_HALF_UP
@@ -499,7 +562,7 @@ class frm_rat_period_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-09-09 13:44:02
+# GLVH @ 2020-02-20 16:44:35
 # =============================================================================
 
 from decimal import ROUND_HALF_UP
@@ -524,7 +587,7 @@ class frm_Role_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-09-09 13:44:02
+# GLVH @ 2020-02-20 16:44:35
 # =============================================================================
 
 from decimal import ROUND_HALF_UP
@@ -568,7 +631,7 @@ class frm_st_use_per_cu_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-09-09 13:44:02
+# GLVH @ 2020-02-20 16:44:35
 # =============================================================================
 
 from decimal import ROUND_HALF_UP
@@ -602,7 +665,7 @@ class frm_st_use_per_type_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-09-09 13:44:02
+# GLVH @ 2020-02-20 16:44:35
 # =============================================================================
 
 from decimal import ROUND_HALF_UP
@@ -624,7 +687,7 @@ class frm_trace_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-09-09 13:44:02
+# GLVH @ 2020-02-20 16:44:35
 # =============================================================================
 
 from decimal import ROUND_HALF_UP
@@ -665,6 +728,8 @@ class frm_user_resumes(Form):
     CC_Description                 = StringField("CC_Description?")
     Rat_Period_Description         = StringField("Rat_Period_Description?")
     CC_Code                        = StringField("CC_Code?")
+    Pla_Id                         = IntegerField("Pla_Id?")
+    Pla_Name                       = StringField("Pla_Name?")
 
     submit_Save                    = SubmitField  ('Save')
     submit_New                     = SubmitField  ('New')
@@ -680,7 +745,7 @@ class frm_user_resumes_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-09-09 13:44:02
+# GLVH @ 2020-02-20 16:44:35
 # =============================================================================
 
 from decimal import ROUND_HALF_UP

@@ -1,0 +1,14 @@
+[Unit]
+Description=Collector Service
+After=mysqld.service
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User=gvalera
+ExecStart=/usr/local/bin/collectord
+
+[Install]
+WantedBy=multi-user.target

@@ -3,5 +3,6 @@
 *.tmp
 *.log
 *.tar
-__*
+*.bak
+__pycache__
 

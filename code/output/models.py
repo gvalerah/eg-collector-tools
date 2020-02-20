@@ -2,6 +2,7 @@
 # Models File
 # Static Header File. 
 # GLVH 2019-08-16
+# GLVH 2020-01-30 JSON Serializing code added
 # =============================================================================
 from app                    import db
 from app                    import login_manager
@@ -20,7 +21,17 @@ from itsdangerous           import TimedJSONWebSignatureSerializer as Serializer
 from flask                  import current_app
 from flask_login            import UserMixin, AnonymousUserMixin
 
+# JSON Serializing enabling code
+from sqlalchemy.inspection import inspect
 
+class Serializer(object):
+
+    def serialize(self):
+        return {c: getattr(self, c) for c in inspect(self).attrs.keys()}
+
+    @staticmethod
+    def serialize_list(l):
+        return [m.serialize() for m in l]
 
 # =============================================================================
 # Models File
@@ -61,10 +72,10 @@ def load_user(user_id):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-09-09 13:44:02
+# GLVH @ 2020-02-20 16:44:35
 # =============================================================================
 
-class charge_item(db.Model):
+class charge_item(db.Model,Serializer):
     __tablename__ = 'Charge_Items'
     CU_Id         = db.Column( db.Integer, db.ForeignKey('Charge_Units.CU_Id'), primary_key=True, default=0 )
     CIT_Date      = db.Column( db.Date )
@@ -91,10 +102,10 @@ class charge_item(db.Model):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-09-09 13:44:02
+# GLVH @ 2020-02-20 16:44:35
 # =============================================================================
 
-class charge_resume(db.Model):
+class charge_resume(db.Model,Serializer):
     __tablename__ = 'Charge_Resumes'
     Cus_Id                 = db.Column( db.Integer, primary_key=True )
     CR_Date_From           = db.Column( db.Date, primary_key=True )
@@ -130,10 +141,12 @@ class charge_resume(db.Model):
     CU_Description         = db.Column( db.String(45) )
     CC_Description         = db.Column( db.String(45) )
     Rat_Period_Description = db.Column( db.String(10) )
+    CC_Code                = db.Column( db.String(45) )
     Pla_Id                 = db.Column( db.Integer )
+    Pla_Name               = db.Column( db.String(45) )
 
 
-    def __init__(self, Cus_Id=None, CR_Date_From=None, CR_Date_To=None, CIT_Status=None, Cur_Code='None', CIT_Count=None, CIT_Quantity=None, CIT_Generation=1, CU_Id=None, CI_CC_Id=None, CU_Operation='None', Typ_Code='None', CC_Cur_Code='None', CI_Id=None, Rat_Id=None, Rat_Price=None, Rat_MU_Code='None', Rat_Cur_Code='None', Rat_Period=None, Rat_Hourly=None, Rat_Daily=None, Rat_Monthly=None, CR_Quantity=None, CR_Quantity_at_Rate=None, CC_XR=None, CR_Cur_XR=None, CR_ST_at_Rate_Cur=None, CR_ST_at_CC_Cur=None, CR_ST_at_Cur=None, Cus_Name='None', CI_Name='None', CU_Description='None', CC_Description='None', Rat_Period_Description='None', Pla_Id=None):
+    def __init__(self, Cus_Id=None, CR_Date_From=None, CR_Date_To=None, CIT_Status=None, Cur_Code='None', CIT_Count=None, CIT_Quantity=None, CIT_Generation=1, CU_Id=None, CI_CC_Id=None, CU_Operation='None', Typ_Code='None', CC_Cur_Code='None', CI_Id=None, Rat_Id=None, Rat_Price=None, Rat_MU_Code='None', Rat_Cur_Code='None', Rat_Period=None, Rat_Hourly=None, Rat_Daily=None, Rat_Monthly=None, CR_Quantity=None, CR_Quantity_at_Rate=None, CC_XR=None, CR_Cur_XR=None, CR_ST_at_Rate_Cur=None, CR_ST_at_CC_Cur=None, CR_ST_at_Cur=None, Cus_Name='None', CI_Name='None', CU_Description='None', CC_Description='None', Rat_Period_Description='None', CC_Code='None', Pla_Id=None, Pla_Name='None'):
         self.Cus_Id                 = Cus_Id
         self.CR_Date_From           = CR_Date_From
         self.CR_Date_To             = CR_Date_To
@@ -168,19 +181,57 @@ class charge_resume(db.Model):
         self.CU_Description         = CU_Description
         self.CC_Description         = CC_Description
         self.Rat_Period_Description = Rat_Period_Description
+        self.CC_Code                = CC_Code
         self.Pla_Id                 = Pla_Id
+        self.Pla_Name               = Pla_Name
 
     def __repr__(self):
-        return "<Charge_Resumes( Cus_Id='%s', CR_Date_From='%s', CR_Date_To='%s', CIT_Status='%s', Cur_Code='%s', CIT_Count='%s', CIT_Quantity='%s', CIT_Generation='%s', CU_Id='%s', CI_CC_Id='%s', CU_Operation='%s', Typ_Code='%s', CC_Cur_Code='%s', CI_Id='%s', Rat_Id='%s', Rat_Price='%s', Rat_MU_Code='%s', Rat_Cur_Code='%s', Rat_Period='%s', Rat_Hourly='%s', Rat_Daily='%s', Rat_Monthly='%s', CR_Quantity='%s', CR_Quantity_at_Rate='%s', CC_XR='%s', CR_Cur_XR='%s', CR_ST_at_Rate_Cur='%s', CR_ST_at_CC_Cur='%s', CR_ST_at_Cur='%s', Cus_Name='%s', CI_Name='%s', CU_Description='%s', CC_Description='%s', Rat_Period_Description='%s', Pla_Id='%s')>" % \
-                ( self.Cus_Id, self.CR_Date_From, self.CR_Date_To, self.CIT_Status, self.Cur_Code, self.CIT_Count, self.CIT_Quantity, self.CIT_Generation, self.CU_Id, self.CI_CC_Id, self.CU_Operation, self.Typ_Code, self.CC_Cur_Code, self.CI_Id, self.Rat_Id, self.Rat_Price, self.Rat_MU_Code, self.Rat_Cur_Code, self.Rat_Period, self.Rat_Hourly, self.Rat_Daily, self.Rat_Monthly, self.CR_Quantity, self.CR_Quantity_at_Rate, self.CC_XR, self.CR_Cur_XR, self.CR_ST_at_Rate_Cur, self.CR_ST_at_CC_Cur, self.CR_ST_at_Cur, self.Cus_Name, self.CI_Name, self.CU_Description, self.CC_Description, self.Rat_Period_Description, self.Pla_Id)
+        return "<Charge_Resumes( Cus_Id='%s', CR_Date_From='%s', CR_Date_To='%s', CIT_Status='%s', Cur_Code='%s', CIT_Count='%s', CIT_Quantity='%s', CIT_Generation='%s', CU_Id='%s', CI_CC_Id='%s', CU_Operation='%s', Typ_Code='%s', CC_Cur_Code='%s', CI_Id='%s', Rat_Id='%s', Rat_Price='%s', Rat_MU_Code='%s', Rat_Cur_Code='%s', Rat_Period='%s', Rat_Hourly='%s', Rat_Daily='%s', Rat_Monthly='%s', CR_Quantity='%s', CR_Quantity_at_Rate='%s', CC_XR='%s', CR_Cur_XR='%s', CR_ST_at_Rate_Cur='%s', CR_ST_at_CC_Cur='%s', CR_ST_at_Cur='%s', Cus_Name='%s', CI_Name='%s', CU_Description='%s', CC_Description='%s', Rat_Period_Description='%s', CC_Code='%s', Pla_Id='%s', Pla_Name='%s')>" % \
+                ( self.Cus_Id, self.CR_Date_From, self.CR_Date_To, self.CIT_Status, self.Cur_Code, self.CIT_Count, self.CIT_Quantity, self.CIT_Generation, self.CU_Id, self.CI_CC_Id, self.CU_Operation, self.Typ_Code, self.CC_Cur_Code, self.CI_Id, self.Rat_Id, self.Rat_Price, self.Rat_MU_Code, self.Rat_Cur_Code, self.Rat_Period, self.Rat_Hourly, self.Rat_Daily, self.Rat_Monthly, self.CR_Quantity, self.CR_Quantity_at_Rate, self.CC_XR, self.CR_Cur_XR, self.CR_ST_at_Rate_Cur, self.CR_ST_at_CC_Cur, self.CR_ST_at_Cur, self.Cus_Name, self.CI_Name, self.CU_Description, self.CC_Description, self.Rat_Period_Description, self.CC_Code, self.Pla_Id, self.Pla_Name)
 
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-09-09 13:44:02
+# GLVH @ 2020-02-20 16:44:35
 # =============================================================================
 
-class charge_unit(db.Model):
+class charge_unit_egm(db.Model,Serializer):
+    __tablename__ = 'Charge_Unit_EGM'
+    CU_Id           = db.Column( db.Integer, db.ForeignKey('Charge_Units.CU_Id'), primary_key=True )
+    Archive         = db.Column( db.Integer )
+    Path            = db.Column( db.String(256) )
+    Metric          = db.Column( db.String(256) )
+    Host            = db.Column( db.String(45), default='localhost' )
+    Port            = db.Column( db.Integer, default=22 )
+    User            = db.Column( db.String(45) )
+    Password        = db.Column( db.String(45) )
+    Public_Key_File = db.Column( db.String(256) )
+    Passphrase      = db.Column( db.String(256) )
+
+
+    def __init__(self, CU_Id=None, Archive=None, Path='None', Metric='None', Host='localhost', Port=22, User='None', Password='None', Public_Key_File='None', Passphrase='None'):
+        self.CU_Id           = CU_Id
+        self.Archive         = Archive
+        self.Path            = Path
+        self.Metric          = Metric
+        self.Host            = Host
+        self.Port            = Port
+        self.User            = User
+        self.Password        = Password
+        self.Public_Key_File = Public_Key_File
+        self.Passphrase      = Passphrase
+
+    def __repr__(self):
+        return "<Charge_Unit_EGM( CU_Id='%s', Archive='%s', Path='%s', Metric='%s', Host='%s', Port='%s', User='%s', Password='%s', Public_Key_File='%s', Passphrase='%s')>" % \
+                ( self.CU_Id, self.Archive, self.Path, self.Metric, self.Host, self.Port, self.User, self.Password, self.Public_Key_File, self.Passphrase)
+
+# =============================================================================
+# Auto-Generated code. do not modify
+# (c) Sertechno 2018
+# GLVH @ 2020-02-20 16:44:35
+# =============================================================================
+
+class charge_unit(db.Model,Serializer):
     __tablename__ = 'Charge_Units'
     CU_Id                  = db.Column( db.Integer, primary_key=True, autoincrement=True )
     CI_Id                  = db.Column( db.Integer, db.ForeignKey('Configuration_Items.CI_Id') )
@@ -197,7 +248,8 @@ class charge_unit(db.Model):
     CU_Reference_2         = db.Column( db.String(45) )
     CU_Reference_3         = db.Column( db.String(45) )
 
-    charge_items           = db.relationship('charge_item',backref='charge_unit')
+    charge_items           = db.relationship('charge_item',backref='charge_unit',lazy='dynamic')
+    charge_unit_egm        = db.relationship('charge_unit_egm',backref='charge_unit',lazy='dynamic')
 
     def __init__(self, CU_Id=0, CI_Id=None, CU_Description='None', CU_UUID='None', CU_Is_Billeable=0, CU_Is_Always_Billeable=0, CU_Quantity=None, CU_Operation='None', Typ_Code='None', CIT_Generation=None, Rat_Id=None, CU_Reference_1='None', CU_Reference_2='None', CU_Reference_3='None'):
         self.CU_Id                  = CU_Id
@@ -222,15 +274,15 @@ class charge_unit(db.Model):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-09-09 13:44:02
+# GLVH @ 2020-02-20 16:44:35
 # =============================================================================
 
-class cit_generation(db.Model):
+class cit_generation(db.Model,Serializer):
     __tablename__ = 'CIT_Generations'
     CIT_Generation = db.Column( db.Integer, primary_key=True )
     Value          = db.Column( db.String(45) )
 
-    charge_units   = db.relationship('charge_unit',backref='cit_generation')
+    charge_units   = db.relationship('charge_unit',backref='cit_generation',lazy='dynamic')
 
     def __init__(self, CIT_Generation=None, Value='None'):
         self.CIT_Generation = CIT_Generation
@@ -243,15 +295,15 @@ class cit_generation(db.Model):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-09-09 13:44:02
+# GLVH @ 2020-02-20 16:44:35
 # =============================================================================
 
-class cit_status(db.Model):
+class cit_status(db.Model,Serializer):
     __tablename__ = 'CIT_Statuses'
     CIT_Status = db.Column( db.Integer, primary_key=True )
     Value      = db.Column( db.String(45) )
 
-    charge_items = db.relationship('charge_item',backref='cit_status')
+    charge_items = db.relationship('charge_item',backref='cit_status',lazy='dynamic')
 
     def __init__(self, CIT_Status=None, Value='None'):
         self.CIT_Status = CIT_Status
@@ -264,10 +316,10 @@ class cit_status(db.Model):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-09-09 13:44:02
+# GLVH @ 2020-02-20 16:44:35
 # =============================================================================
 
-class configuration_item(db.Model):
+class configuration_item(db.Model,Serializer):
     __tablename__ = 'Configuration_Items'
     CI_Id                       = db.Column( db.Integer, primary_key=True, autoincrement=True )
     CI_Name                     = db.Column( db.String(45) )
@@ -278,8 +330,8 @@ class configuration_item(db.Model):
     CI_Commissioning_DateTime   = db.Column( db.DateTime )
     CI_Decommissioning_DateTime = db.Column( db.DateTime )
 
-    charge_units                = db.relationship('charge_unit',backref='configuration_item')
-    rates                       = db.relationship('rate',backref='configuration_item')
+    charge_units                = db.relationship('charge_unit',backref='configuration_item',lazy='dynamic')
+    rates                       = db.relationship('rate',backref='configuration_item',lazy='dynamic')
 
     def __init__(self, CI_Id=0, CI_Name='None', CI_UUID='None', Pla_Id=None, CC_Id=None, Cus_Id=1, CI_Commissioning_DateTime=None, CI_Decommissioning_DateTime=None):
         self.CI_Id                       = CI_Id
@@ -298,40 +350,44 @@ class configuration_item(db.Model):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-09-09 13:44:02
+# GLVH @ 2020-02-20 16:44:35
 # =============================================================================
 
-class cost_center(db.Model):
+class cost_center(db.Model,Serializer):
     __tablename__ = 'Cost_Centers'
     CC_Id          = db.Column( db.Integer, primary_key=True, autoincrement=True )
     CC_Code        = db.Column( db.String(45) )
     CC_Description = db.Column( db.String(45) )
     Cur_Code       = db.Column( db.String(3), db.ForeignKey('Currencies.Cur_Code') )
     CC_Parent_Code = db.Column( db.String(45), default='1' )
+    CC_Reg_Exp     = db.Column( db.String(45) )
+    CC_Reference   = db.Column( db.String(245) )
 
-    configuration_items = db.relationship('configuration_item',backref='cost_center')
-    customers      = db.relationship('customer',backref='cost_center')
-    rates          = db.relationship('rate',backref='cost_center')
-    users          = db.relationship('User',backref='cost_center')
+    configuration_items = db.relationship('configuration_item',backref='cost_center',lazy='dynamic')
+    customers      = db.relationship('customer',backref='cost_center',lazy='dynamic')
+    rates          = db.relationship('rate',backref='cost_center',lazy='dynamic')
+    users          = db.relationship('User',backref='cost_center',lazy='dynamic')
 
-    def __init__(self, CC_Id=0, CC_Code='None', CC_Description='None', Cur_Code='None', CC_Parent_Code='1'):
+    def __init__(self, CC_Id=0, CC_Code='None', CC_Description='None', Cur_Code='None', CC_Parent_Code='1', CC_Reg_Exp='None', CC_Reference='None'):
         self.CC_Id          = CC_Id
         self.CC_Code        = CC_Code
         self.CC_Description = CC_Description
         self.Cur_Code       = Cur_Code
         self.CC_Parent_Code = CC_Parent_Code
+        self.CC_Reg_Exp     = CC_Reg_Exp
+        self.CC_Reference   = CC_Reference
 
     def __repr__(self):
-        return "<Cost_Centers( CC_Id='%s', CC_Code='%s', CC_Description='%s', Cur_Code='%s', CC_Parent_Code='%s')>" % \
-                ( self.CC_Id, self.CC_Code, self.CC_Description, self.Cur_Code, self.CC_Parent_Code)
+        return "<Cost_Centers( CC_Id='%s', CC_Code='%s', CC_Description='%s', Cur_Code='%s', CC_Parent_Code='%s', CC_Reg_Exp='%s', CC_Reference='%s')>" % \
+                ( self.CC_Id, self.CC_Code, self.CC_Description, self.Cur_Code, self.CC_Parent_Code, self.CC_Reg_Exp, self.CC_Reference)
 
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-09-09 13:44:02
+# GLVH @ 2020-02-20 16:44:35
 # =============================================================================
 
-class country_currency(db.Model):
+class country_currency(db.Model,Serializer):
     __tablename__ = 'Countries_Currencies'
     Cou_Code        = db.Column( db.String(2), db.ForeignKey('Countries.Cou_Code'), primary_key=True )
     Cur_Code        = db.Column( db.String(3), db.ForeignKey('Currencies.Cur_Code'), primary_key=True )
@@ -350,17 +406,17 @@ class country_currency(db.Model):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-09-09 13:44:02
+# GLVH @ 2020-02-20 16:44:35
 # =============================================================================
 
-class country(db.Model):
+class country(db.Model,Serializer):
     __tablename__ = 'Countries'
     Cou_Code = db.Column( db.String(2), primary_key=True )
     Cou_Name = db.Column( db.String(45) )
     Cou_A3   = db.Column( db.String(3) )
     Cou_N    = db.Column( db.Integer )
 
-    countries_currencies = db.relationship('country_currency',backref='country')
+    countries_currencies = db.relationship('country_currency',backref='country',lazy='dynamic')
 
     def __init__(self, Cou_Code='None', Cou_Name='None', Cou_A3='None', Cou_N=None):
         self.Cou_Code = Cou_Code
@@ -375,17 +431,17 @@ class country(db.Model):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-09-09 13:44:02
+# GLVH @ 2020-02-20 16:44:35
 # =============================================================================
 
-class cu_operation(db.Model):
+class cu_operation(db.Model,Serializer):
     __tablename__ = 'CU_Operations'
     CU_Operation = db.Column( db.String(10), primary_key=True )
     Value        = db.Column( db.String(45) )
     Is_Multiply  = db.Column( db.Boolean )
     Factor       = db.Column( db.Integer )
 
-    charge_units = db.relationship('charge_unit',backref='cu_operation')
+    charge_units = db.relationship('charge_unit',backref='cu_operation',lazy='dynamic')
 
     def __init__(self, CU_Operation='None', Value='None', Is_Multiply=None, Factor=None):
         self.CU_Operation = CU_Operation
@@ -400,20 +456,20 @@ class cu_operation(db.Model):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-09-09 13:44:02
+# GLVH @ 2020-02-20 16:44:35
 # =============================================================================
 
-class currency(db.Model):
+class currency(db.Model,Serializer):
     __tablename__ = 'Currencies'
     Cur_Code    = db.Column( db.String(3), primary_key=True )
     Cur_Name    = db.Column( db.String(45) )
     Cur_Id      = db.Column( db.Integer )
     Cur_Comment = db.Column( db.String(128) )
 
-    cost_centers = db.relationship('cost_center',backref='currency')
-    countries_currencies = db.relationship('country_currency',backref='currency')
-    exchange_rates = db.relationship('exchange_rate',backref='currency')
-    rates       = db.relationship('rate',backref='currency')
+    cost_centers = db.relationship('cost_center',backref='currency',lazy='dynamic')
+    countries_currencies = db.relationship('country_currency',backref='currency',lazy='dynamic')
+    exchange_rates = db.relationship('exchange_rate',backref='currency',lazy='dynamic')
+    rates       = db.relationship('rate',backref='currency',lazy='dynamic')
 
     def __init__(self, Cur_Code='None', Cur_Name='None', Cur_Id=None, Cur_Comment='None'):
         self.Cur_Code    = Cur_Code
@@ -428,17 +484,17 @@ class currency(db.Model):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-09-09 13:44:02
+# GLVH @ 2020-02-20 16:44:35
 # =============================================================================
 
-class customer(db.Model):
+class customer(db.Model,Serializer):
     __tablename__ = 'Customers'
     Cus_Id   = db.Column( db.Integer, primary_key=True, autoincrement=True )
     Cus_Name = db.Column( db.String(45) )
     CC_Id    = db.Column( db.Integer, db.ForeignKey('Cost_Centers.CC_Id') )
 
-    configuration_items = db.relationship('configuration_item',backref='customer')
-    rates    = db.relationship('rate',backref='customer')
+    configuration_items = db.relationship('configuration_item',backref='customer',lazy='dynamic')
+    rates    = db.relationship('rate',backref='customer',lazy='dynamic')
 
     def __init__(self, Cus_Id=0, Cus_Name='None', CC_Id=None):
         self.Cus_Id   = Cus_Id
@@ -452,16 +508,16 @@ class customer(db.Model):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-09-09 13:44:02
+# GLVH @ 2020-02-20 16:44:35
 # =============================================================================
 
-class cu_type(db.Model):
+class cu_type(db.Model,Serializer):
     __tablename__ = 'CU_Types'
     Typ_Code        = db.Column( db.String(10), primary_key=True )
     Typ_Description = db.Column( db.String(45) )
 
-    charge_units    = db.relationship('charge_unit',backref='cu_type')
-    rates           = db.relationship('rate',backref='cu_type')
+    charge_units    = db.relationship('charge_unit',backref='cu_type',lazy='dynamic')
+    rates           = db.relationship('rate',backref='cu_type',lazy='dynamic')
 
     def __init__(self, Typ_Code='None', Typ_Description='None'):
         self.Typ_Code        = Typ_Code
@@ -474,10 +530,10 @@ class cu_type(db.Model):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-09-09 13:44:02
+# GLVH @ 2020-02-20 16:44:35
 # =============================================================================
 
-class exchange_rate(db.Model):
+class exchange_rate(db.Model,Serializer):
     __tablename__ = 'Exchange_Rates'
     ER_Id     = db.Column( db.Integer, primary_key=True, autoincrement=True )
     Cur_Code  = db.Column( db.String(3), db.ForeignKey('Currencies.Cur_Code') )
@@ -498,15 +554,47 @@ class exchange_rate(db.Model):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-09-09 13:44:02
+# GLVH @ 2020-02-20 16:44:35
 # =============================================================================
 
-class measure_unit(db.Model):
+class interface(db.Model,Serializer):
+    __tablename__ = 'Interface'
+    Id          = db.Column( db.Integer, primary_key=True, autoincrement=True )
+    User_Id     = db.Column( db.Integer )
+    Table_name  = db.Column( db.String(45) )
+    Option_Type = db.Column( db.Integer )
+    Argument_1  = db.Column( db.String(256) )
+    Argument_2  = db.Column( db.String(256) )
+    Argument_3  = db.Column( db.String(256) )
+    Is_Active   = db.Column( db.Boolean )
+
+
+    def __init__(self, Id=0, User_Id=None, Table_name='None', Option_Type=None, Argument_1='None', Argument_2='None', Argument_3='None', Is_Active=None):
+        self.Id          = Id
+        self.User_Id     = User_Id
+        self.Table_name  = Table_name
+        self.Option_Type = Option_Type
+        self.Argument_1  = Argument_1
+        self.Argument_2  = Argument_2
+        self.Argument_3  = Argument_3
+        self.Is_Active   = Is_Active
+
+    def __repr__(self):
+        return "<Interface( Id='%s', User_Id='%s', Table_name='%s', Option_Type='%s', Argument_1='%s', Argument_2='%s', Argument_3='%s', Is_Active='%s')>" % \
+                ( self.Id, self.User_Id, self.Table_name, self.Option_Type, self.Argument_1, self.Argument_2, self.Argument_3, self.Is_Active)
+
+# =============================================================================
+# Auto-Generated code. do not modify
+# (c) Sertechno 2018
+# GLVH @ 2020-02-20 16:44:35
+# =============================================================================
+
+class measure_unit(db.Model,Serializer):
     __tablename__ = 'Measure_Units'
     MU_Code        = db.Column( db.String(3), primary_key=True )
     MU_Description = db.Column( db.String(45) )
 
-    rates          = db.relationship('rate',backref='measure_unit')
+    rates          = db.relationship('rate',backref='measure_unit',lazy='dynamic')
 
     def __init__(self, MU_Code='None', MU_Description='None'):
         self.MU_Code        = MU_Code
@@ -519,10 +607,10 @@ class measure_unit(db.Model):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-09-09 13:44:02
+# GLVH @ 2020-02-20 16:44:35
 # =============================================================================
 
-class platform(db.Model):
+class platform(db.Model,Serializer):
     __tablename__ = 'Platforms'
     Pla_Id       = db.Column( db.Integer, primary_key=True, autoincrement=True )
     Pla_Name     = db.Column( db.String(45) )
@@ -531,8 +619,8 @@ class platform(db.Model):
     Pla_User     = db.Column( db.String(45) )
     Pla_Password = db.Column( db.String(45) )
 
-    configuration_items = db.relationship('configuration_item',backref='platform')
-    rates        = db.relationship('rate',backref='platform')
+    configuration_items = db.relationship('configuration_item',backref='platform',lazy='dynamic')
+    rates        = db.relationship('rate',backref='platform',lazy='dynamic')
 
     def __init__(self, Pla_Id=0, Pla_Name='None', Pla_Host='None', Pla_Port='None', Pla_User='None', Pla_Password='None'):
         self.Pla_Id       = Pla_Id
@@ -549,10 +637,10 @@ class platform(db.Model):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-09-09 13:44:02
+# GLVH @ 2020-02-20 16:44:35
 # =============================================================================
 
-class rate(db.Model):
+class rate(db.Model,Serializer):
     __tablename__ = 'Rates'
     Rat_Id     = db.Column( db.Integer, primary_key=True, autoincrement=True )
     Typ_Code   = db.Column( db.String(10), db.ForeignKey('CU_Types.Typ_Code') )
@@ -567,6 +655,9 @@ class rate(db.Model):
     Rat_Type   = db.Column( db.Integer )
 
 
+    # @property
+    #
+    
     def __init__(self, Rat_Id=0, Typ_Code='None', Cus_Id=None, Pla_Id=None, CC_Id=None, CI_Id=None, Rat_Price=None, Cur_Code='None', MU_Code='None', Rat_Period=None, Rat_Type=None):
         self.Rat_Id     = Rat_Id
         self.Typ_Code   = Typ_Code
@@ -584,18 +675,21 @@ class rate(db.Model):
         return "<Rates( Rat_Id='%s', Typ_Code='%s', Cus_Id='%s', Pla_Id='%s', CC_Id='%s', CI_Id='%s', Rat_Price='%s', Cur_Code='%s', MU_Code='%s', Rat_Period='%s', Rat_Type='%s')>" % \
                 ( self.Rat_Id, self.Typ_Code, self.Cus_Id, self.Pla_Id, self.CC_Id, self.CI_Id, self.Rat_Price, self.Cur_Code, self.MU_Code, self.Rat_Period, self.Rat_Type)
 
+    # method
+    def method(self):
+        pass
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-09-09 13:44:02
+# GLVH @ 2020-02-20 16:44:35
 # =============================================================================
 
-class rat_period(db.Model):
+class rat_period(db.Model,Serializer):
     __tablename__ = 'Rat_Periods'
     Rat_Period = db.Column( db.Integer, primary_key=True )
     Value      = db.Column( db.String(45) )
 
-    rates      = db.relationship('rate',backref='rat_period')
+    rates      = db.relationship('rate',backref='rat_period',lazy='dynamic')
 
     def __init__(self, Rat_Period=None, Value='None'):
         self.Rat_Period = Rat_Period
@@ -608,35 +702,52 @@ class rat_period(db.Model):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-09-09 13:44:02
+# GLVH @ 2020-02-20 16:44:35
 # =============================================================================
 
-class Role(db.Model):
+class Role(db.Model,Serializer):
     __tablename__ = 'Roles'
     id          = db.Column( db.Integer, primary_key=True )
     name        = db.Column( db.String(64) )
     default     = db.Column( db.Boolean )
     permissions = db.Column( db.Integer )
 
-    users       = db.relationship('User',backref='role')
+    users       = db.relationship('User',backref='role',lazy='dynamic')
 
-    def __init__(self, id=None, name='None', default=None, permissions=None):
-        self.id          = id
-        self.name        = name
-        self.default     = default
-        self.permissions = permissions
-
+    @staticmethod
+    def insert_roles():
+        roles = {
+            'Customer': (   Permission.CUSTOMER, False),
+            'Reporter': (   Permission.VIEW |
+                            Permission.REPORT |
+                            Permission.EXPORT, True),
+            'Charger': (    Permission.VIEW |
+                            Permission.DELETE |
+                            Permission.MODIFY |
+                            Permission.REPORT, False),
+            'Administrator':    (0xfe, False),                      # Administrator does not have 'Customer' permisions
+            'Auditor':          (0x1fe, False),                      # Auditor does not have 'Customer' permissions
+            'God':              (0xfff, False)
+        }
+        for r in roles:
+            role = Role.query.filter_by(name=r).first()
+            if role is None:
+                role = Role(name=r)
+            role.permissions = roles[r][0]
+            role.default = roles[r][1]
+            db.session.add(role)
+        db.session.commit()
+    """
     def __repr__(self):
-        return "<Roles( id='%s', name='%s', default='%s', permissions='%s')>" % \
-                ( self.id, self.name, self.default, self.permissions)
-
+        return '<Role %r>' % self.name
+    """
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-09-09 13:44:02
+# GLVH @ 2020-02-20 16:44:35
 # =============================================================================
 
-class st_use_per_cu(db.Model):
+class st_use_per_cu(db.Model,Serializer):
     __tablename__ = 'ST_Use_Per_CU'
     CU_Id                  = db.Column( db.Integer, primary_key=True )
     From                   = db.Column( db.DateTime, primary_key=True )
@@ -695,10 +806,10 @@ class st_use_per_cu(db.Model):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-09-09 13:44:02
+# GLVH @ 2020-02-20 16:44:35
 # =============================================================================
 
-class st_use_per_type(db.Model):
+class st_use_per_type(db.Model,Serializer):
     __tablename__ = 'ST_Use_Per_Type'
     Typ_Code = db.Column( db.String(10), primary_key=True )
     Cus_Id   = db.Column( db.Integer, primary_key=True, default=1 )
@@ -737,10 +848,10 @@ class st_use_per_type(db.Model):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-09-09 13:44:02
+# GLVH @ 2020-02-20 16:44:35
 # =============================================================================
 
-class trace(db.Model):
+class trace(db.Model,Serializer):
     __tablename__ = 'Trace'
     ID   = db.Column( db.Integer, primary_key=True, autoincrement=True )
     LINE = db.Column( db.String(128) )
@@ -757,10 +868,10 @@ class trace(db.Model):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-09-09 13:44:02
+# GLVH @ 2020-02-20 16:44:35
 # =============================================================================
 
-class user_resumes(db.Model):
+class user_resumes(db.Model,Serializer):
     __tablename__ = 'User_Resumes'
     Cus_Id                 = db.Column( db.Integer )
     CR_Date_From           = db.Column( db.Date, primary_key=True )
@@ -797,9 +908,11 @@ class user_resumes(db.Model):
     CC_Description         = db.Column( db.String(45) )
     Rat_Period_Description = db.Column( db.String(10) )
     CC_Code                = db.Column( db.String(45) )
+    Pla_Id                 = db.Column( db.Integer )
+    Pla_Name               = db.Column( db.String(45) )
 
 
-    def __init__(self, Cus_Id=None, CR_Date_From=None, CR_Date_To=None, CIT_Status=None, Cur_Code='None', CIT_Count=None, CIT_Quantity=None, CIT_Generation=1, CU_Id=None, CI_CC_Id=None, CU_Operation='None', Typ_Code='None', CC_Cur_Code='None', CI_Id=None, Rat_Id=None, Rat_Price=None, Rat_MU_Code='None', Rat_Cur_Code='None', Rat_Period=None, Rat_Hourly=None, Rat_Daily=None, Rat_Monthly=None, CR_Quantity=None, CR_Quantity_at_Rate=None, CC_XR=None, CR_Cur_XR=None, CR_ST_at_Rate_Cur=None, CR_ST_at_CC_Cur=None, CR_ST_at_Cur=None, Cus_Name='None', CI_Name='None', CU_Description='None', CC_Description='None', Rat_Period_Description='None', CC_Code='None'):
+    def __init__(self, Cus_Id=None, CR_Date_From=None, CR_Date_To=None, CIT_Status=None, Cur_Code='None', CIT_Count=None, CIT_Quantity=None, CIT_Generation=1, CU_Id=None, CI_CC_Id=None, CU_Operation='None', Typ_Code='None', CC_Cur_Code='None', CI_Id=None, Rat_Id=None, Rat_Price=None, Rat_MU_Code='None', Rat_Cur_Code='None', Rat_Period=None, Rat_Hourly=None, Rat_Daily=None, Rat_Monthly=None, CR_Quantity=None, CR_Quantity_at_Rate=None, CC_XR=None, CR_Cur_XR=None, CR_ST_at_Rate_Cur=None, CR_ST_at_CC_Cur=None, CR_ST_at_Cur=None, Cus_Name='None', CI_Name='None', CU_Description='None', CC_Description='None', Rat_Period_Description='None', CC_Code='None', Pla_Id=None, Pla_Name='None'):
         self.Cus_Id                 = Cus_Id
         self.CR_Date_From           = CR_Date_From
         self.CR_Date_To             = CR_Date_To
@@ -835,18 +948,20 @@ class user_resumes(db.Model):
         self.CC_Description         = CC_Description
         self.Rat_Period_Description = Rat_Period_Description
         self.CC_Code                = CC_Code
+        self.Pla_Id                 = Pla_Id
+        self.Pla_Name               = Pla_Name
 
     def __repr__(self):
-        return "<User_Resumes( Cus_Id='%s', CR_Date_From='%s', CR_Date_To='%s', CIT_Status='%s', Cur_Code='%s', CIT_Count='%s', CIT_Quantity='%s', CIT_Generation='%s', CU_Id='%s', CI_CC_Id='%s', CU_Operation='%s', Typ_Code='%s', CC_Cur_Code='%s', CI_Id='%s', Rat_Id='%s', Rat_Price='%s', Rat_MU_Code='%s', Rat_Cur_Code='%s', Rat_Period='%s', Rat_Hourly='%s', Rat_Daily='%s', Rat_Monthly='%s', CR_Quantity='%s', CR_Quantity_at_Rate='%s', CC_XR='%s', CR_Cur_XR='%s', CR_ST_at_Rate_Cur='%s', CR_ST_at_CC_Cur='%s', CR_ST_at_Cur='%s', Cus_Name='%s', CI_Name='%s', CU_Description='%s', CC_Description='%s', Rat_Period_Description='%s', CC_Code='%s')>" % \
-                ( self.Cus_Id, self.CR_Date_From, self.CR_Date_To, self.CIT_Status, self.Cur_Code, self.CIT_Count, self.CIT_Quantity, self.CIT_Generation, self.CU_Id, self.CI_CC_Id, self.CU_Operation, self.Typ_Code, self.CC_Cur_Code, self.CI_Id, self.Rat_Id, self.Rat_Price, self.Rat_MU_Code, self.Rat_Cur_Code, self.Rat_Period, self.Rat_Hourly, self.Rat_Daily, self.Rat_Monthly, self.CR_Quantity, self.CR_Quantity_at_Rate, self.CC_XR, self.CR_Cur_XR, self.CR_ST_at_Rate_Cur, self.CR_ST_at_CC_Cur, self.CR_ST_at_Cur, self.Cus_Name, self.CI_Name, self.CU_Description, self.CC_Description, self.Rat_Period_Description, self.CC_Code)
+        return "<User_Resumes( Cus_Id='%s', CR_Date_From='%s', CR_Date_To='%s', CIT_Status='%s', Cur_Code='%s', CIT_Count='%s', CIT_Quantity='%s', CIT_Generation='%s', CU_Id='%s', CI_CC_Id='%s', CU_Operation='%s', Typ_Code='%s', CC_Cur_Code='%s', CI_Id='%s', Rat_Id='%s', Rat_Price='%s', Rat_MU_Code='%s', Rat_Cur_Code='%s', Rat_Period='%s', Rat_Hourly='%s', Rat_Daily='%s', Rat_Monthly='%s', CR_Quantity='%s', CR_Quantity_at_Rate='%s', CC_XR='%s', CR_Cur_XR='%s', CR_ST_at_Rate_Cur='%s', CR_ST_at_CC_Cur='%s', CR_ST_at_Cur='%s', Cus_Name='%s', CI_Name='%s', CU_Description='%s', CC_Description='%s', Rat_Period_Description='%s', CC_Code='%s', Pla_Id='%s', Pla_Name='%s')>" % \
+                ( self.Cus_Id, self.CR_Date_From, self.CR_Date_To, self.CIT_Status, self.Cur_Code, self.CIT_Count, self.CIT_Quantity, self.CIT_Generation, self.CU_Id, self.CI_CC_Id, self.CU_Operation, self.Typ_Code, self.CC_Cur_Code, self.CI_Id, self.Rat_Id, self.Rat_Price, self.Rat_MU_Code, self.Rat_Cur_Code, self.Rat_Period, self.Rat_Hourly, self.Rat_Daily, self.Rat_Monthly, self.CR_Quantity, self.CR_Quantity_at_Rate, self.CC_XR, self.CR_Cur_XR, self.CR_ST_at_Rate_Cur, self.CR_ST_at_CC_Cur, self.CR_ST_at_Cur, self.Cus_Name, self.CI_Name, self.CU_Description, self.CC_Description, self.Rat_Period_Description, self.CC_Code, self.Pla_Id, self.Pla_Name)
 
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2019-09-09 13:44:02
+# GLVH @ 2020-02-20 16:44:35
 # =============================================================================
 
-class User(UserMixin, db.Model):
+class User(UserMixin, db.Model,Serializer):
     __tablename__ = 'Users'
     id            = db.Column( db.Integer, primary_key=True, autoincrement=True )
     username      = db.Column( db.String(64) )
@@ -856,6 +971,95 @@ class User(UserMixin, db.Model):
     confirmed     = db.Column( db.Boolean, default=0 )
     CC_Id         = db.Column( db.Integer, db.ForeignKey('Cost_Centers.CC_Id'), default=1 )
 
+
+    def __init__(self, **kwargs):
+        super(User, self).__init__(**kwargs)
+        if self.role is None:
+            if self.username == current_app.config['COLLECTOR_ADMIN']:
+                self.role = Role.query.filter_by(permissions=0xfe).first()
+            if self.role is None:
+                self.role = Role.query.filter_by(default=True).first()
+
+
+    @property
+    def password(self):
+        raise AttributeError('password is not a readable attribute')
+
+    @password.setter
+    def password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def verify_password(self, password):
+        return check_password_hash(self.password_hash, password)
+
+    def generate_confirmation_token(self, expiration=3600):
+        s = Serializer(current_app.config['SECRET_KEY'], expiration)
+        return s.dumps({'confirm': self.id})
+
+    def confirm(self, token):
+        s = Serializer(current_app.config['SECRET_KEY'])
+        try:
+            data = s.loads(token)
+        except:
+            return False
+        if data.get('confirm') != self.id:
+            return False
+        self.confirmed = True
+        db.session.add(self)
+        return True
+
+    def generate_reset_token(self, expiration=3600):
+        s = Serializer(current_app.config['SECRET_KEY'], expiration)
+        return s.dumps({'reset': self.id})
+
+    def reset_password(self, token, new_password):
+        s = Serializer(current_app.config['SECRET_KEY'])
+        try:
+            data = s.loads(token)
+        except:
+            return False
+        if data.get('reset') != self.id:
+            return False
+        self.password = new_password
+        db.session.add(self)
+        return True
+
+    def generate_email_change_token(self, new_email, expiration=3600):
+        s = Serializer(current_app.config['SECRET_KEY'], expiration)
+        return s.dumps({'change_email': self.id, 'new_email': new_email})
+
+    def change_email(self, token):
+        s = Serializer(current_app.config['SECRET_KEY'])
+        try:
+            data = s.loads(token)
+        except:
+            return False
+        if data.get('change_email') != self.id:
+            return False
+        new_email = data.get('new_email')
+        if new_email is None:
+            return False
+        if self.query.filter_by(email=new_email).first() is not None:
+            return False
+        self.email = new_email
+        db.session.add(self)
+        return True
+
+    def can(self, permissions):
+        return self.role is not None and \
+            (self.role.permissions & permissions) == permissions
+
+    def is_administrator(self):
+        return self.can(Permission.ADMINISTER)
+
+    def is_god(self):
+        return self.can(Permission.GOD)
+
+    def is_customer(self):
+        return self.can(Permission.CUSTOMER)
+
+    def __repr__(self):
+        return '<User %r role=%r>' % (self.username,self.role)
 
     @property
     def password(self):

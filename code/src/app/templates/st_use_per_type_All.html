@@ -1,0 +1,76 @@
+{# ============================================================================= #}
+
+{# Auto-Generated code. do not modify #}
+{# (c) Sertechno 2018 #}
+{# GLVH @ 2019-10-07 13:41:33 #}
+{# ============================================================================= #}
+
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% import "_macros.html" as macros %}
+{% block title %}Collector{% endblock %}
+{% block head %}
+   {{ super() }}
+{% endblock %}
+
+{% block page_content %}
+<!-- AG 2019-10-07 13:41:36.348665 -->
+<!-- ------------------------ -->
+<!-- gen_templates_select_all -->
+<!-- ------------------------ -->
+<div class="page-header">
+    <h2>ST Use Per Type:<h2>
+    <a href="#" onclick="history.go(-1)"><img src="/static/img/back.png"  color=yellow width="32" height="32" title="" alt="Add"></a>
+</div>
+<table class="table">
+  <thead class="thead-dark">
+    <tr>
+        <th>Typ_Code</th>
+        <th>Cus_Id</th>
+        <th>Pla_Id</th>
+        <th>CC_Id</th>
+        <th>CI_Id</th>
+        <th>Year</th>
+        <th>Month</th>
+        <th>Count</th>
+        <th>Mean</th>
+        <th>Variance</th>
+        <th>StdDev</th>
+        <th>Min</th>
+        <th>Max</th>
+        <td><a href="/forms/ST_Use_Per_Type"><img src="/static/img/add.png"  color=yellow width="32" height="32" title="" alt="Add"></a></td>
+    </tr>
+  </thead>
+    <tbody>
+    {% for ST_Use_Per_Type in rows.items %}
+       <tr>
+           <td>{{ ST_Use_Per_Type.Typ_Code }}</td>
+           <td>{{ ST_Use_Per_Type.Cus_Id }}</td>
+           <td>{{ ST_Use_Per_Type.Pla_Id }}</td>
+           <td>{{ ST_Use_Per_Type.CC_Id }}</td>
+           <td>{{ ST_Use_Per_Type.CI_Id }}</td>
+           <td>{{ ST_Use_Per_Type.Year }}</td>
+           <td>{{ ST_Use_Per_Type.Month }}</td>
+           <td>{{ ST_Use_Per_Type.Count }}</td>
+           <td>{{ ST_Use_Per_Type.Mean }}</td>
+           <td>{{ ST_Use_Per_Type.Variance }}</td>
+           <td>{{ ST_Use_Per_Type.StdDev }}</td>
+           <td>{{ ST_Use_Per_Type.Min }}</td>
+           <td>{{ ST_Use_Per_Type.Max }}</td>
+           <td><a href="/forms/ST_Use_Per_Type?Typ_Code={{ Typ_Code }}&Cus_Id={{ Cus_Id }}&Pla_Id={{ Pla_Id }}&CC_Id={{ CC_Id }}&CI_Id={{ CI_Id }}&Year={{ Year }}&Month={{ Month }}"><img src="/static/img/edit.png" width="32" height="32" title="" alt="Edit"></a>
+               <a href="/forms/ST_Use_Per_Type_delete?Typ_Code={{ Typ_Code }}&Cus_Id={{ Cus_Id }}&Pla_Id={{ Pla_Id }}&CC_Id={{ CC_Id }}&CI_Id={{ CI_Id }}&Year={{ Year }}&Month={{ Month }}"><img src="/static/img/delete.png" width="32" height="32" title="" alt="Edit"></a>
+           </td>
+       </tr>
+    {% endfor %}
+    </tbody>
+</table>
+<div class="pagination">
+    {{ macros.pagination_widget(rows, '.select_ST_Use_Per_Type_query') }}
+</div>
+<!-- ------------------------ -->
+<!-- gen_templates_select_all -->
+<!-- ------------------------ -->
+{% endblock %}
+
+{# ============================================================================= #}
+

@@ -1,0 +1,80 @@
+{# ============================================================================= #}
+
+{# Auto-Generated code. do not modify #}
+{# (c) Sertechno 2018 #}
+{# GLVH @ 2019-10-07 13:41:33 #}
+{# ============================================================================= #}
+
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% import "_macros.html" as macros %}
+{% block title %}Collector{% endblock %}
+{% block head %}
+   {{ super() }}
+{% endblock %}
+
+{% block page_content %}
+<!-- AG 2019-10-07 13:41:35.784286 -->
+<!-- ------------------------ -->
+<!-- gen_templates_select_all -->
+<!-- ------------------------ -->
+<div class="page-header">
+    <h2>Charge Units:<h2>
+    <a href="#" onclick="history.go(-1)"><img src="/static/img/back.png"  color=yellow width="32" height="32" title="" alt="Add"></a>
+</div>
+<table class="table">
+  <thead class="thead-dark">
+    <tr>
+        <th>Id</th>
+        <th>Configuration Item Id</th>
+        <th>Description</th>
+        <th>UUID</th>
+        <th>Is Billeable</th>
+        <th>Is Always Billeable</th>
+        <th>Quantity</th>
+        <th>Conversion Operation</th>
+        <th>Type</th>
+        <th>Item Generation Type</th>
+        <th>Reference 1</th>
+        <th>Reference 2</th>
+        <th>Reference 3</th>
+        <td><a href="/forms/Charge_Units"><img src="/static/img/add.png"  color=yellow width="32" height="32" title="" alt="Add"></a></td>
+         <td>Charge Items</td>
+         <td>Charge Unit EGM</td>
+    </tr>
+  </thead>
+    <tbody>
+    {% for Charge_Units,CI_Id,CU_Operation,Typ_Code,CIT_Generation in rows.items %}
+       <tr>
+           <td>{{ Charge_Units.CU_Id }}</td>
+           <td>{{ "{:s}".format(CI_Id) }}</td>
+           <td>{{ Charge_Units.CU_Description }}</td>
+           <td>{{ Charge_Units.CU_UUID }}</td>
+           <td>{{ Charge_Units.CU_Is_Billeable }}</td>
+           <td>{{ Charge_Units.CU_Is_Always_Billeable }}</td>
+           <td>{{ Charge_Units.CU_Quantity }}</td>
+           <td>{{ "{:s}".format(CU_Operation) }}</td>
+           <td>{{ "{:s}".format(Typ_Code) }}</td>
+           <td>{{ "{:s}".format(CIT_Generation) }}</td>
+           <td>{{ Charge_Units.CU_Reference_1 }}</td>
+           <td>{{ Charge_Units.CU_Reference_2 }}</td>
+           <td>{{ Charge_Units.CU_Reference_3 }}</td>
+           <td><a href="/forms/Charge_Units?CU_Id={{ Charge_Units.CU_Id }}"><img src="/static/img/edit.png" width="32" height="32" title="" alt="Edit"></a>
+               <a href="/forms/Charge_Units_delete?CU_Id={{ Charge_Units.CU_Id }}"><img src="/static/img/delete.png" width="32" height="32" title="" alt="Edit"></a>
+           </td>
+           <td><a href="/select/Charge_Items_Query?field=CU_Id&value={{Charge_Units.CU_Id}}">{{ Charge_Units.charge_items.__len__() }}</a></td>
+           <td><a href="/select/Charge_Unit_EGM_Query?field=CU_Id&value={{Charge_Units.CU_Id}}">{{ Charge_Units.charge_unit_egm.__len__() }}</a></td>
+       </tr>
+    {% endfor %}
+    </tbody>
+</table>
+<div class="pagination">
+    {{ macros.pagination_widget(rows, '.select_Charge_Units_query') }}
+</div>
+<!-- ------------------------ -->
+<!-- gen_templates_select_all -->
+<!-- ------------------------ -->
+{% endblock %}
+
+{# ============================================================================= #}
+

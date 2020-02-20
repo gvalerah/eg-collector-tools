@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}Collector{% endblock %}
+
+{% block head %}
+{{ super() }}
+<link rel="shortcut icon" href="{{ url_for('static', filename = 'favicon.ico') }}"
+type="image/x-icon">
+<link rel="icon" href="{{ url_for('static', filename = 'img/favicon.ico') }}"
+type="image/x-icon">
+{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    
+    <h1>Collector v 1.0</h1>
+    <p>(c) SERTECHNO 2018 GLVH</p>
+    <p>Flask Current Application Name is "{{ data["name"] }}"</p>
+    <p>Collector local C Context Name is "{{ data["app_name"] }}"</p>
+    <p>Your browser is "{{ data["user_agent"] }}"</p>
+    <p>Local time is @ {{ data["date_time"] }}</p> 
+    <p>The local date and time is {{ moment(data["current_time"]).format('LLL') }}.</p>
+    <p>That was {{ moment(data["current_time"]).fromNow(refresh=True) }}</p>    
+    <p>Esto esta solo en collector.html y recibio name='{{ name }}'({{password}})</p>
+
+    
+    <h1>H1</h1>    <h1>H2</h1>    <h1>H3</h1>
+    <p>p</p>
+    <table>Table
+        <tr>tr 1
+            <td>td 1</td>
+            <td>td 2</td>
+            <td>td 3</td>
+        </tr>
+        <tr>tr 2
+            <td>td 1</td>
+            <td>td 2</td>
+            <td>td 3</td>
+        </tr>
+        <tr>tr 3
+            <td>td 1</td>
+            <td>td 2</td>
+            <td>td 3</td>
+        </tr>
+    </table>
+    <p><b>Global Data</b></p>
+    {% for key in data.keys() %}    
+        {# <p><b>{{ key }}</b></p> #}
+        <p><b>{{ key }}</b> = {{ data[key] }}</p>
+    {% endfor %}
+    <p><b>Current Application Context</b></p>
+    {# % for key in data['current_app'] % #}    
+    {#    <p><b>{{ key }}</b></p> #}
+    {#    <p><b>{{ key }}</b> = {{ data['current_app'].key }}</p> #}
+    {# % endfor % #}
+    <p>Current App Logger = {{ data.current_app.logger }}
+    
+</div>
+{{ wtf.quick_form(form) }}
+{% endblock %}
+
+
+
