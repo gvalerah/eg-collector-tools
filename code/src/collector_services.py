@@ -18,11 +18,13 @@ from    sqlalchemy                          import create_engine
 # Import Emtec Group's modules
 from    emtec                               import *
 from    emtec.collector.db.orm              import *
-from    emtec.collector.common.functions    import *
+# GV 20210408 from    emtec.collector.common.functions    import *
+from    emtec.common.functions              import *
 from    emtec.collector.common.context      import Context
 # Import actual collectors codes
 from    service.collectors.Monthly_Auto     import Monthly_Auto_Collector
 from    service.collectors.Auto_CC          import Auto_CC_Collector
+from    service.collectors.Fill_CU_Rates    import Fill_CU_Rates_Collector
 from    service.collectord_exec             import Execute_Collector_Daemon
 
 # ---------------------------------------------------------------------------------------
@@ -130,6 +132,8 @@ if (os.path.isfile(config_file)):
                         Execute_Collector_Daemon(C,config_ini,driver_group,Monthly_Auto_Collector)
                     elif collector == 'Auto_CC':
                         Execute_Collector_Daemon(C,config_ini,driver_group,Auto_CC_Collector)
+                    elif collector == 'Fill_CU_Rates':
+                        Execute_Collector_Daemon(C,config_ini,driver_group,Fill_CU_Rates_Collector)
                     else:
                         C.logger.error("%s: Invalid collector name '%s'."%(__name__, collector))
             except Exception as e:

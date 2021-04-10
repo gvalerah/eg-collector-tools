@@ -5,6 +5,7 @@
 # =============================================================================
 
 # view required imports
+import os
 import json
 from pprint import pprint
 
@@ -136,6 +137,7 @@ def forms_User_Data_View():
     #filename="tmp/%s_%s_user_data_tree.html"%(current_user.id,id(current_user.id))
     filename="tmp/%s_user_data_tree.html"%(current_user.id)
     try:
+        os.remove("/%s"%filename)
         f=open("/%s"%filename,'w')
     except Exception as e:
         message=("Couldn't open file: '%s'. Please inform administrator. EXCEPTION: %s"%(filename,e))
@@ -149,6 +151,8 @@ def forms_User_Data_View():
     render_children(DATA,f)
    
     f.close()
+    
+    print("forms_User_Data_View(): filename=",filename)
     
     return render_template("user_data_view.html",filename=filename,data=DATA)
 

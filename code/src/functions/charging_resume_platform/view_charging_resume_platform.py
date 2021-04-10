@@ -4,20 +4,28 @@
 # GLVH @ 2019-08-16
 # =============================================================================
 
-from emtec.collector.forms       import frm_charging_resume_platform
-from babel.numbers  import format_number, format_decimal, format_percent
+from emtec.collector.forms  import frm_charging_resume_platform
+from babel.numbers          import format_number
+from babel.numbers          import format_decimal
+from babel.numbers          import format_percent
 
 @main.route('/forms/Get_Charging_Resume_Platform', methods=['GET', 'POST'])
 @login_required
 def forms_Get_Charging_Resume_Platform():
-    logger.debug('Enter: forms_Get_Charging_Resume_Platform()')
-
-    session['data'] =  { 'Pla_Id': None, 'CIT_Date_From':None, 'CIT_Date_To':None, 'CIT_Status':1,'Cur_Code':'USD'}
+    logger.debug(f'{this()}: Enter')
+    collectordata=get_collectordata()
+    session['data'] =  {    'Pla_Id': None, 
+                            'CIT_Date_From':collectordata['COLLECTOR_PERIOD']['start'], 
+                            'CIT_Date_To':collectordata['COLLECTOR_PERIOD']['end'], 
+                            'CIT_Status':1,
+                            'Cur_Code':'USD'}
 
     form = frm_charging_resume_platform()
 
     # ------------------------------------------------------------------------------
     # Will setup filter to consider only Currencies with actual Exchange Rates in DB
+    # Commit all pending DB states in order to refresh data
+    db.session.commit()
     # Prepare query
     query = db.session.query(exchange_rate.Cur_Code.distinct().label('Cur_Code'))
     # Execute query and convert in list for further use in choices selection
@@ -73,11 +81,9 @@ def forms_Get_Charging_Resume_Platform():
                                 ))
 
         elif   form.submit_Cancel.data:
-            #print('Cancel Data Here ... does nothing')
             flash('Report discarded ...')
         else:
-            flash('form validated but not submited. Report to Support ...')
-            #print('form validated but not submited ???')
+            flash('Form validated but not submited. Report to Support ...')
         return redirect(url_for('.forms_Get_Charging_Resume_Platform'))
 
     form.Pla_Id.data        = session['data']['Pla_Id']
@@ -86,7 +92,7 @@ def forms_Get_Charging_Resume_Platform():
     form.CIT_Status.data    = session['data']['CIT_Status']
     form.Cur_Code.data      = session['data']['Cur_Code']
 
-    return render_template('charging_resume_platform.html',form=form, data=session.get('data'))
+    return render_template('charging_resume_platform.html',form=form, data=session.get('data'),collectordata=collectordata)
 
 # =============================================================================
 
@@ -95,7 +101,10 @@ import simplejson as json
 @main.route('/report/Charging_Resume_Platform', methods=['GET','POST'])
 @login_required
 def report_Charging_Resume_Platform():
-    logger.debug('Enter: report_Charging_Resume_Platform()')
+    logger.debug(f'{this()}: Enter')
+    
+    collectordata=get_collectordata()
+
     Pla_Id          =  request.args.get('Pla_Id',None,type=int)
     Pla_Name        =  request.args.get('Pla_Name',None,type=str)
     CIT_Date_From   =  request.args.get('CIT_Date_From',None,type=str)
@@ -105,58 +114,65 @@ def report_Charging_Resume_Platform():
     Cur_Code        =  request.args.get('Cur_Code',None,type=str)
     Cur_Name        =  request.args.get('Cur_Name',None,type=str)
     Update          =  request.args.get('Update',0,type=int)
-    
-    
+        
     # Updated cached data for this specific query if requested 
     if Update == 1:
-        # -------------------------------------------------------------------------------------------------------------- #
-        # Previous Code faster but requires more memory will be replaced by an by CI loop                                #
-        # query="C*ALL Update_Charge_Resume(%d,'%s','%s',%d,'%s')"%(Pla_Id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code) #
-        # resume_records = db.engine.execute(query).scalar()                                                             #
-        # -------------------------------------------------------------------------------------------------------------- #
-        # 20181228 GV query = "S*ELECT DISTINCT CI_Id FROM Configuration_Items WHERE Pla_Id=%d"%(Pla_Id)
-        """
-        query = "S*ELECT CI_Id FROM Configuration_Items WHERE Pla_Id=%d ORDER BY CC_Id,CI_Id"%(Pla_Id)
         
-        logger.debug ("report_Changing_Resume_Platform: query: %s"%(query))
-
-        CI = db.engine.execute(query)
-        """
+        CI = db.session.query(
+                Configuration_Items.CI_Id,
+                Configuration_Items.Cus_Id,
+                ).filter(Configuration_Items.Pla_Id==Pla_Id
+                ).order_by( Configuration_Items.CC_Id,
+                            Configuration_Items.CI_Id
+                ).all()
         
-        CI = db.session.query(Configuration_Items.CI_Id).\
-                filter(Configuration_Items.Pla_Id==Pla_Id).\
-                order_by(Configuration_Items.CC_Id,Configuration_Items.CI_Id).all()
-        
-        logger.debug ("report_Changing_Resume_Platform: %d CI's found for platform %d"%(len(CI),Pla_Id))
+        logger.debug (f"{this()}: {len(CI)} CI's found for platform {Pla_Id}")
         
         resume_records=0
 
-        print("CI=",CI)
+        if CI is not None:
+            cis=len(CI)
+            cis_count=0
+            
         for ci in CI:
-            """
-            query="C*ALL Update_Charge_Resume_CI2('%s','%s',%s,'%s',%s)"%\
-                    (CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code,ci.CI_Id)
-            logger.debug ("report_Changing_Resume_Platform: query: %s"%query)
-            records=db.engine.execute(query)
-            resume_records += records.scalar()
-            """
-            records = db.Update_Charge_Resume_CI2(CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code,ci)
+            cis_count+=1
+            logger.debug ("%s: %.2f%% calling db.Update_Charge_Resume_CI(%s,%s,%s,%s,%s,%s,%s)"%(
+                this(),
+                cis_count*100/cis,
+                ci.Cus_Id,
+                CIT_Date_From,
+                CIT_Date_To,
+                CIT_Status,
+                Cur_Code,
+                ci.CI_Id,
+                charge_item
+                )
+            )
+
+            records = db.Update_Charge_Resume_CI(
+                ci.Cus_Id,
+                CIT_Date_From,
+                CIT_Date_To,
+                CIT_Status,
+                Cur_Code,
+                ci.CI_Id,
+                charge_item)
             if records is not None:
                 resume_records += records
-        logger.debug ("report_Changing_Resume_Platform: resume_records = %s"%resume_records)
+        logger.debug (f"{this()}: resume_records = {resume_records}")
         
     # Get Actual Remume Data from Database
     # NOTE: Here needs some Sand-Clock Message or something in case it takes so long ...
-    """
-    query="C*ALL Get_Charge_Resume2(3,%d,'%s','%s',%d,'%s')"%(Pla_Id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code)
+    rows = db.Get_Charge_Resume2(
+                3,
+                Pla_Id,
+                CIT_Date_From,
+                CIT_Date_To,
+                CIT_Status,Cur_Code
+            )
     
-    logger.debug ("report_Changing_Resume: query: %s"%query)
-    
-    rows =  db.engine.execute(query).fetchall()
-    """
-    rows = db.Get_Charge_Resume2(3,Pla_Id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code)
-    
-    return render_template('report_charging_resume_platform.html',rows=rows,
+    return render_template('report_charging_resume_platform.html',
+                rows=rows,
                 Pla_Id=Pla_Id,
                 Pla_Name=Pla_Name,
                 CIT_Date_From=CIT_Date_From,
@@ -164,6 +180,6 @@ def report_Charging_Resume_Platform():
                 CIT_Status=CIT_Status,
                 CIT_Status_Value=CIT_Status_Value,                
                 Cur_Code=Cur_Code,
-                Cur_Name=Cur_Name
+                Cur_Name=Cur_Name,
+                collectordata=collectordata
                 )
-

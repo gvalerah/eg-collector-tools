@@ -1,0 +1,13 @@
+source /home/collector/bin/colors.sh
+echo -e ${bold}${yellow}
+echo Updating collector_drv_nutanix ...
+echo Stopping collector_nutanix_pc3 service ...
+sudo systemctl stop collector_nutanix_pc3
+echo Updating binary ...
+cp /home/collector/dist/collector_drv_nutanix /home/collector/bin/collector_drv_nutanix
+echo Start collector_nutanix_pc3 service ...
+sudo systemctl start collector_nutanix_pc3
+echo -e ${green}Status of collector_nutanix_pc3 service:${normal}
+sudo systemctl status collector_nutanix_pc3
+echo
+

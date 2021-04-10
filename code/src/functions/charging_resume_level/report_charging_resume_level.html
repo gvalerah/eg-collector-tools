@@ -53,14 +53,14 @@
                 {% if Level == "Device" %}
                 <tr>
                     <td><b>Configuration Item Z: <a href="/forms/Configuration_Items?CI_Id={{ prev_CI.0 }}">{{ prev_CI_Name.0 }}</a></b></td>
-                    <td align="right"><b>{{ "{:,.2f}".format(sum_CI.0) }}</b> {{Cur_Code}}</td>
+                    <td align="right"><b>{{ "{:,.12f}".format(sum_CI.0) }}</b> {{Cur_Code}}</td>
                 </tr> 
                 {% endif %}              
                 {% if Level == "Component" %}
                 <tr>
                     <td></td><td></td><td></td><td></td><td>
                     </td><td align="right">Total CI : <a href="/forms/Configuration_Items?CI_Id={{ prev_CI.0 }}">{{ prev_CI_Name.0 }}</a></td>
-                    <td align="right"><b>{{ "{:,.2f}".format(sum_CI.0) }}</b> {{Cur_Code}}</td>
+                    <td align="right"><b>{{ "{:,.12f}".format(sum_CI.0) }}</b> {{Cur_Code}}</td>
                 </tr>
                 {% endif %}
                 {% if Level == "Component" %}
@@ -77,7 +77,7 @@
                     <table>
                     <tr>
                         <td align="right"><b>Total CC : <a href="/forms/Cost_Centers?CC_Id={{ prev_CC_ID.0 }}">{{ prev_CC.0 }}</a></b> : </td>
-                        <td align="right"><b>{{ "{:,.2f}".format(sum_CC.0) }}</b> {{Cur_Code}}</td>
+                        <td align="right"><b>{{ "{:,.12f}".format(sum_CC.0) }}</b> {{Cur_Code}}</td>
                     </tr>
                     </table>
                     {# <hr> #}
@@ -139,17 +139,17 @@
                         <tr>
                 <td align="right"   >{{ row.CIT_Count }}</td>
                 <td align="center"  ><a href="/forms/Charge_Units?CU_Id={{ row.CU_Id }}">{{ row.CU_Description }}</a></td>
-                <td align="right"><b>{{ "{:,.6f}".format(row.Rat_Price) }}</b> {{row.Rat_Cur_Code}} ({{row.Rat_MU_Code}}/{{row.Rat_Period_Description}})</td>
+                <td align="right"><b>{{ "{:,.12f}".format(row.Rat_Price) }}</b> {{row.Rat_Cur_Code}} ({{row.Rat_MU_Code}}/{{row.Rat_Period_Description}})</td>
                 
-                <td align="right"><b>{{ "{:,.6f}".format(row.CR_Quantity_at_Rate) }}</b></td>                
-                <td align="right"><b>{{ "{:,.2f}".format(row.CR_ST_at_Rate_Cur) }}</b> {{row.Rat_Cur_Code}}</td>
+                <td align="right"><b>{{ "{:,.12f}".format(row.CR_Quantity_at_Rate) }}</b></td>                
+                <td align="right"><b>{{ "{:,.12f}".format(row.CR_ST_at_Rate_Cur) }}</b> {{row.Rat_Cur_Code}}</td>
                 {% if row.Rat_Cur_Code == row.Cur_Code %}
-                <td align="right"   ><b>{{ "{:,.10f}".format(1/row.CR_Cur_XR)}}</b> {{row.Rat_Cur_Code}}/{{ row.Cur_Code }}</td>                
+                <td align="right"   ><b>{{ "{:,.12f}".format(1/row.CR_Cur_XR)}}</b> {{row.Rat_Cur_Code}}/{{ row.Cur_Code }}</td>                
                 {% else %} 
-                <td align="right"   ><b>{{ "{:,.10f}".format(1/row.CR_Cur_XR)}}</b> {{row.Rat_Cur_Code}}/{{ row.Cur_Code }}<br>
-                                     {{ "{:,.10f}".format(row.CR_Cur_XR)}} {{row.Cur_Code}}/{{ row.Rat_Cur_Code }}</td>                
+                <td align="right"   ><b>{{ "{:,.12f}".format(1/row.CR_Cur_XR)}}</b> {{row.Rat_Cur_Code}}/{{ row.Cur_Code }}<br>
+                                     {{ "{:,.12f}".format(row.CR_Cur_XR)}} {{row.Cur_Code}}/{{ row.Rat_Cur_Code }}</td>                
                 {% endif %}
-                <td align="right"><b>{{ "{:,.2f}".format(row.CR_ST_at_Cur) }}</b> {{ row.Cur_Code }}</td>
+                <td align="right"><b>{{ "{:,.12f}".format(row.CR_ST_at_Cur) }}</b> {{ row.Cur_Code }}</td>
                 {# NOTE: to address during "localization" process -------------------------------------------------------#}                
                 {# <td align="right"><b>{{ format_currency(row.TOTAL_BILL_CUR,locale="es_CL") }}</b> {{ row.XCUR }}</td> #}
                 {# ------------------------------------------------------------------------------------------------------#}                
@@ -176,14 +176,14 @@
                 {% if Level == "Device" %}
                 <tr>
                     <td><b>Configuration Item X: <a href="/forms/Configuration_Items?CI_Id={{ prev_CI.0 }}">{{ prev_CI_Name.0 }}</a></b></td>
-                    <td align="right"><b>{{ "{:,.2f}".format(sum_CI.0) }}</b> {{Cur_Code}}</td>
+                    <td align="right"><b>{{ "{:,.12f}".format(sum_CI.0) }}</b> {{Cur_Code}}</td>
                 </tr> 
                 {% endif %}
                 {% if Level == "Component" %}
                 <tr>
                     <td></td><td></td><td></td><td></td><td>
                     </td><td align="right">Total CI : <a href="/forms/Configuration_Items?CI_Id={{ prev_CI.0 }}">{{ prev_CI_Name.0 }}</a></td>
-                    <td align="right"><b>{{ "{:,.2f}".format(sum_CI.0) }}</b> {{Cur_Code}}</td>
+                    <td align="right"><b>{{ "{:,.12f}".format(sum_CI.0) }}</b> {{Cur_Code}}</td>
                 </tr>
                 </tbody>
                 </table>
@@ -193,14 +193,14 @@
                 <tr>
                     <td align="right"><b>Total CC : <a href="/forms/Cost_Centers?CC_Id={{ prev_CC_ID.0 }}">{{ prev_CC.0 }}</a></b> : </td>
                     <td></td><td></td><td></td><td></td><td>
-                    <td align="right"><b>{{ "{:,.2f}".format(sum_CC.0) }}</b> {{Cur_Code}}</td>
+                    <td align="right"><b>{{ "{:,.12f}".format(sum_CC.0) }}</b> {{Cur_Code}}</td>
                 </tr>
             </table>
             <hr>
             <table>
                 <tr>
                     <td align="right">Total of <b>{{CIT_Status_Value}}</b> for customer <b>{{Cus_Name}}</b> between <b>{{CIT_Date_From}}</b> and <b>{{CIT_Date_To}}</b> is </td>
-                    <td align="right"><b>{{ "{:,.2f}".format(sum_Total.0) }}</b> {{Cur_Code}}</td>
+                    <td align="right"><b>{{ "{:,.12f}".format(sum_Total.0) }}</b> {{Cur_Code}}</td>
                 </tr>
             </table>
 <hr>

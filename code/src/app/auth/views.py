@@ -16,14 +16,24 @@ from flask_login                        import logout_user, login_required
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
+    try:
+        logger.debug("login in course ...")
+    except:
+        print("logger is not available")
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
+        #print("2 user=",user)
         if user is not None and user.verify_password(form.password.data):
             #login_user(user, form.remember_me.data)
             login_user(user, False)
+            #print("3.1 request.args.get('next')=",request.args.get('next'))
+            #print("3.2 url_for('main.index')   =",url_for('main.index'))
             return redirect(request.args.get('next') or url_for('main.index'))
         flash('Invalid username or password.')
+    else:
+        pass
+        #print("FORM NOT VALIDATED YET")        
     return render_template('auth/login.html', form=form)
     
 

@@ -1,4 +1,11 @@
-
+# ----------------------------------------------------------------------
+# Nutanix Storage API ETL exploit Class
+# code/src/service/platforms/nutanix_etl_1_0.py
+# GLVH 2018
+# GVLV 2021-04-03 Refactoring + Add snapshots
+# Gerardo L Valera
+# gvalera@emtecgroup.net
+# ----------------------------------------------------------------------
 # Import System Libs
 import  json
 import  shutil
@@ -23,6 +30,7 @@ from sqlalchemy import exc
 # GV 20190818
 
 from emtec                  import *
+from emtec.debug            import *
 from emtec.class_etl        import *
 
 class Nutanix(ETL):
@@ -37,8 +45,13 @@ class Nutanix(ETL):
     base_url            = []
     total_matches       = 0
     processed_vms       = 0
+    processed_images    = 0
+    processed_snapshots = 0
     chunk_size          = 100
     has_more_data       = True
+    sharding            = False
+    sharding_suffix     = None
+    sharding_cit_class  = None
     
     # Data Creation Flags
     # create_XXX    = False
@@ -61,7 +74,7 @@ class Nutanix(ETL):
         # Can be overrided , see below
         self.BASE_URL = [   'https://%s:%d/api/nutanix/v0.8/',
                             'https://%s:%d/PrismGateway/services/rest/v1/',
-                            'https://%s:%d/api/nutanix/v2.0/',
+                            'https://%s:%d/PrismGateway/services/rest/v2.0/',
                             'https://%s:%d/api/nutanix/v3/'
                         ]
                         
@@ -89,15 +102,29 @@ class Nutanix(ETL):
         self.logger.debug("%s: self.API_version= %s"%(__name__,self.API_version))
         for api in range(len(self.BASE_URL)):
             self.logger.debug("%s: %d: [%s]"%(__name__,api,self.base_url[api]))
-
                    
         self.session = self.get_server_session(self.username, self.password)
 
-
-
         # Disable warnings
         urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)    
-
+        
+        
+    def Load_Node(self,node):
+        # overrides Prism Central configurations with Node (Prism Element)
+        # configuration and open/reopen session
+        try:
+            self.host               = self.config.get    (node,'host',                  fallback=None)
+            self.port               = self.config.getint (node,'port',                  fallback=0)
+            self.connection_timeout = self.config.getint (node,'connection_timeout',    fallback=5)
+            self.read_timeout       = self.config.getint (node,'read_timeout',          fallback=10)
+            self.port               = self.config.getint (node,'port',                  fallback=0)
+            self.username           = self.config.get    (node,'username',              fallback=None)
+            self.password           = self.config.get    (node,'password',              fallback=None)
+            self.API_version        = self.config.getint (node,'API_version',           fallback=None)
+            self.session            = self.get_server_session(self.username, self.password)
+        except Exception as e:
+            emtec_handle_general_exception(e,logger=self.logger)
+        
     def get_server_session(self, username=None, password=None):
     
         if username is not None:
@@ -141,7 +168,6 @@ class Nutanix(ETL):
             version = self.api_version 
         call = [    'vms/?includeVMDiskSizes=true&includeAddressAssignments=true',
                     'vms/',
-#                    'vms/?include_vm_disk_config=true&include_vm_nic_config=true',
                     'vms/?offset=%s&length=%s&include_vm_disk_config=true&include_vm_nic_config=true'%(self.processed_vms,self.chunk_size),
                     'vms/list'
                     ]
@@ -189,14 +215,162 @@ class Nutanix(ETL):
             return serverResponse.status_code, data
         else:
             return None, None
-            
+    
+    # GET Image DATA
+    def getImagesInformation(self,version=None):
+        if self.logger:
+            self.logger.debug(f'{__name__}: version={version}')
+        if version is None:
+            version = self.api_version 
+        call = [    '',
+                    '',
+                    'images/?include_vm_disk_sizes=true',
+                    ''
+                    ]
         
+        if version == 3:
+            self.session.headers.update( {'Accept': 'application/json' } )   
+
+        imagesURL = self.base_url[version] + call[version]
+
+        parameters=''
+        call_type=None
+        server_Response=None
+        try:
+            if version == 3:
+                call_type="POST"
+                h=strftime("%H:%M:%S")
+                parameters = '{"kind":"image","offset":%d,"length":%d}'%(
+                    self.processed_images,self.chunk_size)
+                serverResponse = self.session.post(
+                    imagesURL,
+                    parameters,
+                    timeout=(
+                        self.connection_timeout,
+                        self.read_timeout)
+                    )
+            else:
+                call_type="GET"
+                serverResponse = self.session.get(
+                    imagesURL,
+                    timeout=(
+                        self.connection_timeout,
+                        self.read_timeout)
+                    )
+        except ConnectionError:
+            if self.logger:
+                self.logger.error("%s: getImagesInformation: Connection Error trying version=%d call=%s URL=%s"     %(__name__,version,call_type,imagesURL))            
+            return None,None
+        except ConnectTimeout:
+            if self.logger:
+                self.logger.error("%s: getImagesInformation: Connection Timeout trying version=%d call=%s URL=%s"     %(__name__,version,call_type,imagesURL))            
+            return None,None
+        except Exception as e:
+            emtec_handle_general_exception(e,logger=self.logger,module=__name__,function='getImagesInformation')
+            return None,None
+        if (self.logger):
+            self.logger.debug("%s: version        = %d"     %(__name__,version))
+            self.logger.debug("%s: imagesURL      = %s"     %(__name__,imagesURL))
+            self.logger.debug("%s: call_Type      = %s %s"  %(__name__,call_type,parameters))
+            self.logger.debug("%s: serverResponse = %s"     %(__name__,serverResponse))
+            if serverResponse is not None:
+                self.logger.debug("%s:       Code     = %s"     %(__name__,serverResponse.status_code))
+                self.logger.debug("%s:       Text     = %s"     %(__name__,serverResponse.text))
+
+        if serverResponse is not None:
+            if is_json(serverResponse.text):
+                data = json.loads(serverResponse.text)
+            else:
+                data = None
+            return serverResponse.status_code, data
+        else:
+            return None, None
+
+    # GET Snapshots DATA
+    def getSnapshotsInformation(self,version=None):
+        if self.logger:
+            self.logger.debug(f'{this()}: version={version}')
+        if version is None:
+            version = self.api_version
+        self.logger.debug(f'{__name__}: self.session={self.session} {type(self.session)}')
+        #endpoint  = '/PrismGateway/services/rest/v2.0/protection_domains/dr_snapshots'
+        #arguments = '/?fulldetails=true'
+
+        call = [    '',
+                    '',
+                    'protection_domains/dr_snapshots/',
+                    ''
+                    ]
+        
+        if version == 2:
+            self.session.headers.update( {'Accept': 'application/json' } )   
+
+        snapshotsURL = self.base_url[version] + call[version]
+
+        parameters=None
+        
+        call_type=None
+        server_Response=None
+        try:
+            if version == 2:
+                call_type="GET"
+                h=strftime("%H:%M:%S")
+                
+                parameters = {
+                    "fulldetails":True,
+                    "offset":self.processed_snapshots,
+                    "count":self.chunk_size,
+                    "timeout":(
+                        self.connection_timeout,
+                        self.read_timeout),
+                    }
+                
+                serverResponse = self.session.get(
+                    snapshotsURL
+                    )
+            else:
+                call_type="GET"
+                serverResponse = self.session.get(
+                    snapshotsURL,
+                    timeout=(
+                        self.connection_timeout,
+                        self.read_timeout)
+                    )
+        except ConnectionError:
+            if self.logger:
+                self.logger.error(f"{this()}: Connection Error trying version={version} call={call_type} URL={snapshotsURL}")            
+            return None,None
+        except ConnectTimeout:
+            if self.logger:
+                self.logger.error(f"{this()}: Connection Timeout trying version={version} call={call_type} URL={snapshotsURL}")            
+            return None,None
+        except Exception as e:
+            emtec_handle_general_exception(e,logger=self.logger,module=__name__,function=this())
+            return None,None
+        if (self.logger):
+            self.logger.debug(f"{this()}: version        = {version}")
+            self.logger.debug(f"{this()}: snapshotsURL   = {snapshotsURL}")
+            self.logger.debug(f"{this()}: call_Type      = {call_type} {parameters}")
+            self.logger.debug(f"{this()}: serverResponse = {serverResponse}")
+            if serverResponse is not None:
+                self.logger.debug(f"{this()}:       Code     = {serverResponse.status_code}")
+                self.logger.debug(f"{this()}:       Text     = {serverResponse.text}")
+
+        if serverResponse is not None:
+            if is_json(serverResponse.text):
+                data = json.loads(serverResponse.text)
+            else:
+                data = None
+            return serverResponse.status_code, data
+        else:
+            return None, None
+
+            
     def Read_Configuration(self,ini_file):
         self.ini_file = ini_file
         config = configparser.ConfigParser()
         config.read(self.ini_file)
         self.API_version    = config.getint('General','API_version')
-
 
     def Extract(self,file=None,API_version=None):
         """ Method that actually request data from Platform Platform Connection data should be available """
@@ -224,18 +398,96 @@ class Nutanix(ETL):
                 self.processed_vms +=   int(self.data['metadata']['length'])
             if self.processed_vms >= self.total_matches:
                 self.has_more_data = False
+        else:
+            if (self.logger):
+                self.logger.error("%s: status=%s data=%s"%(__name__,status,self.data))
+            
         return status
         # -----------------------------------------------------------
         
     def get_vm_list(self):
         vm_list=[]
         for vm in self.data['entities']:
-            #pprint(vm)
-            #print("vm keys=",vm.keys())
-            #print("vm.metadata keys=",vm['metadata'].keys())
-            #print("vm.spec     keys=",vm['spec'].keys())
             vm_list.append({'name': vm['spec']['name'], 'uuid': vm['metadata']['uuid']})
         return vm_list
+
+    def Extract_Images(self,file=None,API_version=None):
+        """ Method that actually request data from Platform Platform Connection data should be available """
+        if file is not None:
+            json_file_name=file
+        else:
+            json_file_name="/tmp/collector.tmp" # then needs to call randon unique temporary file name generator
+        # Here executes request to platform using platform parameters
+        # -----------------------------------------------------------
+        if (self.logger):
+            self.logger.debug(f"{__name__}: file=%s API_version={API_version}")
+        else:
+            print(f"{__name__}: file=%s API_version={API_version}")
+        if API_version is None:
+            API_version = self.API_version
+        
+        self.data = []      # Cleanup Data for next "Chunk"
+        status, self.data = self.getImagesInformation(API_version)
+        if status == 200:
+            if API_version == 2:
+                self.total_matches =    int(self.data['metadata']['grand_total_entities'])
+                self.processed_images +=   int(self.data['metadata']['total_entities'])
+            elif API_version == 3:
+                self.total_matches =    int(self.data['metadata']['total_matches'])
+                self.processed_images +=   int(self.data['metadata']['length'])
+            if self.processed_images >= self.total_matches:
+                self.has_more_data = False
+        else:
+            if (self.logger):
+                self.logger.error(f"{__name__}: status={status} data={self.data}")
+        return status
+        # -----------------------------------------------------------
+
+    def Extract_Snapshots(self,file=None,API_version=None):
+        """ Method that actually request data from Platform Platform Connection data should be available """
+        if file is not None:
+            json_file_name=file
+        else:
+            json_file_name="/tmp/collector.tmp" # then needs to call randon unique temporary file name generator
+        # Here executes request to platform using platform parameters
+        # -----------------------------------------------------------
+        if (self.logger):
+            self.logger.debug(f"{__name__}: file=%s API_version={API_version}")
+        else:
+            print(f"{__name__}: file=%s API_version={API_version}")
+        if API_version is None:
+            API_version = self.API_version
+        
+        self.data = []      # Cleanup Data for next "Chunk"
+        status, self.data = self.getSnapshotsInformation(API_version)
+        if status == 200:
+            if API_version == 2:
+                self.total_matches =    int(self.data['metadata']['grand_total_entities'])
+                self.processed_images +=   int(self.data['metadata']['total_entities'])
+            elif API_version == 3:
+                self.total_matches =    int(self.data['metadata']['total_matches'])
+                self.processed_images +=   int(self.data['metadata']['length'])
+            if self.processed_images >= self.total_matches:
+                self.has_more_data = False
+        else:
+            if (self.logger):
+                self.logger.error(f"{__name__}: status={status} data={self.data}")
+        return status
+        # -----------------------------------------------------------
+        
+    def get_image_list(self):
+        image_list=[]
+        for image in self.data['entities']:
+            image_type = None
+            if 'image_type' in image.keys(): image_type=image['image_type']
+            image_list.append({
+                'name' : image['name'], 
+                'uuid' : image['uuid'],
+                'type' : image_type,
+                'state': image['image_state'],
+                'size' : image['vm_disk_size'],
+                })
+        return image_list
 
     def print_data(self):
         print("data['metadata']=",self.data['metadata'])
@@ -288,13 +540,9 @@ class Nutanix(ETL):
         print    
         print("<<<EOF>>>")
 
-    """
-    Creates/Updates CI Mother Record
-    self.tuples.append(("CI-CREATE",NAME,UUID))
-    Creates/Updates CU Child Records (for VM Entity)
-    self.tuples.append(("CU-CREATE","VM" ,UUID,CU_UUID,1,"NONE",1,'NULL','NULL','NULL'))
-    self.tuples.append(("CIT-CREATE","VM" ,UUID,CU_UUID,1,DATE,TIME,ACTIVE))
-    """
+# TRANSFORMATION FUNCTIONS ---------------------------------------------
+# Should Transfor input data into list of tuples ready lo load
+#
     def Transform(self):
         if (self.logger): self.logger.debug("%s: Transform(). IN"%(__name__))
 
@@ -391,19 +639,18 @@ class Nutanix(ETL):
             self.tuples.append(("CI-CREATE",NAME,UUID))
             
             # Creates/Updates CU Child Records (for VM Entity)
-            self.tuples.append(("CU-CREATE","VM" ,UUID,CU_UUID,1,"NONE",1,None,None,None))
-            self.tuples.append(("CIT-CREATE","VM" ,UUID,CU_UUID,1    ,DATE,TIME,ACTIVE))
-
+            if self.create_VM:
+                self.tuples.append(("CU-CREATE","VM" ,UUID,CU_UUID,1,"NONE",1,None,None,None))
+                self.tuples.append(("CIT-CREATE","VM" ,UUID,CU_UUID,1    ,DATE,TIME,ACTIVE))
             if self.create_CPU:
                 self.tuples.append(("CU-CREATE","CPU",UUID,CU_UUID,CPU,"NONE",1,None,None,None))
                 self.tuples.append(("CIT-CREATE","CPU",UUID,CU_UUID,CPU  ,DATE,TIME,ACTIVE))
             if self.create_RAM:
-                self.tuples.append(("CU-CREATE","RAM",UUID,CU_UUID,RAMGB,"MBTOGB",1,None,None,None))
+                self.tuples.append(("CU-CREATE","RAM",UUID,CU_UUID,RAMGB,"NONE",1,None,None,None))
                 self.tuples.append(("CIT-CREATE","RAM",UUID,CU_UUID,RAMGB,DATE,TIME,ACTIVE))
             if self.create_COR:
                 self.tuples.append(("CU-CREATE","COR",UUID,CU_UUID,CORES,"NONE",1,None,None,None))
                 self.tuples.append(("CIT-CREATE","COR",UUID,CU_UUID,CORES,DATE,TIME,ACTIVE))
-
             if self.create_DSK:
                 for d in range(disks):
                 
@@ -451,9 +698,8 @@ class Nutanix(ETL):
                         gigabytes = megabytes/1024
 
                         # Creates/Updates CU Child Records for Virtual Disk Drives (for VM Entity)
-                        self.tuples.append(("CU-CREATE","DSK",UUID,disk_UUID,gigabytes,"BTOGB",1,None,None,None))
+                        self.tuples.append(("CU-CREATE","DSK",UUID,disk_UUID,gigabytes,"NONE",1,None,None,None))
                         self.tuples.append(("CIT-CREATE","DSK",UUID,disk_UUID,gigabytes,DATE,TIME,ACTIVE))
-
             if self.create_NIC:
                 for n in range(nics):
                     
@@ -491,3 +737,137 @@ class Nutanix(ETL):
     
         if (self.logger): self.logger.debug("%s: Transform. OUT"%(__name__))
         return 0 
+
+    def Transform_Images(self):
+        if (self.logger): self.logger.debug("%s: Transform_Images(). IN"%(__name__))
+
+        API_version = self.API_version
+
+        if API_version is None:
+            API_version = self.API_version
+        
+        if      API_version == 0:    
+            entities = self.data['metadata']['count']
+        elif    API_version == 1:    
+            entities = self.data['metadata']['count']
+        elif    API_version == 2:    
+            entities = self.data['metadata']['total_entities']
+        elif    API_version == 3:    
+            entities = self.data['metadata']['length']
+        else:    
+            if (self.logger): self.logger.error("%s:  API_version %d can't be processed"%(__name__,API_version)) 
+            return 1
+            
+        if (self.logger): self.logger.debug("%s: ETL_data_to_tuples. IN. %d entities to process"%(__name__,entities)) 
+
+        self.tuples.clear()
+
+        NAME   = '' 
+        UUID   = ''
+        DATE   = strftime("%Y-%m-%d")
+        TIME   = strftime("%H:00:00")
+
+        for e in range(entities):
+            image = self.data['entities'][e]
+
+            if API_version == 2:
+                NAME   = image['name'] 
+                UUID   = image['uuid']
+                ACTIVE = image['image_state']
+                SIZE   = image['vm_disk_size']
+                SIZEGB = SIZE/1024/1024/1024
+                DATE   = strftime("%Y-%m-%d")
+                TIME   = strftime("%H:00:00")
+                REF1=REF2=REF3=None
+                if 'image_type' in image.keys():
+                    REF1   = image['image_type']
+                if 'vm_disk_path' in image.keys():
+                    REF2   = image['vm_disk_path']
+                if 'updated_time_in_usecs' in image.keys():
+                    REF3   = image['updated_time_in_usecs']
+            else:
+                if (self.logger): self.logger.error("%s:  API_version %d can't be processed"%(__name__,API_version)) 
+                return 1
+            if ACTIVE == 'ACTIVE':
+                CU_UUID = image['storage_container_uuid']
+                # Creates/Updates CI Mother Record
+                self.tuples.append(("CI-CREATE",NAME,UUID))
+                # Creates/Updates CU Child Records (for IMAGE Entity)
+                self.tuples.append(("CU-CREATE","IMG",UUID,CU_UUID,SIZEGB,"NONE",1,REF1,REF2,REF3))
+                self.tuples.append(("CIT-CREATE","IMG",UUID,CU_UUID,SIZEGB,DATE,TIME,ACTIVE))
+        if (self.logger):
+            self.logger.debug("%s: Transform. OUT"%(__name__))
+        return 0
+
+    def Transform_Snapshots(self):
+        if (self.logger): self.logger.debug("%s: Transform_Snapshots(). IN"%(__name__))
+
+        API_version = self.API_version
+
+        if API_version is None:
+            API_version = self.API_version
+        
+        if      API_version == 0:    
+            return 1
+        elif    API_version == 1:    
+            return 1
+        elif    API_version == 2:    
+            entities = len(self.data['entities'])
+        elif    API_version == 3:    
+            return 1
+        else:    
+            if (self.logger): self.logger.error("%s:  API_version %d can't be processed"%(__name__,API_version)) 
+            return 1
+            
+        if (self.logger): self.logger.debug("%s: ETL_data_to_tuples. IN. %d entities to process"%(__name__,entities)) 
+
+        self.tuples.clear()
+
+        NAME   = '' 
+        UUID   = ''
+        DATE   = strftime("%Y-%m-%d")
+        TIME   = strftime("%H:00:00")
+
+        for e in range(entities):
+            snapshot = self.data['entities'][e]
+            self.logger.debug(f"snapshot {e} = {pformat(snapshot)}")
+            self.logger.debug(f"API version  = {API_version}")
+            if API_version == 2:
+                if len(snapshot['vms']):
+                    NAME   = snapshot['vms'][0].get('vm_name',None)  # Nombre sera el de la 1ra VM Asociada
+                    if NAME is None:
+                        NAME = snapshot['vms'][0].get('consistency_group',None)
+                    CU_UUID = None
+                    UUID   = snapshot['vms'][0].get('vm_id',None)    # <==== Por ahora solo consdera 1ra maquina
+                    ACTIVE = snapshot.get('state',None) ############## OJO ###############################
+                    SIZE   = snapshot.get('exclusive_usage_in_bytes',0)
+                    SIZEGB = SIZE/1024/1024/1024
+                    DATE   = strftime("%Y-%m-%d")
+                    TIME   = strftime("%H:00:00")
+                    if len(snapshot['remote_site_names']):
+                        REF1   = snapshot['remote_site_names'][0]
+                    else:
+                        REF1   = None
+                    REF2   = snapshot.get('protection_domain_name',None)
+                    REF3   = snapshot['vms'][0].get('consistency_group',None)
+                                # Only valid data will be recorded -------------------------
+                    if NAME is not None and UUID is not None and SIZE > 0:
+                        # Creates/Updates CI Mother Record/actually this 
+                        # does not have to have any effect
+                        # it should exist prior to SNP existence ..........
+                        if self.db.Get_CI_Id_From_UUID(UUID) is not None:
+                            # if first appereance of SNaPshot then creates Charge Unit
+                            self.tuples.append(("CU-CREATE" ,"SNP",UUID,CU_UUID,SIZEGB,"NONE",1,REF1,REF2,REF3))
+                            self.tuples.append(("CIT-CREATE","SNP",UUID,CU_UUID,SIZEGB,DATE,TIME,ACTIVE))
+                        else:
+                            if (self.logger): self.logger.debug(f"{this()}:  Snapshot {snapshot.get('snapshot_id')} for an unknown VM {NAME}:{UUID}. ignored") 
+                else:
+                    if (self.logger): self.logger.debug(f"{this()}:  Snapshot {snapshot.get('snapshot_id')} does not have a valid VMs list. ignored") 
+            else:
+                if (self.logger): self.logger.error("%s:  API_version %d can't be processed"%(__name__,API_version)) 
+                return 1
+        if (self.logger):
+            self.logger.debug("%s: Transform. OUT"%(__name__))
+        return 0
+
+# ----------------------------------------------------------------------

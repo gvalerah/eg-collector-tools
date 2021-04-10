@@ -11,6 +11,15 @@ def Nutanix_ETL_Collector(C,config,group):
     C.logger.info("%s: NUTANIX Platform Collector: Execution start"%(__name__))
     C.logger.info("%s: Using Group         : %s"%(__name__,group))
 
+    # 20201101 Includes sharging management here -----------------------   
+    #sharding=config['General']['collector_cit_sharding']
+    # Here we'll include sharding required code
+    #if sharding:
+    #    suffix = strftime('%Y%m')
+    #    charge_item.set_shard(suffix)
+    #    C.logger.debug(f"{this()}: Using shardened table: {charge_item.__table__.name}") 
+    # ------------------------------------------------------------------
+
     good_bye_message=''
     
     try:    
@@ -27,10 +36,11 @@ def Nutanix_ETL_Collector(C,config,group):
             N.customer        = config.getint(group,'default_customer',fallback=1)
             N.CIT_generation  = config.getint(group,'CIT_generation',fallback=1)
             N.chunk_size      = config.getint(group,'chunk_size',fallback=100)
+            N.sharding        = config.getboolean('General','collector_cit_sharding',fallback=False)
             
             C.logger.debug("%s: will enter loop has more data = %s"      % (__name__,N.has_more_data) )  
             while N.has_more_data:
-                C.logger.debug("%s: in loop has more data = %s total=%d processed=%d"      % (__name__,N.has_more_data,N.total_matches,N.processed_vms) )  
+                C.logger.info("%s: in loop has more data = %s total=%d processed=%d"      % (__name__,N.has_more_data,N.total_matches,N.processed_vms) )  
                 status=N.Extract(API_version=api_version)
                 if status == 200:
                     N.Transform() 

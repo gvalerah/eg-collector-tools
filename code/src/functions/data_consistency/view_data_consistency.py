@@ -4,6 +4,8 @@
 # GLVH @ 2019-03-11
 # =============================================================================
 
+from pprint import pprint
+from emtec.collector.db.orm_model import *
 
 # Support Constants, Variables & Functions
 RAT_TYPE        =0x01
@@ -46,109 +48,114 @@ from sqlalchemy.sql.expression import or_
 @main.route('/reports/Data_Consistency', methods=['GET'])
 @login_required
 def reports_Data_Consistency():
-    logger.debug('Enter: reports_Data_Consistency()'%())
+    logger.debug('Enter: reports_Data_Consistency()')
 
-    # Prepare query
+    # Prepare query This working for MySQL Engine Only
     version  = db.engine.execute("SELECT VERSION()").fetchall()
     hostname = db.engine.execute("SELECT @@HOSTNAME").fetchall()
     data={}
     data.update({'version': version[0][0]})
     data.update({'hostname': hostname[0][0]})
     
-    ci_rows=db.session.query(configuration_item)\
-                .join(customer)                                                 .add_column(customer.Cus_Name)\
-                .join(platform)                                                 .add_column(platform.Pla_Name)\
-                .join(cost_center,cost_center.CC_Id==configuration_item.CC_Id)  .add_column(cost_center.CC_Description)\
-                .filter(or_(    configuration_item.CC_Id==customer.CC_Id\
-                                ,configuration_item.CC_Id==1))\
-                .all()
+    # ------------------------------------------------------------------
+    ci_rows=db.session.query(Configuration_Items
+                ).join(Customers
+                    ).add_column(Customers.Cus_Name
+                ).join(Platforms
+                    ).add_column(Platforms.Pla_Name
+                ).join(Cost_Centers,
+                    Cost_Centers.CC_Id==Configuration_Items.CC_Id
+                    ).add_column(Cost_Centers.CC_Description
+                ).filter(or_(
+                            Configuration_Items.CC_Id==Customers.CC_Id,
+                            Configuration_Items.CC_Id==1
+                            )
+                ).all()
                 
     data.update({'ci_rows': ci_rows})
     
+    # ------------------------------------------------------------------
     # Updates Rate Types in Rates Table in order to validate them in report
     Update_Rates_Type()
-    
-    """
-    query=db.session.query(rate)\
-                .join(customer)                                                 .add_column(customer.Cus_Name)\
-                .join(platform)                                                 .add_column(platform.Pla_Name)\
-                .join(configuration_item)                                       .add_column(configuration_item.CI_Name)\
-                .join(cost_center,cost_center.CC_Id==rate.CC_Id)                .add_column(cost_center.CC_Description)\
-                .order_by(rate.Pla_Id,rate.Cus_Id,rate.CC_Id,rate.CI_Id,rate.Typ_Code)
-    
-    flash(query)
-    """
-    """
-    rate_rows=None
-    rate_rows=db.session.query(rate)\
-                .join(customer)                                                 .add_column(customer.Cus_Name)\
-                .join(platform)                                                 .add_column(platform.Pla_Name)\
-                .join(configuration_item)                                       .add_column(configuration_item.CI_Name)\
-                .join(cost_center,cost_center.CC_Id==rate.CC_Id)                .add_column(cost_center.CC_Description)\
-                .order_by(rate.Pla_Id,rate.Cus_Id,rate.CC_Id,rate.CI_Id,rate.Typ_Code)\
-                .all()
-    """
-    """
-    query = "SELECT * "\
-                "FROM Rates "\
-                    "JOIN Customers             USING   (Cus_Id) "\
-                    "JOIN Platforms             USING   (Pla_Id) "\
-                    "JOIN Configuration_Items   USING   (CI_Id) "\
-                    "JOIN Cost_Centers          ON      Cost_Centers.CC_Id=Rates.CC_id "\
-                "ORDER BY Typ_Code,Rates.Pla_Id,Rates.Cus_Id,Rates.CC_Id,Rates.CI_Id"
-    """
-    # GV 20190907
-    """
-    query = db.session.query(Rates,Customers,Platforms,Configuration_Items,Cost_Centes).\
-                join(Customers          , Rates.Cus_Id == Customers.Cus_Id).\
-                join(Platforms          , Rates.Pla_Id == Platforms.Pla_Id).\
-                join(Configuration_Items, Rates.CI_Id  == Configuration_Items.CI_Id).\
-                join(Cost_Centers       , Rates.CC_Id  == Cost_Centers.CC_Id).\
-                order_by(   Rates.Typ_Code,
-                            Rates.Pla_Id,
-                            Rates.Cus_Id,
-                            Rates.CC_Id,
-                            Rates.CI_Id)
-    """
-    
-    query = db.session.query(rate,customer,platform,configuration_item,cost_center).\
-                join(customer          , rate.Cus_Id == customer.Cus_Id).\
-                join(platform          , rate.Pla_Id == platform.Pla_Id).\
-                join(configuration_item, rate.CI_Id  == configuration_item.CI_Id).\
-                join(cost_center       , rate.CC_Id  == cost_center.CC_Id).\
-                order_by(   rate.Typ_Code,
-                            rate.Pla_Id,
-                            rate.Cus_Id,
-                            rate.CC_Id,
-                            rate.CI_Id)
-    
+        
+    query = db.session.query(
+                Rates,
+                Customers,
+                Platforms,
+                Configuration_Items,
+                Cost_Centers
+                ).join(Customers, 
+                    Rates.Cus_Id == Customers.Cus_Id
+                ).join(Platforms, 
+                    Rates.Pla_Id == Platforms.Pla_Id
+                ).join(Configuration_Items, 
+                    Rates.CI_Id  == Configuration_Items.CI_Id
+                ).join(Cost_Centers, 
+                    Rates.CC_Id  == Cost_Centers.CC_Id
+                ).order_by(
+                    Rates.Typ_Code,
+                    Rates.Pla_Id,
+                    Rates.Cus_Id,
+                    Rates.CC_Id,
+                    Rates.CI_Id
+                )
     rate_rows=[]
 
     try:
-        rate_rows = db.session.execute(query).fetchall()
+        rate_rows = query.all()
     except Exception as e:
         print("**************************************")
         print(e)
         print("**************************************")
 
     data.update({'rate_rows': rate_rows})
+    # ------------------------------------------------------------------
+    query = db.session.query(   Charge_Units,
+                                Configuration_Items,
+                                Platforms,
+                                Customers,
+                                Cost_Centers
+                ).join(Configuration_Items,
+                    Charge_Units.CI_Id==Configuration_Items.CI_Id
+                ).join(Platforms          ,
+                    Platforms.Pla_Id==Configuration_Items.Pla_Id
+                ).join(Customers          ,
+                    Customers.Cus_Id==Configuration_Items.Cus_Id
+                ).join(Cost_Centers       ,
+                    Cost_Centers.CC_Id==Configuration_Items.CC_Id
+                )
+    # El filtro no esta segun lo deseado la idea es ver si el ID de la 
+    # tarifa corresponde con un id valido probablemente hay que crear un
+    # loop aqui para poblar la lista segun un chequeo python ya que no 
+    # hay stored procedure
+    
+    # Por ahora solo muestra las que estan con Rate = 1 o None
 
-    """ GV 20190907 AQUI AUN HAY QUE CONSTRUIR UN ALGORITMO EQUIVALENTE
-    query = "SELECT CU_Id,CU_Description,Typ_Code,Pla_Id,Cus_Id,CI.CC_Id AS CC_ID,Rat_Id,"\
-                    "Get_Rate_Id (Typ_Code,Pla_Id,Cus_Id,CI.CC_Id,CU_Id) AS RATE, "\
-                    "Pla_Name,Cus_Name,CC_Description,CI_Name "\
-                "FROM Charge_Units AS CU "\
-                    "JOIN Configuration_Items AS CI  USING (CI_Id) "\
-                    "JOIN Platforms           AS PLA USING (Pla_Id) "\
-                    "JOIN Customers           AS CUS USING (Cus_Id) "\
-                    "JOIN Cost_Centers        AS CC  ON CC.CC_Id = CI.CC_Id "\
-                "WHERE Rat_Id != Get_Rate_Id(Typ_Code,Pla_Id,Cus_Id,CI.CC_Id,CU_Id)"
-    """
+    query = query.filter(or_(   Charge_Units.Rat_Id==1,
+                                Charge_Units.Rat_Id==None
+                            )
+                        )
 
+    rows = query.all()
+
+    # ------------------------------------------------------------------
     cu_rows = []
     
     try:
-        cu_rows = db.session.execute(query).fetchall()
+        # Este loop es redundante por el filtro de arriba
+        # se mantiene para opcion adicional
+        # es muy lento si se ejecuta para todos los CUs
+        # en el sistema Checkqo full de consistecia
+        for row in rows:
+            rate_id = db.Get_Rate_Id(
+                        row.Charge_Units.Typ_Code,
+                        row.Configuration_Items.Pla_Id,
+                        row.Configuration_Items.Cus_Id,
+                        row.Configuration_Items.CC_Id,
+                        row.Charge_Units.CU_Id
+                        )
+            if row.Charge_Units.Rat_Id != rate_id:
+                cu_rows.append([row,rate_id])
     except Exception as e:
         print("**************************************")
         print(e)
@@ -156,8 +163,12 @@ def reports_Data_Consistency():
 
     data.update({'cu_rows': cu_rows})
 
-    return render_template('report_data_consistency.html',data=data,is_valid_rate=is_valid_rate)
+    return render_template(
+        'report_data_consistency.html',
+        data=data,
+        is_valid_rate=is_valid_rate
+        )
 
-# =============================================================================
+# ======================================================================
 
 

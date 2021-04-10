@@ -113,6 +113,7 @@ def forms_Get_User_Resume():
 @permission_required(Permission.CUSTOMER)
 def forms_Get_User_Resume():
     logger.debug('Enter: forms_Get_User_Resume()'%())
+    db.logger=logger
 
     session['data'] =  { 'CIT_Date_From':None, 'CIT_Date_To':None, 'CIT_Status':1,'Cur_Code':'USD','CC_Id':current_user.CC_Id}
 
@@ -161,7 +162,6 @@ def forms_Get_User_Resume():
                 if form.CC_Id.choices[i][0]==form.CC_Id.data:
                     cc_index=i
             return redirect(url_for('.report_User_Resume',
-                                #CC_Description  = CC_Description,
                                 CIT_Date_From   = form.CIT_Date_From.data,
                                 CIT_Date_To     = form.CIT_Date_To.data,
                                 CIT_Status      = form.CIT_Status.data,
@@ -181,7 +181,6 @@ def forms_Get_User_Resume():
                 if form.CC_Id.choices[i][0]==form.CC_Id.data:
                     cc_index=i
             return redirect(url_for('.report_User_Resume',
-                                #CC_Description  = CC_Description,
                                 CIT_Date_From   = form.CIT_Date_From.data,
                                 CIT_Date_To     = form.CIT_Date_To.data,
                                 CIT_Status      = form.CIT_Status.data,
@@ -206,7 +205,11 @@ def forms_Get_User_Resume():
     form.CIT_Status.data    = session['data']['CIT_Status']
     form.Cur_Code.data      = session['data']['Cur_Code']
 
-    return render_template('get_user_resume.html',form=form, data=session.get('data'))
+    return render_template('get_user_resume.html',
+            form=form, 
+            data=session.get('data'),
+            collectordata=get_collectordata()
+            )
 
 # =============================================================================
 
@@ -315,7 +318,14 @@ def report_User_Resume():
 @login_required
 @permission_required(Permission.CUSTOMER)
 def report_User_Resume():
-    logger.debug('Enter: report_User_Resume()')
+    function_name=sys._getframe().f_code.co_name
+    logger.debug('%s: Enter'%(function_name))
+    db.logger=logger
+    #collectordata=get_collectordata()
+    table_name='Charge_Items'
+    class_name='charge_item'
+    template_name='Charge_Items'
+
     CC_Id           =  request.args.get('CC_Id',current_user.id,type=int)
     CC_Description  =  request.args.get('CC_Description',None,type=str)
     CIT_Date_From   =  request.args.get('CIT_Date_From',None,type=str)
@@ -335,65 +345,72 @@ def report_User_Resume():
         # resume_records = db.engine.execute(query).scalar()                                                             #
         # -------------------------------------------------------------------------------------------------------------- #
         # 20181228 GV query = "S*ELECT DISTINCT CI_Id FROM configuration_item WHERE Cus_Id=%d"%(Cus_Id)
-        print("***********************")
-        print("Update Mode")
-        print("current user=",current_user)
-        print("current user id=",current_user.id)
-        print("current user CC_Id=",current_user.CC_Id)
+        logger.debug("%s: ***********************"%(function_name))
+        logger.debug("%s: Update Mode"%(function_name))
+        logger.debug("%s: current user= %s"%(function_name,current_user))
+        logger.debug("%s: current user id= %s"%(function_name,current_user.id))
+        logger.debug("%s: current user CC_Id=%s"%(function_name,current_user.CC_Id))
         
         CCISBELOW=db.get_cost_centers(CC_Id)
-        print("CCISBELOW=",CCISBELOW)
+        logger.debug("%s: CCISBELOW= %s"%(function_name,CCISBELOW))
         if current_user.CC_Id == 1:        
-        #if current_user.id == 1:        
             query = db.session.query(configuration_item.CI_Id).\
                         filter(configuration_item.CC_Id.in_(CCISBELOW)).\
                         order_by(configuration_item.CC_Id,configuration_item.CI_Id)
         else:
-            #USERCAN=db.get_user_cost_centers(CC_Id)
             USERCAN=db.get_user_cost_centers(current_user.id)
-            print("USERCAN=",USERCAN)
+            logger.debug("%s: USERCAN= %s"%(function_name,USERCAN))
+            """
             query = db.session.query(configuration_item.CI_Id).\
                         filter(configuration_item.CC_Id.in_(USERCAN)).\
                         filter(configuration_item.CC_Id.in_(CCISBELOW)).\
                         order_by(configuration_item.CC_Id,configuration_item.CI_Id)
-            
+            """
+            query = db.session.query(configuration_item.CI_Id
+                        #).filter(configuration_item.CC_Id.in_(USERCAN)
+                        ).filter(configuration_item.CC_Id.in_(CCISBELOW)
+                        ).order_by(configuration_item.CC_Id,configuration_item.CI_Id)
         CI = query.all()
-        print("CI=",CI)
+        logger.debug("%s: CI=%s"%(function_name,CI))
 
         
-        #print ("report_User_Resume: %d CI's found for user %d"%(CI.rowcount,current_user.id))
-        #logger.debug ("report_User_Resume: %d CI's found for user %d"%(CI.rowcount,current_user.id))
-        print ("report_User_Resume: %d CI's found for user %d"%(len(CI),current_user.id))
-        logger.debug ("report_User_Resume: %d CI's found for user %d"%(len(CI),current_user.id))
+        logger.debug("%s: user %s"%(function_name,current_user))
+        logger.debug("%s: report_User_Resume: %d CI's found for user %d"%(function_name,len(CI),current_user.id))
         
         resume_records=0
 
         for ci in CI:
-            """print("records = db.Update_User_Resume_CI(%s,%s,%s,%s,%s)"%(
-                CIT_Date_From,
-                CIT_Date_To,
-                CIT_Status,
-                Cur_Code,
-                ci.CI_Id))"""
-            #records = db.Update_User_Resume_CI(CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code,ci.CI_Id)
-            print("records = db.Update_User_Resume_CI(%s,%s,%s,%s,%s,%s)"%(
+            logger.debug("%s: records = db.Update_User_Resume_CI(%s,%s,%s,%s,%s,%s,%s)"%(
+                function_name,
                 current_user.id,
                 CIT_Date_From,
                 CIT_Date_To,
                 CIT_Status,
                 Cur_Code,
-                ci.CI_Id))
-            records = db.Update_User_Resume_CI(current_user.id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code,ci.CI_Id)
-            print("ci=",ci,"records=",records)
+                ci.CI_Id,
+                charge_item.__table__.name
+                )
+            )
+            records = db.Update_User_Resume_CI(
+                current_user.id,
+                CIT_Date_From,
+                CIT_Date_To,
+                CIT_Status,
+                Cur_Code,
+                ci.CI_Id,
+                charge_item
+                )
+            logger.debug("%s: ci= %s records= %s"%(function_name,ci,records))
             if records is not None:
                 resume_records += records
             
-        logger.debug ("report_User_Resume: resume_records = %s"%resume_records)
+        logger.debug("%s: resume_records = %s"%(function_name,resume_records))
         
     # Get Actual Resume Data from Database
     # NOTE: Here needs some Sand-Clock Message or something in case it takes so long ...
     try:
-        print("rows = db.Get_User_Resume(%s,%s,%s,%s,%s)"%(
+        logger.debug("%s: rows = db.Get_User_Resume(%s,%s,%s,%s,%s)"%(
+            function_name,
             current_user.id,
             CIT_Date_From,
             CIT_Date_To,
@@ -403,11 +420,27 @@ def report_User_Resume():
             user_id=db.session.query(User.id).filter(User.CC_Id==CC_Id).one()      
             # 20200207 GV rows = db.Get_User_Resume(user_id.id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code,CC_Id)
             #rows = db.Get_Charge_Resume(user_id.id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code)
-            rows = db.Get_User_Resume(current_user.id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code)
+            rows = db.Get_User_Resume(
+                        current_user.id,
+                        CIT_Date_From,
+                        CIT_Date_To,
+                        CIT_Status,
+                        Cur_Code
+                        )
         else:
             # rows = db.Get_User_Resume(current_user.id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code,CC_Id)
             rows = db.Get_User_Resume(current_user.id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code)
-        return render_template('report_user_resume.html',rows=rows,
+        logger.debug("%s: user %s"%(function_name,current_user))
+        logger.debug("%s: %s rows in resume for user %s %s as role %s"%(
+            function_name,
+            len(rows),
+            current_user.id,
+            current_user.username,
+            current_user.role_id
+            )
+        )
+        return render_template( 'report_user_resume.html',
+                    rows=rows,
                     CC_Description=CC_Description,
                     CIT_Date_From=CIT_Date_From,
                     CIT_Date_To=CIT_Date_To,
@@ -417,6 +450,6 @@ def report_User_Resume():
                     Cur_Name=Cur_Name
                     )
     except Exception as e:
-        print("EXCEPCION",str(e))
+        print("EXCEPTION",str(e))
         message=str(e)
         return render_template("404.html",message=message), 404

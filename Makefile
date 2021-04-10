@@ -4,6 +4,7 @@
 COLLECTOR_FOLDER=/home/gvalera/GIT/EG-Collector
       APP_FOLDER=${COLLECTOR_FOLDER}/app
   SERVICE_FOLDER=${COLLECTOR_FOLDER}/service
+    TOOLS_FOLDER=${COLLECTOR_FOLDER}/tools
      MAIN_FOLDER=${APP_FOLDER}/main
 TEMPLATES_FOLDER=${APP_FOLDER}/templates
 
@@ -26,8 +27,8 @@ SUITE_AUTO_TEMPLATES=${SUITE_AUTO_FOLDER}/templates
         COLLECTOR_CODE_COMMON=${COLLECTOR_CODE_SRC}/common
         COLLECTOR_CODE_OUTPUT=${COLLECTOR_CODE_FOLDER}/output
           COLLECTOR_CODE_AUTO=${COLLECTOR_CODE_FOLDER}/auto
-COLLECTOR_CODE_AUTO_TEMPLATES=${COLLECTOR_CODE_AUTO}/templates
-COLLECTOR_CODE_AUTO_TEMPLATES=${SUITE_AUTO_TEMPLATES}
+#COLLECTOR_CODE_AUTO_TEMPLATES=${COLLECTOR_CODE_AUTO}/templates
+#COLLECTOR_CODE_AUTO_TEMPLATES=${SUITE_AUTO_TEMPLATES}
 
 # Emtec Library updates for Collector App
            LIB_EMTEC=/home/gvalera/GIT/eg-libraries/emtec/src/emtec
@@ -67,7 +68,7 @@ collector:	${COLLECTOR_CODE_OUTPUT}/models.py ${COLLECTOR_CODE_OUTPUT}/orm_model
 	@echo "COLLECTOR_CODE_COMMON         =" ${COLLECTOR_CODE_COMMON}
 	@echo "COLLECTOR_CODE_OUTPUT         =" ${COLLECTOR_CODE_OUTPUT}
 	@echo "COLLECTOR_CODE_AUTO           =" ${COLLECTOR_CODE_AUTO}
-	@echo "COLLECTOR_CODE_AUTO_TEMPLATES =" ${COLLECTOR_CODE_AUTO_TEMPLATES}
+#	@echo "COLLECTOR_CODE_AUTO_TEMPLATES =" ${COLLECTOR_CODE_AUTO_TEMPLATES}
 	@echo "LIB_EMTEC                     =" ${LIB_EMTEC}
 	@echo "LIB_EMTEC_COMMON              =" ${LIB_EMTEC_COMMON}
 	@echo "LIB_COLLECTOR                 =" ${LIB_COLLECTOR}
@@ -103,10 +104,12 @@ collector:	${COLLECTOR_CODE_OUTPUT}/models.py ${COLLECTOR_CODE_OUTPUT}/orm_model
 	@echo
 	@ls -l ${TEMPLATES_FOLDER}/base.html
 	@echo
-	@echo "updating ${APP_FOLDER}/templates ..."
+	@echo "updating ${TEMPLATES_FOLDER} templates ..."
 	@echo
-	@cp  ${SUITE_AUTO_TEMPLATES}/*.html     		${TEMPLATES_FOLDER}/.
-	@cp  ${COLLECTOR_CODE_SRC}/templates/*.html     		${TEMPLATES_FOLDER}/.
+	cp  ${SUITE_AUTO_TEMPLATES}/*.html     		${TEMPLATES_FOLDER}/.
+	ls -l ~/collector/app/templates/navbar_template.html
+	cp  ${COLLECTOR_CODE_SRC}/templates/*.html     		${TEMPLATES_FOLDER}/.
+	ls -l ~/collector/app/templates/navbar_template.html
 	@echo
 	@echo "updating COMMON files to" ${LIB_COLLECTOR_COMMON}
 	@echo
@@ -145,6 +148,8 @@ collector:	${COLLECTOR_CODE_OUTPUT}/models.py ${COLLECTOR_CODE_OUTPUT}/orm_model
 	cp  ${COLLECTOR_CODE_SRC}/service/collectors/*.py			${COLLECTOR_FOLDER}/service/collectors/.
 	cp  ${COLLECTOR_CODE_SRC}/service/platforms/*.py			${COLLECTOR_FOLDER}/service/platforms/.
 	cp  ${COLLECTOR_CODE_SRC}/service/plugins/*.ini				${COLLECTOR_FOLDER}/service/plugins/.
+	cp  ${COLLECTOR_CODE_SRC}/tools/*.py						${COLLECTOR_FOLDER}/tools/.
+	cp  ${COLLECTOR_CODE_SRC}/scripts/*.sh						${COLLECTOR_FOLDER}/scripts/.
 	@echo
 	@echo collector completed !!!
 	@echo

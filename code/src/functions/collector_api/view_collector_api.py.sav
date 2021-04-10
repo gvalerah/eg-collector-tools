@@ -1,0 +1,338 @@
+# ======================================================================
+# COLLECTOR API routes
+# (c) Sertechno 2020
+# GLVH @ 2020-10-09
+# ======================================================================
+# Version | Programmer | Description
+# ------- | ---------- | -----------------------------------------------
+# 1.0.0   | GLVH       | Initial version. Minimal implementation required
+#         |            | Butler integration requirement.
+# ======================================================================
+import json
+import inspect
+import datetime
+
+COLLECTOR_API_VERSION = '1.0.0'
+COLLECTOR_API_OK      = 0
+COLLECTOR_API_WARNING = 1
+COLLECTOR_API_ERROR   = 2
+COLLECTOR_API_UNKNOWN = 3
+COLLECTOR_API_STATES  = ['OK','WARNING','ERROR','UNKNOWN']
+
+def get_empty_data():
+    return {
+        'api_version': COLLECTOR_API_VERSION,
+        'metadata': {
+            'total_matches':0,
+            'kind':None,
+            'length': 0 ,
+            'offset': 0,
+            },
+        'status': {
+            'state' : None,
+            'code': COLLECTOR_API_UNKNOWN,
+            'message': None,
+            'execution_context': None,
+        },
+        'entities': [],
+    }
+
+# ----------------------------------------------------------------------
+"""
+# support Functions
+# Candidates to library support
+def serializable(data):
+    print(f'data={data} {type(data)}')
+    if   type(data) in [str,int,float,dict]:
+        return data
+    elif isinstance(data,datetime.datetime):
+        return datetime.timestamp(data)
+    else:
+        return None
+        
+def this():
+    return inspect.stack()[1][3]
+
+def get_request_data(request):
+    "" " Gets request data for GET or POST methods
+        if DEBUG Field within data the debug flag is turned ON and
+        debug payload is returned
+    "" "
+    caller  = f'{inspect.stack()[1][3]}:{this()}:'
+    data    = None
+
+    try:
+        if request is not None:
+            
+            logger.debug(f'{caller} request.method    = {request.method}')
+            logger.debug(f'{caller} request.args      = {request.args}{type(request.args)}')
+            logger.debug(f'{caller} request.form      = {request.form}{type(request.form)}')
+            logger.debug(f'{caller} request.data      = {request.data}{type(request.data)} length={len(request.data)}')
+            if   request.method == 'GET':
+                data=dict(request.args)
+            elif request.method in ['POST','PATCH','PUT','DELETE']:
+                data={}
+                data.update(dict(request.args))
+                if len(request.form):       
+                    item=0             
+                    for form_item in request.form:
+                        logger.debug(f'{caller} form_item={form_item}{type(form_item)}')
+                        item+=1
+                        if len(form_item):
+                            try:
+                                data.update(json.loads(form_item))
+                            except Exception as e:
+                                logger.debug(f'{caller} ----------------------')
+                                logger.debug(f'{caller} WARNING: EXCEPTION: {str(e)}')
+                                logger.debug(f'{caller}------------------------')
+                if len(request.data):
+                    # request.data is loaded with JSON data
+                    # any other will be ignored
+                    try:
+                        data.update(json.loads(request.data))
+                    except:
+                        pass
+                logger.debug(f'{caller} ----------------------')
+                logger.debug(f'{caller} data({type(data)}) = {data}')
+                logger.debug(f'{caller} ----------------------')
+    except Exception as e:
+        logger.debug(f'{caller} ----------------------')
+        logger.debug(f'{caller} EXCEPTION: str({e})')
+        logger.debug(f'{caller} ----------------------')
+        logger.debug(f"{caller} VARIABLES DUMP")
+        logger.debug(f'{caller} app     = {app}')
+        logger.debug(f'{caller} debug   = {debug}')
+        logger.debug(f'{caller} request = {request}')
+        logger.debug(f'{caller} ----------------------')
+
+    return data
+"""
+# ----------------------------------------------------------------------
+
+
+"""
+def api_heartbeat():
+    logger.debug(f'{this()}: IN')
+    db.logger=logger
+    data = get_empty_data()
+    data['metadata']['kind'] = 'heartbeat'
+    # Will get any request arguments from request if any
+    payload = get_request_data(request)
+    data['status']['state'] = 'OK'
+    data['status']['code'] = 0
+    data['status']['execution_context'] = { 'payload': payload }
+    response = json.dumps(data)
+    logger.debug(f'{this()}: returns: response = {response}')
+    return json.dumps(data)
+"""
+@main.route('/api/heartbeat', methods=['GET'])
+def api_heartbeat():
+    logger.debug(f'{this()}: IN')
+    kind='heartbeat'
+    entities=[]
+    name=current_app.config['NAME']
+    authorized = api_check_authorization(request,current_app)
+    if authorized:
+        """
+        db.logger=logger
+        data = get_empty_data()
+        data['metadata']['kind'] = 'heartbeat'
+        # Will get any request arguments from request if any
+        payload = get_request_data(request)
+        data['status']['state'] = 'OK'
+        data['status']['code'] = 0
+        data['status']['execution_context'] = { 'payload': payload }
+        response = json.dumps(data)
+        logger.debug(f'{this()}: returns: response = {response}')
+        return json.dumps(data)
+        """
+        code    = API_OK
+        message = 'Authorized request'
+    else:
+        code    = API_ERROR
+        message = 'Unauthorized request'
+    return get_api_response(
+            code=code,
+            message=message,
+            kind=kind,
+            entities=entities,
+            name=name)
+
+
+"""
+@main.route('/api/cost-center', methods=['GET','POST','PATCH','PUT','DELETE'])
+def api_cost_center():
+    logger.debug(f'{this()}: IN')
+    db.logger=logger
+
+    data = get_empty_data()
+
+    # Will get any request arguments from request if any
+    payload = get_request_data(request)
+    data['metadata']['kind'] = 'cost-center'
+    data['status']['execution_context'] = { 'payload': payload }
+    try:
+        if   request.method == 'GET':
+            query = db.session.query(cost_center)
+            # Will set some filters if required
+            if payload is not None:
+                for field in payload.keys():
+                    if field == 'CC_Id'          :   query = query.filter(cost_center.CC_Id          == payload[field])
+                    if field == 'CC_Code'        :   query = query.filter(cost_center.CC_Code        == payload[field])
+                    if field == 'CC_Desccription':   query = query.filter(cost_center.CC_Description == payload[field])
+                    if field == 'Cur_Code'       :   query = query.filter(cost_center.Cur_Code       == payload[field])
+                    if field == 'CC_Parent_Code' :   query = query.filter(cost_center.CC_Parent_Code == payload[field])
+                    if field == 'CC_Reg_Exp'     :   query = query.filter(cost_center.CC_Reg_Exp     == payload[field])
+                    if field == 'CC_Reference'   :   query = query.filter(cost_center.CC_Reference   == payload[field])
+                             
+            result = query.all()
+                        
+            length = 0
+            if result is not None:
+                length = len(result)
+                for row in result:
+                    data['entities'].append({
+                        'CC_Id'          : row.CC_Id,
+                        'CC_Code'        : row.CC_Code,
+                        'CC_Description' : row.CC_Description,
+                        'Cur_Code'       : row.Cur_Code,
+                        'CC_Parent_Code' : row.CC_Parent_Code,
+                        'CC_Reg_Exp'     : row.CC_Reg_Exp,
+                        'CC_Reference'   : row.CC_Reference,
+                    })
+            data['metadata']['length'] = length
+            data['status']['state'] = 'OK'
+            data['status']['code'] = COLLECTOR_API_OK
+            data['status']['message'] = 'OK'
+            data['status']['execution_context'] = { 'payload':payload }
+        elif request.method == 'POST':
+            data['status']['code'] = COLLECTOR_API_UNKNOWN
+            data['status']['message'] = f'{this()}: method {request.method} not implemented.'
+        elif request.method == 'PUT':
+            data['status']['code'] = COLLECTOR_API_UNKNOWN
+            data['status']['message'] = f'{this()}: method {request.method} not implemented.'
+        elif request.method == 'PATCH':
+            data['status']['code'] = COLLECTOR_API_UNKNOWN
+            data['status']['message'] = f'{this()}: method {request.method} not implemented.'
+        elif request.method == 'DELETE':
+            data['status']['code'] = COLLECTOR_API_UNKNOWN
+            data['status']['message'] = f'{this()}: method {request.method} not implemented.'
+    except Exception as e:
+        data['status']['code'] = COLLECTOR_API_ERROR
+        data['status']['message'] = f'{this()}: EXCEPTION: {e}'
+        
+    response = json.dumps(data)
+    logger.debug(f'{this()}: returns: response = {response}')
+    return json.dumps(data)
+
+@main.route('/api/configuration-item', methods=['GET','POST','PATCH','PUT','DELETE'])
+def api_configuration_item():
+    logger.debug(f'{this()}: IN')
+    db.logger=logger
+    
+    data = get_empty_data()
+
+    # Will get any request arguments from request if any
+    payload = get_request_data(request)
+    data['metadata']['kind'] = 'configuration-item'
+    data['status']['execution_context'] = { 'payload': payload }
+    try:
+        if   request.method == 'GET':
+            query = db.session.query(configuration_item)
+            # Will set some filters if required 
+            if payload is not None:
+                for field in payload.keys():
+                    if field == 'CI_Id':   query = query.filter(configuration_item.CI_Id   == payload[field])
+                    if field == 'CI_Name': query = query.filter(configuration_item.CI_Name == payload[field])
+                    if field == 'CI_UUID': query = query.filter(configuration_item.CI_UUID == payload[field])
+                    if field == 'Pla_Id' : query = query.filter(configuration_item.Pla_Id  == payload[field])
+                    if field == 'CC_Id'  : query = query.filter(configuration_item.CC_Id   == payload[field])
+                    if field == 'Cus_Id' : query = query.filter(configuration_item.Cus_Id  == payload[field])
+            result = query.all()
+                    
+            length = 0
+            if result is not None:
+                length = len(result)
+                for row in result:
+                    # for datetime fields a JSON serializable float tiemstamp will be returned
+                    if row.CI_Commissioning_DateTime is not None:
+                        CI_Commissioning_DateTime = datetime.timestamp(row.CI_Commissioning_DateTime)
+                    else:
+                        CI_Commissioning_DateTime = None
+                    if row.CI_Decommissioning_DateTime is not None:
+                        CI_Decommissioning_DateTime = datetime.timestamp(row.CI_Decommissioning_DateTime)
+                    else:
+                        CI_Decommissioning_DateTime = None
+                    data['entities'].append({
+                        'CI_Id'   : row.CI_Id,
+                        'CI_Name' : row.CI_Name,
+                        'CI_UUID' : row.CI_UUID,
+                        'Pla_Id'  : row.Pla_Id,
+                        'CC_Id'   : row.CC_Id,
+                        'Cus_Id'  : row.Cus_Id,
+                        'CI_Commissioning_DateTime' : CI_Commissioning_DateTime,
+                        'CI_Decommissioning_DateTime' : CI_Decommissioning_DateTime,
+                        #'CI_Commissioning_DateTime' : serializable(row.CI_Commissioning_DateTime),
+                        #'CI_Decommissioning_DateTime' : serializable(row.CI_Decommissioning_DateTime),
+                    })
+            data['metadata']['total_matches'] = length
+            data['metadata']['length'] = length
+            data['status']['state'] = 'OK'
+            data['status']['code'] = COLLECTOR_API_OK
+            data['status']['message'] = 'OK'
+        elif request.method == 'POST':
+            data['status']['code'] = COLLECTOR_API_UNKNOWN
+            data['status']['message'] = f'{this()}: method {request.method} not implemented.'
+        elif request.method == 'PUT':
+            data['status']['code'] = COLLECTOR_API_UNKNOWN
+            data['status']['message'] = f'{this()}: method {request.method} not implemented.'
+        elif request.method == 'PATCH':
+            query = db.session.query(configuration_item)
+            # Will set some filters if required 
+            if len(payload):
+                try:
+                    # Valid filter fields will be used for record selection
+                    for field in payload.keys():
+                        if field == 'CI_Id':   query = query.filter(configuration_item.CI_Id   == payload[field])
+                        if field == 'CI_Name': query = query.filter(configuration_item.CI_Name == payload[field])
+                        if field == 'CI_UUID': query = query.filter(configuration_item.CI_UUID == payload[field])
+                    # Applies payload to update record
+                    # This will update all fields included in payload
+                    query = query.update(payload)
+                    logger.debug(f'{this()}: {query} record(s) will be affected {len(payload)} field(s) will be updated ...')
+                    data['metadata']['total_matches'] = query
+                    if query:
+                        # commit changes
+                        db.session.commit()
+                        data['status']['state'] = 'UPDATED'
+                        data['status']['code'] = COLLECTOR_API_OK
+                        data['status']['message'] = f'CI Updated. payload: {payload}'
+                        logger.info(f'{this()}: CI Updated. payload: {payload}')
+                    else:
+                        data['status']['state'] = 'ERROR'
+                        data['status']['code'] = COLLECTOR_API_ERROR
+                        data['status']['message'] = f'{this()}: No CI records found. payload: {payload}'
+                except Exception as e:
+                    data['status']['state'] = 'ERROR'
+                    data['status']['code'] = COLLECTOR_API_ERROR
+                    data['status']['message'] = f'{this()}: payload: {payload} EXCEPTION: {str(e)}'
+            else:
+                    data['status']['state'] = 'ERROR'
+                    data['status']['code'] = COLLECTOR_API_ERROR
+                    data['status']['message'] = f'{this()}: No unique CI identificator provided'
+        elif request.method == 'DELETE':
+            data['status']['state'] = 'WARNING'
+            data['status']['code'] = COLLECTOR_API_UNKNOWN
+            data['status']['message'] = f'{this()}: method {request.method} not implemented.'
+
+    except Exception as e:
+        data['status']['state'] = 'ERROR'
+        data['status']['code'] = COLLECTOR_API_ERROR
+        data['status']['message'] = f'{this()}: EXCEPTION: {e}'
+        logger.error(f'{this()}: EXCEPTION: {e}')
+    logger.debug(f"{this()}: {data['metadata']['length']} records found")
+    
+    response = json.dumps(data)
+    logger.debug(f'{this()}: returns: response = {response}')
+    return json.dumps(data)
+"""

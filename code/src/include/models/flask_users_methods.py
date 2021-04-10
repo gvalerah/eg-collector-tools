@@ -1,3 +1,4 @@
+    # source: code/src/include/models/flask_users_methods.py
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
         if self.role is None:

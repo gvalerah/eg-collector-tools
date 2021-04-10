@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-
 # ----------------------------------------------------------------------
 # Top level required definitions
 # ----------------------------------------------------------------------
@@ -23,8 +22,8 @@ from    gunicorn.app.base   import Application, Config
 from    gunicorn            import glogging
 from    gunicorn.workers    import sync
 
-def number_of_workers():
-    return (multiprocessing.cpu_count() * 2) + 1
+def number_of_workers(max_workers=65):
+    return min((multiprocessing.cpu_count() * 2) + 1,max_workers)
 
 class GUnicornFlaskApplication(Application):
     def __init__(self, app):
@@ -44,7 +43,7 @@ class GUnicornFlaskApplication(Application):
 
 from    emtec.common.functions             import *
 from    emtec.collector.common.context     import Context
-from    emtec.collector.common.functions   import *
+#from    emtec.collector.common.functions   import *
 # ----------------------------------------------------------------------
 
 # Setup context data depending on configuration file
@@ -73,12 +72,16 @@ if (os.path.isfile(config_file)):
 else:
     sys.exit(1)
 
-from    app                 import create_app,db,logger
+#from    app                 import create_app
+from    app                 import db
+from    app                 import logger
+from    app                 import create_flask_app
+
 C = Context("Collector Web Server",config_file,logger)
 C.Set()
 
-app     = create_app(config_file,os.getenv('COLLECTOR_CONFIG') or 'production', C)
-
+#pp     = create_app(config_file,os.getenv('COLLECTOR_CONFIG') or 'production', C)
+app     = create_flask_app('Collector',config_file)
 
 # CONFIGURATION PATCH !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -115,6 +118,7 @@ if __name__ == '__main__':
     db.logger = logger
     
     if logger is not None:
+        db.logger = logger
         logger.info("****** Collector Server *****************")
         logger.info(" * %s: as '%s' Using configuration: '%s'"%
             (sys.argv[0],getpass.getuser(),config_file))
@@ -124,6 +128,7 @@ if __name__ == '__main__':
             logger.debug("%s=%s"%(variable,os.environ.get(variable)))
         logger.debug("logger                = %s"%logger)
         logger.debug("db                    = %s"%db)
+        logger.debug("db.logger             = %s"%db.logger)
         logger.debug("app                   = %s"%app)
         logger.debug("app.root_path         = %s"%app.root_path)
         logger.debug("app.static_folder     = %s"%app.static_folder)
@@ -167,21 +172,22 @@ if __name__ == '__main__':
         print("****************************************")
 
     print(" * Will execute app here")   
-    
-    # 20200217 LOCATION OPORTINITY CHANGE DUE TO CONFIG ISSUES
+    # 20200217 LOCATION OPORTINITY CHANGE DUE TO CONFIG ISSUES ---------
     from    emtec.collector.db.flask_models    import User, Role
-
+    # ------------------------------------------------------------------
     # Will be replaced by embedded Green Unicorn HTTP Server
     if run_mode == 'FLASK':
         print(" * Running in Flask app mode")
         app.run(host=flask_host,port=flask_port)
     else:
+        # Calculates maximum number of workers or by config
+        max_workers = int(app.config.get('COLLECTOR_MAX_WORKERS',65))
         options = {
             'bind': '%s:%s' % (gunicorn_host, gunicorn_port),
-            'workers': number_of_workers(),
+            'workers': number_of_workers(max_workers),
             'worker_class':"gunicorn.workers.sync.SyncWorker",
         }
-        print(" * Running in Green Unicorn powered mode")
+        print(f" * Running in Green Unicorn powered mode {options['workers']}/{max_workers} workers")
         logger.debug("Application CPUs   = %s" % multiprocessing.cpu_count())
         logger.debug("Application options= %s" % options)
         logger.debug("Application Flask  = %s" % app)

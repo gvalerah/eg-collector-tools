@@ -44,16 +44,16 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for (row) in data.rate_rows %}
+                    {% for row in data.rate_rows %}
                     <tr>
-                        <td><a href="/forms/Rates?Rat_Id={{row.Rat_Id}}">{{row.Rat_Id}}</a></td>
-                        <td>{{row.Typ_Code}}</td>
-                        <td>{{row.Pla_Name}}</td>
-                        <td>{{row.Cus_Name}}</td>
-                        <td>{{row.CC_Description}}</td>
-                        <td>{{row.CI_Name}}</td>
+                        <td><a href="/forms/Rates?Rat_Id={{row.Rates.Rat_Id}}">{{row.Rates.Rat_Id}}</a></td>
+                        <td>{{row.Rates.Typ_Code}}</td>
+                        <td>{{row.Platforms.Pla_Name}}</td>
+                        <td>{{row.Customers.Cus_Name}}</td>
+                        <td>{{row.Cost_Centers.CC_Description}}</td>
+                        <td>{{row.Configuration_Items.CI_Name}}</td>
                         <td>
-                        {% if is_valid_rate(row.Rat_Type)%}
+                        {% if is_valid_rate(row.Rates.Rat_Type)%}
                         VALID RATE
                         {% else %}
                         INVALID RATE
@@ -83,17 +83,17 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for (row) in data.cu_rows %}
+                    {% for row,RATE in data.cu_rows %}
                     <tr>
                         {# {row} #}
-                        <td><a href="/forms/Charge_Units?CU_Id={{row.CU_Id}}">{{row.CU_Id}}</a></td>
-                        <td>{{row.CI_Name}}</a></td>
-                        <td>{{row.Pla_Name}}</td>
-                        <td>{{row.Cus_Name}}</td>
-                        <td>{{row.CC_Description}}</td>
-                        <td>{{row.Typ_Code}}</td>
-                        <td>{{row.Rat_Id}}</td>
-                        <td>{{row.RATE}}</td>
+                        <td><a href="/forms/Charge_Units?CU_Id={{row.Charge_Units.CU_Id}}">{{row.Charge_Units.CU_Id}}</a></td>
+                        <td>{{row.Configuration_Items.CI_Name}}</a></td>
+                        <td>{{row.Platforms.Pla_Name}}</td>
+                        <td>{{row.Customers.Cus_Name}}</td>
+                        <td>{{row.Cost_Centers.CC_Description}}</td>
+                        <td>{{row.Charge_Units.Typ_Code}}</td>
+                        <td>{{row.Charge_Units.Rat_Id}}</td>
+                        <td>{{RATE}}</td>
                     </tr>
                     {% endfor %}
                 </tbody>

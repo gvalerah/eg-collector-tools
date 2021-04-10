@@ -1,0 +1,27 @@
+export  black="\e[30m"
+export   blue="\e[34m"
+export   cyan="\e[36m"
+export  green="\e[32m"
+export purple="\e[35m"
+export    red="\e[31m"
+export  white="\e[37m"
+export yellow="\e[33m"
+
+export  bgblack="\e[40m"
+export   bgblue="\e[44m"
+export   bgcyan="\e[46m"
+export  bggreen="\e[42m"
+export bgpurple="\e[45m"
+export    bgred="\e[41m"
+export  bgwhite="\e[47m"
+export bgyellow="\e[43m"
+
+export     normal="\e[0m"
+export       bold="\e[1m"
+export        dim="\e[2m"
+export underlined="\e[4m"
+export   blinking="\e[5m"
+export   reversed="\e[7m"
+export     hidden="\e[8m"
+
+

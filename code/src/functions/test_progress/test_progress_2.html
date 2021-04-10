@@ -1,0 +1,23 @@
+{# ================================================================== #}
+{# CIT Period Report Template                                         #}
+{# For Customer on a defined period and status                        #}
+{# (c) Sertechno 2020                                                 #}
+{# GLVH @ 2018-03-18                                                  #}
+{# ================================================================== #}
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% import "_macros.html" as macros %}
+{% block title %}Collector{% endblock %}
+{% block head %}
+   {{ super() }}
+{% endblock %}
+{% block page_content %}
+<div class="page-header">
+    <h2>Test Progress Bar: </h2>
+    <a href="#" onclick="history.go(-1)">
+        <img src="/static/img/back.png"
+        color=yellow width="32" height="32" title="" alt="Add">
+    </a>
+</div>
+{% endblock %}
+{# ================================================================== #}

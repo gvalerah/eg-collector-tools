@@ -1,24 +1,34 @@
-# ------------------------------------------------ 
+# ---------------------------------------------------------------------- 
 # ORM Models File
 # Static File. 
 # GLVH 2018-12-13
-# ------------------------------------------------
-from datetime               import datetime
+# GLVH 2021-04-02 datetime refactoring fixup
+# Source: EG-Collector-Tools/code/src/orm_models_py_header.py
+# ----------------------------------------------------------------------
+# GV 20210403 from datetime               import datetime
+import datetime
 
-from sqlalchemy             import Column, String, Integer, Numeric, Date, Time, Boolean, DateTime
-from sqlalchemy             import ForeignKey
-# ------------------------------------------------
+from sqlalchemy import Column
+from sqlalchemy import String
+from sqlalchemy import Integer, Numeric
+from sqlalchemy import Date, Time, DateTime
+from sqlalchemy import Boolean
+from sqlalchemy import ForeignKey
+# ----------------------------------------------------------------------
 
 
 
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2020-02-20 16:44:35
+# GLVH @ 2021-04-08 20:09:28
 # =============================================================================
 
-from sqlalchemy                 import Table, Column, MetaData, ForeignKey
-from sqlalchemy                 import Integer, String, Date, Time
+from sqlalchemy                 import Table, Column
+from sqlalchemy                 import MetaData, ForeignKey
+from sqlalchemy                 import Integer, BigInteger,SmallInteger
+from sqlalchemy                 import String
+from sqlalchemy                 import Date, Time
 from sqlalchemy                 import Numeric, DateTime, Boolean, Text
 from sqlalchemy                 import VARBINARY
 
@@ -26,7 +36,7 @@ from sqlalchemy                 import VARBINARY
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2020-02-20 16:44:35
+# GLVH @ 2021-04-08 20:09:28
 # =============================================================================
 import json
 import logging
@@ -40,13 +50,22 @@ Base = declarative_base()
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2020-02-20 16:44:35
+# GLVH @ 2021-04-08 20:09:28
 # =============================================================================
 
+# gen_model_flask.py:389 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_cit_generations.py
 class CIT_Generations(Base):
     __tablename__ = 'CIT_Generations'
     engine        = None
     logger        = None
+
+    def set_shard(suffix=None):
+       if suffix is not None:
+           name='CIT_Generations_{suffix}'.format(suffix=suffix)
+           __class__.__tablename__  = name
+           __class__.__table__.name = name
+       return __class__.__tablename__
+
     CIT_Generation = Column( Integer, primary_key=True )
     Value          = Column( String(45) )
     
@@ -127,7 +146,7 @@ class CIT_Generations(Base):
 
     def get_columns(self):
         """ Gets CIT_Generations record column full details list """
-        __list=[{'field': 'CIT_Generation', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 1, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'CIT_Generation', 'is_time': False}, {'field': 'Value', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 2, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Value', 'is_time': False}]
+        __list=[{'field': 'CIT_Generation', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 1, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'CIT_Generation', 'is_time': False}, {'field': 'Value', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 2, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Value', 'is_time': False}]
 
         return __list
 
@@ -174,13 +193,22 @@ class CIT_Generations(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2020-02-20 16:44:35
+# GLVH @ 2021-04-08 20:09:28
 # =============================================================================
 
+# gen_model_flask.py:389 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_cit_statuses.py
 class CIT_Statuses(Base):
     __tablename__ = 'CIT_Statuses'
     engine        = None
     logger        = None
+
+    def set_shard(suffix=None):
+       if suffix is not None:
+           name='CIT_Statuses_{suffix}'.format(suffix=suffix)
+           __class__.__tablename__  = name
+           __class__.__table__.name = name
+       return __class__.__tablename__
+
     CIT_Status = Column( Integer, primary_key=True )
     Value      = Column( String(45) )
     
@@ -261,7 +289,7 @@ class CIT_Statuses(Base):
 
     def get_columns(self):
         """ Gets CIT_Statuses record column full details list """
-        __list=[{'field': 'CIT_Status', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 1, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'CIT Status', 'is_time': False}, {'field': 'Value', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 2, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Vallue', 'is_time': False}]
+        __list=[{'field': 'CIT_Status', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 1, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'CIT Status', 'is_time': False}, {'field': 'Value', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 2, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Vallue', 'is_time': False}]
 
         return __list
 
@@ -308,13 +336,22 @@ class CIT_Statuses(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2020-02-20 16:44:35
+# GLVH @ 2021-04-08 20:09:28
 # =============================================================================
 
+# gen_model_flask.py:389 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_cu_operations.py
 class CU_Operations(Base):
     __tablename__ = 'CU_Operations'
     engine        = None
     logger        = None
+
+    def set_shard(suffix=None):
+       if suffix is not None:
+           name='CU_Operations_{suffix}'.format(suffix=suffix)
+           __class__.__tablename__  = name
+           __class__.__table__.name = name
+       return __class__.__tablename__
+
     CU_Operation = Column( String(10), primary_key=True )
     Value        = Column( String(45) )
     Is_Multiply  = Column( Boolean )
@@ -399,7 +436,7 @@ class CU_Operations(Base):
 
     def get_columns(self):
         """ Gets CU_Operations record column full details list """
-        __list=[{'field': 'CU_Operation', 'type': 'varchar(10)', 'type_flask': 'db.String(10)', 'type_sqlalchemy': 'String(10)', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 1, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Operation', 'is_time': False}, {'field': 'Value', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 2, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Value', 'is_time': False}, {'field': 'Is_Multiply', 'type': 'tinyint(4)', 'type_flask': 'db.Boolean', 'type_sqlalchemy': 'Boolean', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 3, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'BooleanField', 'is_id': False, 'header': 'Is Multiply', 'is_time': False}, {'field': 'Factor', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 4, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'Factor', 'is_time': False}]
+        __list=[{'field': 'CU_Operation', 'type': 'varchar(10)', 'type_flask': 'db.String(10)', 'type_sqlalchemy': 'String(10)', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 1, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Operation', 'is_time': False}, {'field': 'Value', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 2, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Value', 'is_time': False}, {'field': 'Is_Multiply', 'type': 'tinyint', 'type_flask': 'db.Boolean', 'type_sqlalchemy': 'Boolean', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 3, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'BooleanField', 'is_id': False, 'header': 'Is Multiply', 'is_time': False}, {'field': 'Factor', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 4, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'Factor', 'is_time': False}]
 
         return __list
 
@@ -446,13 +483,22 @@ class CU_Operations(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2020-02-20 16:44:35
+# GLVH @ 2021-04-08 20:09:28
 # =============================================================================
 
+# gen_model_flask.py:389 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_cu_types.py
 class CU_Types(Base):
     __tablename__ = 'CU_Types'
     engine        = None
     logger        = None
+
+    def set_shard(suffix=None):
+       if suffix is not None:
+           name='CU_Types_{suffix}'.format(suffix=suffix)
+           __class__.__tablename__  = name
+           __class__.__table__.name = name
+       return __class__.__tablename__
+
     Typ_Code        = Column( String(10), primary_key=True )
     Typ_Description = Column( String(45) )
     
@@ -580,22 +626,31 @@ class CU_Types(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2020-02-20 16:44:35
+# GLVH @ 2021-04-08 20:09:28
 # =============================================================================
 
+# gen_model_flask.py:389 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_charge_items.py
 class Charge_Items(Base):
     __tablename__ = 'Charge_Items'
     engine        = None
     logger        = None
+
+    def set_shard(suffix=None):
+       if suffix is not None:
+           name='Charge_Items_{suffix}'.format(suffix=suffix)
+           __class__.__tablename__  = name
+           __class__.__table__.name = name
+       return __class__.__tablename__
+
     CU_Id         = Column( Integer, ForeignKey('Charge_Units.CU_Id'), primary_key=True )
     CIT_Date      = Column( Date )
     CIT_Time      = Column( Time )
-    CIT_Quantity  = Column( Numeric(20,6) )
+    CIT_Quantity  = Column( Numeric(20,12) )
     CIT_Status    = Column( Integer, ForeignKey('CIT_Statuses.CIT_Status') )
     CIT_Is_Active = Column( Boolean )
     CIT_DateTime  = Column( DateTime, primary_key=True )
     
-    def __init__(self, CU_Id=0, CIT_Date=None, CIT_Time=None, CIT_Quantity=0.000000, CIT_Status=0, CIT_Is_Active=0, CIT_DateTime=None,engine=None,logger=None):
+    def __init__(self, CU_Id=0, CIT_Date=None, CIT_Time=None, CIT_Quantity=0.000000000000, CIT_Status=0, CIT_Is_Active=0, CIT_DateTime=None,engine=None,logger=None):
         """ Initiates a Charge_Items class record """
         self.engine=engine
         self.logger=logger
@@ -677,7 +732,7 @@ class Charge_Items(Base):
 
     def get_columns(self):
         """ Gets Charge_Items record column full details list """
-        __list=[{'field': 'CU_Id', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': '0', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 1, 'is_searchable': True, 'is_fk': True, 'foreign_field': 'CU_Id', 'referenced_table': 'Charge_Units', 'referenced_class': 'charge_unit', 'foreign_key': 'CU_Id', 'foreign_value': 'CU_Description', 'is_numeric': False, 'form_type': 'SelectField', 'is_id': False, 'header': 'Charge Unit Id', 'is_time': False}, {'field': 'CIT_Date', 'type': 'date', 'type_flask': 'db.Date', 'type_sqlalchemy': 'Date', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 2, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'DateField', 'is_id': False, 'header': 'Date', 'is_time': False}, {'field': 'CIT_Time', 'type': 'time', 'type_flask': 'db.Time', 'type_sqlalchemy': 'Time', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 3, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'TimeField', 'is_id': False, 'header': 'Time', 'is_time': True}, {'field': 'CIT_Quantity', 'type': 'decimal(20,6)', 'type_flask': 'db.Numeric(20,6)', 'type_sqlalchemy': 'Numeric(20,6)', 'null': 'NO', 'key': '', 'default': '0.000000', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 4, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'Quantity', 'is_time': False}, {'field': 'CIT_Status', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'MUL', 'default': '0', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 5, 'is_searchable': True, 'is_fk': True, 'referenced_table': 'CIT_Statuses', 'referenced_class': 'cit_status', 'foreign_key': 'CIT_Status', 'foreign_field': 'CIT_Status', 'foreign_value': 'Value', 'is_numeric': False, 'form_type': 'SelectField', 'is_id': False, 'header': 'Status', 'is_time': False}, {'field': 'CIT_Is_Active', 'type': 'tinyint(4)', 'type_flask': 'db.Boolean', 'type_sqlalchemy': 'Boolean', 'null': 'YES', 'key': '', 'default': '0', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 6, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'BooleanField', 'is_id': False, 'header': 'Is Active', 'is_time': False}, {'field': 'CIT_DateTime', 'type': 'timestamp', 'type_flask': 'db.DateTime', 'type_sqlalchemy': 'DateTime', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': False, 'format': None, 'order': 7, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'DateTimeField', 'is_id': False, 'header': 'CIT_DateTime', 'is_time': False}]
+        __list=[{'field': 'CU_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': '0', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 1, 'is_searchable': True, 'is_fk': True, 'foreign_field': 'CU_Id', 'referenced_table': 'Charge_Units', 'referenced_class': 'charge_unit', 'foreign_key': 'CU_Id', 'foreign_value': 'CU_Description', 'is_numeric': False, 'form_type': 'SelectField', 'is_id': False, 'header': 'Charge Unit Id', 'is_time': False}, {'field': 'CIT_Date', 'type': 'date', 'type_flask': 'db.Date', 'type_sqlalchemy': 'Date', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 2, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'DateField', 'is_id': False, 'header': 'Date', 'is_time': False}, {'field': 'CIT_Time', 'type': 'time', 'type_flask': 'db.Time', 'type_sqlalchemy': 'Time', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 3, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'TimeField', 'is_id': False, 'header': 'Time', 'is_time': True}, {'field': 'CIT_Quantity', 'type': 'decimal(20,12)', 'type_flask': 'db.Numeric(20,12)', 'type_sqlalchemy': 'Numeric(20,12)', 'null': 'NO', 'key': '', 'default': '0.000000000000', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 4, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'Quantity', 'is_time': False}, {'field': 'CIT_Status', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'MUL', 'default': '0', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 5, 'is_searchable': True, 'is_fk': True, 'referenced_table': 'CIT_Statuses', 'referenced_class': 'cit_status', 'foreign_key': 'CIT_Status', 'foreign_field': 'CIT_Status', 'foreign_value': 'Value', 'is_numeric': False, 'form_type': 'SelectField', 'is_id': False, 'header': 'Status', 'is_time': False}, {'field': 'CIT_Is_Active', 'type': 'tinyint', 'type_flask': 'db.Boolean', 'type_sqlalchemy': 'Boolean', 'null': 'YES', 'key': '', 'default': '0', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 6, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'BooleanField', 'is_id': False, 'header': 'Is Active', 'is_time': False}, {'field': 'CIT_DateTime', 'type': 'timestamp', 'type_flask': 'db.DateTime', 'type_sqlalchemy': 'DateTime', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': False, 'format': None, 'order': 7, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'DateTimeField', 'is_id': False, 'header': 'CIT_DateTime', 'is_time': False}]
 
         return __list
 
@@ -689,13 +744,13 @@ class Charge_Items(Base):
 
     def get_column_types(self):
         """ Gets Charge_Items record column data types list """
-        __list=['Integer', 'Date', 'Time', 'Numeric(20,6)', 'Integer', 'Boolean', 'DateTime']
+        __list=['Integer', 'Date', 'Time', 'Numeric(20,12)', 'Integer', 'Boolean', 'DateTime']
 
         return __list
 
     def get_column_meta(self):
         """ Gets Charge_Items record column data meta list """
-        __list=[('CU_Id', 'Integer'), ('CIT_Date', 'Date'), ('CIT_Time', 'Time'), ('CIT_Quantity', 'Numeric(20,6)'), ('CIT_Status', 'Integer'), ('CIT_Is_Active', 'Boolean'), ('CIT_DateTime', 'DateTime')]
+        __list=[('CU_Id', 'Integer'), ('CIT_Date', 'Date'), ('CIT_Time', 'Time'), ('CIT_Quantity', 'Numeric(20,12)'), ('CIT_Status', 'Integer'), ('CIT_Is_Active', 'Boolean'), ('CIT_DateTime', 'DateTime')]
 
         return __list
 
@@ -724,20 +779,189 @@ class Charge_Items(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2020-02-20 16:44:35
+# GLVH @ 2021-04-08 20:09:28
 # =============================================================================
 
+# gen_model_flask.py:817 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_charge_items.py
+# gen_model_flask.py: Table sharding code follows:
+def get_Charge_Items(table_name_suffix):
+  class Charge_Items_Class(Base):
+    __tablename__ = 'Charge_Items_%s'%(table_name_suffix)
+    engine        = None
+    logger        = None
+
+    def set_shard(suffix=None):
+       if suffix is not None:
+           name='Charge_Items_{suffix}'.format(suffix=suffix)
+           __class__.__tablename__  = name
+           __class__.__table_args__ = {'extend_existing':True}
+           __class__.__table__.name = name
+       return __class__.__tablename__
+
+    CU_Id         = Column( Integer, ForeignKey('Charge_Units.CU_Id'), primary_key=True )
+    CIT_Date      = Column( Date )
+    CIT_Time      = Column( Time )
+    CIT_Quantity  = Column( Numeric(20,12) )
+    CIT_Status    = Column( Integer, ForeignKey('CIT_Statuses.CIT_Status') )
+    CIT_Is_Active = Column( Boolean )
+    CIT_DateTime  = Column( DateTime, primary_key=True )
+    
+    def __init__(self, CU_Id=0, CIT_Date=None, CIT_Time=None, CIT_Quantity=0.000000000000, CIT_Status=0, CIT_Is_Active=0, CIT_DateTime=None,engine=None,logger=None):
+        """ Initiates a Charge_Items class record """
+        self.engine=engine
+        self.logger=logger
+        self.CU_Id         = CU_Id
+        self.CIT_Date      = CIT_Date
+        self.CIT_Time      = CIT_Time
+        self.CIT_Quantity  = CIT_Quantity
+        self.CIT_Status    = CIT_Status
+        self.CIT_Is_Active = CIT_Is_Active
+        self.CIT_DateTime  = CIT_DateTime
+
+        self.log('Created %s'%self)
+    def __repr__(self):
+        """ default class Charge_Items representation function """
+        return "<Charge_Items( CU_Id='%s', CIT_Date='%s', CIT_Time='%s', CIT_Quantity='%s', CIT_Status='%s', CIT_Is_Active='%s', CIT_DateTime='%s')>" % \
+                ( self.CU_Id, self.CIT_Date, self.CIT_Time, self.CIT_Quantity, self.CIT_Status, self.CIT_Is_Active, self.CIT_DateTime)
+
+    def get_list(self):
+        """ Gets Charge_Items record in list format """
+        __list = [ self.CU_Id, self.CIT_Date, self.CIT_Time, self.CIT_Quantity, self.CIT_Status, self.CIT_Is_Active, self.CIT_DateTime]
+        return __list
+
+    def get_tuple(self):
+        """ Gets Charge_Items record in tuple format """
+        __tuple = ( self.CU_Id, self.CIT_Date, self.CIT_Time, self.CIT_Quantity, self.CIT_Status, self.CIT_Is_Active, self.CIT_DateTime)
+        return __tuple
+
+    def get_dict(self):
+        """ Gets Charge_Items record in dict format """
+        __dict={'CU_Id':self.CU_Id,'CIT_Date':self.CIT_Date,'CIT_Time':self.CIT_Time,'CIT_Quantity':self.CIT_Quantity,'CIT_Status':self.CIT_Status,'CIT_Is_Active':self.CIT_Is_Active,'CIT_DateTime':self.CIT_DateTime}
+
+        return __dict
+
+    def get_json_dict(self,dateformat='%Y-%m-%d',timeformat='%H:%M:%S',datetimeformat=None):
+        __dict = self.get_dict()
+        if datetimeformat is None: 
+            datetimeformat='%s %s'%(dateformat,timeformat)
+        for key in __dict.keys():
+            if   'datetime.datetime' in str(type(__dict[key])): __dict[key]=__dict[key].strftime(datetimeformat)
+            elif 'datetime.date'     in str(type(__dict[key])): __dict[key]=__dict[key].strftime(dateformat)
+            elif 'datetime.time'     in str(type(__dict[key])): __dict[key]=__dict[key].strftime(timeformat)
+            elif 'decimal.Decimal'   in str(type(__dict[key])): __dict[key]=float(__dict[key])
+        return __dict
+
+    def get_json(self,dateformat='%Y-%m-%d',timeformat='%H:%M:%S',datetimeformat=None):
+        __dict = self.get_dict()
+        if datetimeformat is None: 
+            datetimeformat='%s %s'%(dateformat,timeformat)
+        for key in __dict.keys():
+            if   'datetime.datetime' in str(type(__dict[key])): __dict[key]=__dict[key].strftime(datetimeformat)
+            elif 'datetime.date'     in str(type(__dict[key])): __dict[key]=__dict[key].strftime(dateformat)
+            elif 'datetime.time'     in str(type(__dict[key])): __dict[key]=__dict[key].strftime(timeformat)
+            elif 'decimal.Decimal'   in str(type(__dict[key])): __dict[key]=float(__dict[key])
+        return json.dumps(__dict)
+
+    def post(self):
+       return self
+
+    def patch(self,**kwargs):
+       for field in self.get_column_headers():
+           if field in kwargs.keys():
+               setattr(self,field,kwargs[field])
+       return self
+
+    def delete(self):
+       return True
+
+    def get_json_array(self,dateformat='%Y-%m-%d',timeformat='%H:%M:%S',datetimeformat=None):
+        """ Gets Charge_Items record in JSON array format """
+        __list = self.get_list()
+        if datetimeformat is None: 
+            datetimeformat='%s %s'%(dateformat,timeformat)
+        for field in range(len(__list)):
+            if   'datetime.datetime' in str(type(__list[field])): __list[field]=__list[field].strftime(datetimeformat)
+            elif 'datetime.date'     in str(type(__list[field])): __list[field]=__list[field].strftime(dateformat)
+            elif 'datetime.time'     in str(type(__list[field])): __list[field]=__list[field].strftime(timeformat)
+            elif 'decimal.Decimal'   in str(type(__list[field])): __list[field]=float(__list[field])
+        return __list
+
+    def get_columns(self):
+        """ Gets Charge_Items record column full details list """
+        __list=[{'field': 'CU_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': '0', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 1, 'is_searchable': True, 'is_fk': True, 'foreign_field': 'CU_Id', 'referenced_table': 'Charge_Units', 'referenced_class': 'charge_unit', 'foreign_key': 'CU_Id', 'foreign_value': 'CU_Description', 'is_numeric': False, 'form_type': 'SelectField', 'is_id': False, 'header': 'Charge Unit Id', 'is_time': False}, {'field': 'CIT_Date', 'type': 'date', 'type_flask': 'db.Date', 'type_sqlalchemy': 'Date', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 2, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'DateField', 'is_id': False, 'header': 'Date', 'is_time': False}, {'field': 'CIT_Time', 'type': 'time', 'type_flask': 'db.Time', 'type_sqlalchemy': 'Time', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 3, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'TimeField', 'is_id': False, 'header': 'Time', 'is_time': True}, {'field': 'CIT_Quantity', 'type': 'decimal(20,12)', 'type_flask': 'db.Numeric(20,12)', 'type_sqlalchemy': 'Numeric(20,12)', 'null': 'NO', 'key': '', 'default': '0.000000000000', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 4, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'Quantity', 'is_time': False}, {'field': 'CIT_Status', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'MUL', 'default': '0', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 5, 'is_searchable': True, 'is_fk': True, 'referenced_table': 'CIT_Statuses', 'referenced_class': 'cit_status', 'foreign_key': 'CIT_Status', 'foreign_field': 'CIT_Status', 'foreign_value': 'Value', 'is_numeric': False, 'form_type': 'SelectField', 'is_id': False, 'header': 'Status', 'is_time': False}, {'field': 'CIT_Is_Active', 'type': 'tinyint', 'type_flask': 'db.Boolean', 'type_sqlalchemy': 'Boolean', 'null': 'YES', 'key': '', 'default': '0', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 6, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'BooleanField', 'is_id': False, 'header': 'Is Active', 'is_time': False}, {'field': 'CIT_DateTime', 'type': 'timestamp', 'type_flask': 'db.DateTime', 'type_sqlalchemy': 'DateTime', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': False, 'format': None, 'order': 7, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'DateTimeField', 'is_id': False, 'header': 'CIT_DateTime', 'is_time': False}]
+
+        return __list
+
+    def get_column_headers(self):
+        """ Gets Charge_Items record column headers list """
+        __list=['CU_Id', 'CIT_Date', 'CIT_Time', 'CIT_Quantity', 'CIT_Status', 'CIT_Is_Active', 'CIT_DateTime']
+
+        return __list
+
+    def get_column_types(self):
+        """ Gets Charge_Items record column data types list """
+        __list=['Integer', 'Date', 'Time', 'Numeric(20,12)', 'Integer', 'Boolean', 'DateTime']
+
+        return __list
+
+    def get_column_meta(self):
+        """ Gets Charge_Items record column data meta list """
+        __list=[('CU_Id', 'Integer'), ('CIT_Date', 'Date'), ('CIT_Time', 'Time'), ('CIT_Quantity', 'Numeric(20,12)'), ('CIT_Status', 'Integer'), ('CIT_Is_Active', 'Boolean'), ('CIT_DateTime', 'DateTime')]
+
+        return __list
+
+    def search_key(self,CU_Id,CIT_DateTime):
+        """ Search for an unique Charge_Items record using all key fields (CU_Id,CIT_DateTime) """
+        try:
+            if self.engine is not None:
+                Session=sessionmaker(bind=self.engine)
+                session=Session()
+                record = session.query(Charge_Items).filter(Charge_Items.CU_Id==CU_Id).filter(Charge_Items.CIT_DateTime==CIT_DateTime).one_or_none()
+                session.close()
+            else:
+                session.rollback()
+                record = None
+        except Exception as e:
+            detail='Charge_Items.search_key(%s,%s): Exception: %s'%(CU_Id,CIT_DateTime,e)
+            emtec_handle_general_exception(e,detail=detail,module=__name__,function='Charge_Items.search_key()',logger=self.logger)
+            record = None
+        return record
+
+    def log(self,message,level=logging.DEBUG):
+        """ Class Charge_Items log function """
+        if self.logger is not None:
+            self.logger.log(level,message)
+
+  Charge_Items_Class.__name__ = 'Charge_Items_%s'%(table_name_suffix)
+  x = Charge_Items_Class
+  return x
+
+# =============================================================================
+# Auto-Generated code. do not modify
+# (c) Sertechno 2018
+# GLVH @ 2021-04-08 20:09:28
+# =============================================================================
+
+# gen_model_flask.py:389 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_charge_resumes.py
 class Charge_Resumes(Base):
     __tablename__ = 'Charge_Resumes'
     engine        = None
     logger        = None
+
+    def set_shard(suffix=None):
+       if suffix is not None:
+           name='Charge_Resumes_{suffix}'.format(suffix=suffix)
+           __class__.__tablename__  = name
+           __class__.__table__.name = name
+       return __class__.__tablename__
+
     Cus_Id                 = Column( Integer, primary_key=True )
     CR_Date_From           = Column( Date, primary_key=True )
     CR_Date_To             = Column( Date, primary_key=True )
     CIT_Status             = Column( Integer, primary_key=True )
     Cur_Code               = Column( String(3), primary_key=True )
     CIT_Count              = Column( Integer )
-    CIT_Quantity           = Column( Numeric(20,6) )
+    CIT_Quantity           = Column( Numeric(20,12) )
     CIT_Generation         = Column( Integer )
     CU_Id                  = Column( Integer, primary_key=True )
     CI_CC_Id               = Column( Integer )
@@ -746,24 +970,24 @@ class Charge_Resumes(Base):
     CC_Cur_Code            = Column( String(3) )
     CI_Id                  = Column( Integer )
     Rat_Id                 = Column( Integer )
-    Rat_Price              = Column( Numeric(20,6) )
+    Rat_Price              = Column( Numeric(20,12) )
     Rat_MU_Code            = Column( String(3) )
     Rat_Cur_Code           = Column( String(3) )
     Rat_Period             = Column( Integer )
-    Rat_Hourly             = Column( Numeric(20,6) )
-    Rat_Daily              = Column( Numeric(20,6) )
-    Rat_Monthly            = Column( Numeric(20,6) )
-    CR_Quantity            = Column( Numeric(20,6) )
-    CR_Quantity_at_Rate    = Column( Numeric(20,6) )
-    CC_XR                  = Column( Numeric(20,10) )
-    CR_Cur_XR              = Column( Numeric(20,10) )
-    CR_ST_at_Rate_Cur      = Column( Numeric(20,6) )
-    CR_ST_at_CC_Cur        = Column( Numeric(20,6) )
-    CR_ST_at_Cur           = Column( Numeric(20,6) )
+    Rat_Hourly             = Column( Numeric(20,12) )
+    Rat_Daily              = Column( Numeric(20,12) )
+    Rat_Monthly            = Column( Numeric(20,12) )
+    CR_Quantity            = Column( Numeric(20,12) )
+    CR_Quantity_at_Rate    = Column( Numeric(20,12) )
+    CC_XR                  = Column( Numeric(20,12) )
+    CR_Cur_XR              = Column( Numeric(20,12) )
+    CR_ST_at_Rate_Cur      = Column( Numeric(20,12) )
+    CR_ST_at_CC_Cur        = Column( Numeric(20,12) )
+    CR_ST_at_Cur           = Column( Numeric(20,12) )
     Cus_Name               = Column( String(45) )
     CI_Name                = Column( String(45) )
     CU_Description         = Column( String(45) )
-    CC_Description         = Column( String(45) )
+    CC_Description         = Column( String(255) )
     Rat_Period_Description = Column( String(10) )
     CC_Code                = Column( String(45) )
     Pla_Id                 = Column( Integer )
@@ -881,7 +1105,7 @@ class Charge_Resumes(Base):
 
     def get_columns(self):
         """ Gets Charge_Resumes record column full details list """
-        __list=[{'field': 'Cus_Id', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 1, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'Cus_Id', 'is_time': False}, {'field': 'CR_Date_From', 'type': 'date', 'type_flask': 'db.Date', 'type_sqlalchemy': 'Date', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 2, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'DateField', 'is_id': False, 'header': 'CR_Date_From', 'is_time': False}, {'field': 'CR_Date_To', 'type': 'date', 'type_flask': 'db.Date', 'type_sqlalchemy': 'Date', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 3, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'DateField', 'is_id': False, 'header': 'CR_Date_To', 'is_time': False}, {'field': 'CIT_Status', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 4, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'CIT_Status', 'is_time': False}, {'field': 'Cur_Code', 'type': 'varchar(3)', 'type_flask': 'db.String(3)', 'type_sqlalchemy': 'String(3)', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 5, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Cur_Code', 'is_time': False}, {'field': 'CIT_Count', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 6, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'CIT_Count', 'is_time': False}, {'field': 'CIT_Quantity', 'type': 'decimal(20,6)', 'type_flask': 'db.Numeric(20,6)', 'type_sqlalchemy': 'Numeric(20,6)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 7, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'CIT_Quantity', 'is_time': False}, {'field': 'CIT_Generation', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': '1', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 8, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'CIT_Generation', 'is_time': False}, {'field': 'CU_Id', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 9, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'CU_Id', 'is_time': False}, {'field': 'CI_CC_Id', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 10, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'CI_CC_Id', 'is_time': False}, {'field': 'CU_Operation', 'type': 'varchar(10)', 'type_flask': 'db.String(10)', 'type_sqlalchemy': 'String(10)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 11, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'CU_Operation', 'is_time': False}, {'field': 'Typ_Code', 'type': 'varchar(10)', 'type_flask': 'db.String(10)', 'type_sqlalchemy': 'String(10)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 12, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Typ_Code', 'is_time': False}, {'field': 'CC_Cur_Code', 'type': 'varchar(3)', 'type_flask': 'db.String(3)', 'type_sqlalchemy': 'String(3)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 13, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'CC_Cur_Code', 'is_time': False}, {'field': 'CI_Id', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 14, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'CI_Id', 'is_time': False}, {'field': 'Rat_Id', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 15, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'Rat_Id', 'is_time': False}, {'field': 'Rat_Price', 'type': 'decimal(20,6)', 'type_flask': 'db.Numeric(20,6)', 'type_sqlalchemy': 'Numeric(20,6)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 16, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'Rat_Price', 'is_time': False}, {'field': 'Rat_MU_Code', 'type': 'varchar(3)', 'type_flask': 'db.String(3)', 'type_sqlalchemy': 'String(3)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 17, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Rat_MU_Code', 'is_time': False}, {'field': 'Rat_Cur_Code', 'type': 'varchar(3)', 'type_flask': 'db.String(3)', 'type_sqlalchemy': 'String(3)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 18, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Rat_Cur_Code', 'is_time': False}, {'field': 'Rat_Period', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 19, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'Rat_Period', 'is_time': False}, {'field': 'Rat_Hourly', 'type': 'decimal(20,6)', 'type_flask': 'db.Numeric(20,6)', 'type_sqlalchemy': 'Numeric(20,6)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 20, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'Rat_Hourly', 'is_time': False}, {'field': 'Rat_Daily', 'type': 'decimal(20,6)', 'type_flask': 'db.Numeric(20,6)', 'type_sqlalchemy': 'Numeric(20,6)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 21, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'Rat_Daily', 'is_time': False}, {'field': 'Rat_Monthly', 'type': 'decimal(20,6)', 'type_flask': 'db.Numeric(20,6)', 'type_sqlalchemy': 'Numeric(20,6)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 22, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'Rat_Monthly', 'is_time': False}, {'field': 'CR_Quantity', 'type': 'decimal(20,6)', 'type_flask': 'db.Numeric(20,6)', 'type_sqlalchemy': 'Numeric(20,6)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 23, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'CR_Quantity', 'is_time': False}, {'field': 'CR_Quantity_at_Rate', 'type': 'decimal(20,6)', 'type_flask': 'db.Numeric(20,6)', 'type_sqlalchemy': 'Numeric(20,6)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 24, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'CR_Quantity_at_Rate', 'is_time': False}, {'field': 'CC_XR', 'type': 'decimal(20,10)', 'type_flask': 'db.Numeric(20,10)', 'type_sqlalchemy': 'Numeric(20,10)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 25, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'CC_XR', 'is_time': False}, {'field': 'CR_Cur_XR', 'type': 'decimal(20,10)', 'type_flask': 'db.Numeric(20,10)', 'type_sqlalchemy': 'Numeric(20,10)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 26, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'CR_Cur_XR', 'is_time': False}, {'field': 'CR_ST_at_Rate_Cur', 'type': 'decimal(20,6)', 'type_flask': 'db.Numeric(20,6)', 'type_sqlalchemy': 'Numeric(20,6)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 27, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'CR_ST_at_Rate_Cur', 'is_time': False}, {'field': 'CR_ST_at_CC_Cur', 'type': 'decimal(20,6)', 'type_flask': 'db.Numeric(20,6)', 'type_sqlalchemy': 'Numeric(20,6)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 28, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'CR_ST_at_CC_Cur', 'is_time': False}, {'field': 'CR_ST_at_Cur', 'type': 'decimal(20,6)', 'type_flask': 'db.Numeric(20,6)', 'type_sqlalchemy': 'Numeric(20,6)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 29, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'CR_ST_at_Cur', 'is_time': False}, {'field': 'Cus_Name', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 30, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Cus_Name', 'is_time': False}, {'field': 'CI_Name', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 31, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'CI_Name', 'is_time': False}, {'field': 'CU_Description', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 32, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'CU_Description', 'is_time': False}, {'field': 'CC_Description', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 33, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'CC_Description', 'is_time': False}, {'field': 'Rat_Period_Description', 'type': 'varchar(10)', 'type_flask': 'db.String(10)', 'type_sqlalchemy': 'String(10)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 34, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Rat_Period_Description', 'is_time': False}, {'field': 'CC_Code', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 35, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'CC_Code', 'is_time': False}, {'field': 'Pla_Id', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 36, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'Pla_Id', 'is_time': False}, {'field': 'Pla_Name', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 37, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Pla_Name', 'is_time': False}]
+        __list=[{'field': 'Cus_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 1, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'Cus_Id', 'is_time': False}, {'field': 'CR_Date_From', 'type': 'date', 'type_flask': 'db.Date', 'type_sqlalchemy': 'Date', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 2, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'DateField', 'is_id': False, 'header': 'CR_Date_From', 'is_time': False}, {'field': 'CR_Date_To', 'type': 'date', 'type_flask': 'db.Date', 'type_sqlalchemy': 'Date', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 3, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'DateField', 'is_id': False, 'header': 'CR_Date_To', 'is_time': False}, {'field': 'CIT_Status', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 4, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'CIT_Status', 'is_time': False}, {'field': 'Cur_Code', 'type': 'varchar(3)', 'type_flask': 'db.String(3)', 'type_sqlalchemy': 'String(3)', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 5, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Cur_Code', 'is_time': False}, {'field': 'CIT_Count', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 6, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'CIT_Count', 'is_time': False}, {'field': 'CIT_Quantity', 'type': 'decimal(20,12)', 'type_flask': 'db.Numeric(20,12)', 'type_sqlalchemy': 'Numeric(20,12)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 7, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'CIT_Quantity', 'is_time': False}, {'field': 'CIT_Generation', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': '1', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 8, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'CIT_Generation', 'is_time': False}, {'field': 'CU_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 9, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'CU_Id', 'is_time': False}, {'field': 'CI_CC_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 10, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'CI_CC_Id', 'is_time': False}, {'field': 'CU_Operation', 'type': 'varchar(10)', 'type_flask': 'db.String(10)', 'type_sqlalchemy': 'String(10)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 11, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'CU_Operation', 'is_time': False}, {'field': 'Typ_Code', 'type': 'varchar(10)', 'type_flask': 'db.String(10)', 'type_sqlalchemy': 'String(10)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 12, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Typ_Code', 'is_time': False}, {'field': 'CC_Cur_Code', 'type': 'varchar(3)', 'type_flask': 'db.String(3)', 'type_sqlalchemy': 'String(3)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 13, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'CC_Cur_Code', 'is_time': False}, {'field': 'CI_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 14, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'CI_Id', 'is_time': False}, {'field': 'Rat_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 15, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'Rat_Id', 'is_time': False}, {'field': 'Rat_Price', 'type': 'decimal(20,12)', 'type_flask': 'db.Numeric(20,12)', 'type_sqlalchemy': 'Numeric(20,12)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 16, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'Rat_Price', 'is_time': False}, {'field': 'Rat_MU_Code', 'type': 'varchar(3)', 'type_flask': 'db.String(3)', 'type_sqlalchemy': 'String(3)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 17, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Rat_MU_Code', 'is_time': False}, {'field': 'Rat_Cur_Code', 'type': 'varchar(3)', 'type_flask': 'db.String(3)', 'type_sqlalchemy': 'String(3)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 18, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Rat_Cur_Code', 'is_time': False}, {'field': 'Rat_Period', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 19, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'Rat_Period', 'is_time': False}, {'field': 'Rat_Hourly', 'type': 'decimal(20,12)', 'type_flask': 'db.Numeric(20,12)', 'type_sqlalchemy': 'Numeric(20,12)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 20, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'Rat_Hourly', 'is_time': False}, {'field': 'Rat_Daily', 'type': 'decimal(20,12)', 'type_flask': 'db.Numeric(20,12)', 'type_sqlalchemy': 'Numeric(20,12)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 21, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'Rat_Daily', 'is_time': False}, {'field': 'Rat_Monthly', 'type': 'decimal(20,12)', 'type_flask': 'db.Numeric(20,12)', 'type_sqlalchemy': 'Numeric(20,12)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 22, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'Rat_Monthly', 'is_time': False}, {'field': 'CR_Quantity', 'type': 'decimal(20,12)', 'type_flask': 'db.Numeric(20,12)', 'type_sqlalchemy': 'Numeric(20,12)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 23, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'CR_Quantity', 'is_time': False}, {'field': 'CR_Quantity_at_Rate', 'type': 'decimal(20,12)', 'type_flask': 'db.Numeric(20,12)', 'type_sqlalchemy': 'Numeric(20,12)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 24, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'CR_Quantity_at_Rate', 'is_time': False}, {'field': 'CC_XR', 'type': 'decimal(20,12)', 'type_flask': 'db.Numeric(20,12)', 'type_sqlalchemy': 'Numeric(20,12)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 25, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'CC_XR', 'is_time': False}, {'field': 'CR_Cur_XR', 'type': 'decimal(20,12)', 'type_flask': 'db.Numeric(20,12)', 'type_sqlalchemy': 'Numeric(20,12)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 26, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'CR_Cur_XR', 'is_time': False}, {'field': 'CR_ST_at_Rate_Cur', 'type': 'decimal(20,12)', 'type_flask': 'db.Numeric(20,12)', 'type_sqlalchemy': 'Numeric(20,12)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 27, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'CR_ST_at_Rate_Cur', 'is_time': False}, {'field': 'CR_ST_at_CC_Cur', 'type': 'decimal(20,12)', 'type_flask': 'db.Numeric(20,12)', 'type_sqlalchemy': 'Numeric(20,12)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 28, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'CR_ST_at_CC_Cur', 'is_time': False}, {'field': 'CR_ST_at_Cur', 'type': 'decimal(20,12)', 'type_flask': 'db.Numeric(20,12)', 'type_sqlalchemy': 'Numeric(20,12)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 29, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'CR_ST_at_Cur', 'is_time': False}, {'field': 'Cus_Name', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 30, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Cus_Name', 'is_time': False}, {'field': 'CI_Name', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 31, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'CI_Name', 'is_time': False}, {'field': 'CU_Description', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 32, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'CU_Description', 'is_time': False}, {'field': 'CC_Description', 'type': 'varchar(255)', 'type_flask': 'db.String(255)', 'type_sqlalchemy': 'String(255)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 33, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'CC_Description', 'is_time': False}, {'field': 'Rat_Period_Description', 'type': 'varchar(10)', 'type_flask': 'db.String(10)', 'type_sqlalchemy': 'String(10)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 34, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Rat_Period_Description', 'is_time': False}, {'field': 'CC_Code', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 35, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'CC_Code', 'is_time': False}, {'field': 'Pla_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 36, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'Pla_Id', 'is_time': False}, {'field': 'Pla_Name', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 37, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Pla_Name', 'is_time': False}]
 
         return __list
 
@@ -893,13 +1117,13 @@ class Charge_Resumes(Base):
 
     def get_column_types(self):
         """ Gets Charge_Resumes record column data types list """
-        __list=['Integer', 'Date', 'Date', 'Integer', 'String(3)', 'Integer', 'Numeric(20,6)', 'Integer', 'Integer', 'Integer', 'String(10)', 'String(10)', 'String(3)', 'Integer', 'Integer', 'Numeric(20,6)', 'String(3)', 'String(3)', 'Integer', 'Numeric(20,6)', 'Numeric(20,6)', 'Numeric(20,6)', 'Numeric(20,6)', 'Numeric(20,6)', 'Numeric(20,10)', 'Numeric(20,10)', 'Numeric(20,6)', 'Numeric(20,6)', 'Numeric(20,6)', 'String(45)', 'String(45)', 'String(45)', 'String(45)', 'String(10)', 'String(45)', 'Integer', 'String(45)']
+        __list=['Integer', 'Date', 'Date', 'Integer', 'String(3)', 'Integer', 'Numeric(20,12)', 'Integer', 'Integer', 'Integer', 'String(10)', 'String(10)', 'String(3)', 'Integer', 'Integer', 'Numeric(20,12)', 'String(3)', 'String(3)', 'Integer', 'Numeric(20,12)', 'Numeric(20,12)', 'Numeric(20,12)', 'Numeric(20,12)', 'Numeric(20,12)', 'Numeric(20,12)', 'Numeric(20,12)', 'Numeric(20,12)', 'Numeric(20,12)', 'Numeric(20,12)', 'String(45)', 'String(45)', 'String(45)', 'String(255)', 'String(10)', 'String(45)', 'Integer', 'String(45)']
 
         return __list
 
     def get_column_meta(self):
         """ Gets Charge_Resumes record column data meta list """
-        __list=[('Cus_Id', 'Integer'), ('CR_Date_From', 'Date'), ('CR_Date_To', 'Date'), ('CIT_Status', 'Integer'), ('Cur_Code', 'String(3)'), ('CIT_Count', 'Integer'), ('CIT_Quantity', 'Numeric(20,6)'), ('CIT_Generation', 'Integer'), ('CU_Id', 'Integer'), ('CI_CC_Id', 'Integer'), ('CU_Operation', 'String(10)'), ('Typ_Code', 'String(10)'), ('CC_Cur_Code', 'String(3)'), ('CI_Id', 'Integer'), ('Rat_Id', 'Integer'), ('Rat_Price', 'Numeric(20,6)'), ('Rat_MU_Code', 'String(3)'), ('Rat_Cur_Code', 'String(3)'), ('Rat_Period', 'Integer'), ('Rat_Hourly', 'Numeric(20,6)'), ('Rat_Daily', 'Numeric(20,6)'), ('Rat_Monthly', 'Numeric(20,6)'), ('CR_Quantity', 'Numeric(20,6)'), ('CR_Quantity_at_Rate', 'Numeric(20,6)'), ('CC_XR', 'Numeric(20,10)'), ('CR_Cur_XR', 'Numeric(20,10)'), ('CR_ST_at_Rate_Cur', 'Numeric(20,6)'), ('CR_ST_at_CC_Cur', 'Numeric(20,6)'), ('CR_ST_at_Cur', 'Numeric(20,6)'), ('Cus_Name', 'String(45)'), ('CI_Name', 'String(45)'), ('CU_Description', 'String(45)'), ('CC_Description', 'String(45)'), ('Rat_Period_Description', 'String(10)'), ('CC_Code', 'String(45)'), ('Pla_Id', 'Integer'), ('Pla_Name', 'String(45)')]
+        __list=[('Cus_Id', 'Integer'), ('CR_Date_From', 'Date'), ('CR_Date_To', 'Date'), ('CIT_Status', 'Integer'), ('Cur_Code', 'String(3)'), ('CIT_Count', 'Integer'), ('CIT_Quantity', 'Numeric(20,12)'), ('CIT_Generation', 'Integer'), ('CU_Id', 'Integer'), ('CI_CC_Id', 'Integer'), ('CU_Operation', 'String(10)'), ('Typ_Code', 'String(10)'), ('CC_Cur_Code', 'String(3)'), ('CI_Id', 'Integer'), ('Rat_Id', 'Integer'), ('Rat_Price', 'Numeric(20,12)'), ('Rat_MU_Code', 'String(3)'), ('Rat_Cur_Code', 'String(3)'), ('Rat_Period', 'Integer'), ('Rat_Hourly', 'Numeric(20,12)'), ('Rat_Daily', 'Numeric(20,12)'), ('Rat_Monthly', 'Numeric(20,12)'), ('CR_Quantity', 'Numeric(20,12)'), ('CR_Quantity_at_Rate', 'Numeric(20,12)'), ('CC_XR', 'Numeric(20,12)'), ('CR_Cur_XR', 'Numeric(20,12)'), ('CR_ST_at_Rate_Cur', 'Numeric(20,12)'), ('CR_ST_at_CC_Cur', 'Numeric(20,12)'), ('CR_ST_at_Cur', 'Numeric(20,12)'), ('Cus_Name', 'String(45)'), ('CI_Name', 'String(45)'), ('CU_Description', 'String(45)'), ('CC_Description', 'String(255)'), ('Rat_Period_Description', 'String(10)'), ('CC_Code', 'String(45)'), ('Pla_Id', 'Integer'), ('Pla_Name', 'String(45)')]
 
         return __list
 
@@ -928,13 +1152,22 @@ class Charge_Resumes(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2020-02-20 16:44:35
+# GLVH @ 2021-04-08 20:09:28
 # =============================================================================
 
+# gen_model_flask.py:389 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_charge_unit_egm.py
 class Charge_Unit_EGM(Base):
     __tablename__ = 'Charge_Unit_EGM'
     engine        = None
     logger        = None
+
+    def set_shard(suffix=None):
+       if suffix is not None:
+           name='Charge_Unit_EGM_{suffix}'.format(suffix=suffix)
+           __class__.__tablename__  = name
+           __class__.__table__.name = name
+       return __class__.__tablename__
+
     CU_Id           = Column( Integer, ForeignKey('Charge_Units.CU_Id'), primary_key=True )
     Archive         = Column( Integer )
     Path            = Column( String(256) )
@@ -1031,7 +1264,7 @@ class Charge_Unit_EGM(Base):
 
     def get_columns(self):
         """ Gets Charge_Unit_EGM record column full details list """
-        __list=[{'field': 'CU_Id', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 1, 'is_searchable': True, 'is_fk': True, 'foreign_field': 'CU_Id', 'referenced_table': 'Charge_Units', 'referenced_class': 'charge_unit', 'foreign_key': 'CU_Id', 'foreign_value': 'CU_Description', 'is_numeric': False, 'form_type': 'SelectField', 'is_id': False, 'header': 'Charge Unit Id', 'is_time': False}, {'field': 'Archive', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 2, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'Archive', 'is_time': False}, {'field': 'Path', 'type': 'varchar(256)', 'type_flask': 'db.String(256)', 'type_sqlalchemy': 'String(256)', 'null': 'NO', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 3, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Path', 'is_time': False}, {'field': 'Metric', 'type': 'varchar(256)', 'type_flask': 'db.String(256)', 'type_sqlalchemy': 'String(256)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 4, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Metric', 'is_time': False}, {'field': 'Host', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'NO', 'key': '', 'default': 'localhost', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 5, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Host', 'is_time': False}, {'field': 'Port', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': '', 'default': '22', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 6, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'Port', 'is_time': False}, {'field': 'User', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'NO', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 7, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'User', 'is_time': False}, {'field': 'Password', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 8, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Password', 'is_time': False}, {'field': 'Public_Key_File', 'type': 'varchar(256)', 'type_flask': 'db.String(256)', 'type_sqlalchemy': 'String(256)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 9, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Public_Key_File', 'is_time': False}, {'field': 'Passphrase', 'type': 'varchar(256)', 'type_flask': 'db.String(256)', 'type_sqlalchemy': 'String(256)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 10, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Passphrase', 'is_time': False}]
+        __list=[{'field': 'CU_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 1, 'is_searchable': True, 'is_fk': True, 'foreign_field': 'CU_Id', 'referenced_table': 'Charge_Units', 'referenced_class': 'charge_unit', 'foreign_key': 'CU_Id', 'foreign_value': 'CU_Description', 'is_numeric': False, 'form_type': 'SelectField', 'is_id': False, 'header': 'Charge Unit Id', 'is_time': False}, {'field': 'Archive', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 2, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'Archive', 'is_time': False}, {'field': 'Path', 'type': 'varchar(256)', 'type_flask': 'db.String(256)', 'type_sqlalchemy': 'String(256)', 'null': 'NO', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 3, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Path', 'is_time': False}, {'field': 'Metric', 'type': 'varchar(256)', 'type_flask': 'db.String(256)', 'type_sqlalchemy': 'String(256)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 4, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Metric', 'is_time': False}, {'field': 'Host', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'NO', 'key': '', 'default': 'localhost', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 5, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Host', 'is_time': False}, {'field': 'Port', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': '', 'default': '22', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 6, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'Port', 'is_time': False}, {'field': 'User', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'NO', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 7, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'User', 'is_time': False}, {'field': 'Password', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 8, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Password', 'is_time': False}, {'field': 'Public_Key_File', 'type': 'varchar(256)', 'type_flask': 'db.String(256)', 'type_sqlalchemy': 'String(256)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 9, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Public_Key_File', 'is_time': False}, {'field': 'Passphrase', 'type': 'varchar(256)', 'type_flask': 'db.String(256)', 'type_sqlalchemy': 'String(256)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 10, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Passphrase', 'is_time': False}]
 
         return __list
 
@@ -1078,20 +1311,29 @@ class Charge_Unit_EGM(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2020-02-20 16:44:35
+# GLVH @ 2021-04-08 20:09:28
 # =============================================================================
 
+# gen_model_flask.py:389 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_charge_units.py
 class Charge_Units(Base):
     __tablename__ = 'Charge_Units'
     engine        = None
     logger        = None
+
+    def set_shard(suffix=None):
+       if suffix is not None:
+           name='Charge_Units_{suffix}'.format(suffix=suffix)
+           __class__.__tablename__  = name
+           __class__.__table__.name = name
+       return __class__.__tablename__
+
     CU_Id                  = Column( Integer, primary_key=True, autoincrement=True )
     CI_Id                  = Column( Integer, ForeignKey('Configuration_Items.CI_Id') )
-    CU_Description         = Column( String(45) )
+    CU_Description         = Column( String(255) )
     CU_UUID                = Column( String(45) )
     CU_Is_Billeable        = Column( Boolean )
     CU_Is_Always_Billeable = Column( Boolean )
-    CU_Quantity            = Column( Numeric(20,6) )
+    CU_Quantity            = Column( Numeric(20,12) )
     CU_Operation           = Column( String(10), ForeignKey('CU_Operations.CU_Operation') )
     Typ_Code               = Column( String(10), ForeignKey('CU_Types.Typ_Code') )
     CIT_Generation         = Column( Integer, ForeignKey('CIT_Generations.CIT_Generation') )
@@ -1189,7 +1431,7 @@ class Charge_Units(Base):
 
     def get_columns(self):
         """ Gets Charge_Units record column full details list """
-        __list=[{'field': 'CU_Id', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': 'auto_increment', 'is_form_editable': True, 'format': None, 'order': 1, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': True, 'header': 'Id', 'is_time': False}, {'field': 'CI_Id', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'MUL', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 2, 'is_searchable': True, 'is_fk': True, 'foreign_field': 'CI_Id', 'referenced_table': 'Configuration_Items', 'referenced_class': 'configuration_item', 'foreign_key': 'CI_Id', 'foreign_value': 'CI_Name', 'is_numeric': False, 'form_type': 'SelectField', 'is_id': False, 'header': 'Configuration Item Id', 'is_time': False}, {'field': 'CU_Description', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 3, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Description', 'is_time': False}, {'field': 'CU_UUID', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 4, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'UUID', 'is_time': False}, {'field': 'CU_Is_Billeable', 'type': 'tinyint(4)', 'type_flask': 'db.Boolean', 'type_sqlalchemy': 'Boolean', 'null': 'YES', 'key': '', 'default': '0', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 5, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'BooleanField', 'is_id': False, 'header': 'Is Billeable', 'is_time': False}, {'field': 'CU_Is_Always_Billeable', 'type': 'tinyint(4)', 'type_flask': 'db.Boolean', 'type_sqlalchemy': 'Boolean', 'null': 'YES', 'key': '', 'default': '0', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 6, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'BooleanField', 'is_id': False, 'header': 'Is Always Billeable', 'is_time': False}, {'field': 'CU_Quantity', 'type': 'decimal(20,6)', 'type_flask': 'db.Numeric(20,6)', 'type_sqlalchemy': 'Numeric(20,6)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 7, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'Quantity', 'is_time': False}, {'field': 'CU_Operation', 'type': 'varchar(10)', 'type_flask': 'db.String(10)', 'type_sqlalchemy': 'String(10)', 'null': 'NO', 'key': 'MUL', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 8, 'is_searchable': True, 'is_fk': True, 'foreign_field': 'CU_Operation', 'referenced_table': 'CU_Operations', 'referenced_class': 'cu_operation', 'foreign_key': 'CU_Operation', 'foreign_value': 'Value', 'is_numeric': False, 'form_type': 'SelectField', 'is_id': False, 'header': 'Conversion Operation', 'is_time': False}, {'field': 'Typ_Code', 'type': 'varchar(10)', 'type_flask': 'db.String(10)', 'type_sqlalchemy': 'String(10)', 'null': 'NO', 'key': 'MUL', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 9, 'is_searchable': True, 'is_fk': True, 'foreign_field': 'Typ_Code', 'referenced_table': 'CU_Types', 'referenced_class': 'cu_type', 'foreign_key': 'Typ_Code', 'foreign_value': 'Typ_Description', 'is_numeric': False, 'form_type': 'SelectField', 'is_id': False, 'header': 'Type', 'is_time': False}, {'field': 'CIT_Generation', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'MUL', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 10, 'is_searchable': True, 'is_fk': True, 'foreign_field': 'CIT_Generation', 'referenced_table': 'CIT_Generations', 'referenced_class': 'cit_generation', 'foreign_key': 'CIT_Generation', 'foreign_value': 'Value', 'is_numeric': False, 'form_type': 'SelectField', 'is_id': False, 'header': 'Item Generation Type', 'is_time': False}, {'field': 'Rat_Id', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': False, 'format': None, 'order': 11, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'Rate Id', 'is_time': False}, {'field': 'CU_Reference_1', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 12, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Reference 1', 'is_time': False}, {'field': 'CU_Reference_2', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 13, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Reference 2', 'is_time': False}, {'field': 'CU_Reference_3', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 14, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Reference 3', 'is_time': False}]
+        __list=[{'field': 'CU_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': 'auto_increment', 'is_form_editable': True, 'format': None, 'order': 1, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': True, 'header': 'Id', 'is_time': False}, {'field': 'CI_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'MUL', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 2, 'is_searchable': True, 'is_fk': True, 'foreign_field': 'CI_Id', 'referenced_table': 'Configuration_Items', 'referenced_class': 'configuration_item', 'foreign_key': 'CI_Id', 'foreign_value': 'CI_Name', 'is_numeric': False, 'form_type': 'SelectField', 'is_id': False, 'header': 'Configuration Item Id', 'is_time': False}, {'field': 'CU_Description', 'type': 'varchar(255)', 'type_flask': 'db.String(255)', 'type_sqlalchemy': 'String(255)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 3, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Description', 'is_time': False}, {'field': 'CU_UUID', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 4, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'UUID', 'is_time': False}, {'field': 'CU_Is_Billeable', 'type': 'tinyint', 'type_flask': 'db.Boolean', 'type_sqlalchemy': 'Boolean', 'null': 'YES', 'key': '', 'default': '0', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 5, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'BooleanField', 'is_id': False, 'header': 'Is Billeable', 'is_time': False}, {'field': 'CU_Is_Always_Billeable', 'type': 'tinyint', 'type_flask': 'db.Boolean', 'type_sqlalchemy': 'Boolean', 'null': 'YES', 'key': '', 'default': '0', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 6, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'BooleanField', 'is_id': False, 'header': 'Is Always Billeable', 'is_time': False}, {'field': 'CU_Quantity', 'type': 'decimal(20,12)', 'type_flask': 'db.Numeric(20,12)', 'type_sqlalchemy': 'Numeric(20,12)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 7, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'Quantity', 'is_time': False}, {'field': 'CU_Operation', 'type': 'varchar(10)', 'type_flask': 'db.String(10)', 'type_sqlalchemy': 'String(10)', 'null': 'NO', 'key': 'MUL', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 8, 'is_searchable': True, 'is_fk': True, 'foreign_field': 'CU_Operation', 'referenced_table': 'CU_Operations', 'referenced_class': 'cu_operation', 'foreign_key': 'CU_Operation', 'foreign_value': 'Value', 'is_numeric': False, 'form_type': 'SelectField', 'is_id': False, 'header': 'Conversion Operation', 'is_time': False}, {'field': 'Typ_Code', 'type': 'varchar(10)', 'type_flask': 'db.String(10)', 'type_sqlalchemy': 'String(10)', 'null': 'NO', 'key': 'MUL', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 9, 'is_searchable': True, 'is_fk': True, 'foreign_field': 'Typ_Code', 'referenced_table': 'CU_Types', 'referenced_class': 'cu_type', 'foreign_key': 'Typ_Code', 'foreign_value': 'Typ_Description', 'is_numeric': False, 'form_type': 'SelectField', 'is_id': False, 'header': 'Type', 'is_time': False}, {'field': 'CIT_Generation', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'MUL', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 10, 'is_searchable': True, 'is_fk': True, 'foreign_field': 'CIT_Generation', 'referenced_table': 'CIT_Generations', 'referenced_class': 'cit_generation', 'foreign_key': 'CIT_Generation', 'foreign_value': 'Value', 'is_numeric': False, 'form_type': 'SelectField', 'is_id': False, 'header': 'Item Generation Type', 'is_time': False}, {'field': 'Rat_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 11, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'Rate Id', 'is_time': False}, {'field': 'CU_Reference_1', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 12, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Reference 1', 'is_time': False}, {'field': 'CU_Reference_2', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 13, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Reference 2', 'is_time': False}, {'field': 'CU_Reference_3', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 14, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Reference 3', 'is_time': False}]
 
         return __list
 
@@ -1201,13 +1443,13 @@ class Charge_Units(Base):
 
     def get_column_types(self):
         """ Gets Charge_Units record column data types list """
-        __list=['Integer', 'Integer', 'String(45)', 'String(45)', 'Boolean', 'Boolean', 'Numeric(20,6)', 'String(10)', 'String(10)', 'Integer', 'Integer', 'String(45)', 'String(45)', 'String(45)']
+        __list=['Integer', 'Integer', 'String(255)', 'String(45)', 'Boolean', 'Boolean', 'Numeric(20,12)', 'String(10)', 'String(10)', 'Integer', 'Integer', 'String(45)', 'String(45)', 'String(45)']
 
         return __list
 
     def get_column_meta(self):
         """ Gets Charge_Units record column data meta list """
-        __list=[('CU_Id', 'Integer'), ('CI_Id', 'Integer'), ('CU_Description', 'String(45)'), ('CU_UUID', 'String(45)'), ('CU_Is_Billeable', 'Boolean'), ('CU_Is_Always_Billeable', 'Boolean'), ('CU_Quantity', 'Numeric(20,6)'), ('CU_Operation', 'String(10)'), ('Typ_Code', 'String(10)'), ('CIT_Generation', 'Integer'), ('Rat_Id', 'Integer'), ('CU_Reference_1', 'String(45)'), ('CU_Reference_2', 'String(45)'), ('CU_Reference_3', 'String(45)')]
+        __list=[('CU_Id', 'Integer'), ('CI_Id', 'Integer'), ('CU_Description', 'String(255)'), ('CU_UUID', 'String(45)'), ('CU_Is_Billeable', 'Boolean'), ('CU_Is_Always_Billeable', 'Boolean'), ('CU_Quantity', 'Numeric(20,12)'), ('CU_Operation', 'String(10)'), ('Typ_Code', 'String(10)'), ('CIT_Generation', 'Integer'), ('Rat_Id', 'Integer'), ('CU_Reference_1', 'String(45)'), ('CU_Reference_2', 'String(45)'), ('CU_Reference_3', 'String(45)')]
 
         return __list
 
@@ -1236,15 +1478,24 @@ class Charge_Units(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2020-02-20 16:44:35
+# GLVH @ 2021-04-08 20:09:28
 # =============================================================================
 
+# gen_model_flask.py:389 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_configuration_items.py
 class Configuration_Items(Base):
     __tablename__ = 'Configuration_Items'
     engine        = None
     logger        = None
+
+    def set_shard(suffix=None):
+       if suffix is not None:
+           name='Configuration_Items_{suffix}'.format(suffix=suffix)
+           __class__.__tablename__  = name
+           __class__.__table__.name = name
+       return __class__.__tablename__
+
     CI_Id                       = Column( Integer, primary_key=True, autoincrement=True )
-    CI_Name                     = Column( String(45) )
+    CI_Name                     = Column( String(255) )
     CI_UUID                     = Column( String(45) )
     Pla_Id                      = Column( Integer, ForeignKey('Platforms.Pla_Id') )
     CC_Id                       = Column( Integer, ForeignKey('Cost_Centers.CC_Id') )
@@ -1335,7 +1586,7 @@ class Configuration_Items(Base):
 
     def get_columns(self):
         """ Gets Configuration_Items record column full details list """
-        __list=[{'field': 'CI_Id', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': 'auto_increment', 'is_form_editable': True, 'format': None, 'order': 1, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': True, 'header': 'Id', 'is_time': False}, {'field': 'CI_Name', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'NO', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 2, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Name', 'is_time': False}, {'field': 'CI_UUID', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'NO', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 3, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'UUID', 'is_time': False}, {'field': 'Pla_Id', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'MUL', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 4, 'is_searchable': True, 'is_fk': True, 'foreign_field': 'Pla_Id', 'referenced_table': 'Platforms', 'referenced_class': 'platform', 'foreign_key': 'Pla_Id', 'foreign_value': 'Pla_Name', 'is_numeric': False, 'form_type': 'SelectField', 'is_id': False, 'header': 'Platform Id', 'is_time': False}, {'field': 'CC_Id', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'MUL', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 5, 'is_searchable': True, 'is_fk': True, 'foreign_field': 'CC_Id', 'referenced_table': 'Cost_Centers', 'referenced_class': 'cost_center', 'foreign_key': 'CC_Id', 'foreign_value': 'CC_Description', 'is_numeric': False, 'form_type': 'SelectField', 'is_id': False, 'header': 'Cost Center Id', 'is_time': False}, {'field': 'Cus_Id', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'MUL', 'default': '1', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 6, 'is_searchable': True, 'is_fk': True, 'foreign_field': 'Cus_Id', 'referenced_table': 'Customers', 'referenced_class': 'customer', 'foreign_key': 'Cus_Id', 'foreign_value': 'Cus_Name', 'is_numeric': False, 'form_type': 'SelectField', 'is_id': False, 'header': 'Customer Id', 'is_time': False}, {'field': 'CI_Commissioning_DateTime', 'type': 'timestamp', 'type_flask': 'db.DateTime', 'type_sqlalchemy': 'DateTime', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 7, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'DateTimeField', 'is_id': False, 'header': 'Commissioning Date and Time', 'is_time': False}, {'field': 'CI_Decommissioning_DateTime', 'type': 'timestamp', 'type_flask': 'db.DateTime', 'type_sqlalchemy': 'DateTime', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 8, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'DateTimeField', 'is_id': False, 'header': 'Decommissioning Date and Time', 'is_time': False}]
+        __list=[{'field': 'CI_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': 'auto_increment', 'is_form_editable': True, 'format': None, 'order': 1, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': True, 'header': 'Id', 'is_time': False}, {'field': 'CI_Name', 'type': 'varchar(255)', 'type_flask': 'db.String(255)', 'type_sqlalchemy': 'String(255)', 'null': 'NO', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 2, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Name', 'is_time': False}, {'field': 'CI_UUID', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'NO', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 3, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'UUID', 'is_time': False}, {'field': 'Pla_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'MUL', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 4, 'is_searchable': True, 'is_fk': True, 'foreign_field': 'Pla_Id', 'referenced_table': 'Platforms', 'referenced_class': 'platform', 'foreign_key': 'Pla_Id', 'foreign_value': 'Pla_Name', 'is_numeric': False, 'form_type': 'SelectField', 'is_id': False, 'header': 'Platform Id', 'is_time': False}, {'field': 'CC_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'MUL', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 5, 'is_searchable': True, 'is_fk': True, 'foreign_field': 'CC_Id', 'referenced_table': 'Cost_Centers', 'referenced_class': 'cost_center', 'foreign_key': 'CC_Id', 'foreign_value': 'CC_Description', 'is_numeric': False, 'form_type': 'SelectField', 'is_id': False, 'header': 'Cost Center Id', 'is_time': False}, {'field': 'Cus_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'MUL', 'default': '1', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 6, 'is_searchable': True, 'is_fk': True, 'foreign_field': 'Cus_Id', 'referenced_table': 'Customers', 'referenced_class': 'customer', 'foreign_key': 'Cus_Id', 'foreign_value': 'Cus_Name', 'is_numeric': False, 'form_type': 'SelectField', 'is_id': False, 'header': 'Customer Id', 'is_time': False}, {'field': 'CI_Commissioning_DateTime', 'type': 'timestamp', 'type_flask': 'db.DateTime', 'type_sqlalchemy': 'DateTime', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 7, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'DateTimeField', 'is_id': False, 'header': 'Commissioning Date and Time', 'is_time': False}, {'field': 'CI_Decommissioning_DateTime', 'type': 'timestamp', 'type_flask': 'db.DateTime', 'type_sqlalchemy': 'DateTime', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 8, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'DateTimeField', 'is_id': False, 'header': 'Decommissioning Date and Time', 'is_time': False}]
 
         return __list
 
@@ -1347,13 +1598,13 @@ class Configuration_Items(Base):
 
     def get_column_types(self):
         """ Gets Configuration_Items record column data types list """
-        __list=['Integer', 'String(45)', 'String(45)', 'Integer', 'Integer', 'Integer', 'DateTime', 'DateTime']
+        __list=['Integer', 'String(255)', 'String(45)', 'Integer', 'Integer', 'Integer', 'DateTime', 'DateTime']
 
         return __list
 
     def get_column_meta(self):
         """ Gets Configuration_Items record column data meta list """
-        __list=[('CI_Id', 'Integer'), ('CI_Name', 'String(45)'), ('CI_UUID', 'String(45)'), ('Pla_Id', 'Integer'), ('CC_Id', 'Integer'), ('Cus_Id', 'Integer'), ('CI_Commissioning_DateTime', 'DateTime'), ('CI_Decommissioning_DateTime', 'DateTime')]
+        __list=[('CI_Id', 'Integer'), ('CI_Name', 'String(255)'), ('CI_UUID', 'String(45)'), ('Pla_Id', 'Integer'), ('CC_Id', 'Integer'), ('Cus_Id', 'Integer'), ('CI_Commissioning_DateTime', 'DateTime'), ('CI_Decommissioning_DateTime', 'DateTime')]
 
         return __list
 
@@ -1382,16 +1633,25 @@ class Configuration_Items(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2020-02-20 16:44:35
+# GLVH @ 2021-04-08 20:09:28
 # =============================================================================
 
+# gen_model_flask.py:389 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_cost_centers.py
 class Cost_Centers(Base):
     __tablename__ = 'Cost_Centers'
     engine        = None
     logger        = None
+
+    def set_shard(suffix=None):
+       if suffix is not None:
+           name='Cost_Centers_{suffix}'.format(suffix=suffix)
+           __class__.__tablename__  = name
+           __class__.__table__.name = name
+       return __class__.__tablename__
+
     CC_Id          = Column( Integer, primary_key=True, autoincrement=True )
     CC_Code        = Column( String(45) )
-    CC_Description = Column( String(45) )
+    CC_Description = Column( String(255) )
     Cur_Code       = Column( String(3), ForeignKey('Currencies.Cur_Code') )
     CC_Parent_Code = Column( String(45) )
     CC_Reg_Exp     = Column( String(45) )
@@ -1479,7 +1739,7 @@ class Cost_Centers(Base):
 
     def get_columns(self):
         """ Gets Cost_Centers record column full details list """
-        __list=[{'field': 'CC_Id', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': 'auto_increment', 'is_form_editable': True, 'format': None, 'order': 1, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': True, 'header': 'Cost Center Id', 'is_time': False}, {'field': 'CC_Code', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 2, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Code', 'is_time': False}, {'field': 'CC_Description', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 3, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Description', 'is_time': False}, {'field': 'Cur_Code', 'type': 'varchar(3)', 'type_flask': 'db.String(3)', 'type_sqlalchemy': 'String(3)', 'null': 'NO', 'key': 'MUL', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 4, 'is_searchable': True, 'is_fk': True, 'foreign_field': 'Cur_Code', 'referenced_table': 'Currencies', 'referenced_class': 'currency', 'foreign_key': 'Cur_Code', 'foreign_value': 'Cur_Name', 'is_numeric': False, 'form_type': 'SelectField', 'is_id': False, 'header': 'Currency Code', 'is_time': False}, {'field': 'CC_Parent_Code', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'NO', 'key': '', 'default': '1', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 5, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Parent Code', 'is_time': False}, {'field': 'CC_Reg_Exp', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 6, 'is_searchable': False, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Regular Expression', 'is_time': False}, {'field': 'CC_Reference', 'type': 'varchar(245)', 'type_flask': 'db.String(245)', 'type_sqlalchemy': 'String(245)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 7, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Reference', 'is_time': False}]
+        __list=[{'field': 'CC_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': 'auto_increment', 'is_form_editable': True, 'format': None, 'order': 1, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': True, 'header': 'Cost Center Id', 'is_time': False}, {'field': 'CC_Code', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 2, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Code', 'is_time': False}, {'field': 'CC_Description', 'type': 'varchar(255)', 'type_flask': 'db.String(255)', 'type_sqlalchemy': 'String(255)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 3, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Description', 'is_time': False}, {'field': 'Cur_Code', 'type': 'varchar(3)', 'type_flask': 'db.String(3)', 'type_sqlalchemy': 'String(3)', 'null': 'NO', 'key': 'MUL', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 4, 'is_searchable': True, 'is_fk': True, 'foreign_field': 'Cur_Code', 'referenced_table': 'Currencies', 'referenced_class': 'currency', 'foreign_key': 'Cur_Code', 'foreign_value': 'Cur_Name', 'is_numeric': False, 'form_type': 'SelectField', 'is_id': False, 'header': 'Currency Code', 'is_time': False}, {'field': 'CC_Parent_Code', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'NO', 'key': '', 'default': '1', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 5, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Parent Code', 'is_time': False}, {'field': 'CC_Reg_Exp', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 6, 'is_searchable': False, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Regular Expression', 'is_time': False}, {'field': 'CC_Reference', 'type': 'varchar(245)', 'type_flask': 'db.String(245)', 'type_sqlalchemy': 'String(245)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 7, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Reference', 'is_time': False}]
 
         return __list
 
@@ -1491,13 +1751,13 @@ class Cost_Centers(Base):
 
     def get_column_types(self):
         """ Gets Cost_Centers record column data types list """
-        __list=['Integer', 'String(45)', 'String(45)', 'String(3)', 'String(45)', 'String(45)', 'String(245)']
+        __list=['Integer', 'String(45)', 'String(255)', 'String(3)', 'String(45)', 'String(45)', 'String(245)']
 
         return __list
 
     def get_column_meta(self):
         """ Gets Cost_Centers record column data meta list """
-        __list=[('CC_Id', 'Integer'), ('CC_Code', 'String(45)'), ('CC_Description', 'String(45)'), ('Cur_Code', 'String(3)'), ('CC_Parent_Code', 'String(45)'), ('CC_Reg_Exp', 'String(45)'), ('CC_Reference', 'String(245)')]
+        __list=[('CC_Id', 'Integer'), ('CC_Code', 'String(45)'), ('CC_Description', 'String(255)'), ('Cur_Code', 'String(3)'), ('CC_Parent_Code', 'String(45)'), ('CC_Reg_Exp', 'String(45)'), ('CC_Reference', 'String(245)')]
 
         return __list
 
@@ -1526,13 +1786,22 @@ class Cost_Centers(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2020-02-20 16:44:35
+# GLVH @ 2021-04-08 20:09:28
 # =============================================================================
 
+# gen_model_flask.py:389 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_countries.py
 class Countries(Base):
     __tablename__ = 'Countries'
     engine        = None
     logger        = None
+
+    def set_shard(suffix=None):
+       if suffix is not None:
+           name='Countries_{suffix}'.format(suffix=suffix)
+           __class__.__tablename__  = name
+           __class__.__table__.name = name
+       return __class__.__tablename__
+
     Cou_Code = Column( String(2), primary_key=True )
     Cou_Name = Column( String(45) )
     Cou_A3   = Column( String(3) )
@@ -1617,7 +1886,7 @@ class Countries(Base):
 
     def get_columns(self):
         """ Gets Countries record column full details list """
-        __list=[{'field': 'Cou_Code', 'type': 'varchar(2)', 'type_flask': 'db.String(2)', 'type_sqlalchemy': 'String(2)', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 1, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Code', 'is_time': False}, {'field': 'Cou_Name', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 2, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Name', 'is_time': False}, {'field': 'Cou_A3', 'type': 'varchar(3)', 'type_flask': 'db.String(3)', 'type_sqlalchemy': 'String(3)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 3, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Alphanum Code', 'is_time': False}, {'field': 'Cou_N', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 4, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'ISO Numeric Code', 'is_time': False}]
+        __list=[{'field': 'Cou_Code', 'type': 'varchar(2)', 'type_flask': 'db.String(2)', 'type_sqlalchemy': 'String(2)', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 1, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Code', 'is_time': False}, {'field': 'Cou_Name', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 2, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Name', 'is_time': False}, {'field': 'Cou_A3', 'type': 'varchar(3)', 'type_flask': 'db.String(3)', 'type_sqlalchemy': 'String(3)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 3, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Alphanum Code', 'is_time': False}, {'field': 'Cou_N', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 4, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'ISO Numeric Code', 'is_time': False}]
 
         return __list
 
@@ -1664,13 +1933,22 @@ class Countries(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2020-02-20 16:44:35
+# GLVH @ 2021-04-08 20:09:28
 # =============================================================================
 
+# gen_model_flask.py:389 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_countries_currencies.py
 class Countries_Currencies(Base):
     __tablename__ = 'Countries_Currencies'
     engine        = None
     logger        = None
+
+    def set_shard(suffix=None):
+       if suffix is not None:
+           name='Countries_Currencies_{suffix}'.format(suffix=suffix)
+           __class__.__tablename__  = name
+           __class__.__table__.name = name
+       return __class__.__tablename__
+
     Cou_Code        = Column( String(2), ForeignKey('Countries.Cou_Code'), primary_key=True )
     Cur_Code        = Column( String(3), ForeignKey('Currencies.Cur_Code'), primary_key=True )
     Cou_Cur_Comment = Column( String(45) )
@@ -1800,13 +2078,22 @@ class Countries_Currencies(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2020-02-20 16:44:35
+# GLVH @ 2021-04-08 20:09:28
 # =============================================================================
 
+# gen_model_flask.py:389 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_currencies.py
 class Currencies(Base):
     __tablename__ = 'Currencies'
     engine        = None
     logger        = None
+
+    def set_shard(suffix=None):
+       if suffix is not None:
+           name='Currencies_{suffix}'.format(suffix=suffix)
+           __class__.__tablename__  = name
+           __class__.__table__.name = name
+       return __class__.__tablename__
+
     Cur_Code    = Column( String(3), primary_key=True )
     Cur_Name    = Column( String(45) )
     Cur_Id      = Column( Integer )
@@ -1891,7 +2178,7 @@ class Currencies(Base):
 
     def get_columns(self):
         """ Gets Currencies record column full details list """
-        __list=[{'field': 'Cur_Code', 'type': 'varchar(3)', 'type_flask': 'db.String(3)', 'type_sqlalchemy': 'String(3)', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 1, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Code', 'is_time': False}, {'field': 'Cur_Name', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 2, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Name', 'is_time': False}, {'field': 'Cur_Id', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 3, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'Id', 'is_time': False}, {'field': 'Cur_Comment', 'type': 'varchar(128)', 'type_flask': 'db.String(128)', 'type_sqlalchemy': 'String(128)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 4, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Comment', 'is_time': False}]
+        __list=[{'field': 'Cur_Code', 'type': 'varchar(3)', 'type_flask': 'db.String(3)', 'type_sqlalchemy': 'String(3)', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 1, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Code', 'is_time': False}, {'field': 'Cur_Name', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 2, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Name', 'is_time': False}, {'field': 'Cur_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 3, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'Id', 'is_time': False}, {'field': 'Cur_Comment', 'type': 'varchar(128)', 'type_flask': 'db.String(128)', 'type_sqlalchemy': 'String(128)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 4, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Comment', 'is_time': False}]
 
         return __list
 
@@ -1938,13 +2225,22 @@ class Currencies(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2020-02-20 16:44:35
+# GLVH @ 2021-04-08 20:09:28
 # =============================================================================
 
+# gen_model_flask.py:389 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_customers.py
 class Customers(Base):
     __tablename__ = 'Customers'
     engine        = None
     logger        = None
+
+    def set_shard(suffix=None):
+       if suffix is not None:
+           name='Customers_{suffix}'.format(suffix=suffix)
+           __class__.__tablename__  = name
+           __class__.__table__.name = name
+       return __class__.__tablename__
+
     Cus_Id   = Column( Integer, primary_key=True, autoincrement=True )
     Cus_Name = Column( String(45) )
     CC_Id    = Column( Integer, ForeignKey('Cost_Centers.CC_Id') )
@@ -2027,7 +2323,7 @@ class Customers(Base):
 
     def get_columns(self):
         """ Gets Customers record column full details list """
-        __list=[{'field': 'Cus_Id', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': 'auto_increment', 'is_form_editable': True, 'format': None, 'order': 1, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': True, 'header': 'Id', 'is_time': False}, {'field': 'Cus_Name', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'NO', 'key': 'UNI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 2, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Name', 'is_time': False}, {'field': 'CC_Id', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'MUL', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 3, 'is_searchable': True, 'is_fk': True, 'foreign_field': 'CC_Id', 'referenced_table': 'Cost_Centers', 'referenced_class': 'cost_center', 'foreign_key': 'CC_Id', 'foreign_value': 'CC_Description', 'is_numeric': False, 'form_type': 'SelectField', 'is_id': False, 'header': 'Cost Center Id', 'is_time': False}]
+        __list=[{'field': 'Cus_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': 'auto_increment', 'is_form_editable': True, 'format': None, 'order': 1, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': True, 'header': 'Id', 'is_time': False}, {'field': 'Cus_Name', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'NO', 'key': 'UNI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 2, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Name', 'is_time': False}, {'field': 'CC_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'MUL', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 3, 'is_searchable': True, 'is_fk': True, 'foreign_field': 'CC_Id', 'referenced_table': 'Cost_Centers', 'referenced_class': 'cost_center', 'foreign_key': 'CC_Id', 'foreign_value': 'CC_Description', 'is_numeric': False, 'form_type': 'SelectField', 'is_id': False, 'header': 'Cost Center Id', 'is_time': False}]
 
         return __list
 
@@ -2074,16 +2370,25 @@ class Customers(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2020-02-20 16:44:35
+# GLVH @ 2021-04-08 20:09:28
 # =============================================================================
 
+# gen_model_flask.py:389 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_exchange_rates.py
 class Exchange_Rates(Base):
     __tablename__ = 'Exchange_Rates'
     engine        = None
     logger        = None
+
+    def set_shard(suffix=None):
+       if suffix is not None:
+           name='Exchange_Rates_{suffix}'.format(suffix=suffix)
+           __class__.__tablename__  = name
+           __class__.__table__.name = name
+       return __class__.__tablename__
+
     ER_Id     = Column( Integer, primary_key=True, autoincrement=True )
     Cur_Code  = Column( String(3), ForeignKey('Currencies.Cur_Code') )
-    ER_Factor = Column( Numeric(20,10) )
+    ER_Factor = Column( Numeric(20,12) )
     ER_Date   = Column( Date )
     
     def __init__(self, ER_Id=0, Cur_Code='None', ER_Factor=None, ER_Date=None,engine=None,logger=None):
@@ -2165,7 +2470,7 @@ class Exchange_Rates(Base):
 
     def get_columns(self):
         """ Gets Exchange_Rates record column full details list """
-        __list=[{'field': 'ER_Id', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': 'auto_increment', 'is_form_editable': True, 'format': None, 'order': 1, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': True, 'header': 'Id', 'is_time': False}, {'field': 'Cur_Code', 'type': 'varchar(3)', 'type_flask': 'db.String(3)', 'type_sqlalchemy': 'String(3)', 'null': 'NO', 'key': 'MUL', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 2, 'is_searchable': True, 'is_fk': True, 'foreign_field': 'Cur_Code', 'referenced_table': 'Currencies', 'referenced_class': 'currency', 'foreign_key': 'Cur_Code', 'foreign_value': 'Cur_Name', 'is_numeric': False, 'form_type': 'SelectField', 'is_id': False, 'header': 'Currency Code', 'is_time': False}, {'field': 'ER_Factor', 'type': 'decimal(20,10)', 'type_flask': 'db.Numeric(20,10)', 'type_sqlalchemy': 'Numeric(20,10)', 'null': 'NO', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 3, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'Factor', 'is_time': False}, {'field': 'ER_Date', 'type': 'date', 'type_flask': 'db.Date', 'type_sqlalchemy': 'Date', 'null': 'NO', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 4, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'DateField', 'is_id': False, 'header': 'Date', 'is_time': False}]
+        __list=[{'field': 'ER_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': 'auto_increment', 'is_form_editable': True, 'format': None, 'order': 1, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': True, 'header': 'Id', 'is_time': False}, {'field': 'Cur_Code', 'type': 'varchar(3)', 'type_flask': 'db.String(3)', 'type_sqlalchemy': 'String(3)', 'null': 'NO', 'key': 'MUL', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 2, 'is_searchable': True, 'is_fk': True, 'foreign_field': 'Cur_Code', 'referenced_table': 'Currencies', 'referenced_class': 'currency', 'foreign_key': 'Cur_Code', 'foreign_value': 'Cur_Name', 'is_numeric': False, 'form_type': 'SelectField', 'is_id': False, 'header': 'Currency Code', 'is_time': False}, {'field': 'ER_Factor', 'type': 'decimal(20,12)', 'type_flask': 'db.Numeric(20,12)', 'type_sqlalchemy': 'Numeric(20,12)', 'null': 'NO', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 3, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'Factor', 'is_time': False}, {'field': 'ER_Date', 'type': 'date', 'type_flask': 'db.Date', 'type_sqlalchemy': 'Date', 'null': 'NO', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 4, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'DateField', 'is_id': False, 'header': 'Date', 'is_time': False}]
 
         return __list
 
@@ -2177,13 +2482,13 @@ class Exchange_Rates(Base):
 
     def get_column_types(self):
         """ Gets Exchange_Rates record column data types list """
-        __list=['Integer', 'String(3)', 'Numeric(20,10)', 'Date']
+        __list=['Integer', 'String(3)', 'Numeric(20,12)', 'Date']
 
         return __list
 
     def get_column_meta(self):
         """ Gets Exchange_Rates record column data meta list """
-        __list=[('ER_Id', 'Integer'), ('Cur_Code', 'String(3)'), ('ER_Factor', 'Numeric(20,10)'), ('ER_Date', 'Date')]
+        __list=[('ER_Id', 'Integer'), ('Cur_Code', 'String(3)'), ('ER_Factor', 'Numeric(20,12)'), ('ER_Date', 'Date')]
 
         return __list
 
@@ -2212,13 +2517,22 @@ class Exchange_Rates(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2020-02-20 16:44:35
+# GLVH @ 2021-04-08 20:09:28
 # =============================================================================
 
+# gen_model_flask.py:389 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_interface.py
 class Interface(Base):
     __tablename__ = 'Interface'
     engine        = None
     logger        = None
+
+    def set_shard(suffix=None):
+       if suffix is not None:
+           name='Interface_{suffix}'.format(suffix=suffix)
+           __class__.__tablename__  = name
+           __class__.__table__.name = name
+       return __class__.__tablename__
+
     Id          = Column( Integer, primary_key=True, autoincrement=True )
     User_Id     = Column( Integer )
     Table_name  = Column( String(45) )
@@ -2311,7 +2625,7 @@ class Interface(Base):
 
     def get_columns(self):
         """ Gets Interface record column full details list """
-        __list=[{'field': 'Id', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': 'auto_increment', 'is_form_editable': True, 'format': None, 'order': 1, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': True, 'header': 'Id', 'is_time': False}, {'field': 'User_Id', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 2, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'User_Id', 'is_time': False}, {'field': 'Table_name', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'NO', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 3, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Table_name', 'is_time': False}, {'field': 'Option_Type', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 4, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'Option_Type', 'is_time': False}, {'field': 'Argument_1', 'type': 'varchar(256)', 'type_flask': 'db.String(256)', 'type_sqlalchemy': 'String(256)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 5, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Argument_1', 'is_time': False}, {'field': 'Argument_2', 'type': 'varchar(256)', 'type_flask': 'db.String(256)', 'type_sqlalchemy': 'String(256)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 6, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Argument_2', 'is_time': False}, {'field': 'Argument_3', 'type': 'varchar(256)', 'type_flask': 'db.String(256)', 'type_sqlalchemy': 'String(256)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 7, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Argument_3', 'is_time': False}, {'field': 'Is_Active', 'type': 'tinyint(4)', 'type_flask': 'db.Boolean', 'type_sqlalchemy': 'Boolean', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 8, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'BooleanField', 'is_id': False, 'header': 'Is_Active', 'is_time': False}]
+        __list=[{'field': 'Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': 'auto_increment', 'is_form_editable': True, 'format': None, 'order': 1, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': True, 'header': 'Id', 'is_time': False}, {'field': 'User_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 2, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'User_Id', 'is_time': False}, {'field': 'Table_name', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'NO', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 3, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Table_name', 'is_time': False}, {'field': 'Option_Type', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 4, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'Option_Type', 'is_time': False}, {'field': 'Argument_1', 'type': 'varchar(256)', 'type_flask': 'db.String(256)', 'type_sqlalchemy': 'String(256)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 5, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Argument_1', 'is_time': False}, {'field': 'Argument_2', 'type': 'varchar(256)', 'type_flask': 'db.String(256)', 'type_sqlalchemy': 'String(256)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 6, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Argument_2', 'is_time': False}, {'field': 'Argument_3', 'type': 'varchar(256)', 'type_flask': 'db.String(256)', 'type_sqlalchemy': 'String(256)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 7, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Argument_3', 'is_time': False}, {'field': 'Is_Active', 'type': 'tinyint', 'type_flask': 'db.Boolean', 'type_sqlalchemy': 'Boolean', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 8, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'BooleanField', 'is_id': False, 'header': 'Is_Active', 'is_time': False}]
 
         return __list
 
@@ -2358,13 +2672,22 @@ class Interface(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2020-02-20 16:44:35
+# GLVH @ 2021-04-08 20:09:28
 # =============================================================================
 
+# gen_model_flask.py:389 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_measure_units.py
 class Measure_Units(Base):
     __tablename__ = 'Measure_Units'
     engine        = None
     logger        = None
+
+    def set_shard(suffix=None):
+       if suffix is not None:
+           name='Measure_Units_{suffix}'.format(suffix=suffix)
+           __class__.__tablename__  = name
+           __class__.__table__.name = name
+       return __class__.__tablename__
+
     MU_Code        = Column( String(3), primary_key=True )
     MU_Description = Column( String(45) )
     
@@ -2492,13 +2815,22 @@ class Measure_Units(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2020-02-20 16:44:35
+# GLVH @ 2021-04-08 20:09:28
 # =============================================================================
 
+# gen_model_flask.py:389 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_platforms.py
 class Platforms(Base):
     __tablename__ = 'Platforms'
     engine        = None
     logger        = None
+
+    def set_shard(suffix=None):
+       if suffix is not None:
+           name='Platforms_{suffix}'.format(suffix=suffix)
+           __class__.__tablename__  = name
+           __class__.__table__.name = name
+       return __class__.__tablename__
+
     Pla_Id       = Column( Integer, primary_key=True, autoincrement=True )
     Pla_Name     = Column( String(45) )
     Pla_Host     = Column( String(45) )
@@ -2587,7 +2919,7 @@ class Platforms(Base):
 
     def get_columns(self):
         """ Gets Platforms record column full details list """
-        __list=[{'field': 'Pla_Id', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': 'auto_increment', 'is_form_editable': True, 'format': None, 'order': 1, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': True, 'header': 'Id', 'is_time': False}, {'field': 'Pla_Name', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'NO', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 2, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Name', 'is_time': False}, {'field': 'Pla_Host', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 3, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Host', 'is_time': False}, {'field': 'Pla_Port', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 4, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Port', 'is_time': False}, {'field': 'Pla_User', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 5, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'User', 'is_time': False}, {'field': 'Pla_Password', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 6, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Password', 'is_time': False}]
+        __list=[{'field': 'Pla_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': 'auto_increment', 'is_form_editable': True, 'format': None, 'order': 1, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': True, 'header': 'Id', 'is_time': False}, {'field': 'Pla_Name', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'NO', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 2, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Name', 'is_time': False}, {'field': 'Pla_Host', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 3, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Host', 'is_time': False}, {'field': 'Pla_Port', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 4, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Port', 'is_time': False}, {'field': 'Pla_User', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 5, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'User', 'is_time': False}, {'field': 'Pla_Password', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 6, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Password', 'is_time': False}]
 
         return __list
 
@@ -2634,13 +2966,22 @@ class Platforms(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2020-02-20 16:44:35
+# GLVH @ 2021-04-08 20:09:28
 # =============================================================================
 
+# gen_model_flask.py:389 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_rat_periods.py
 class Rat_Periods(Base):
     __tablename__ = 'Rat_Periods'
     engine        = None
     logger        = None
+
+    def set_shard(suffix=None):
+       if suffix is not None:
+           name='Rat_Periods_{suffix}'.format(suffix=suffix)
+           __class__.__tablename__  = name
+           __class__.__table__.name = name
+       return __class__.__tablename__
+
     Rat_Period = Column( Integer, primary_key=True )
     Value      = Column( String(45) )
     
@@ -2721,7 +3062,7 @@ class Rat_Periods(Base):
 
     def get_columns(self):
         """ Gets Rat_Periods record column full details list """
-        __list=[{'field': 'Rat_Period', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 1, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'Rate Period', 'is_time': False}, {'field': 'Value', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 2, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Value', 'is_time': False}]
+        __list=[{'field': 'Rat_Period', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 1, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'Rate Period', 'is_time': False}, {'field': 'Value', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 2, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Value', 'is_time': False}]
 
         return __list
 
@@ -2768,20 +3109,29 @@ class Rat_Periods(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2020-02-20 16:44:35
+# GLVH @ 2021-04-08 20:09:28
 # =============================================================================
 
+# gen_model_flask.py:389 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_rates.py
 class Rates(Base):
     __tablename__ = 'Rates'
     engine        = None
     logger        = None
+
+    def set_shard(suffix=None):
+       if suffix is not None:
+           name='Rates_{suffix}'.format(suffix=suffix)
+           __class__.__tablename__  = name
+           __class__.__table__.name = name
+       return __class__.__tablename__
+
     Rat_Id     = Column( Integer, primary_key=True, autoincrement=True )
     Typ_Code   = Column( String(10), ForeignKey('CU_Types.Typ_Code') )
     Cus_Id     = Column( Integer, ForeignKey('Customers.Cus_Id') )
     Pla_Id     = Column( Integer, ForeignKey('Platforms.Pla_Id') )
     CC_Id      = Column( Integer, ForeignKey('Cost_Centers.CC_Id') )
     CI_Id      = Column( Integer, ForeignKey('Configuration_Items.CI_Id') )
-    Rat_Price  = Column( Numeric(20,6) )
+    Rat_Price  = Column( Numeric(20,12) )
     Cur_Code   = Column( String(3), ForeignKey('Currencies.Cur_Code') )
     MU_Code    = Column( String(3), ForeignKey('Measure_Units.MU_Code') )
     Rat_Period = Column( Integer, ForeignKey('Rat_Periods.Rat_Period') )
@@ -2876,7 +3226,7 @@ class Rates(Base):
 
     def get_columns(self):
         """ Gets Rates record column full details list """
-        __list=[{'field': 'Rat_Id', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': 'auto_increment', 'is_form_editable': True, 'format': None, 'order': 1, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': True, 'header': 'Id', 'is_time': False}, {'field': 'Typ_Code', 'type': 'varchar(10)', 'type_flask': 'db.String(10)', 'type_sqlalchemy': 'String(10)', 'null': 'NO', 'key': 'MUL', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 2, 'is_searchable': True, 'is_fk': True, 'foreign_field': 'Typ_Code', 'referenced_table': 'CU_Types', 'referenced_class': 'cu_type', 'foreign_key': 'Typ_Code', 'foreign_value': 'Typ_Description', 'is_numeric': False, 'form_type': 'SelectField', 'is_id': False, 'header': 'Charge Unit Type', 'is_time': False}, {'field': 'Cus_Id', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'MUL', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 3, 'is_searchable': True, 'is_fk': True, 'foreign_field': 'Cus_Id', 'referenced_table': 'Customers', 'referenced_class': 'customer', 'foreign_key': 'Cus_Id', 'foreign_value': 'Cus_Name', 'is_numeric': False, 'form_type': 'SelectField', 'is_id': False, 'header': 'Customer Id', 'is_time': False}, {'field': 'Pla_Id', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'MUL', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 4, 'is_searchable': True, 'is_fk': True, 'foreign_field': 'Pla_Id', 'referenced_table': 'Platforms', 'referenced_class': 'platform', 'foreign_key': 'Pla_Id', 'foreign_value': 'Pla_Name', 'is_numeric': False, 'form_type': 'SelectField', 'is_id': False, 'header': 'Platform Id', 'is_time': False}, {'field': 'CC_Id', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'MUL', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 5, 'is_searchable': True, 'is_fk': True, 'foreign_field': 'CC_Id', 'referenced_table': 'Cost_Centers', 'referenced_class': 'cost_center', 'foreign_key': 'CC_Id', 'foreign_value': 'CC_Description', 'is_numeric': False, 'form_type': 'SelectField', 'is_id': False, 'header': 'Cost Center Id', 'is_time': False}, {'field': 'CI_Id', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'MUL', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 6, 'is_searchable': True, 'is_fk': True, 'foreign_field': 'CI_Id', 'referenced_table': 'Configuration_Items', 'referenced_class': 'configuration_item', 'foreign_key': 'CI_Id', 'foreign_value': 'CI_Name', 'is_numeric': False, 'form_type': 'SelectField', 'is_id': False, 'header': 'Configuration Item', 'is_time': False}, {'field': 'Rat_Price', 'type': 'decimal(20,6)', 'type_flask': 'db.Numeric(20,6)', 'type_sqlalchemy': 'Numeric(20,6)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 7, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'Rate Price', 'is_time': False}, {'field': 'Cur_Code', 'type': 'varchar(3)', 'type_flask': 'db.String(3)', 'type_sqlalchemy': 'String(3)', 'null': 'NO', 'key': 'MUL', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 8, 'is_searchable': True, 'is_fk': True, 'foreign_field': 'Cur_Code', 'referenced_table': 'Currencies', 'referenced_class': 'currency', 'foreign_key': 'Cur_Code', 'foreign_value': 'Cur_Name', 'is_numeric': False, 'form_type': 'SelectField', 'is_id': False, 'header': 'Currency Code', 'is_time': False}, {'field': 'MU_Code', 'type': 'varchar(3)', 'type_flask': 'db.String(3)', 'type_sqlalchemy': 'String(3)', 'null': 'NO', 'key': 'MUL', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 9, 'is_searchable': True, 'is_fk': True, 'foreign_field': 'MU_Code', 'referenced_table': 'Measure_Units', 'referenced_class': 'measure_unit', 'foreign_key': 'MU_Code', 'foreign_value': 'MU_Description', 'is_numeric': False, 'form_type': 'SelectField', 'is_id': False, 'header': 'Measure Unit', 'is_time': False}, {'field': 'Rat_Period', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'MUL', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 10, 'is_searchable': True, 'is_fk': True, 'foreign_field': 'Rat_Period', 'referenced_table': 'Rat_Periods', 'referenced_class': 'rat_period', 'foreign_key': 'Rat_Period', 'foreign_value': 'Value', 'is_numeric': False, 'form_type': 'RadioField', 'is_id': False, 'header': 'Period', 'is_time': False}, {'field': 'Rat_Type', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': False, 'format': None, 'order': 11, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'Rate Type', 'is_time': False}]
+        __list=[{'field': 'Rat_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': 'auto_increment', 'is_form_editable': True, 'format': None, 'order': 1, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': True, 'header': 'Id', 'is_time': False}, {'field': 'Typ_Code', 'type': 'varchar(10)', 'type_flask': 'db.String(10)', 'type_sqlalchemy': 'String(10)', 'null': 'NO', 'key': 'MUL', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 2, 'is_searchable': True, 'is_fk': True, 'foreign_field': 'Typ_Code', 'referenced_table': 'CU_Types', 'referenced_class': 'cu_type', 'foreign_key': 'Typ_Code', 'foreign_value': 'Typ_Description', 'is_numeric': False, 'form_type': 'SelectField', 'is_id': False, 'header': 'Charge Unit Type', 'is_time': False}, {'field': 'Cus_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'MUL', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 3, 'is_searchable': True, 'is_fk': True, 'foreign_field': 'Cus_Id', 'referenced_table': 'Customers', 'referenced_class': 'customer', 'foreign_key': 'Cus_Id', 'foreign_value': 'Cus_Name', 'is_numeric': False, 'form_type': 'SelectField', 'is_id': False, 'header': 'Customer Id', 'is_time': False}, {'field': 'Pla_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'MUL', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 4, 'is_searchable': True, 'is_fk': True, 'foreign_field': 'Pla_Id', 'referenced_table': 'Platforms', 'referenced_class': 'platform', 'foreign_key': 'Pla_Id', 'foreign_value': 'Pla_Name', 'is_numeric': False, 'form_type': 'SelectField', 'is_id': False, 'header': 'Platform Id', 'is_time': False}, {'field': 'CC_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'MUL', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 5, 'is_searchable': True, 'is_fk': True, 'foreign_field': 'CC_Id', 'referenced_table': 'Cost_Centers', 'referenced_class': 'cost_center', 'foreign_key': 'CC_Id', 'foreign_value': 'CC_Description', 'is_numeric': False, 'form_type': 'SelectField', 'is_id': False, 'header': 'Cost Center Id', 'is_time': False}, {'field': 'CI_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'MUL', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 6, 'is_searchable': True, 'is_fk': True, 'foreign_field': 'CI_Id', 'referenced_table': 'Configuration_Items', 'referenced_class': 'configuration_item', 'foreign_key': 'CI_Id', 'foreign_value': 'CI_Name', 'is_numeric': False, 'form_type': 'SelectField', 'is_id': False, 'header': 'Configuration Item', 'is_time': False}, {'field': 'Rat_Price', 'type': 'decimal(20,12)', 'type_flask': 'db.Numeric(20,12)', 'type_sqlalchemy': 'Numeric(20,12)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 7, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'Rate Price', 'is_time': False}, {'field': 'Cur_Code', 'type': 'varchar(3)', 'type_flask': 'db.String(3)', 'type_sqlalchemy': 'String(3)', 'null': 'NO', 'key': 'MUL', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 8, 'is_searchable': True, 'is_fk': True, 'foreign_field': 'Cur_Code', 'referenced_table': 'Currencies', 'referenced_class': 'currency', 'foreign_key': 'Cur_Code', 'foreign_value': 'Cur_Name', 'is_numeric': False, 'form_type': 'SelectField', 'is_id': False, 'header': 'Currency Code', 'is_time': False}, {'field': 'MU_Code', 'type': 'varchar(3)', 'type_flask': 'db.String(3)', 'type_sqlalchemy': 'String(3)', 'null': 'NO', 'key': 'MUL', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 9, 'is_searchable': True, 'is_fk': True, 'foreign_field': 'MU_Code', 'referenced_table': 'Measure_Units', 'referenced_class': 'measure_unit', 'foreign_key': 'MU_Code', 'foreign_value': 'MU_Description', 'is_numeric': False, 'form_type': 'SelectField', 'is_id': False, 'header': 'Measure Unit', 'is_time': False}, {'field': 'Rat_Period', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'MUL', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 10, 'is_searchable': True, 'is_fk': True, 'foreign_field': 'Rat_Period', 'referenced_table': 'Rat_Periods', 'referenced_class': 'rat_period', 'foreign_key': 'Rat_Period', 'foreign_value': 'Value', 'is_numeric': False, 'form_type': 'RadioField', 'is_id': False, 'header': 'Period', 'is_time': False}, {'field': 'Rat_Type', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': False, 'format': None, 'order': 11, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'Rate Type', 'is_time': False}]
 
         return __list
 
@@ -2888,13 +3238,13 @@ class Rates(Base):
 
     def get_column_types(self):
         """ Gets Rates record column data types list """
-        __list=['Integer', 'String(10)', 'Integer', 'Integer', 'Integer', 'Integer', 'Numeric(20,6)', 'String(3)', 'String(3)', 'Integer', 'Integer']
+        __list=['Integer', 'String(10)', 'Integer', 'Integer', 'Integer', 'Integer', 'Numeric(20,12)', 'String(3)', 'String(3)', 'Integer', 'Integer']
 
         return __list
 
     def get_column_meta(self):
         """ Gets Rates record column data meta list """
-        __list=[('Rat_Id', 'Integer'), ('Typ_Code', 'String(10)'), ('Cus_Id', 'Integer'), ('Pla_Id', 'Integer'), ('CC_Id', 'Integer'), ('CI_Id', 'Integer'), ('Rat_Price', 'Numeric(20,6)'), ('Cur_Code', 'String(3)'), ('MU_Code', 'String(3)'), ('Rat_Period', 'Integer'), ('Rat_Type', 'Integer')]
+        __list=[('Rat_Id', 'Integer'), ('Typ_Code', 'String(10)'), ('Cus_Id', 'Integer'), ('Pla_Id', 'Integer'), ('CC_Id', 'Integer'), ('CI_Id', 'Integer'), ('Rat_Price', 'Numeric(20,12)'), ('Cur_Code', 'String(3)'), ('MU_Code', 'String(3)'), ('Rat_Period', 'Integer'), ('Rat_Type', 'Integer')]
 
         return __list
 
@@ -2926,13 +3276,22 @@ class Rates(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2020-02-20 16:44:35
+# GLVH @ 2021-04-08 20:09:28
 # =============================================================================
 
+# gen_model_flask.py:389 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_roles.py
 class Roles(Base):
     __tablename__ = 'Roles'
     engine        = None
     logger        = None
+
+    def set_shard(suffix=None):
+       if suffix is not None:
+           name='Roles_{suffix}'.format(suffix=suffix)
+           __class__.__tablename__  = name
+           __class__.__table__.name = name
+       return __class__.__tablename__
+
     id          = Column( Integer, primary_key=True )
     name        = Column( String(64) )
     default     = Column( Boolean )
@@ -3017,7 +3376,7 @@ class Roles(Base):
 
     def get_columns(self):
         """ Gets Roles record column full details list """
-        __list=[{'field': 'id', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 1, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'id', 'is_time': False}, {'field': 'name', 'type': 'varchar(64)', 'type_flask': 'db.String(64)', 'type_sqlalchemy': 'String(64)', 'null': 'YES', 'key': 'UNI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 2, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'name', 'is_time': False}, {'field': 'default', 'type': 'tinyint(4)', 'type_flask': 'db.Boolean', 'type_sqlalchemy': 'Boolean', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 3, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'BooleanField', 'is_id': False, 'header': 'default', 'is_time': False}, {'field': 'permissions', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 4, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'permissions', 'is_time': False}]
+        __list=[{'field': 'id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 1, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'id', 'is_time': False}, {'field': 'name', 'type': 'varchar(64)', 'type_flask': 'db.String(64)', 'type_sqlalchemy': 'String(64)', 'null': 'YES', 'key': 'UNI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 2, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'name', 'is_time': False}, {'field': 'default', 'type': 'tinyint', 'type_flask': 'db.Boolean', 'type_sqlalchemy': 'Boolean', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 3, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'BooleanField', 'is_id': False, 'header': 'default', 'is_time': False}, {'field': 'permissions', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 4, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'permissions', 'is_time': False}]
 
         return __list
 
@@ -3064,38 +3423,47 @@ class Roles(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2020-02-20 16:44:35
+# GLVH @ 2021-04-08 20:09:28
 # =============================================================================
 
+# gen_model_flask.py:389 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_st_use_per_cu.py
 class ST_Use_Per_CU(Base):
     __tablename__ = 'ST_Use_Per_CU'
     engine        = None
     logger        = None
+
+    def set_shard(suffix=None):
+       if suffix is not None:
+           name='ST_Use_Per_CU_{suffix}'.format(suffix=suffix)
+           __class__.__tablename__  = name
+           __class__.__table__.name = name
+       return __class__.__tablename__
+
     CU_Id                  = Column( Integer, primary_key=True )
     From                   = Column( DateTime, primary_key=True )
     To                     = Column( DateTime, primary_key=True )
     Total_Slices           = Column( Integer )
     Found_Slices           = Column( Integer )
     Not_Found_Slices       = Column( Integer )
-    Period_Initial_Q       = Column( Numeric(20,6) )
-    Period_Increase        = Column( Numeric(20,6) )
+    Period_Initial_Q       = Column( Numeric(20,12) )
+    Period_Increase        = Column( Numeric(20,12) )
     Period_Increase_Count  = Column( Integer )
-    Period_Reduction       = Column( Numeric(20,6) )
+    Period_Reduction       = Column( Numeric(20,12) )
     Period_Reduction_Count = Column( Integer )
-    Period_Final_Q         = Column( Numeric(20,6) )
+    Period_Final_Q         = Column( Numeric(20,12) )
     CI_Id                  = Column( Integer )
     CC_Id                  = Column( Integer )
     Cus_Id                 = Column( Integer )
     Rat_Id                 = Column( Integer )
     Typ_Code               = Column( String(10) )
     Pla_Id                 = Column( Integer )
-    Mean                   = Column( Numeric(20,6) )
-    Variance               = Column( Numeric(20,6) )
-    StdDev                 = Column( Numeric(20,6) )
-    Min                    = Column( Numeric(20,6) )
-    Max                    = Column( Numeric(20,6) )
+    Mean                   = Column( Numeric(20,12) )
+    Variance               = Column( Numeric(20,12) )
+    StdDev                 = Column( Numeric(20,12) )
+    Min                    = Column( Numeric(20,12) )
+    Max                    = Column( Numeric(20,12) )
     
-    def __init__(self, CU_Id=None, From=None, To=None, Total_Slices=0, Found_Slices=0, Not_Found_Slices=0, Period_Initial_Q=0.000000, Period_Increase=0.000000, Period_Increase_Count=0, Period_Reduction=0.000000, Period_Reduction_Count=0, Period_Final_Q=0.000000, CI_Id=1, CC_Id=1, Cus_Id=1, Rat_Id=1, Typ_Code='NUL', Pla_Id=1, Mean=0.000000, Variance=0.000000, StdDev=0.000000, Min=0.000000, Max=0.000000,engine=None,logger=None):
+    def __init__(self, CU_Id=None, From=None, To=None, Total_Slices=0, Found_Slices=0, Not_Found_Slices=0, Period_Initial_Q=0.000000000000, Period_Increase=0.000000000000, Period_Increase_Count=0, Period_Reduction=0.000000000000, Period_Reduction_Count=0, Period_Final_Q=0.000000000000, CI_Id=1, CC_Id=1, Cus_Id=1, Rat_Id=1, Typ_Code='NUL', Pla_Id=1, Mean=0.000000000000, Variance=0.000000000000, StdDev=0.000000000000, Min=0.000000000000, Max=0.000000000000,engine=None,logger=None):
         """ Initiates a ST_Use_Per_CU class record """
         self.engine=engine
         self.logger=logger
@@ -3193,7 +3561,7 @@ class ST_Use_Per_CU(Base):
 
     def get_columns(self):
         """ Gets ST_Use_Per_CU record column full details list """
-        __list=[{'field': 'CU_Id', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 1, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'CU_Id', 'is_time': False}, {'field': 'From', 'type': 'timestamp', 'type_flask': 'db.DateTime', 'type_sqlalchemy': 'DateTime', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 2, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'DateTimeField', 'is_id': False, 'header': 'From', 'is_time': False}, {'field': 'To', 'type': 'timestamp', 'type_flask': 'db.DateTime', 'type_sqlalchemy': 'DateTime', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 3, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'DateTimeField', 'is_id': False, 'header': 'To', 'is_time': False}, {'field': 'Total_Slices', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': '0', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 4, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'Total_Slices', 'is_time': False}, {'field': 'Found_Slices', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': '0', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 5, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'Found_Slices', 'is_time': False}, {'field': 'Not_Found_Slices', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': '0', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 6, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'Not_Found_Slices', 'is_time': False}, {'field': 'Period_Initial_Q', 'type': 'decimal(20,6)', 'type_flask': 'db.Numeric(20,6)', 'type_sqlalchemy': 'Numeric(20,6)', 'null': 'YES', 'key': '', 'default': '0.000000', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 7, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'Period_Initial_Q', 'is_time': False}, {'field': 'Period_Increase', 'type': 'decimal(20,6)', 'type_flask': 'db.Numeric(20,6)', 'type_sqlalchemy': 'Numeric(20,6)', 'null': 'YES', 'key': '', 'default': '0.000000', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 8, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'Period_Increase', 'is_time': False}, {'field': 'Period_Increase_Count', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': '0', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 9, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'Period_Increase_Count', 'is_time': False}, {'field': 'Period_Reduction', 'type': 'decimal(20,6)', 'type_flask': 'db.Numeric(20,6)', 'type_sqlalchemy': 'Numeric(20,6)', 'null': 'YES', 'key': '', 'default': '0.000000', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 10, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'Period_Reduction', 'is_time': False}, {'field': 'Period_Reduction_Count', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': '0', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 11, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'Period_Reduction_Count', 'is_time': False}, {'field': 'Period_Final_Q', 'type': 'decimal(20,6)', 'type_flask': 'db.Numeric(20,6)', 'type_sqlalchemy': 'Numeric(20,6)', 'null': 'YES', 'key': '', 'default': '0.000000', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 12, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'Period_Final_Q', 'is_time': False}, {'field': 'CI_Id', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': '1', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 13, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'CI_Id', 'is_time': False}, {'field': 'CC_Id', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': '1', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 14, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'CC_Id', 'is_time': False}, {'field': 'Cus_Id', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': '1', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 15, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'Cus_Id', 'is_time': False}, {'field': 'Rat_Id', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': '1', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 16, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'Rat_id', 'is_time': False}, {'field': 'Typ_Code', 'type': 'varchar(10)', 'type_flask': 'db.String(10)', 'type_sqlalchemy': 'String(10)', 'null': 'YES', 'key': '', 'default': 'NUL', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 17, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Typ_Code', 'is_time': False}, {'field': 'Pla_Id', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': '1', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 18, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'Pla_Id', 'is_time': False}, {'field': 'Mean', 'type': 'decimal(20,6)', 'type_flask': 'db.Numeric(20,6)', 'type_sqlalchemy': 'Numeric(20,6)', 'null': 'YES', 'key': '', 'default': '0.000000', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 19, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'Mean', 'is_time': False}, {'field': 'Variance', 'type': 'decimal(20,6)', 'type_flask': 'db.Numeric(20,6)', 'type_sqlalchemy': 'Numeric(20,6)', 'null': 'YES', 'key': '', 'default': '0.000000', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 20, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'Variance', 'is_time': False}, {'field': 'StdDev', 'type': 'decimal(20,6)', 'type_flask': 'db.Numeric(20,6)', 'type_sqlalchemy': 'Numeric(20,6)', 'null': 'YES', 'key': '', 'default': '0.000000', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 21, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'StdDev', 'is_time': False}, {'field': 'Min', 'type': 'decimal(20,6)', 'type_flask': 'db.Numeric(20,6)', 'type_sqlalchemy': 'Numeric(20,6)', 'null': 'YES', 'key': '', 'default': '0.000000', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 22, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'Min', 'is_time': False}, {'field': 'Max', 'type': 'decimal(20,6)', 'type_flask': 'db.Numeric(20,6)', 'type_sqlalchemy': 'Numeric(20,6)', 'null': 'YES', 'key': '', 'default': '0.000000', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 23, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'Max', 'is_time': False}]
+        __list=[{'field': 'CU_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 1, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'CU_Id', 'is_time': False}, {'field': 'From', 'type': 'timestamp', 'type_flask': 'db.DateTime', 'type_sqlalchemy': 'DateTime', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 2, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'DateTimeField', 'is_id': False, 'header': 'From', 'is_time': False}, {'field': 'To', 'type': 'timestamp', 'type_flask': 'db.DateTime', 'type_sqlalchemy': 'DateTime', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 3, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'DateTimeField', 'is_id': False, 'header': 'To', 'is_time': False}, {'field': 'Total_Slices', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': '0', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 4, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'Total_Slices', 'is_time': False}, {'field': 'Found_Slices', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': '0', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 5, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'Found_Slices', 'is_time': False}, {'field': 'Not_Found_Slices', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': '0', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 6, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'Not_Found_Slices', 'is_time': False}, {'field': 'Period_Initial_Q', 'type': 'decimal(20,12)', 'type_flask': 'db.Numeric(20,12)', 'type_sqlalchemy': 'Numeric(20,12)', 'null': 'YES', 'key': '', 'default': '0.000000000000', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 7, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'Period_Initial_Q', 'is_time': False}, {'field': 'Period_Increase', 'type': 'decimal(20,12)', 'type_flask': 'db.Numeric(20,12)', 'type_sqlalchemy': 'Numeric(20,12)', 'null': 'YES', 'key': '', 'default': '0.000000000000', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 8, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'Period_Increase', 'is_time': False}, {'field': 'Period_Increase_Count', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': '0', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 9, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'Period_Increase_Count', 'is_time': False}, {'field': 'Period_Reduction', 'type': 'decimal(20,12)', 'type_flask': 'db.Numeric(20,12)', 'type_sqlalchemy': 'Numeric(20,12)', 'null': 'YES', 'key': '', 'default': '0.000000000000', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 10, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'Period_Reduction', 'is_time': False}, {'field': 'Period_Reduction_Count', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': '0', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 11, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'Period_Reduction_Count', 'is_time': False}, {'field': 'Period_Final_Q', 'type': 'decimal(20,12)', 'type_flask': 'db.Numeric(20,12)', 'type_sqlalchemy': 'Numeric(20,12)', 'null': 'YES', 'key': '', 'default': '0.000000000000', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 12, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'Period_Final_Q', 'is_time': False}, {'field': 'CI_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': '1', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 13, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'CI_Id', 'is_time': False}, {'field': 'CC_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': '1', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 14, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'CC_Id', 'is_time': False}, {'field': 'Cus_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': '1', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 15, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'Cus_Id', 'is_time': False}, {'field': 'Rat_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': '1', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 16, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'Rat_id', 'is_time': False}, {'field': 'Typ_Code', 'type': 'varchar(10)', 'type_flask': 'db.String(10)', 'type_sqlalchemy': 'String(10)', 'null': 'YES', 'key': '', 'default': 'NUL', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 17, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Typ_Code', 'is_time': False}, {'field': 'Pla_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': '1', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 18, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'Pla_Id', 'is_time': False}, {'field': 'Mean', 'type': 'decimal(20,12)', 'type_flask': 'db.Numeric(20,12)', 'type_sqlalchemy': 'Numeric(20,12)', 'null': 'YES', 'key': '', 'default': '0.000000000000', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 19, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'Mean', 'is_time': False}, {'field': 'Variance', 'type': 'decimal(20,12)', 'type_flask': 'db.Numeric(20,12)', 'type_sqlalchemy': 'Numeric(20,12)', 'null': 'YES', 'key': '', 'default': '0.000000000000', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 20, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'Variance', 'is_time': False}, {'field': 'StdDev', 'type': 'decimal(20,12)', 'type_flask': 'db.Numeric(20,12)', 'type_sqlalchemy': 'Numeric(20,12)', 'null': 'YES', 'key': '', 'default': '0.000000000000', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 21, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'StdDev', 'is_time': False}, {'field': 'Min', 'type': 'decimal(20,12)', 'type_flask': 'db.Numeric(20,12)', 'type_sqlalchemy': 'Numeric(20,12)', 'null': 'YES', 'key': '', 'default': '0.000000000000', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 22, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'Min', 'is_time': False}, {'field': 'Max', 'type': 'decimal(20,12)', 'type_flask': 'db.Numeric(20,12)', 'type_sqlalchemy': 'Numeric(20,12)', 'null': 'YES', 'key': '', 'default': '0.000000000000', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 23, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'Max', 'is_time': False}]
 
         return __list
 
@@ -3205,13 +3573,13 @@ class ST_Use_Per_CU(Base):
 
     def get_column_types(self):
         """ Gets ST_Use_Per_CU record column data types list """
-        __list=['Integer', 'DateTime', 'DateTime', 'Integer', 'Integer', 'Integer', 'Numeric(20,6)', 'Numeric(20,6)', 'Integer', 'Numeric(20,6)', 'Integer', 'Numeric(20,6)', 'Integer', 'Integer', 'Integer', 'Integer', 'String(10)', 'Integer', 'Numeric(20,6)', 'Numeric(20,6)', 'Numeric(20,6)', 'Numeric(20,6)', 'Numeric(20,6)']
+        __list=['Integer', 'DateTime', 'DateTime', 'Integer', 'Integer', 'Integer', 'Numeric(20,12)', 'Numeric(20,12)', 'Integer', 'Numeric(20,12)', 'Integer', 'Numeric(20,12)', 'Integer', 'Integer', 'Integer', 'Integer', 'String(10)', 'Integer', 'Numeric(20,12)', 'Numeric(20,12)', 'Numeric(20,12)', 'Numeric(20,12)', 'Numeric(20,12)']
 
         return __list
 
     def get_column_meta(self):
         """ Gets ST_Use_Per_CU record column data meta list """
-        __list=[('CU_Id', 'Integer'), ('From', 'DateTime'), ('To', 'DateTime'), ('Total_Slices', 'Integer'), ('Found_Slices', 'Integer'), ('Not_Found_Slices', 'Integer'), ('Period_Initial_Q', 'Numeric(20,6)'), ('Period_Increase', 'Numeric(20,6)'), ('Period_Increase_Count', 'Integer'), ('Period_Reduction', 'Numeric(20,6)'), ('Period_Reduction_Count', 'Integer'), ('Period_Final_Q', 'Numeric(20,6)'), ('CI_Id', 'Integer'), ('CC_Id', 'Integer'), ('Cus_Id', 'Integer'), ('Rat_Id', 'Integer'), ('Typ_Code', 'String(10)'), ('Pla_Id', 'Integer'), ('Mean', 'Numeric(20,6)'), ('Variance', 'Numeric(20,6)'), ('StdDev', 'Numeric(20,6)'), ('Min', 'Numeric(20,6)'), ('Max', 'Numeric(20,6)')]
+        __list=[('CU_Id', 'Integer'), ('From', 'DateTime'), ('To', 'DateTime'), ('Total_Slices', 'Integer'), ('Found_Slices', 'Integer'), ('Not_Found_Slices', 'Integer'), ('Period_Initial_Q', 'Numeric(20,12)'), ('Period_Increase', 'Numeric(20,12)'), ('Period_Increase_Count', 'Integer'), ('Period_Reduction', 'Numeric(20,12)'), ('Period_Reduction_Count', 'Integer'), ('Period_Final_Q', 'Numeric(20,12)'), ('CI_Id', 'Integer'), ('CC_Id', 'Integer'), ('Cus_Id', 'Integer'), ('Rat_Id', 'Integer'), ('Typ_Code', 'String(10)'), ('Pla_Id', 'Integer'), ('Mean', 'Numeric(20,12)'), ('Variance', 'Numeric(20,12)'), ('StdDev', 'Numeric(20,12)'), ('Min', 'Numeric(20,12)'), ('Max', 'Numeric(20,12)')]
 
         return __list
 
@@ -3240,13 +3608,22 @@ class ST_Use_Per_CU(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2020-02-20 16:44:35
+# GLVH @ 2021-04-08 20:09:28
 # =============================================================================
 
+# gen_model_flask.py:389 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_st_use_per_type.py
 class ST_Use_Per_Type(Base):
     __tablename__ = 'ST_Use_Per_Type'
     engine        = None
     logger        = None
+
+    def set_shard(suffix=None):
+       if suffix is not None:
+           name='ST_Use_Per_Type_{suffix}'.format(suffix=suffix)
+           __class__.__tablename__  = name
+           __class__.__table__.name = name
+       return __class__.__tablename__
+
     Typ_Code = Column( String(10), primary_key=True )
     Cus_Id   = Column( Integer, primary_key=True )
     Pla_Id   = Column( Integer, primary_key=True )
@@ -3255,13 +3632,13 @@ class ST_Use_Per_Type(Base):
     Year     = Column( Integer, primary_key=True )
     Month    = Column( Integer, primary_key=True )
     Count    = Column( Integer )
-    Mean     = Column( Numeric(20,6) )
-    Variance = Column( Numeric(20,6) )
-    StdDev   = Column( Numeric(20,6) )
-    Min      = Column( Numeric(20,6) )
-    Max      = Column( Numeric(20,6) )
+    Mean     = Column( Numeric(20,12) )
+    Variance = Column( Numeric(20,12) )
+    StdDev   = Column( Numeric(20,12) )
+    Min      = Column( Numeric(20,12) )
+    Max      = Column( Numeric(20,12) )
     
-    def __init__(self, Typ_Code='None', Cus_Id=1, Pla_Id=1, CC_Id=1, CI_Id=1, Year=None, Month=None, Count=0, Mean=0.000000, Variance=0.000000, StdDev=0.000000, Min=0.000000, Max=0.000000,engine=None,logger=None):
+    def __init__(self, Typ_Code='None', Cus_Id=1, Pla_Id=1, CC_Id=1, CI_Id=1, Year=None, Month=None, Count=0, Mean=None, Variance=None, StdDev=None, Min=None, Max=None,engine=None,logger=None):
         """ Initiates a ST_Use_Per_Type class record """
         self.engine=engine
         self.logger=logger
@@ -3349,7 +3726,7 @@ class ST_Use_Per_Type(Base):
 
     def get_columns(self):
         """ Gets ST_Use_Per_Type record column full details list """
-        __list=[{'field': 'Typ_Code', 'type': 'varchar(10)', 'type_flask': 'db.String(10)', 'type_sqlalchemy': 'String(10)', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 1, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Typ_Code', 'is_time': False}, {'field': 'Cus_Id', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': '1', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 2, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'Cus_Id', 'is_time': False}, {'field': 'Pla_Id', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': '1', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 3, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'Pla_Id', 'is_time': False}, {'field': 'CC_Id', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': '1', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 4, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'CC_Id', 'is_time': False}, {'field': 'CI_Id', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': '1', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 5, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'CI_Id', 'is_time': False}, {'field': 'Year', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 6, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'Year', 'is_time': False}, {'field': 'Month', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 7, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'Month', 'is_time': False}, {'field': 'Count', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': '0', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 8, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'Count', 'is_time': False}, {'field': 'Mean', 'type': 'decimal(20,6)', 'type_flask': 'db.Numeric(20,6)', 'type_sqlalchemy': 'Numeric(20,6)', 'null': 'YES', 'key': '', 'default': '0.000000', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 9, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'Mean', 'is_time': False}, {'field': 'Variance', 'type': 'decimal(20,6)', 'type_flask': 'db.Numeric(20,6)', 'type_sqlalchemy': 'Numeric(20,6)', 'null': 'YES', 'key': '', 'default': '0.000000', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 10, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'Variance', 'is_time': False}, {'field': 'StdDev', 'type': 'decimal(20,6)', 'type_flask': 'db.Numeric(20,6)', 'type_sqlalchemy': 'Numeric(20,6)', 'null': 'YES', 'key': '', 'default': '0.000000', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 11, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'StdDev', 'is_time': False}, {'field': 'Min', 'type': 'decimal(20,6)', 'type_flask': 'db.Numeric(20,6)', 'type_sqlalchemy': 'Numeric(20,6)', 'null': 'YES', 'key': '', 'default': '0.000000', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 12, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'Min', 'is_time': False}, {'field': 'Max', 'type': 'decimal(20,6)', 'type_flask': 'db.Numeric(20,6)', 'type_sqlalchemy': 'Numeric(20,6)', 'null': 'YES', 'key': '', 'default': '0.000000', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 13, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'Max', 'is_time': False}]
+        __list=[{'field': 'Typ_Code', 'type': 'varchar(10)', 'type_flask': 'db.String(10)', 'type_sqlalchemy': 'String(10)', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 1, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Typ_Code', 'is_time': False}, {'field': 'Cus_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': '1', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 2, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'Cus_Id', 'is_time': False}, {'field': 'Pla_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': '1', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 3, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'Pla_Id', 'is_time': False}, {'field': 'CC_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': '1', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 4, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'CC_Id', 'is_time': False}, {'field': 'CI_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': '1', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 5, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'CI_Id', 'is_time': False}, {'field': 'Year', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 6, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'Year', 'is_time': False}, {'field': 'Month', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 7, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'Month', 'is_time': False}, {'field': 'Count', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': '0', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 8, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'Count', 'is_time': False}, {'field': 'Mean', 'type': 'decimal(20,12)', 'type_flask': 'db.Numeric(20,12)', 'type_sqlalchemy': 'Numeric(20,12)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 9, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'Mean', 'is_time': False}, {'field': 'Variance', 'type': 'decimal(20,12)', 'type_flask': 'db.Numeric(20,12)', 'type_sqlalchemy': 'Numeric(20,12)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 10, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'Variance', 'is_time': False}, {'field': 'StdDev', 'type': 'decimal(20,12)', 'type_flask': 'db.Numeric(20,12)', 'type_sqlalchemy': 'Numeric(20,12)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 11, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'StdDev', 'is_time': False}, {'field': 'Min', 'type': 'decimal(20,12)', 'type_flask': 'db.Numeric(20,12)', 'type_sqlalchemy': 'Numeric(20,12)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 12, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'Min', 'is_time': False}, {'field': 'Max', 'type': 'decimal(20,12)', 'type_flask': 'db.Numeric(20,12)', 'type_sqlalchemy': 'Numeric(20,12)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 13, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'Max', 'is_time': False}]
 
         return __list
 
@@ -3361,13 +3738,13 @@ class ST_Use_Per_Type(Base):
 
     def get_column_types(self):
         """ Gets ST_Use_Per_Type record column data types list """
-        __list=['String(10)', 'Integer', 'Integer', 'Integer', 'Integer', 'Integer', 'Integer', 'Integer', 'Numeric(20,6)', 'Numeric(20,6)', 'Numeric(20,6)', 'Numeric(20,6)', 'Numeric(20,6)']
+        __list=['String(10)', 'Integer', 'Integer', 'Integer', 'Integer', 'Integer', 'Integer', 'Integer', 'Numeric(20,12)', 'Numeric(20,12)', 'Numeric(20,12)', 'Numeric(20,12)', 'Numeric(20,12)']
 
         return __list
 
     def get_column_meta(self):
         """ Gets ST_Use_Per_Type record column data meta list """
-        __list=[('Typ_Code', 'String(10)'), ('Cus_Id', 'Integer'), ('Pla_Id', 'Integer'), ('CC_Id', 'Integer'), ('CI_Id', 'Integer'), ('Year', 'Integer'), ('Month', 'Integer'), ('Count', 'Integer'), ('Mean', 'Numeric(20,6)'), ('Variance', 'Numeric(20,6)'), ('StdDev', 'Numeric(20,6)'), ('Min', 'Numeric(20,6)'), ('Max', 'Numeric(20,6)')]
+        __list=[('Typ_Code', 'String(10)'), ('Cus_Id', 'Integer'), ('Pla_Id', 'Integer'), ('CC_Id', 'Integer'), ('CI_Id', 'Integer'), ('Year', 'Integer'), ('Month', 'Integer'), ('Count', 'Integer'), ('Mean', 'Numeric(20,12)'), ('Variance', 'Numeric(20,12)'), ('StdDev', 'Numeric(20,12)'), ('Min', 'Numeric(20,12)'), ('Max', 'Numeric(20,12)')]
 
         return __list
 
@@ -3396,13 +3773,22 @@ class ST_Use_Per_Type(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2020-02-20 16:44:35
+# GLVH @ 2021-04-08 20:09:28
 # =============================================================================
 
+# gen_model_flask.py:389 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_trace.py
 class Trace(Base):
     __tablename__ = 'Trace'
     engine        = None
     logger        = None
+
+    def set_shard(suffix=None):
+       if suffix is not None:
+           name='Trace_{suffix}'.format(suffix=suffix)
+           __class__.__tablename__  = name
+           __class__.__table__.name = name
+       return __class__.__tablename__
+
     ID   = Column( Integer, primary_key=True, autoincrement=True )
     LINE = Column( String(128) )
     
@@ -3483,7 +3869,7 @@ class Trace(Base):
 
     def get_columns(self):
         """ Gets Trace record column full details list """
-        __list=[{'field': 'ID', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': 'auto_increment', 'is_form_editable': True, 'format': None, 'order': 1, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': True, 'header': 'ID', 'is_time': False}, {'field': 'LINE', 'type': 'varchar(128)', 'type_flask': 'db.String(128)', 'type_sqlalchemy': 'String(128)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 2, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'LINE', 'is_time': False}]
+        __list=[{'field': 'ID', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': 'auto_increment', 'is_form_editable': True, 'format': None, 'order': 1, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': True, 'header': 'ID', 'is_time': False}, {'field': 'LINE', 'type': 'varchar(128)', 'type_flask': 'db.String(128)', 'type_sqlalchemy': 'String(128)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 2, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'LINE', 'is_time': False}]
 
         return __list
 
@@ -3530,20 +3916,30 @@ class Trace(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2020-02-20 16:44:35
+# GLVH @ 2021-04-08 20:09:28
 # =============================================================================
 
+# gen_model_flask.py:389 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_user_resumes.py
 class User_Resumes(Base):
     __tablename__ = 'User_Resumes'
     engine        = None
     logger        = None
+
+    def set_shard(suffix=None):
+       if suffix is not None:
+           name='User_Resumes_{suffix}'.format(suffix=suffix)
+           __class__.__tablename__  = name
+           __class__.__table__.name = name
+       return __class__.__tablename__
+
+    User_Id                = Column( Integer, primary_key=True )
     Cus_Id                 = Column( Integer )
     CR_Date_From           = Column( Date, primary_key=True )
     CR_Date_To             = Column( Date, primary_key=True )
     CIT_Status             = Column( Integer, primary_key=True )
     Cur_Code               = Column( String(3), primary_key=True )
     CIT_Count              = Column( Integer )
-    CIT_Quantity           = Column( Numeric(20,6) )
+    CIT_Quantity           = Column( Numeric(20,12) )
     CIT_Generation         = Column( Integer )
     CU_Id                  = Column( Integer, primary_key=True )
     CI_CC_Id               = Column( Integer )
@@ -3552,33 +3948,34 @@ class User_Resumes(Base):
     CC_Cur_Code            = Column( String(3) )
     CI_Id                  = Column( Integer, primary_key=True )
     Rat_Id                 = Column( Integer )
-    Rat_Price              = Column( Numeric(20,6) )
+    Rat_Price              = Column( Numeric(20,12) )
     Rat_MU_Code            = Column( String(3) )
     Rat_Cur_Code           = Column( String(3) )
     Rat_Period             = Column( Integer )
-    Rat_Hourly             = Column( Numeric(20,6) )
-    Rat_Daily              = Column( Numeric(20,6) )
-    Rat_Monthly            = Column( Numeric(20,6) )
-    CR_Quantity            = Column( Numeric(20,6) )
-    CR_Quantity_at_Rate    = Column( Numeric(20,6) )
-    CC_XR                  = Column( Numeric(20,10) )
-    CR_Cur_XR              = Column( Numeric(20,10) )
-    CR_ST_at_Rate_Cur      = Column( Numeric(20,6) )
-    CR_ST_at_CC_Cur        = Column( Numeric(20,6) )
-    CR_ST_at_Cur           = Column( Numeric(20,6) )
+    Rat_Hourly             = Column( Numeric(20,12) )
+    Rat_Daily              = Column( Numeric(20,12) )
+    Rat_Monthly            = Column( Numeric(20,12) )
+    CR_Quantity            = Column( Numeric(20,12) )
+    CR_Quantity_at_Rate    = Column( Numeric(20,12) )
+    CC_XR                  = Column( Numeric(20,12) )
+    CR_Cur_XR              = Column( Numeric(20,12) )
+    CR_ST_at_Rate_Cur      = Column( Numeric(20,12) )
+    CR_ST_at_CC_Cur        = Column( Numeric(20,12) )
+    CR_ST_at_Cur           = Column( Numeric(20,12) )
     Cus_Name               = Column( String(45) )
     CI_Name                = Column( String(45) )
     CU_Description         = Column( String(45) )
-    CC_Description         = Column( String(45) )
+    CC_Description         = Column( String(255) )
     Rat_Period_Description = Column( String(10) )
     CC_Code                = Column( String(45) )
     Pla_Id                 = Column( Integer )
     Pla_Name               = Column( String(45) )
     
-    def __init__(self, Cus_Id=None, CR_Date_From=None, CR_Date_To=None, CIT_Status=None, Cur_Code='None', CIT_Count=None, CIT_Quantity=None, CIT_Generation=1, CU_Id=None, CI_CC_Id=None, CU_Operation='None', Typ_Code='None', CC_Cur_Code='None', CI_Id=None, Rat_Id=None, Rat_Price=None, Rat_MU_Code='None', Rat_Cur_Code='None', Rat_Period=None, Rat_Hourly=None, Rat_Daily=None, Rat_Monthly=None, CR_Quantity=None, CR_Quantity_at_Rate=None, CC_XR=None, CR_Cur_XR=None, CR_ST_at_Rate_Cur=None, CR_ST_at_CC_Cur=None, CR_ST_at_Cur=None, Cus_Name='None', CI_Name='None', CU_Description='None', CC_Description='None', Rat_Period_Description='None', CC_Code='None', Pla_Id=None, Pla_Name='None',engine=None,logger=None):
+    def __init__(self, User_Id=None, Cus_Id=None, CR_Date_From=None, CR_Date_To=None, CIT_Status=None, Cur_Code='None', CIT_Count=None, CIT_Quantity=None, CIT_Generation=1, CU_Id=None, CI_CC_Id=None, CU_Operation='None', Typ_Code='None', CC_Cur_Code='None', CI_Id=None, Rat_Id=None, Rat_Price=None, Rat_MU_Code='None', Rat_Cur_Code='None', Rat_Period=None, Rat_Hourly=None, Rat_Daily=None, Rat_Monthly=None, CR_Quantity=None, CR_Quantity_at_Rate=None, CC_XR=None, CR_Cur_XR=None, CR_ST_at_Rate_Cur=None, CR_ST_at_CC_Cur=None, CR_ST_at_Cur=None, Cus_Name='None', CI_Name='None', CU_Description='None', CC_Description='None', Rat_Period_Description='None', CC_Code='None', Pla_Id=None, Pla_Name='None',engine=None,logger=None):
         """ Initiates a User_Resumes class record """
         self.engine=engine
         self.logger=logger
+        self.User_Id                = User_Id
         self.Cus_Id                 = Cus_Id
         self.CR_Date_From           = CR_Date_From
         self.CR_Date_To             = CR_Date_To
@@ -3620,22 +4017,22 @@ class User_Resumes(Base):
         self.log('Created %s'%self)
     def __repr__(self):
         """ default class User_Resumes representation function """
-        return "<User_Resumes( Cus_Id='%s', CR_Date_From='%s', CR_Date_To='%s', CIT_Status='%s', Cur_Code='%s', CIT_Count='%s', CIT_Quantity='%s', CIT_Generation='%s', CU_Id='%s', CI_CC_Id='%s', CU_Operation='%s', Typ_Code='%s', CC_Cur_Code='%s', CI_Id='%s', Rat_Id='%s', Rat_Price='%s', Rat_MU_Code='%s', Rat_Cur_Code='%s', Rat_Period='%s', Rat_Hourly='%s', Rat_Daily='%s', Rat_Monthly='%s', CR_Quantity='%s', CR_Quantity_at_Rate='%s', CC_XR='%s', CR_Cur_XR='%s', CR_ST_at_Rate_Cur='%s', CR_ST_at_CC_Cur='%s', CR_ST_at_Cur='%s', Cus_Name='%s', CI_Name='%s', CU_Description='%s', CC_Description='%s', Rat_Period_Description='%s', CC_Code='%s', Pla_Id='%s', Pla_Name='%s')>" % \
-                ( self.Cus_Id, self.CR_Date_From, self.CR_Date_To, self.CIT_Status, self.Cur_Code, self.CIT_Count, self.CIT_Quantity, self.CIT_Generation, self.CU_Id, self.CI_CC_Id, self.CU_Operation, self.Typ_Code, self.CC_Cur_Code, self.CI_Id, self.Rat_Id, self.Rat_Price, self.Rat_MU_Code, self.Rat_Cur_Code, self.Rat_Period, self.Rat_Hourly, self.Rat_Daily, self.Rat_Monthly, self.CR_Quantity, self.CR_Quantity_at_Rate, self.CC_XR, self.CR_Cur_XR, self.CR_ST_at_Rate_Cur, self.CR_ST_at_CC_Cur, self.CR_ST_at_Cur, self.Cus_Name, self.CI_Name, self.CU_Description, self.CC_Description, self.Rat_Period_Description, self.CC_Code, self.Pla_Id, self.Pla_Name)
+        return "<User_Resumes( User_Id='%s', Cus_Id='%s', CR_Date_From='%s', CR_Date_To='%s', CIT_Status='%s', Cur_Code='%s', CIT_Count='%s', CIT_Quantity='%s', CIT_Generation='%s', CU_Id='%s', CI_CC_Id='%s', CU_Operation='%s', Typ_Code='%s', CC_Cur_Code='%s', CI_Id='%s', Rat_Id='%s', Rat_Price='%s', Rat_MU_Code='%s', Rat_Cur_Code='%s', Rat_Period='%s', Rat_Hourly='%s', Rat_Daily='%s', Rat_Monthly='%s', CR_Quantity='%s', CR_Quantity_at_Rate='%s', CC_XR='%s', CR_Cur_XR='%s', CR_ST_at_Rate_Cur='%s', CR_ST_at_CC_Cur='%s', CR_ST_at_Cur='%s', Cus_Name='%s', CI_Name='%s', CU_Description='%s', CC_Description='%s', Rat_Period_Description='%s', CC_Code='%s', Pla_Id='%s', Pla_Name='%s')>" % \
+                ( self.User_Id, self.Cus_Id, self.CR_Date_From, self.CR_Date_To, self.CIT_Status, self.Cur_Code, self.CIT_Count, self.CIT_Quantity, self.CIT_Generation, self.CU_Id, self.CI_CC_Id, self.CU_Operation, self.Typ_Code, self.CC_Cur_Code, self.CI_Id, self.Rat_Id, self.Rat_Price, self.Rat_MU_Code, self.Rat_Cur_Code, self.Rat_Period, self.Rat_Hourly, self.Rat_Daily, self.Rat_Monthly, self.CR_Quantity, self.CR_Quantity_at_Rate, self.CC_XR, self.CR_Cur_XR, self.CR_ST_at_Rate_Cur, self.CR_ST_at_CC_Cur, self.CR_ST_at_Cur, self.Cus_Name, self.CI_Name, self.CU_Description, self.CC_Description, self.Rat_Period_Description, self.CC_Code, self.Pla_Id, self.Pla_Name)
 
     def get_list(self):
         """ Gets User_Resumes record in list format """
-        __list = [ self.Cus_Id, self.CR_Date_From, self.CR_Date_To, self.CIT_Status, self.Cur_Code, self.CIT_Count, self.CIT_Quantity, self.CIT_Generation, self.CU_Id, self.CI_CC_Id, self.CU_Operation, self.Typ_Code, self.CC_Cur_Code, self.CI_Id, self.Rat_Id, self.Rat_Price, self.Rat_MU_Code, self.Rat_Cur_Code, self.Rat_Period, self.Rat_Hourly, self.Rat_Daily, self.Rat_Monthly, self.CR_Quantity, self.CR_Quantity_at_Rate, self.CC_XR, self.CR_Cur_XR, self.CR_ST_at_Rate_Cur, self.CR_ST_at_CC_Cur, self.CR_ST_at_Cur, self.Cus_Name, self.CI_Name, self.CU_Description, self.CC_Description, self.Rat_Period_Description, self.CC_Code, self.Pla_Id, self.Pla_Name]
+        __list = [ self.User_Id, self.Cus_Id, self.CR_Date_From, self.CR_Date_To, self.CIT_Status, self.Cur_Code, self.CIT_Count, self.CIT_Quantity, self.CIT_Generation, self.CU_Id, self.CI_CC_Id, self.CU_Operation, self.Typ_Code, self.CC_Cur_Code, self.CI_Id, self.Rat_Id, self.Rat_Price, self.Rat_MU_Code, self.Rat_Cur_Code, self.Rat_Period, self.Rat_Hourly, self.Rat_Daily, self.Rat_Monthly, self.CR_Quantity, self.CR_Quantity_at_Rate, self.CC_XR, self.CR_Cur_XR, self.CR_ST_at_Rate_Cur, self.CR_ST_at_CC_Cur, self.CR_ST_at_Cur, self.Cus_Name, self.CI_Name, self.CU_Description, self.CC_Description, self.Rat_Period_Description, self.CC_Code, self.Pla_Id, self.Pla_Name]
         return __list
 
     def get_tuple(self):
         """ Gets User_Resumes record in tuple format """
-        __tuple = ( self.Cus_Id, self.CR_Date_From, self.CR_Date_To, self.CIT_Status, self.Cur_Code, self.CIT_Count, self.CIT_Quantity, self.CIT_Generation, self.CU_Id, self.CI_CC_Id, self.CU_Operation, self.Typ_Code, self.CC_Cur_Code, self.CI_Id, self.Rat_Id, self.Rat_Price, self.Rat_MU_Code, self.Rat_Cur_Code, self.Rat_Period, self.Rat_Hourly, self.Rat_Daily, self.Rat_Monthly, self.CR_Quantity, self.CR_Quantity_at_Rate, self.CC_XR, self.CR_Cur_XR, self.CR_ST_at_Rate_Cur, self.CR_ST_at_CC_Cur, self.CR_ST_at_Cur, self.Cus_Name, self.CI_Name, self.CU_Description, self.CC_Description, self.Rat_Period_Description, self.CC_Code, self.Pla_Id, self.Pla_Name)
+        __tuple = ( self.User_Id, self.Cus_Id, self.CR_Date_From, self.CR_Date_To, self.CIT_Status, self.Cur_Code, self.CIT_Count, self.CIT_Quantity, self.CIT_Generation, self.CU_Id, self.CI_CC_Id, self.CU_Operation, self.Typ_Code, self.CC_Cur_Code, self.CI_Id, self.Rat_Id, self.Rat_Price, self.Rat_MU_Code, self.Rat_Cur_Code, self.Rat_Period, self.Rat_Hourly, self.Rat_Daily, self.Rat_Monthly, self.CR_Quantity, self.CR_Quantity_at_Rate, self.CC_XR, self.CR_Cur_XR, self.CR_ST_at_Rate_Cur, self.CR_ST_at_CC_Cur, self.CR_ST_at_Cur, self.Cus_Name, self.CI_Name, self.CU_Description, self.CC_Description, self.Rat_Period_Description, self.CC_Code, self.Pla_Id, self.Pla_Name)
         return __tuple
 
     def get_dict(self):
         """ Gets User_Resumes record in dict format """
-        __dict={'Cus_Id':self.Cus_Id,'CR_Date_From':self.CR_Date_From,'CR_Date_To':self.CR_Date_To,'CIT_Status':self.CIT_Status,'Cur_Code':self.Cur_Code,'CIT_Count':self.CIT_Count,'CIT_Quantity':self.CIT_Quantity,'CIT_Generation':self.CIT_Generation,'CU_Id':self.CU_Id,'CI_CC_Id':self.CI_CC_Id,'CU_Operation':self.CU_Operation,'Typ_Code':self.Typ_Code,'CC_Cur_Code':self.CC_Cur_Code,'CI_Id':self.CI_Id,'Rat_Id':self.Rat_Id,'Rat_Price':self.Rat_Price,'Rat_MU_Code':self.Rat_MU_Code,'Rat_Cur_Code':self.Rat_Cur_Code,'Rat_Period':self.Rat_Period,'Rat_Hourly':self.Rat_Hourly,'Rat_Daily':self.Rat_Daily,'Rat_Monthly':self.Rat_Monthly,'CR_Quantity':self.CR_Quantity,'CR_Quantity_at_Rate':self.CR_Quantity_at_Rate,'CC_XR':self.CC_XR,'CR_Cur_XR':self.CR_Cur_XR,'CR_ST_at_Rate_Cur':self.CR_ST_at_Rate_Cur,'CR_ST_at_CC_Cur':self.CR_ST_at_CC_Cur,'CR_ST_at_Cur':self.CR_ST_at_Cur,'Cus_Name':self.Cus_Name,'CI_Name':self.CI_Name,'CU_Description':self.CU_Description,'CC_Description':self.CC_Description,'Rat_Period_Description':self.Rat_Period_Description,'CC_Code':self.CC_Code,'Pla_Id':self.Pla_Id,'Pla_Name':self.Pla_Name}
+        __dict={'User_Id':self.User_Id,'Cus_Id':self.Cus_Id,'CR_Date_From':self.CR_Date_From,'CR_Date_To':self.CR_Date_To,'CIT_Status':self.CIT_Status,'Cur_Code':self.Cur_Code,'CIT_Count':self.CIT_Count,'CIT_Quantity':self.CIT_Quantity,'CIT_Generation':self.CIT_Generation,'CU_Id':self.CU_Id,'CI_CC_Id':self.CI_CC_Id,'CU_Operation':self.CU_Operation,'Typ_Code':self.Typ_Code,'CC_Cur_Code':self.CC_Cur_Code,'CI_Id':self.CI_Id,'Rat_Id':self.Rat_Id,'Rat_Price':self.Rat_Price,'Rat_MU_Code':self.Rat_MU_Code,'Rat_Cur_Code':self.Rat_Cur_Code,'Rat_Period':self.Rat_Period,'Rat_Hourly':self.Rat_Hourly,'Rat_Daily':self.Rat_Daily,'Rat_Monthly':self.Rat_Monthly,'CR_Quantity':self.CR_Quantity,'CR_Quantity_at_Rate':self.CR_Quantity_at_Rate,'CC_XR':self.CC_XR,'CR_Cur_XR':self.CR_Cur_XR,'CR_ST_at_Rate_Cur':self.CR_ST_at_Rate_Cur,'CR_ST_at_CC_Cur':self.CR_ST_at_CC_Cur,'CR_ST_at_Cur':self.CR_ST_at_Cur,'Cus_Name':self.Cus_Name,'CI_Name':self.CI_Name,'CU_Description':self.CU_Description,'CC_Description':self.CC_Description,'Rat_Period_Description':self.Rat_Period_Description,'CC_Code':self.CC_Code,'Pla_Id':self.Pla_Id,'Pla_Name':self.Pla_Name}
 
         return __dict
 
@@ -3687,41 +4084,41 @@ class User_Resumes(Base):
 
     def get_columns(self):
         """ Gets User_Resumes record column full details list """
-        __list=[{'field': 'Cus_Id', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 1, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'Cus_Id', 'is_time': False}, {'field': 'CR_Date_From', 'type': 'date', 'type_flask': 'db.Date', 'type_sqlalchemy': 'Date', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 2, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'DateField', 'is_id': False, 'header': 'CR_Date_From', 'is_time': False}, {'field': 'CR_Date_To', 'type': 'date', 'type_flask': 'db.Date', 'type_sqlalchemy': 'Date', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 3, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'DateField', 'is_id': False, 'header': 'CR_Date_To', 'is_time': False}, {'field': 'CIT_Status', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 4, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'CIT_Status', 'is_time': False}, {'field': 'Cur_Code', 'type': 'varchar(3)', 'type_flask': 'db.String(3)', 'type_sqlalchemy': 'String(3)', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 5, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Cur_Code', 'is_time': False}, {'field': 'CIT_Count', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 6, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'CIT_Count', 'is_time': False}, {'field': 'CIT_Quantity', 'type': 'decimal(20,6)', 'type_flask': 'db.Numeric(20,6)', 'type_sqlalchemy': 'Numeric(20,6)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 7, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'CIT_Quantity', 'is_time': False}, {'field': 'CIT_Generation', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': '1', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 8, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'CIT_Generation', 'is_time': False}, {'field': 'CU_Id', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 9, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'CU_Id', 'is_time': False}, {'field': 'CI_CC_Id', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 10, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'CI_CC_Id', 'is_time': False}, {'field': 'CU_Operation', 'type': 'varchar(10)', 'type_flask': 'db.String(10)', 'type_sqlalchemy': 'String(10)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 11, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'CU_Operation', 'is_time': False}, {'field': 'Typ_Code', 'type': 'varchar(10)', 'type_flask': 'db.String(10)', 'type_sqlalchemy': 'String(10)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 12, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Typ_Code', 'is_time': False}, {'field': 'CC_Cur_Code', 'type': 'varchar(3)', 'type_flask': 'db.String(3)', 'type_sqlalchemy': 'String(3)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 13, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'CC_Cur_Code', 'is_time': False}, {'field': 'CI_Id', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 14, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'CI_Id', 'is_time': False}, {'field': 'Rat_Id', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 15, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'Rat_Id', 'is_time': False}, {'field': 'Rat_Price', 'type': 'decimal(20,6)', 'type_flask': 'db.Numeric(20,6)', 'type_sqlalchemy': 'Numeric(20,6)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 16, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'Rat_Price', 'is_time': False}, {'field': 'Rat_MU_Code', 'type': 'varchar(3)', 'type_flask': 'db.String(3)', 'type_sqlalchemy': 'String(3)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 17, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Rat_MU_Code', 'is_time': False}, {'field': 'Rat_Cur_Code', 'type': 'varchar(3)', 'type_flask': 'db.String(3)', 'type_sqlalchemy': 'String(3)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 18, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Rat_Cur_Code', 'is_time': False}, {'field': 'Rat_Period', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 19, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'Rat_Period', 'is_time': False}, {'field': 'Rat_Hourly', 'type': 'decimal(20,6)', 'type_flask': 'db.Numeric(20,6)', 'type_sqlalchemy': 'Numeric(20,6)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 20, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'Rat_Hourly', 'is_time': False}, {'field': 'Rat_Daily', 'type': 'decimal(20,6)', 'type_flask': 'db.Numeric(20,6)', 'type_sqlalchemy': 'Numeric(20,6)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 21, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'Rat_Daily', 'is_time': False}, {'field': 'Rat_Monthly', 'type': 'decimal(20,6)', 'type_flask': 'db.Numeric(20,6)', 'type_sqlalchemy': 'Numeric(20,6)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 22, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'Rat_Monthly', 'is_time': False}, {'field': 'CR_Quantity', 'type': 'decimal(20,6)', 'type_flask': 'db.Numeric(20,6)', 'type_sqlalchemy': 'Numeric(20,6)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 23, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'CR_Quantity', 'is_time': False}, {'field': 'CR_Quantity_at_Rate', 'type': 'decimal(20,6)', 'type_flask': 'db.Numeric(20,6)', 'type_sqlalchemy': 'Numeric(20,6)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 24, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'CR_Quantity_at_Rate', 'is_time': False}, {'field': 'CC_XR', 'type': 'decimal(20,10)', 'type_flask': 'db.Numeric(20,10)', 'type_sqlalchemy': 'Numeric(20,10)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 25, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'CC_XR', 'is_time': False}, {'field': 'CR_Cur_XR', 'type': 'decimal(20,10)', 'type_flask': 'db.Numeric(20,10)', 'type_sqlalchemy': 'Numeric(20,10)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 26, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'CR_Cur_XR', 'is_time': False}, {'field': 'CR_ST_at_Rate_Cur', 'type': 'decimal(20,6)', 'type_flask': 'db.Numeric(20,6)', 'type_sqlalchemy': 'Numeric(20,6)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 27, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'CR_ST_at_Rate_Cur', 'is_time': False}, {'field': 'CR_ST_at_CC_Cur', 'type': 'decimal(20,6)', 'type_flask': 'db.Numeric(20,6)', 'type_sqlalchemy': 'Numeric(20,6)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 28, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'CR_ST_at_CC_Cur', 'is_time': False}, {'field': 'CR_ST_at_Cur', 'type': 'decimal(20,6)', 'type_flask': 'db.Numeric(20,6)', 'type_sqlalchemy': 'Numeric(20,6)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 29, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'CR_ST_at_Cur', 'is_time': False}, {'field': 'Cus_Name', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 30, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Cus_Name', 'is_time': False}, {'field': 'CI_Name', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 31, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'CI_Name', 'is_time': False}, {'field': 'CU_Description', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 32, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'CU_Description', 'is_time': False}, {'field': 'CC_Description', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 33, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'CC_Description', 'is_time': False}, {'field': 'Rat_Period_Description', 'type': 'varchar(10)', 'type_flask': 'db.String(10)', 'type_sqlalchemy': 'String(10)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 34, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Rat_Period_Description', 'is_time': False}, {'field': 'CC_Code', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 35, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'CC_Code', 'is_time': False}, {'field': 'Pla_Id', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 36, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'Pla_Id', 'is_time': False}, {'field': 'Pla_Name', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 37, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Pla_Name', 'is_time': False}]
+        __list=[{'field': 'User_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 1, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'User_Id', 'is_time': False}, {'field': 'Cus_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 2, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'Cus_Id', 'is_time': False}, {'field': 'CR_Date_From', 'type': 'date', 'type_flask': 'db.Date', 'type_sqlalchemy': 'Date', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 3, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'DateField', 'is_id': False, 'header': 'CR_Date_From', 'is_time': False}, {'field': 'CR_Date_To', 'type': 'date', 'type_flask': 'db.Date', 'type_sqlalchemy': 'Date', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 4, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'DateField', 'is_id': False, 'header': 'CR_Date_To', 'is_time': False}, {'field': 'CIT_Status', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 5, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'CIT_Status', 'is_time': False}, {'field': 'Cur_Code', 'type': 'varchar(3)', 'type_flask': 'db.String(3)', 'type_sqlalchemy': 'String(3)', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 6, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Cur_Code', 'is_time': False}, {'field': 'CIT_Count', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 7, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'CIT_Count', 'is_time': False}, {'field': 'CIT_Quantity', 'type': 'decimal(20,12)', 'type_flask': 'db.Numeric(20,12)', 'type_sqlalchemy': 'Numeric(20,12)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 8, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'CIT_Quantity', 'is_time': False}, {'field': 'CIT_Generation', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': '1', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 9, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'CIT_Generation', 'is_time': False}, {'field': 'CU_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 10, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'CU_Id', 'is_time': False}, {'field': 'CI_CC_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 11, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'CI_CC_Id', 'is_time': False}, {'field': 'CU_Operation', 'type': 'varchar(10)', 'type_flask': 'db.String(10)', 'type_sqlalchemy': 'String(10)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 12, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'CU_Operation', 'is_time': False}, {'field': 'Typ_Code', 'type': 'varchar(10)', 'type_flask': 'db.String(10)', 'type_sqlalchemy': 'String(10)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 13, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Typ_Code', 'is_time': False}, {'field': 'CC_Cur_Code', 'type': 'varchar(3)', 'type_flask': 'db.String(3)', 'type_sqlalchemy': 'String(3)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 14, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'CC_Cur_Code', 'is_time': False}, {'field': 'CI_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 15, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'CI_Id', 'is_time': False}, {'field': 'Rat_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 16, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'Rat_Id', 'is_time': False}, {'field': 'Rat_Price', 'type': 'decimal(20,12)', 'type_flask': 'db.Numeric(20,12)', 'type_sqlalchemy': 'Numeric(20,12)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 17, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'Rat_Price', 'is_time': False}, {'field': 'Rat_MU_Code', 'type': 'varchar(3)', 'type_flask': 'db.String(3)', 'type_sqlalchemy': 'String(3)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 18, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Rat_MU_Code', 'is_time': False}, {'field': 'Rat_Cur_Code', 'type': 'varchar(3)', 'type_flask': 'db.String(3)', 'type_sqlalchemy': 'String(3)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 19, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Rat_Cur_Code', 'is_time': False}, {'field': 'Rat_Period', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 20, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'Rat_Period', 'is_time': False}, {'field': 'Rat_Hourly', 'type': 'decimal(20,12)', 'type_flask': 'db.Numeric(20,12)', 'type_sqlalchemy': 'Numeric(20,12)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 21, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'Rat_Hourly', 'is_time': False}, {'field': 'Rat_Daily', 'type': 'decimal(20,12)', 'type_flask': 'db.Numeric(20,12)', 'type_sqlalchemy': 'Numeric(20,12)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 22, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'Rat_Daily', 'is_time': False}, {'field': 'Rat_Monthly', 'type': 'decimal(20,12)', 'type_flask': 'db.Numeric(20,12)', 'type_sqlalchemy': 'Numeric(20,12)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 23, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'Rat_Monthly', 'is_time': False}, {'field': 'CR_Quantity', 'type': 'decimal(20,12)', 'type_flask': 'db.Numeric(20,12)', 'type_sqlalchemy': 'Numeric(20,12)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 24, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'CR_Quantity', 'is_time': False}, {'field': 'CR_Quantity_at_Rate', 'type': 'decimal(20,12)', 'type_flask': 'db.Numeric(20,12)', 'type_sqlalchemy': 'Numeric(20,12)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 25, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'CR_Quantity_at_Rate', 'is_time': False}, {'field': 'CC_XR', 'type': 'decimal(20,12)', 'type_flask': 'db.Numeric(20,12)', 'type_sqlalchemy': 'Numeric(20,12)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 26, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'CC_XR', 'is_time': False}, {'field': 'CR_Cur_XR', 'type': 'decimal(20,12)', 'type_flask': 'db.Numeric(20,12)', 'type_sqlalchemy': 'Numeric(20,12)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 27, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'CR_Cur_XR', 'is_time': False}, {'field': 'CR_ST_at_Rate_Cur', 'type': 'decimal(20,12)', 'type_flask': 'db.Numeric(20,12)', 'type_sqlalchemy': 'Numeric(20,12)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 28, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'CR_ST_at_Rate_Cur', 'is_time': False}, {'field': 'CR_ST_at_CC_Cur', 'type': 'decimal(20,12)', 'type_flask': 'db.Numeric(20,12)', 'type_sqlalchemy': 'Numeric(20,12)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 29, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'CR_ST_at_CC_Cur', 'is_time': False}, {'field': 'CR_ST_at_Cur', 'type': 'decimal(20,12)', 'type_flask': 'db.Numeric(20,12)', 'type_sqlalchemy': 'Numeric(20,12)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 30, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'CR_ST_at_Cur', 'is_time': False}, {'field': 'Cus_Name', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 31, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Cus_Name', 'is_time': False}, {'field': 'CI_Name', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 32, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'CI_Name', 'is_time': False}, {'field': 'CU_Description', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 33, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'CU_Description', 'is_time': False}, {'field': 'CC_Description', 'type': 'varchar(255)', 'type_flask': 'db.String(255)', 'type_sqlalchemy': 'String(255)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 34, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'CC_Description', 'is_time': False}, {'field': 'Rat_Period_Description', 'type': 'varchar(10)', 'type_flask': 'db.String(10)', 'type_sqlalchemy': 'String(10)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 35, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Rat_Period_Description', 'is_time': False}, {'field': 'CC_Code', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 36, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'CC_Code', 'is_time': False}, {'field': 'Pla_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 37, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'Pla_Id', 'is_time': False}, {'field': 'Pla_Name', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 38, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Pla_Name', 'is_time': False}]
 
         return __list
 
     def get_column_headers(self):
         """ Gets User_Resumes record column headers list """
-        __list=['Cus_Id', 'CR_Date_From', 'CR_Date_To', 'CIT_Status', 'Cur_Code', 'CIT_Count', 'CIT_Quantity', 'CIT_Generation', 'CU_Id', 'CI_CC_Id', 'CU_Operation', 'Typ_Code', 'CC_Cur_Code', 'CI_Id', 'Rat_Id', 'Rat_Price', 'Rat_MU_Code', 'Rat_Cur_Code', 'Rat_Period', 'Rat_Hourly', 'Rat_Daily', 'Rat_Monthly', 'CR_Quantity', 'CR_Quantity_at_Rate', 'CC_XR', 'CR_Cur_XR', 'CR_ST_at_Rate_Cur', 'CR_ST_at_CC_Cur', 'CR_ST_at_Cur', 'Cus_Name', 'CI_Name', 'CU_Description', 'CC_Description', 'Rat_Period_Description', 'CC_Code', 'Pla_Id', 'Pla_Name']
+        __list=['User_Id', 'Cus_Id', 'CR_Date_From', 'CR_Date_To', 'CIT_Status', 'Cur_Code', 'CIT_Count', 'CIT_Quantity', 'CIT_Generation', 'CU_Id', 'CI_CC_Id', 'CU_Operation', 'Typ_Code', 'CC_Cur_Code', 'CI_Id', 'Rat_Id', 'Rat_Price', 'Rat_MU_Code', 'Rat_Cur_Code', 'Rat_Period', 'Rat_Hourly', 'Rat_Daily', 'Rat_Monthly', 'CR_Quantity', 'CR_Quantity_at_Rate', 'CC_XR', 'CR_Cur_XR', 'CR_ST_at_Rate_Cur', 'CR_ST_at_CC_Cur', 'CR_ST_at_Cur', 'Cus_Name', 'CI_Name', 'CU_Description', 'CC_Description', 'Rat_Period_Description', 'CC_Code', 'Pla_Id', 'Pla_Name']
 
         return __list
 
     def get_column_types(self):
         """ Gets User_Resumes record column data types list """
-        __list=['Integer', 'Date', 'Date', 'Integer', 'String(3)', 'Integer', 'Numeric(20,6)', 'Integer', 'Integer', 'Integer', 'String(10)', 'String(10)', 'String(3)', 'Integer', 'Integer', 'Numeric(20,6)', 'String(3)', 'String(3)', 'Integer', 'Numeric(20,6)', 'Numeric(20,6)', 'Numeric(20,6)', 'Numeric(20,6)', 'Numeric(20,6)', 'Numeric(20,10)', 'Numeric(20,10)', 'Numeric(20,6)', 'Numeric(20,6)', 'Numeric(20,6)', 'String(45)', 'String(45)', 'String(45)', 'String(45)', 'String(10)', 'String(45)', 'Integer', 'String(45)']
+        __list=['Integer', 'Integer', 'Date', 'Date', 'Integer', 'String(3)', 'Integer', 'Numeric(20,12)', 'Integer', 'Integer', 'Integer', 'String(10)', 'String(10)', 'String(3)', 'Integer', 'Integer', 'Numeric(20,12)', 'String(3)', 'String(3)', 'Integer', 'Numeric(20,12)', 'Numeric(20,12)', 'Numeric(20,12)', 'Numeric(20,12)', 'Numeric(20,12)', 'Numeric(20,12)', 'Numeric(20,12)', 'Numeric(20,12)', 'Numeric(20,12)', 'Numeric(20,12)', 'String(45)', 'String(45)', 'String(45)', 'String(255)', 'String(10)', 'String(45)', 'Integer', 'String(45)']
 
         return __list
 
     def get_column_meta(self):
         """ Gets User_Resumes record column data meta list """
-        __list=[('Cus_Id', 'Integer'), ('CR_Date_From', 'Date'), ('CR_Date_To', 'Date'), ('CIT_Status', 'Integer'), ('Cur_Code', 'String(3)'), ('CIT_Count', 'Integer'), ('CIT_Quantity', 'Numeric(20,6)'), ('CIT_Generation', 'Integer'), ('CU_Id', 'Integer'), ('CI_CC_Id', 'Integer'), ('CU_Operation', 'String(10)'), ('Typ_Code', 'String(10)'), ('CC_Cur_Code', 'String(3)'), ('CI_Id', 'Integer'), ('Rat_Id', 'Integer'), ('Rat_Price', 'Numeric(20,6)'), ('Rat_MU_Code', 'String(3)'), ('Rat_Cur_Code', 'String(3)'), ('Rat_Period', 'Integer'), ('Rat_Hourly', 'Numeric(20,6)'), ('Rat_Daily', 'Numeric(20,6)'), ('Rat_Monthly', 'Numeric(20,6)'), ('CR_Quantity', 'Numeric(20,6)'), ('CR_Quantity_at_Rate', 'Numeric(20,6)'), ('CC_XR', 'Numeric(20,10)'), ('CR_Cur_XR', 'Numeric(20,10)'), ('CR_ST_at_Rate_Cur', 'Numeric(20,6)'), ('CR_ST_at_CC_Cur', 'Numeric(20,6)'), ('CR_ST_at_Cur', 'Numeric(20,6)'), ('Cus_Name', 'String(45)'), ('CI_Name', 'String(45)'), ('CU_Description', 'String(45)'), ('CC_Description', 'String(45)'), ('Rat_Period_Description', 'String(10)'), ('CC_Code', 'String(45)'), ('Pla_Id', 'Integer'), ('Pla_Name', 'String(45)')]
+        __list=[('User_Id', 'Integer'), ('Cus_Id', 'Integer'), ('CR_Date_From', 'Date'), ('CR_Date_To', 'Date'), ('CIT_Status', 'Integer'), ('Cur_Code', 'String(3)'), ('CIT_Count', 'Integer'), ('CIT_Quantity', 'Numeric(20,12)'), ('CIT_Generation', 'Integer'), ('CU_Id', 'Integer'), ('CI_CC_Id', 'Integer'), ('CU_Operation', 'String(10)'), ('Typ_Code', 'String(10)'), ('CC_Cur_Code', 'String(3)'), ('CI_Id', 'Integer'), ('Rat_Id', 'Integer'), ('Rat_Price', 'Numeric(20,12)'), ('Rat_MU_Code', 'String(3)'), ('Rat_Cur_Code', 'String(3)'), ('Rat_Period', 'Integer'), ('Rat_Hourly', 'Numeric(20,12)'), ('Rat_Daily', 'Numeric(20,12)'), ('Rat_Monthly', 'Numeric(20,12)'), ('CR_Quantity', 'Numeric(20,12)'), ('CR_Quantity_at_Rate', 'Numeric(20,12)'), ('CC_XR', 'Numeric(20,12)'), ('CR_Cur_XR', 'Numeric(20,12)'), ('CR_ST_at_Rate_Cur', 'Numeric(20,12)'), ('CR_ST_at_CC_Cur', 'Numeric(20,12)'), ('CR_ST_at_Cur', 'Numeric(20,12)'), ('Cus_Name', 'String(45)'), ('CI_Name', 'String(45)'), ('CU_Description', 'String(45)'), ('CC_Description', 'String(255)'), ('Rat_Period_Description', 'String(10)'), ('CC_Code', 'String(45)'), ('Pla_Id', 'Integer'), ('Pla_Name', 'String(45)')]
 
         return __list
 
-    def search_key(self,CR_Date_From,CR_Date_To,CIT_Status,Cur_Code,CU_Id,CI_Id):
-        """ Search for an unique User_Resumes record using all key fields (CR_Date_From,CR_Date_To,CIT_Status,Cur_Code,CU_Id,CI_Id) """
+    def search_key(self,User_Id,CR_Date_From,CR_Date_To,CIT_Status,Cur_Code,CU_Id,CI_Id):
+        """ Search for an unique User_Resumes record using all key fields (User_Id,CR_Date_From,CR_Date_To,CIT_Status,Cur_Code,CU_Id,CI_Id) """
         try:
             if self.engine is not None:
                 Session=sessionmaker(bind=self.engine)
                 session=Session()
-                record = session.query(User_Resumes).filter(User_Resumes.CR_Date_From==CR_Date_From).filter(User_Resumes.CR_Date_To==CR_Date_To).filter(User_Resumes.CIT_Status==CIT_Status).filter(User_Resumes.Cur_Code==Cur_Code).filter(User_Resumes.CU_Id==CU_Id).filter(User_Resumes.CI_Id==CI_Id).one_or_none()
+                record = session.query(User_Resumes).filter(User_Resumes.User_Id==User_Id).filter(User_Resumes.CR_Date_From==CR_Date_From).filter(User_Resumes.CR_Date_To==CR_Date_To).filter(User_Resumes.CIT_Status==CIT_Status).filter(User_Resumes.Cur_Code==Cur_Code).filter(User_Resumes.CU_Id==CU_Id).filter(User_Resumes.CI_Id==CI_Id).one_or_none()
                 session.close()
             else:
                 session.rollback()
                 record = None
         except Exception as e:
-            detail='User_Resumes.search_key(%s,%s,%s,%s,%s,%s): Exception: %s'%(CR_Date_From,CR_Date_To,CIT_Status,Cur_Code,CU_Id,CI_Id,e)
+            detail='User_Resumes.search_key(%s,%s,%s,%s,%s,%s,%s): Exception: %s'%(User_Id,CR_Date_From,CR_Date_To,CIT_Status,Cur_Code,CU_Id,CI_Id,e)
             emtec_handle_general_exception(e,detail=detail,module=__name__,function='User_Resumes.search_key()',logger=self.logger)
             record = None
         return record
@@ -3734,13 +4131,22 @@ class User_Resumes(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2020-02-20 16:44:35
+# GLVH @ 2021-04-08 20:09:28
 # =============================================================================
 
+# gen_model_flask.py:389 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_users.py
 class Users(Base):
     __tablename__ = 'Users'
     engine        = None
     logger        = None
+
+    def set_shard(suffix=None):
+       if suffix is not None:
+           name='Users_{suffix}'.format(suffix=suffix)
+           __class__.__tablename__  = name
+           __class__.__table__.name = name
+       return __class__.__tablename__
+
     id            = Column( Integer, primary_key=True, autoincrement=True )
     username      = Column( String(64) )
     role_id       = Column( Integer, ForeignKey('Roles.id') )
@@ -3831,7 +4237,7 @@ class Users(Base):
 
     def get_columns(self):
         """ Gets Users record column full details list """
-        __list=[{'field': 'id', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': 'auto_increment', 'is_form_editable': True, 'format': None, 'order': 1, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': True, 'header': 'Id', 'is_time': False}, {'field': 'username', 'type': 'varchar(64)', 'type_flask': 'db.String(64)', 'type_sqlalchemy': 'String(64)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 2, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'username', 'is_time': False}, {'field': 'role_id', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'MUL', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 3, 'is_searchable': True, 'is_fk': True, 'foreign_field': 'id', 'referenced_table': 'Roles', 'referenced_class': 'Role', 'foreign_key': 'id', 'foreign_value': 'name', 'is_numeric': False, 'form_type': 'SelectField', 'is_id': False, 'header': 'role_id', 'is_time': False}, {'field': 'email', 'type': 'varchar(64)', 'type_flask': 'db.String(64)', 'type_sqlalchemy': 'String(64)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 4, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'email', 'is_time': False}, {'field': 'password_hash', 'type': 'varchar(128)', 'type_flask': 'db.String(128)', 'type_sqlalchemy': 'String(128)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 5, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'password_hash', 'is_time': False}, {'field': 'confirmed', 'type': 'tinyint(4)', 'type_flask': 'db.Boolean', 'type_sqlalchemy': 'Boolean', 'null': 'YES', 'key': '', 'default': '0', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 6, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'BooleanField', 'is_id': False, 'header': 'confirmed', 'is_time': False}, {'field': 'CC_Id', 'type': 'int(11)', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'MUL', 'default': '1', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 7, 'is_searchable': True, 'is_fk': True, 'foreign_field': 'CC_Id', 'referenced_table': 'Cost_Centers', 'referenced_class': 'cost_center', 'foreign_key': 'CC_Id', 'foreign_value': 'CC_Description', 'is_numeric': False, 'form_type': 'SelectField', 'is_id': False, 'header': 'CC_Id', 'is_time': False}]
+        __list=[{'field': 'id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': 'auto_increment', 'is_form_editable': True, 'format': None, 'order': 1, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': True, 'header': 'Id', 'is_time': False}, {'field': 'username', 'type': 'varchar(64)', 'type_flask': 'db.String(64)', 'type_sqlalchemy': 'String(64)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 2, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'username', 'is_time': False}, {'field': 'role_id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'MUL', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 3, 'is_searchable': True, 'is_fk': True, 'foreign_field': 'id', 'referenced_table': 'Roles', 'referenced_class': 'Role', 'foreign_key': 'id', 'foreign_value': 'name', 'is_numeric': False, 'form_type': 'SelectField', 'is_id': False, 'header': 'role_id', 'is_time': False}, {'field': 'email', 'type': 'varchar(64)', 'type_flask': 'db.String(64)', 'type_sqlalchemy': 'String(64)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 4, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'email', 'is_time': False}, {'field': 'password_hash', 'type': 'varchar(128)', 'type_flask': 'db.String(128)', 'type_sqlalchemy': 'String(128)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 5, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'password_hash', 'is_time': False}, {'field': 'confirmed', 'type': 'tinyint', 'type_flask': 'db.Boolean', 'type_sqlalchemy': 'Boolean', 'null': 'YES', 'key': '', 'default': '0', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 6, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'BooleanField', 'is_id': False, 'header': 'confirmed', 'is_time': False}, {'field': 'CC_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'MUL', 'default': '1', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 7, 'is_searchable': True, 'is_fk': True, 'foreign_field': 'CC_Id', 'referenced_table': 'Cost_Centers', 'referenced_class': 'cost_center', 'foreign_key': 'CC_Id', 'foreign_value': 'CC_Description', 'is_numeric': False, 'form_type': 'SelectField', 'is_id': False, 'header': 'CC_Id', 'is_time': False}]
 
         return __list
 

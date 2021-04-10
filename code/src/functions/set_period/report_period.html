@@ -1,0 +1,37 @@
+{# ================================================================== #}
+{# CIT Period Report Template                                         #}
+{# For Customer on a defined period and status                        #}
+{# (c) Sertechno 2020                                                 #}
+{# GLVH @ 2018-03-18                                                  #}
+{# ================================================================== #}
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% import "_macros.html" as macros %}
+{% block title %}Collector{% endblock %}
+{% block head %}
+   {{ super() }}
+{% endblock %}
+{% block page_content %}
+<div class="page-header">
+    <h2>Period Status Report: </h2>
+    <a href="#" onclick="history.go(-1)">
+        <img src="/static/img/back.png"
+        color=yellow width="32" height="32" title="" alt="Add">
+    </a>
+</div>
+    <table class="table table-striped table-hover table-sm">
+        <thead class="thead-dark">
+            <tr>
+                <td>CONTEXT</td>
+                <td>ARGUMENT</td>
+                <td>VALUE</td>
+            </tr>
+        </thead>
+        <tbody>
+        <tr><td>Context</td><td>Current</td><td>{{data.current}}</td></tr>
+        <tr><td>Context</td><td>Active</td><td>{{data.active}}</td></tr>
+        <tr><td>Context</td><td>Available</td><td>{{data.available}}</td></tr>
+        </tbody>
+    </table>
+{% endblock %}
+{# ================================================================== #}

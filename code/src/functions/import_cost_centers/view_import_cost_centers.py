@@ -39,6 +39,8 @@ def load_columns(sheet):
     return columns
     
 def load_Cost_Centers_from_XLS(file):
+    logger.debug('%s: Enter: load_Cost_Centers_from_XLS(%s)'%(__name__,file))
+
     updates=0
     additions=0
     errors=0
@@ -65,16 +67,16 @@ def load_Cost_Centers_from_XLS(file):
                             'Cur_Code':         s.cell(row,COLUMNS['Cur_Code']).value,
                             'CC_Parent_Code':   s.cell(row,COLUMNS['CC_Parent_Code']).value,
                             })
-    #print("CCs = %d"%len(DATA['entities']))
+    logger.debug("%s: CCs = %d"%(__name__,len(DATA['entities'])))
     
     DATA['metadata'].update({'count':len(DATA['entities'])})
 
     for cc in DATA['entities']:    
-        #print("Importing CC: %s %s"%(cc['CC_Code'],cc['CC_Description']))
+        logger.debug("Importing CC: %s %s"%(cc['CC_Code'],cc['CC_Description']))
         try:
             id = db.session.query(cost_center.CC_Id).filter(cost_center.CC_Code==cc['CC_Code']).scalar()
             if id:
-                #print("Existent CC",id,"will be updated");
+                logger.debug("Existent CC",id,"will be updated");
                 c=cost_center(id,cc['CC_Code'],cc['CC_Description'],cc['Cur_Code'],cc['CC_Parent_Code'])
                 try:
                     db.session.merge(c)
@@ -82,13 +84,13 @@ def load_Cost_Centers_from_XLS(file):
                     updates+=1
                 except Exception as e:
                     errors+=1              
-                    flash("fail updatinging CC:",e)
-                #print("c=",c)                
+                    flash("fail updating CC:",e)
+                logger.debug("c=",c)                
             else:
-                #print("Add new CC")
+                logger.debug("Add new CC")
                 c=cost_center(0,cc['CC_Code'],cc['CC_Description'],cc['Cur_Code'],cc['CC_Parent_Code'])
                 
-                #print("c=",c)                
+                logger.debug("c=",c)                
                 try:
                     db.session.add(c)
                     db.session.commit()
@@ -98,7 +100,7 @@ def load_Cost_Centers_from_XLS(file):
                     flash("fail updating CC:",e)
         except Exception as e:
             errors+=1              
-            flash("fail queryng for CC:",e)
+            flash("fail querying for CC:",e)
         
     return (len(DATA['entities']),additions,updates,errors)
 
@@ -106,25 +108,25 @@ def load_Cost_Centers_from_XLS(file):
 @main.route('/forms/Import_Cost_Centers', methods=['GET', 'POST'])
 @login_required
 def forms_Import_Cost_Centers():
-    logger.debug('Enter: forms_Import_Cost_Centers()'%())
+    logger.debug('%s: Enter: forms_Import_Cost_Centers()'%(__name__))
+    logger.debug('%s: UPLOAD_FOLDER=%s'%(__name__,UPLOAD_FOLDER))
 
     session['data'] =  { }
 
     form = frm_import_cost_centers()
+    logger.debug('%s: form = %s'%(__name__,form))        
     
     if form.validate_on_submit():
-        #print("************")
-        #print("form.Import.data",form.Import.data);
-        #flash("form.Import.data=%s"%form.Import.data);
-        #print("************")
         f=form.Import.data
         filename=secure_filename(f.filename)
+        logger.debug('%s: filename is %s'%(__name__,filename))        
         f.save(os.path.join(
             UPLOAD_FOLDER,  filename
         ))        
-        #return redirect(url_for('index'))
-        
+        logger.debug('%s: will call load_Cost_Centers_from_XLS with UPLOAD FOLDER=%s'%(__name__,UPLOAD_FOLDER))        
         result=load_Cost_Centers_from_XLS("%s/%s"%(UPLOAD_FOLDER,filename))
+        logger.debug('%s: result type is %s'%(__name__,type(result)))        
+        logger.debug('%s: will render template import_cost_centers_execution.html'%(__name__,type(result)))        
         return render_template('import_cost_centers_execution.html',filename=filename,result=result)
         """
         if     form.submit_Import.data:
@@ -140,6 +142,7 @@ def forms_Import_Cost_Centers():
             print('form validated but not submited ???')
             return redirect(url_for('.index'))
         """
+    logger.debug('%s: will render template import_cost_centers.html'%(__name__))        
     return render_template('import_cost_centers.html',form=form)
     
     

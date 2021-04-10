@@ -1,6 +1,7 @@
 # =============================================================================
 # Models File
 # Static Header File. 
+# source: models_py_header.py
 # GLVH 2019-08-16
 # GLVH 2020-01-30 JSON Serializing code added
 # =============================================================================
@@ -24,6 +25,7 @@ from flask_login            import UserMixin, AnonymousUserMixin
 # JSON Serializing enabling code
 from sqlalchemy.inspection import inspect
 
+
 class Serializer(object):
 
     def serialize(self):
@@ -33,6 +35,10 @@ class Serializer(object):
     def serialize_list(l):
         return [m.serialize() for m in l]
 
+# 20200224 GV force import of the whole emtec db library ---------------
+from emtec.collector.db.orm_model       import *
+from emtec.collector.db.flask_models    import *
+# ----------------------------------------------------------------------
 # =============================================================================
 # Models File
 # Authorization subsystem. 
@@ -72,11 +78,97 @@ def load_user(user_id):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2020-02-20 16:44:35
+# GLVH @ 2021-04-08 20:09:28
 # =============================================================================
 
+# gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_charge_items.py
 class charge_item(db.Model,Serializer):
     __tablename__ = 'Charge_Items'
+
+    def set_shard(suffix=None):
+       if suffix is not None:
+           name='Charge_Items_{suffix}'.format(suffix=suffix)
+           __class__.__tablename__  = name
+           __class__.__table__.name = name
+       return __class__.__tablename__
+
+    CU_Id         = db.Column( db.Integer, db.ForeignKey('Charge_Units.CU_Id'), primary_key=True, default=0 )
+    CIT_Date      = db.Column( db.Date )
+    CIT_Time      = db.Column( db.Time )
+    CIT_Quantity  = db.Column( db.Numeric(20,12), default=0.000000000000 )
+    CIT_Status    = db.Column( db.Integer, db.ForeignKey('CIT_Statuses.CIT_Status'), default=0 )
+    CIT_Is_Active = db.Column( db.Boolean, default=0 )
+    CIT_DateTime  = db.Column( db.DateTime, primary_key=True )
+
+
+    # looking for include file: /home/gvalera/GIT/EG-Suite-Tools/Collector/code/src/include/models/flask_charge_items_properties.py
+    # file: /home/gvalera/GIT/EG-Suite-Tools/Collector/code/src/include/models/flask_charge_items_properties.py not found
+    def __init__(self, CU_Id=0, CIT_Date=None, CIT_Time=None, CIT_Quantity=0.000000000000, CIT_Status=0, CIT_Is_Active=0, CIT_DateTime=None):
+        self.CU_Id         = CU_Id
+        self.CIT_Date      = CIT_Date
+        self.CIT_Time      = CIT_Time
+        self.CIT_Quantity  = CIT_Quantity
+        self.CIT_Status    = CIT_Status
+        self.CIT_Is_Active = CIT_Is_Active
+        self.CIT_DateTime  = CIT_DateTime
+
+    def __repr__(self):
+        return "<Charge_Items( CU_Id='%s', CIT_Date='%s', CIT_Time='%s', CIT_Quantity='%s', CIT_Status='%s', CIT_Is_Active='%s', CIT_DateTime='%s')>" % \
+                ( self.CU_Id, self.CIT_Date, self.CIT_Time, self.CIT_Quantity, self.CIT_Status, self.CIT_Is_Active, self.CIT_DateTime)
+
+# =============================================================================
+# Auto-Generated code. do not modify
+# (c) Sertechno 2018
+# GLVH @ 2021-04-08 20:09:28
+# =============================================================================
+
+# gen_model_flask.py:670 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_charge_items.py
+def get_charge_item(table_name_suffix):
+  # gen_model_flask.py:678 =>/home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_charge_items.py
+  class charge_item_Class(db.Model,Serializer):
+    __tablename__ = 'Charge_Items_%s'%(table_name_suffix)
+
+    def set_shard(suffix=None):
+        if suffix is not None:
+           name='Charge_Items_{suffix}'.format(suffix=suffix)
+           __class__.__tablename__  = name
+           __class__.__table__.name = name
+        return __class__.__tablename__
+
+    CU_Id         = db.Column( db.Integer, db.ForeignKey('Charge_Units.CU_Id'), primary_key=True, default=0 )
+    CIT_Date      = db.Column( db.Date )
+    CIT_Time      = db.Column( db.Time )
+    CIT_Quantity  = db.Column( db.Numeric(20,12), default=0.000000000000 )
+    CIT_Status    = db.Column( db.Integer, db.ForeignKey('CIT_Statuses.CIT_Status'), default=0 )
+    CIT_Is_Active = db.Column( db.Boolean, default=0 )
+    CIT_DateTime  = db.Column( db.DateTime, primary_key=True )
+
+
+    def __init__(self, CU_Id=0, CIT_Date=None, CIT_Time=None, CIT_Quantity=0.000000000000, CIT_Status=0, CIT_Is_Active=0, CIT_DateTime=None):
+        self.CU_Id         = CU_Id
+        self.CIT_Date      = CIT_Date
+        self.CIT_Time      = CIT_Time
+        self.CIT_Quantity  = CIT_Quantity
+        self.CIT_Status    = CIT_Status
+        self.CIT_Is_Active = CIT_Is_Active
+        self.CIT_DateTime  = CIT_DateTime
+
+    def __repr__(self):
+        return "<Charge_Items( CU_Id='%s', CIT_Date='%s', CIT_Time='%s', CIT_Quantity='%s', CIT_Status='%s', CIT_Is_Active='%s', CIT_DateTime='%s')>" % \
+                ( self.CU_Id, self.CIT_Date, self.CIT_Time, self.CIT_Quantity, self.CIT_Status, self.CIT_Is_Active, self.CIT_DateTime)
+
+  charge_item_Class.__name__ = 'charge_item_%s'%(table_name_suffix)
+  return charge_item_Class
+  # gen_model_flask.py 801 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_charge_items.py
+# =============================================================================
+# Auto-Generated code. do not modify
+# (c) Sertechno 2018
+# GLVH @ 2020-02-24 15:33:48
+# =============================================================================
+
+def get_charge_item(table_name_sufix):
+  class charge_item_Class(db.Model,Serializer):
+    __tablename__ = 'Charge_Items_%s'%(table_name_sufix)
     CU_Id         = db.Column( db.Integer, db.ForeignKey('Charge_Units.CU_Id'), primary_key=True, default=0 )
     CIT_Date      = db.Column( db.Date )
     CIT_Time      = db.Column( db.Time )
@@ -99,21 +191,32 @@ class charge_item(db.Model,Serializer):
         return "<Charge_Items( CU_Id='%s', CIT_Date='%s', CIT_Time='%s', CIT_Quantity='%s', CIT_Status='%s', CIT_Is_Active='%s', CIT_DateTime='%s')>" % \
                 ( self.CU_Id, self.CIT_Date, self.CIT_Time, self.CIT_Quantity, self.CIT_Status, self.CIT_Is_Active, self.CIT_DateTime)
 
+  charge_item_Class.__name__ = 'charge_item_%s'%(table_name_sufix)
+  return charge_item_Class
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2020-02-20 16:44:35
+# GLVH @ 2021-04-08 20:09:28
 # =============================================================================
 
+# gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_charge_resumes.py
 class charge_resume(db.Model,Serializer):
     __tablename__ = 'Charge_Resumes'
+
+    def set_shard(suffix=None):
+       if suffix is not None:
+           name='Charge_Resumes_{suffix}'.format(suffix=suffix)
+           __class__.__tablename__  = name
+           __class__.__table__.name = name
+       return __class__.__tablename__
+
     Cus_Id                 = db.Column( db.Integer, primary_key=True )
     CR_Date_From           = db.Column( db.Date, primary_key=True )
     CR_Date_To             = db.Column( db.Date, primary_key=True )
     CIT_Status             = db.Column( db.Integer, primary_key=True )
     Cur_Code               = db.Column( db.String(3), primary_key=True )
     CIT_Count              = db.Column( db.Integer )
-    CIT_Quantity           = db.Column( db.Numeric(20,6) )
+    CIT_Quantity           = db.Column( db.Numeric(20,12) )
     CIT_Generation         = db.Column( db.Integer, default=1 )
     CU_Id                  = db.Column( db.Integer, primary_key=True )
     CI_CC_Id               = db.Column( db.Integer )
@@ -122,30 +225,32 @@ class charge_resume(db.Model,Serializer):
     CC_Cur_Code            = db.Column( db.String(3) )
     CI_Id                  = db.Column( db.Integer )
     Rat_Id                 = db.Column( db.Integer )
-    Rat_Price              = db.Column( db.Numeric(20,6) )
+    Rat_Price              = db.Column( db.Numeric(20,12) )
     Rat_MU_Code            = db.Column( db.String(3) )
     Rat_Cur_Code           = db.Column( db.String(3) )
     Rat_Period             = db.Column( db.Integer )
-    Rat_Hourly             = db.Column( db.Numeric(20,6) )
-    Rat_Daily              = db.Column( db.Numeric(20,6) )
-    Rat_Monthly            = db.Column( db.Numeric(20,6) )
-    CR_Quantity            = db.Column( db.Numeric(20,6) )
-    CR_Quantity_at_Rate    = db.Column( db.Numeric(20,6) )
-    CC_XR                  = db.Column( db.Numeric(20,10) )
-    CR_Cur_XR              = db.Column( db.Numeric(20,10) )
-    CR_ST_at_Rate_Cur      = db.Column( db.Numeric(20,6) )
-    CR_ST_at_CC_Cur        = db.Column( db.Numeric(20,6) )
-    CR_ST_at_Cur           = db.Column( db.Numeric(20,6) )
+    Rat_Hourly             = db.Column( db.Numeric(20,12) )
+    Rat_Daily              = db.Column( db.Numeric(20,12) )
+    Rat_Monthly            = db.Column( db.Numeric(20,12) )
+    CR_Quantity            = db.Column( db.Numeric(20,12) )
+    CR_Quantity_at_Rate    = db.Column( db.Numeric(20,12) )
+    CC_XR                  = db.Column( db.Numeric(20,12) )
+    CR_Cur_XR              = db.Column( db.Numeric(20,12) )
+    CR_ST_at_Rate_Cur      = db.Column( db.Numeric(20,12) )
+    CR_ST_at_CC_Cur        = db.Column( db.Numeric(20,12) )
+    CR_ST_at_Cur           = db.Column( db.Numeric(20,12) )
     Cus_Name               = db.Column( db.String(45) )
     CI_Name                = db.Column( db.String(45) )
     CU_Description         = db.Column( db.String(45) )
-    CC_Description         = db.Column( db.String(45) )
+    CC_Description         = db.Column( db.String(255) )
     Rat_Period_Description = db.Column( db.String(10) )
     CC_Code                = db.Column( db.String(45) )
     Pla_Id                 = db.Column( db.Integer )
     Pla_Name               = db.Column( db.String(45) )
 
 
+    # looking for include file: /home/gvalera/GIT/EG-Suite-Tools/Collector/code/src/include/models/flask_charge_resumes_properties.py
+    # file: /home/gvalera/GIT/EG-Suite-Tools/Collector/code/src/include/models/flask_charge_resumes_properties.py not found
     def __init__(self, Cus_Id=None, CR_Date_From=None, CR_Date_To=None, CIT_Status=None, Cur_Code='None', CIT_Count=None, CIT_Quantity=None, CIT_Generation=1, CU_Id=None, CI_CC_Id=None, CU_Operation='None', Typ_Code='None', CC_Cur_Code='None', CI_Id=None, Rat_Id=None, Rat_Price=None, Rat_MU_Code='None', Rat_Cur_Code='None', Rat_Period=None, Rat_Hourly=None, Rat_Daily=None, Rat_Monthly=None, CR_Quantity=None, CR_Quantity_at_Rate=None, CC_XR=None, CR_Cur_XR=None, CR_ST_at_Rate_Cur=None, CR_ST_at_CC_Cur=None, CR_ST_at_Cur=None, Cus_Name='None', CI_Name='None', CU_Description='None', CC_Description='None', Rat_Period_Description='None', CC_Code='None', Pla_Id=None, Pla_Name='None'):
         self.Cus_Id                 = Cus_Id
         self.CR_Date_From           = CR_Date_From
@@ -192,11 +297,20 @@ class charge_resume(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2020-02-20 16:44:35
+# GLVH @ 2021-04-08 20:09:28
 # =============================================================================
 
+# gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_charge_unit_egm.py
 class charge_unit_egm(db.Model,Serializer):
     __tablename__ = 'Charge_Unit_EGM'
+
+    def set_shard(suffix=None):
+       if suffix is not None:
+           name='Charge_Unit_EGM_{suffix}'.format(suffix=suffix)
+           __class__.__tablename__  = name
+           __class__.__table__.name = name
+       return __class__.__tablename__
+
     CU_Id           = db.Column( db.Integer, db.ForeignKey('Charge_Units.CU_Id'), primary_key=True )
     Archive         = db.Column( db.Integer )
     Path            = db.Column( db.String(256) )
@@ -209,6 +323,8 @@ class charge_unit_egm(db.Model,Serializer):
     Passphrase      = db.Column( db.String(256) )
 
 
+    # looking for include file: /home/gvalera/GIT/EG-Suite-Tools/Collector/code/src/include/models/flask_charge_unit_egm_properties.py
+    # file: /home/gvalera/GIT/EG-Suite-Tools/Collector/code/src/include/models/flask_charge_unit_egm_properties.py not found
     def __init__(self, CU_Id=None, Archive=None, Path='None', Metric='None', Host='localhost', Port=22, User='None', Password='None', Public_Key_File='None', Passphrase='None'):
         self.CU_Id           = CU_Id
         self.Archive         = Archive
@@ -228,11 +344,69 @@ class charge_unit_egm(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2020-02-20 16:44:35
+# GLVH @ 2021-04-08 20:09:28
 # =============================================================================
 
+# gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_charge_units.py
 class charge_unit(db.Model,Serializer):
     __tablename__ = 'Charge_Units'
+
+    def set_shard(suffix=None):
+       if suffix is not None:
+           name='Charge_Units_{suffix}'.format(suffix=suffix)
+           __class__.__tablename__  = name
+           __class__.__table__.name = name
+       return __class__.__tablename__
+
+    CU_Id                  = db.Column( db.Integer, primary_key=True, autoincrement=True )
+    CI_Id                  = db.Column( db.Integer, db.ForeignKey('Configuration_Items.CI_Id') )
+    CU_Description         = db.Column( db.String(255) )
+    CU_UUID                = db.Column( db.String(45) )
+    CU_Is_Billeable        = db.Column( db.Boolean, default=0 )
+    CU_Is_Always_Billeable = db.Column( db.Boolean, default=0 )
+    CU_Quantity            = db.Column( db.Numeric(20,12) )
+    CU_Operation           = db.Column( db.String(10), db.ForeignKey('CU_Operations.CU_Operation') )
+    Typ_Code               = db.Column( db.String(10), db.ForeignKey('CU_Types.Typ_Code') )
+    CIT_Generation         = db.Column( db.Integer, db.ForeignKey('CIT_Generations.CIT_Generation') )
+    Rat_Id                 = db.Column( db.Integer )
+    CU_Reference_1         = db.Column( db.String(45) )
+    CU_Reference_2         = db.Column( db.String(45) )
+    CU_Reference_3         = db.Column( db.String(45) )
+
+    # child_table=None gen_children=False
+    # child_table=None gen_children=False
+
+    # looking for include file: /home/gvalera/GIT/EG-Suite-Tools/Collector/code/src/include/models/flask_charge_units_properties.py
+    # file: /home/gvalera/GIT/EG-Suite-Tools/Collector/code/src/include/models/flask_charge_units_properties.py not found
+    def __init__(self, CU_Id=0, CI_Id=None, CU_Description='None', CU_UUID='None', CU_Is_Billeable=0, CU_Is_Always_Billeable=0, CU_Quantity=None, CU_Operation='None', Typ_Code='None', CIT_Generation=None, Rat_Id=None, CU_Reference_1='None', CU_Reference_2='None', CU_Reference_3='None'):
+        self.CU_Id                  = CU_Id
+        self.CI_Id                  = CI_Id
+        self.CU_Description         = CU_Description
+        self.CU_UUID                = CU_UUID
+        self.CU_Is_Billeable        = CU_Is_Billeable
+        self.CU_Is_Always_Billeable = CU_Is_Always_Billeable
+        self.CU_Quantity            = CU_Quantity
+        self.CU_Operation           = CU_Operation
+        self.Typ_Code               = Typ_Code
+        self.CIT_Generation         = CIT_Generation
+        self.Rat_Id                 = Rat_Id
+        self.CU_Reference_1         = CU_Reference_1
+        self.CU_Reference_2         = CU_Reference_2
+        self.CU_Reference_3         = CU_Reference_3
+
+    def __repr__(self):
+        return "<Charge_Units( CU_Id='%s', CI_Id='%s', CU_Description='%s', CU_UUID='%s', CU_Is_Billeable='%s', CU_Is_Always_Billeable='%s', CU_Quantity='%s', CU_Operation='%s', Typ_Code='%s', CIT_Generation='%s', Rat_Id='%s', CU_Reference_1='%s', CU_Reference_2='%s', CU_Reference_3='%s')>" % \
+                ( self.CU_Id, self.CI_Id, self.CU_Description, self.CU_UUID, self.CU_Is_Billeable, self.CU_Is_Always_Billeable, self.CU_Quantity, self.CU_Operation, self.Typ_Code, self.CIT_Generation, self.Rat_Id, self.CU_Reference_1, self.CU_Reference_2, self.CU_Reference_3)
+
+# =============================================================================
+# Auto-Generated code. do not modify
+# (c) Sertechno 2018
+# GLVH @ 2020-02-24 14:48:48
+# =============================================================================
+
+def get_charge_unit(table_name_sufix):
+  class charge_unit_Class(db.Model,Serializer):
+    __tablename__ = 'Charge_Units_%s'%(table_name_sufix)
     CU_Id                  = db.Column( db.Integer, primary_key=True, autoincrement=True )
     CI_Id                  = db.Column( db.Integer, db.ForeignKey('Configuration_Items.CI_Id') )
     CU_Description         = db.Column( db.String(45) )
@@ -271,19 +445,33 @@ class charge_unit(db.Model,Serializer):
         return "<Charge_Units( CU_Id='%s', CI_Id='%s', CU_Description='%s', CU_UUID='%s', CU_Is_Billeable='%s', CU_Is_Always_Billeable='%s', CU_Quantity='%s', CU_Operation='%s', Typ_Code='%s', CIT_Generation='%s', Rat_Id='%s', CU_Reference_1='%s', CU_Reference_2='%s', CU_Reference_3='%s')>" % \
                 ( self.CU_Id, self.CI_Id, self.CU_Description, self.CU_UUID, self.CU_Is_Billeable, self.CU_Is_Always_Billeable, self.CU_Quantity, self.CU_Operation, self.Typ_Code, self.CIT_Generation, self.Rat_Id, self.CU_Reference_1, self.CU_Reference_2, self.CU_Reference_3)
 
+  charge_unit_Class.__name__ = 'charge_unit_%s'%(table_name_sufix)
+  return charge_unit_Class
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2020-02-20 16:44:35
+# GLVH @ 2021-04-08 20:09:28
 # =============================================================================
 
+# gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_cit_generations.py
 class cit_generation(db.Model,Serializer):
     __tablename__ = 'CIT_Generations'
+
+    def set_shard(suffix=None):
+       if suffix is not None:
+           name='CIT_Generations_{suffix}'.format(suffix=suffix)
+           __class__.__tablename__  = name
+           __class__.__table__.name = name
+       return __class__.__tablename__
+
     CIT_Generation = db.Column( db.Integer, primary_key=True )
     Value          = db.Column( db.String(45) )
 
+    # child_table=None gen_children=True
     charge_units   = db.relationship('charge_unit',backref='cit_generation',lazy='dynamic')
 
+    # looking for include file: /home/gvalera/GIT/EG-Suite-Tools/Collector/code/src/include/models/flask_cit_generations_properties.py
+    # file: /home/gvalera/GIT/EG-Suite-Tools/Collector/code/src/include/models/flask_cit_generations_properties.py not found
     def __init__(self, CIT_Generation=None, Value='None'):
         self.CIT_Generation = CIT_Generation
         self.Value          = Value
@@ -295,16 +483,28 @@ class cit_generation(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2020-02-20 16:44:35
+# GLVH @ 2021-04-08 20:09:28
 # =============================================================================
 
+# gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_cit_statuses.py
 class cit_status(db.Model,Serializer):
     __tablename__ = 'CIT_Statuses'
+
+    def set_shard(suffix=None):
+       if suffix is not None:
+           name='CIT_Statuses_{suffix}'.format(suffix=suffix)
+           __class__.__tablename__  = name
+           __class__.__table__.name = name
+       return __class__.__tablename__
+
     CIT_Status = db.Column( db.Integer, primary_key=True )
     Value      = db.Column( db.String(45) )
 
+    # child_table=None gen_children=True
     charge_items = db.relationship('charge_item',backref='cit_status',lazy='dynamic')
 
+    # looking for include file: /home/gvalera/GIT/EG-Suite-Tools/Collector/code/src/include/models/flask_cit_statuses_properties.py
+    # file: /home/gvalera/GIT/EG-Suite-Tools/Collector/code/src/include/models/flask_cit_statuses_properties.py not found
     def __init__(self, CIT_Status=None, Value='None'):
         self.CIT_Status = CIT_Status
         self.Value      = Value
@@ -316,13 +516,22 @@ class cit_status(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2020-02-20 16:44:35
+# GLVH @ 2021-04-08 20:09:28
 # =============================================================================
 
+# gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_configuration_items.py
 class configuration_item(db.Model,Serializer):
     __tablename__ = 'Configuration_Items'
+
+    def set_shard(suffix=None):
+       if suffix is not None:
+           name='Configuration_Items_{suffix}'.format(suffix=suffix)
+           __class__.__tablename__  = name
+           __class__.__table__.name = name
+       return __class__.__tablename__
+
     CI_Id                       = db.Column( db.Integer, primary_key=True, autoincrement=True )
-    CI_Name                     = db.Column( db.String(45) )
+    CI_Name                     = db.Column( db.String(255) )
     CI_UUID                     = db.Column( db.String(45) )
     Pla_Id                      = db.Column( db.Integer, db.ForeignKey('Platforms.Pla_Id') )
     CC_Id                       = db.Column( db.Integer, db.ForeignKey('Cost_Centers.CC_Id') )
@@ -330,9 +539,13 @@ class configuration_item(db.Model,Serializer):
     CI_Commissioning_DateTime   = db.Column( db.DateTime )
     CI_Decommissioning_DateTime = db.Column( db.DateTime )
 
+    # child_table=Charge_Units gen_children=True
     charge_units                = db.relationship('charge_unit',backref='configuration_item',lazy='dynamic')
+    # child_table=Charge_Units gen_children=True
     rates                       = db.relationship('rate',backref='configuration_item',lazy='dynamic')
 
+    # looking for include file: /home/gvalera/GIT/EG-Suite-Tools/Collector/code/src/include/models/flask_configuration_items_properties.py
+    # file: /home/gvalera/GIT/EG-Suite-Tools/Collector/code/src/include/models/flask_configuration_items_properties.py not found
     def __init__(self, CI_Id=0, CI_Name='None', CI_UUID='None', Pla_Id=None, CC_Id=None, Cus_Id=1, CI_Commissioning_DateTime=None, CI_Decommissioning_DateTime=None):
         self.CI_Id                       = CI_Id
         self.CI_Name                     = CI_Name
@@ -350,24 +563,39 @@ class configuration_item(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2020-02-20 16:44:35
+# GLVH @ 2021-04-08 20:09:28
 # =============================================================================
 
+# gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_cost_centers.py
 class cost_center(db.Model,Serializer):
     __tablename__ = 'Cost_Centers'
+
+    def set_shard(suffix=None):
+       if suffix is not None:
+           name='Cost_Centers_{suffix}'.format(suffix=suffix)
+           __class__.__tablename__  = name
+           __class__.__table__.name = name
+       return __class__.__tablename__
+
     CC_Id          = db.Column( db.Integer, primary_key=True, autoincrement=True )
     CC_Code        = db.Column( db.String(45) )
-    CC_Description = db.Column( db.String(45) )
+    CC_Description = db.Column( db.String(255) )
     Cur_Code       = db.Column( db.String(3), db.ForeignKey('Currencies.Cur_Code') )
     CC_Parent_Code = db.Column( db.String(45), default='1' )
     CC_Reg_Exp     = db.Column( db.String(45) )
     CC_Reference   = db.Column( db.String(245) )
 
+    # child_table=None gen_children=True
     configuration_items = db.relationship('configuration_item',backref='cost_center',lazy='dynamic')
+    # child_table=None gen_children=True
     customers      = db.relationship('customer',backref='cost_center',lazy='dynamic')
+    # child_table=None gen_children=True
     rates          = db.relationship('rate',backref='cost_center',lazy='dynamic')
+    # child_table=None gen_children=True
     users          = db.relationship('User',backref='cost_center',lazy='dynamic')
 
+    # looking for include file: /home/gvalera/GIT/EG-Suite-Tools/Collector/code/src/include/models/flask_cost_centers_properties.py
+    # file: /home/gvalera/GIT/EG-Suite-Tools/Collector/code/src/include/models/flask_cost_centers_properties.py not found
     def __init__(self, CC_Id=0, CC_Code='None', CC_Description='None', Cur_Code='None', CC_Parent_Code='1', CC_Reg_Exp='None', CC_Reference='None'):
         self.CC_Id          = CC_Id
         self.CC_Code        = CC_Code
@@ -384,16 +612,27 @@ class cost_center(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2020-02-20 16:44:35
+# GLVH @ 2021-04-08 20:09:28
 # =============================================================================
 
+# gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_countries_currencies.py
 class country_currency(db.Model,Serializer):
     __tablename__ = 'Countries_Currencies'
+
+    def set_shard(suffix=None):
+       if suffix is not None:
+           name='Countries_Currencies_{suffix}'.format(suffix=suffix)
+           __class__.__tablename__  = name
+           __class__.__table__.name = name
+       return __class__.__tablename__
+
     Cou_Code        = db.Column( db.String(2), db.ForeignKey('Countries.Cou_Code'), primary_key=True )
     Cur_Code        = db.Column( db.String(3), db.ForeignKey('Currencies.Cur_Code'), primary_key=True )
     Cou_Cur_Comment = db.Column( db.String(45) )
 
 
+    # looking for include file: /home/gvalera/GIT/EG-Suite-Tools/Collector/code/src/include/models/flask_countries_currencies_properties.py
+    # file: /home/gvalera/GIT/EG-Suite-Tools/Collector/code/src/include/models/flask_countries_currencies_properties.py not found
     def __init__(self, Cou_Code='None', Cur_Code='None', Cou_Cur_Comment='None'):
         self.Cou_Code        = Cou_Code
         self.Cur_Code        = Cur_Code
@@ -406,18 +645,30 @@ class country_currency(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2020-02-20 16:44:35
+# GLVH @ 2021-04-08 20:09:28
 # =============================================================================
 
+# gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_countries.py
 class country(db.Model,Serializer):
     __tablename__ = 'Countries'
+
+    def set_shard(suffix=None):
+       if suffix is not None:
+           name='Countries_{suffix}'.format(suffix=suffix)
+           __class__.__tablename__  = name
+           __class__.__table__.name = name
+       return __class__.__tablename__
+
     Cou_Code = db.Column( db.String(2), primary_key=True )
     Cou_Name = db.Column( db.String(45) )
     Cou_A3   = db.Column( db.String(3) )
     Cou_N    = db.Column( db.Integer )
 
+    # child_table=None gen_children=True
     countries_currencies = db.relationship('country_currency',backref='country',lazy='dynamic')
 
+    # looking for include file: /home/gvalera/GIT/EG-Suite-Tools/Collector/code/src/include/models/flask_countries_properties.py
+    # file: /home/gvalera/GIT/EG-Suite-Tools/Collector/code/src/include/models/flask_countries_properties.py not found
     def __init__(self, Cou_Code='None', Cou_Name='None', Cou_A3='None', Cou_N=None):
         self.Cou_Code = Cou_Code
         self.Cou_Name = Cou_Name
@@ -431,18 +682,30 @@ class country(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2020-02-20 16:44:35
+# GLVH @ 2021-04-08 20:09:28
 # =============================================================================
 
+# gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_cu_operations.py
 class cu_operation(db.Model,Serializer):
     __tablename__ = 'CU_Operations'
+
+    def set_shard(suffix=None):
+       if suffix is not None:
+           name='CU_Operations_{suffix}'.format(suffix=suffix)
+           __class__.__tablename__  = name
+           __class__.__table__.name = name
+       return __class__.__tablename__
+
     CU_Operation = db.Column( db.String(10), primary_key=True )
     Value        = db.Column( db.String(45) )
     Is_Multiply  = db.Column( db.Boolean )
     Factor       = db.Column( db.Integer )
 
+    # child_table=None gen_children=True
     charge_units = db.relationship('charge_unit',backref='cu_operation',lazy='dynamic')
 
+    # looking for include file: /home/gvalera/GIT/EG-Suite-Tools/Collector/code/src/include/models/flask_cu_operations_properties.py
+    # file: /home/gvalera/GIT/EG-Suite-Tools/Collector/code/src/include/models/flask_cu_operations_properties.py not found
     def __init__(self, CU_Operation='None', Value='None', Is_Multiply=None, Factor=None):
         self.CU_Operation = CU_Operation
         self.Value        = Value
@@ -456,21 +719,36 @@ class cu_operation(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2020-02-20 16:44:35
+# GLVH @ 2021-04-08 20:09:28
 # =============================================================================
 
+# gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_currencies.py
 class currency(db.Model,Serializer):
     __tablename__ = 'Currencies'
+
+    def set_shard(suffix=None):
+       if suffix is not None:
+           name='Currencies_{suffix}'.format(suffix=suffix)
+           __class__.__tablename__  = name
+           __class__.__table__.name = name
+       return __class__.__tablename__
+
     Cur_Code    = db.Column( db.String(3), primary_key=True )
     Cur_Name    = db.Column( db.String(45) )
     Cur_Id      = db.Column( db.Integer )
     Cur_Comment = db.Column( db.String(128) )
 
+    # child_table=None gen_children=True
     cost_centers = db.relationship('cost_center',backref='currency',lazy='dynamic')
+    # child_table=None gen_children=True
     countries_currencies = db.relationship('country_currency',backref='currency',lazy='dynamic')
+    # child_table=None gen_children=True
     exchange_rates = db.relationship('exchange_rate',backref='currency',lazy='dynamic')
+    # child_table=None gen_children=True
     rates       = db.relationship('rate',backref='currency',lazy='dynamic')
 
+    # looking for include file: /home/gvalera/GIT/EG-Suite-Tools/Collector/code/src/include/models/flask_currencies_properties.py
+    # file: /home/gvalera/GIT/EG-Suite-Tools/Collector/code/src/include/models/flask_currencies_properties.py not found
     def __init__(self, Cur_Code='None', Cur_Name='None', Cur_Id=None, Cur_Comment='None'):
         self.Cur_Code    = Cur_Code
         self.Cur_Name    = Cur_Name
@@ -484,18 +762,31 @@ class currency(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2020-02-20 16:44:35
+# GLVH @ 2021-04-08 20:09:28
 # =============================================================================
 
+# gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_customers.py
 class customer(db.Model,Serializer):
     __tablename__ = 'Customers'
+
+    def set_shard(suffix=None):
+       if suffix is not None:
+           name='Customers_{suffix}'.format(suffix=suffix)
+           __class__.__tablename__  = name
+           __class__.__table__.name = name
+       return __class__.__tablename__
+
     Cus_Id   = db.Column( db.Integer, primary_key=True, autoincrement=True )
     Cus_Name = db.Column( db.String(45) )
     CC_Id    = db.Column( db.Integer, db.ForeignKey('Cost_Centers.CC_Id') )
 
+    # child_table=None gen_children=True
     configuration_items = db.relationship('configuration_item',backref='customer',lazy='dynamic')
+    # child_table=None gen_children=True
     rates    = db.relationship('rate',backref='customer',lazy='dynamic')
 
+    # looking for include file: /home/gvalera/GIT/EG-Suite-Tools/Collector/code/src/include/models/flask_customers_properties.py
+    # file: /home/gvalera/GIT/EG-Suite-Tools/Collector/code/src/include/models/flask_customers_properties.py not found
     def __init__(self, Cus_Id=0, Cus_Name='None', CC_Id=None):
         self.Cus_Id   = Cus_Id
         self.Cus_Name = Cus_Name
@@ -508,17 +799,30 @@ class customer(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2020-02-20 16:44:35
+# GLVH @ 2021-04-08 20:09:28
 # =============================================================================
 
+# gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_cu_types.py
 class cu_type(db.Model,Serializer):
     __tablename__ = 'CU_Types'
+
+    def set_shard(suffix=None):
+       if suffix is not None:
+           name='CU_Types_{suffix}'.format(suffix=suffix)
+           __class__.__tablename__  = name
+           __class__.__table__.name = name
+       return __class__.__tablename__
+
     Typ_Code        = db.Column( db.String(10), primary_key=True )
     Typ_Description = db.Column( db.String(45) )
 
+    # child_table=None gen_children=True
     charge_units    = db.relationship('charge_unit',backref='cu_type',lazy='dynamic')
+    # child_table=None gen_children=True
     rates           = db.relationship('rate',backref='cu_type',lazy='dynamic')
 
+    # looking for include file: /home/gvalera/GIT/EG-Suite-Tools/Collector/code/src/include/models/flask_cu_types_properties.py
+    # file: /home/gvalera/GIT/EG-Suite-Tools/Collector/code/src/include/models/flask_cu_types_properties.py not found
     def __init__(self, Typ_Code='None', Typ_Description='None'):
         self.Typ_Code        = Typ_Code
         self.Typ_Description = Typ_Description
@@ -530,17 +834,28 @@ class cu_type(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2020-02-20 16:44:35
+# GLVH @ 2021-04-08 20:09:28
 # =============================================================================
 
+# gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_exchange_rates.py
 class exchange_rate(db.Model,Serializer):
     __tablename__ = 'Exchange_Rates'
+
+    def set_shard(suffix=None):
+       if suffix is not None:
+           name='Exchange_Rates_{suffix}'.format(suffix=suffix)
+           __class__.__tablename__  = name
+           __class__.__table__.name = name
+       return __class__.__tablename__
+
     ER_Id     = db.Column( db.Integer, primary_key=True, autoincrement=True )
     Cur_Code  = db.Column( db.String(3), db.ForeignKey('Currencies.Cur_Code') )
-    ER_Factor = db.Column( db.Numeric(20,10) )
+    ER_Factor = db.Column( db.Numeric(20,12) )
     ER_Date   = db.Column( db.Date )
 
 
+    # looking for include file: /home/gvalera/GIT/EG-Suite-Tools/Collector/code/src/include/models/flask_exchange_rates_properties.py
+    # file: /home/gvalera/GIT/EG-Suite-Tools/Collector/code/src/include/models/flask_exchange_rates_properties.py not found
     def __init__(self, ER_Id=0, Cur_Code='None', ER_Factor=None, ER_Date=None):
         self.ER_Id     = ER_Id
         self.Cur_Code  = Cur_Code
@@ -554,11 +869,20 @@ class exchange_rate(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2020-02-20 16:44:35
+# GLVH @ 2021-04-08 20:09:28
 # =============================================================================
 
+# gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_interface.py
 class interface(db.Model,Serializer):
     __tablename__ = 'Interface'
+
+    def set_shard(suffix=None):
+       if suffix is not None:
+           name='Interface_{suffix}'.format(suffix=suffix)
+           __class__.__tablename__  = name
+           __class__.__table__.name = name
+       return __class__.__tablename__
+
     Id          = db.Column( db.Integer, primary_key=True, autoincrement=True )
     User_Id     = db.Column( db.Integer )
     Table_name  = db.Column( db.String(45) )
@@ -569,6 +893,8 @@ class interface(db.Model,Serializer):
     Is_Active   = db.Column( db.Boolean )
 
 
+    # looking for include file: /home/gvalera/GIT/EG-Suite-Tools/Collector/code/src/include/models/flask_interface_properties.py
+    # file: /home/gvalera/GIT/EG-Suite-Tools/Collector/code/src/include/models/flask_interface_properties.py not found
     def __init__(self, Id=0, User_Id=None, Table_name='None', Option_Type=None, Argument_1='None', Argument_2='None', Argument_3='None', Is_Active=None):
         self.Id          = Id
         self.User_Id     = User_Id
@@ -586,16 +912,28 @@ class interface(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2020-02-20 16:44:35
+# GLVH @ 2021-04-08 20:09:28
 # =============================================================================
 
+# gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_measure_units.py
 class measure_unit(db.Model,Serializer):
     __tablename__ = 'Measure_Units'
+
+    def set_shard(suffix=None):
+       if suffix is not None:
+           name='Measure_Units_{suffix}'.format(suffix=suffix)
+           __class__.__tablename__  = name
+           __class__.__table__.name = name
+       return __class__.__tablename__
+
     MU_Code        = db.Column( db.String(3), primary_key=True )
     MU_Description = db.Column( db.String(45) )
 
+    # child_table=None gen_children=True
     rates          = db.relationship('rate',backref='measure_unit',lazy='dynamic')
 
+    # looking for include file: /home/gvalera/GIT/EG-Suite-Tools/Collector/code/src/include/models/flask_measure_units_properties.py
+    # file: /home/gvalera/GIT/EG-Suite-Tools/Collector/code/src/include/models/flask_measure_units_properties.py not found
     def __init__(self, MU_Code='None', MU_Description='None'):
         self.MU_Code        = MU_Code
         self.MU_Description = MU_Description
@@ -607,11 +945,20 @@ class measure_unit(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2020-02-20 16:44:35
+# GLVH @ 2021-04-08 20:09:28
 # =============================================================================
 
+# gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_platforms.py
 class platform(db.Model,Serializer):
     __tablename__ = 'Platforms'
+
+    def set_shard(suffix=None):
+       if suffix is not None:
+           name='Platforms_{suffix}'.format(suffix=suffix)
+           __class__.__tablename__  = name
+           __class__.__table__.name = name
+       return __class__.__tablename__
+
     Pla_Id       = db.Column( db.Integer, primary_key=True, autoincrement=True )
     Pla_Name     = db.Column( db.String(45) )
     Pla_Host     = db.Column( db.String(45) )
@@ -619,9 +966,13 @@ class platform(db.Model,Serializer):
     Pla_User     = db.Column( db.String(45) )
     Pla_Password = db.Column( db.String(45) )
 
+    # child_table=None gen_children=True
     configuration_items = db.relationship('configuration_item',backref='platform',lazy='dynamic')
+    # child_table=None gen_children=True
     rates        = db.relationship('rate',backref='platform',lazy='dynamic')
 
+    # looking for include file: /home/gvalera/GIT/EG-Suite-Tools/Collector/code/src/include/models/flask_platforms_properties.py
+    # file: /home/gvalera/GIT/EG-Suite-Tools/Collector/code/src/include/models/flask_platforms_properties.py not found
     def __init__(self, Pla_Id=0, Pla_Name='None', Pla_Host='None', Pla_Port='None', Pla_User='None', Pla_Password='None'):
         self.Pla_Id       = Pla_Id
         self.Pla_Name     = Pla_Name
@@ -637,24 +988,35 @@ class platform(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2020-02-20 16:44:35
+# GLVH @ 2021-04-08 20:09:28
 # =============================================================================
 
+# gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_rates.py
 class rate(db.Model,Serializer):
     __tablename__ = 'Rates'
+
+    def set_shard(suffix=None):
+       if suffix is not None:
+           name='Rates_{suffix}'.format(suffix=suffix)
+           __class__.__tablename__  = name
+           __class__.__table__.name = name
+       return __class__.__tablename__
+
     Rat_Id     = db.Column( db.Integer, primary_key=True, autoincrement=True )
     Typ_Code   = db.Column( db.String(10), db.ForeignKey('CU_Types.Typ_Code') )
     Cus_Id     = db.Column( db.Integer, db.ForeignKey('Customers.Cus_Id') )
     Pla_Id     = db.Column( db.Integer, db.ForeignKey('Platforms.Pla_Id') )
     CC_Id      = db.Column( db.Integer, db.ForeignKey('Cost_Centers.CC_Id') )
     CI_Id      = db.Column( db.Integer, db.ForeignKey('Configuration_Items.CI_Id') )
-    Rat_Price  = db.Column( db.Numeric(20,6) )
+    Rat_Price  = db.Column( db.Numeric(20,12) )
     Cur_Code   = db.Column( db.String(3), db.ForeignKey('Currencies.Cur_Code') )
     MU_Code    = db.Column( db.String(3), db.ForeignKey('Measure_Units.MU_Code') )
     Rat_Period = db.Column( db.Integer, db.ForeignKey('Rat_Periods.Rat_Period') )
     Rat_Type   = db.Column( db.Integer )
 
 
+    # looking for include file: /home/gvalera/GIT/EG-Suite-Tools/Collector/code/src/include/models/flask_rates_properties.py
+    # including file: /home/gvalera/GIT/EG-Suite-Tools/Collector/code/src/include/models/flask_rates_properties.py
     # @property
     #
     
@@ -681,16 +1043,28 @@ class rate(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2020-02-20 16:44:35
+# GLVH @ 2021-04-08 20:09:28
 # =============================================================================
 
+# gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_rat_periods.py
 class rat_period(db.Model,Serializer):
     __tablename__ = 'Rat_Periods'
+
+    def set_shard(suffix=None):
+       if suffix is not None:
+           name='Rat_Periods_{suffix}'.format(suffix=suffix)
+           __class__.__tablename__  = name
+           __class__.__table__.name = name
+       return __class__.__tablename__
+
     Rat_Period = db.Column( db.Integer, primary_key=True )
     Value      = db.Column( db.String(45) )
 
+    # child_table=None gen_children=True
     rates      = db.relationship('rate',backref='rat_period',lazy='dynamic')
 
+    # looking for include file: /home/gvalera/GIT/EG-Suite-Tools/Collector/code/src/include/models/flask_rat_periods_properties.py
+    # file: /home/gvalera/GIT/EG-Suite-Tools/Collector/code/src/include/models/flask_rat_periods_properties.py not found
     def __init__(self, Rat_Period=None, Value='None'):
         self.Rat_Period = Rat_Period
         self.Value      = Value
@@ -702,18 +1076,30 @@ class rat_period(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2020-02-20 16:44:35
+# GLVH @ 2021-04-08 20:09:28
 # =============================================================================
 
+# gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_roles.py
 class Role(db.Model,Serializer):
     __tablename__ = 'Roles'
+
+    def set_shard(suffix=None):
+       if suffix is not None:
+           name='Roles_{suffix}'.format(suffix=suffix)
+           __class__.__tablename__  = name
+           __class__.__table__.name = name
+       return __class__.__tablename__
+
     id          = db.Column( db.Integer, primary_key=True )
     name        = db.Column( db.String(64) )
     default     = db.Column( db.Boolean )
     permissions = db.Column( db.Integer )
 
+    # child_table=None gen_children=True
     users       = db.relationship('User',backref='role',lazy='dynamic')
 
+    # looking for include file: /home/gvalera/GIT/EG-Suite-Tools/Collector/code/src/include/models/flask_roles_properties.py
+    # file: /home/gvalera/GIT/EG-Suite-Tools/Collector/code/src/include/models/flask_roles_properties.py not found
     @staticmethod
     def insert_roles():
         roles = {
@@ -744,37 +1130,48 @@ class Role(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2020-02-20 16:44:35
+# GLVH @ 2021-04-08 20:09:28
 # =============================================================================
 
+# gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_st_use_per_cu.py
 class st_use_per_cu(db.Model,Serializer):
     __tablename__ = 'ST_Use_Per_CU'
+
+    def set_shard(suffix=None):
+       if suffix is not None:
+           name='ST_Use_Per_CU_{suffix}'.format(suffix=suffix)
+           __class__.__tablename__  = name
+           __class__.__table__.name = name
+       return __class__.__tablename__
+
     CU_Id                  = db.Column( db.Integer, primary_key=True )
     From                   = db.Column( db.DateTime, primary_key=True )
     To                     = db.Column( db.DateTime, primary_key=True )
     Total_Slices           = db.Column( db.Integer, default=0 )
     Found_Slices           = db.Column( db.Integer, default=0 )
     Not_Found_Slices       = db.Column( db.Integer, default=0 )
-    Period_Initial_Q       = db.Column( db.Numeric(20,6), default=0.000000 )
-    Period_Increase        = db.Column( db.Numeric(20,6), default=0.000000 )
+    Period_Initial_Q       = db.Column( db.Numeric(20,12), default=0.000000000000 )
+    Period_Increase        = db.Column( db.Numeric(20,12), default=0.000000000000 )
     Period_Increase_Count  = db.Column( db.Integer, default=0 )
-    Period_Reduction       = db.Column( db.Numeric(20,6), default=0.000000 )
+    Period_Reduction       = db.Column( db.Numeric(20,12), default=0.000000000000 )
     Period_Reduction_Count = db.Column( db.Integer, default=0 )
-    Period_Final_Q         = db.Column( db.Numeric(20,6), default=0.000000 )
+    Period_Final_Q         = db.Column( db.Numeric(20,12), default=0.000000000000 )
     CI_Id                  = db.Column( db.Integer, default=1 )
     CC_Id                  = db.Column( db.Integer, default=1 )
     Cus_Id                 = db.Column( db.Integer, default=1 )
     Rat_Id                 = db.Column( db.Integer, default=1 )
     Typ_Code               = db.Column( db.String(10), default='NUL' )
     Pla_Id                 = db.Column( db.Integer, default=1 )
-    Mean                   = db.Column( db.Numeric(20,6), default=0.000000 )
-    Variance               = db.Column( db.Numeric(20,6), default=0.000000 )
-    StdDev                 = db.Column( db.Numeric(20,6), default=0.000000 )
-    Min                    = db.Column( db.Numeric(20,6), default=0.000000 )
-    Max                    = db.Column( db.Numeric(20,6), default=0.000000 )
+    Mean                   = db.Column( db.Numeric(20,12), default=0.000000000000 )
+    Variance               = db.Column( db.Numeric(20,12), default=0.000000000000 )
+    StdDev                 = db.Column( db.Numeric(20,12), default=0.000000000000 )
+    Min                    = db.Column( db.Numeric(20,12), default=0.000000000000 )
+    Max                    = db.Column( db.Numeric(20,12), default=0.000000000000 )
 
 
-    def __init__(self, CU_Id=None, From=None, To=None, Total_Slices=0, Found_Slices=0, Not_Found_Slices=0, Period_Initial_Q=0.000000, Period_Increase=0.000000, Period_Increase_Count=0, Period_Reduction=0.000000, Period_Reduction_Count=0, Period_Final_Q=0.000000, CI_Id=1, CC_Id=1, Cus_Id=1, Rat_Id=1, Typ_Code='NUL', Pla_Id=1, Mean=0.000000, Variance=0.000000, StdDev=0.000000, Min=0.000000, Max=0.000000):
+    # looking for include file: /home/gvalera/GIT/EG-Suite-Tools/Collector/code/src/include/models/flask_st_use_per_cu_properties.py
+    # file: /home/gvalera/GIT/EG-Suite-Tools/Collector/code/src/include/models/flask_st_use_per_cu_properties.py not found
+    def __init__(self, CU_Id=None, From=None, To=None, Total_Slices=0, Found_Slices=0, Not_Found_Slices=0, Period_Initial_Q=0.000000000000, Period_Increase=0.000000000000, Period_Increase_Count=0, Period_Reduction=0.000000000000, Period_Reduction_Count=0, Period_Final_Q=0.000000000000, CI_Id=1, CC_Id=1, Cus_Id=1, Rat_Id=1, Typ_Code='NUL', Pla_Id=1, Mean=0.000000000000, Variance=0.000000000000, StdDev=0.000000000000, Min=0.000000000000, Max=0.000000000000):
         self.CU_Id                  = CU_Id
         self.From                   = From
         self.To                     = To
@@ -806,11 +1203,20 @@ class st_use_per_cu(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2020-02-20 16:44:35
+# GLVH @ 2021-04-08 20:09:28
 # =============================================================================
 
+# gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_st_use_per_type.py
 class st_use_per_type(db.Model,Serializer):
     __tablename__ = 'ST_Use_Per_Type'
+
+    def set_shard(suffix=None):
+       if suffix is not None:
+           name='ST_Use_Per_Type_{suffix}'.format(suffix=suffix)
+           __class__.__tablename__  = name
+           __class__.__table__.name = name
+       return __class__.__tablename__
+
     Typ_Code = db.Column( db.String(10), primary_key=True )
     Cus_Id   = db.Column( db.Integer, primary_key=True, default=1 )
     Pla_Id   = db.Column( db.Integer, primary_key=True, default=1 )
@@ -819,14 +1225,16 @@ class st_use_per_type(db.Model,Serializer):
     Year     = db.Column( db.Integer, primary_key=True )
     Month    = db.Column( db.Integer, primary_key=True )
     Count    = db.Column( db.Integer, default=0 )
-    Mean     = db.Column( db.Numeric(20,6), default=0.000000 )
-    Variance = db.Column( db.Numeric(20,6), default=0.000000 )
-    StdDev   = db.Column( db.Numeric(20,6), default=0.000000 )
-    Min      = db.Column( db.Numeric(20,6), default=0.000000 )
-    Max      = db.Column( db.Numeric(20,6), default=0.000000 )
+    Mean     = db.Column( db.Numeric(20,12) )
+    Variance = db.Column( db.Numeric(20,12) )
+    StdDev   = db.Column( db.Numeric(20,12) )
+    Min      = db.Column( db.Numeric(20,12) )
+    Max      = db.Column( db.Numeric(20,12) )
 
 
-    def __init__(self, Typ_Code='None', Cus_Id=1, Pla_Id=1, CC_Id=1, CI_Id=1, Year=None, Month=None, Count=0, Mean=0.000000, Variance=0.000000, StdDev=0.000000, Min=0.000000, Max=0.000000):
+    # looking for include file: /home/gvalera/GIT/EG-Suite-Tools/Collector/code/src/include/models/flask_st_use_per_type_properties.py
+    # file: /home/gvalera/GIT/EG-Suite-Tools/Collector/code/src/include/models/flask_st_use_per_type_properties.py not found
+    def __init__(self, Typ_Code='None', Cus_Id=1, Pla_Id=1, CC_Id=1, CI_Id=1, Year=None, Month=None, Count=0, Mean=None, Variance=None, StdDev=None, Min=None, Max=None):
         self.Typ_Code = Typ_Code
         self.Cus_Id   = Cus_Id
         self.Pla_Id   = Pla_Id
@@ -848,15 +1256,156 @@ class st_use_per_type(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2020-02-20 16:44:35
+# GLVH @ 2020-10-18 20:12:04
 # =============================================================================
 
-class trace(db.Model,Serializer):
-    __tablename__ = 'Trace'
+# gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_trace_202003.py
+class trace_202003(db.Model,Serializer):
+    __tablename__ = 'Trace_202003'
+
+    def set_shard(suffix=None):
+       if suffix is not None:
+           name='Trace_202003_{suffix}'.format(suffix=suffix)
+           __class__.__tablename__  = name
+           __class__.__table__.name = name
+       return __class__.__tablename__
+
     ID   = db.Column( db.Integer, primary_key=True, autoincrement=True )
     LINE = db.Column( db.String(128) )
 
 
+    # looking for include file: /home/gvalera/GIT/EG-Suite-Tools/Collector/code/src/include/models/flask_trace_202003_properties.py
+    # file: /home/gvalera/GIT/EG-Suite-Tools/Collector/code/src/include/models/flask_trace_202003_properties.py not found
+    def __init__(self, ID=0, LINE='None'):
+        self.ID   = ID
+        self.LINE = LINE
+
+    def __repr__(self):
+        return "<Trace_202003( ID='%s', LINE='%s')>" % \
+                ( self.ID, self.LINE)
+
+# =============================================================================
+# Auto-Generated code. do not modify
+# (c) Sertechno 2018
+# GLVH @ 2020-10-18 20:12:04
+# =============================================================================
+
+# gen_model_flask.py:670 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_trace_202003.py
+def get_trace_202003(table_name_suffix):
+  # gen_model_flask.py:678 =>/home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_trace_202003.py
+  class trace_202003_Class(db.Model,Serializer):
+    __tablename__ = 'Trace_202003_%s'%(table_name_suffix)
+
+    def set_shard(suffix=None):
+        if suffix is not None:
+           name='Trace_202003_{suffix}'.format(suffix=suffix)
+           __class__.__tablename__  = name
+           __class__.__table__.name = name
+        return __class__.__tablename__
+
+    ID   = db.Column( db.Integer, primary_key=True, autoincrement=True )
+    LINE = db.Column( db.String(128) )
+
+
+    def __init__(self, ID=0, LINE='None'):
+        self.ID   = ID
+        self.LINE = LINE
+
+    def __repr__(self):
+        return "<Trace_202003( ID='%s', LINE='%s')>" % \
+                ( self.ID, self.LINE)
+
+  trace_202003_Class.__name__ = 'trace_202003_%s'%(table_name_suffix)
+  return trace_202003_Class
+  # gen_model_flask.py 801 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_trace_202003.py
+# =============================================================================
+# Auto-Generated code. do not modify
+# (c) Sertechno 2018
+# GLVH @ 2020-10-18 20:12:04
+# =============================================================================
+
+# gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_trace_202101.py
+class trace_202101(db.Model,Serializer):
+    __tablename__ = 'Trace_202101'
+
+    def set_shard(suffix=None):
+       if suffix is not None:
+           name='Trace_202101_{suffix}'.format(suffix=suffix)
+           __class__.__tablename__  = name
+           __class__.__table__.name = name
+       return __class__.__tablename__
+
+    ID   = db.Column( db.Integer, primary_key=True, autoincrement=True )
+    LINE = db.Column( db.String(128) )
+
+
+    # looking for include file: /home/gvalera/GIT/EG-Suite-Tools/Collector/code/src/include/models/flask_trace_202101_properties.py
+    # file: /home/gvalera/GIT/EG-Suite-Tools/Collector/code/src/include/models/flask_trace_202101_properties.py not found
+    def __init__(self, ID=0, LINE='None'):
+        self.ID   = ID
+        self.LINE = LINE
+
+    def __repr__(self):
+        return "<Trace_202101( ID='%s', LINE='%s')>" % \
+                ( self.ID, self.LINE)
+
+# =============================================================================
+# Auto-Generated code. do not modify
+# (c) Sertechno 2018
+# GLVH @ 2020-10-18 20:12:04
+# =============================================================================
+
+# gen_model_flask.py:670 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_trace_202101.py
+def get_trace_202101(table_name_suffix):
+  # gen_model_flask.py:678 =>/home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_trace_202101.py
+  class trace_202101_Class(db.Model,Serializer):
+    __tablename__ = 'Trace_202101_%s'%(table_name_suffix)
+
+    def set_shard(suffix=None):
+        if suffix is not None:
+           name='Trace_202101_{suffix}'.format(suffix=suffix)
+           __class__.__tablename__  = name
+           __class__.__table__.name = name
+        return __class__.__tablename__
+
+    ID   = db.Column( db.Integer, primary_key=True, autoincrement=True )
+    LINE = db.Column( db.String(128) )
+
+
+    def __init__(self, ID=0, LINE='None'):
+        self.ID   = ID
+        self.LINE = LINE
+
+    def __repr__(self):
+        return "<Trace_202101( ID='%s', LINE='%s')>" % \
+                ( self.ID, self.LINE)
+
+  trace_202101_Class.__name__ = 'trace_202101_%s'%(table_name_suffix)
+  return trace_202101_Class
+  # gen_model_flask.py 801 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_trace_202101.py
+# =============================================================================
+# Auto-Generated code. do not modify
+# (c) Sertechno 2018
+# GLVH @ 2021-04-08 20:09:28
+# =============================================================================
+
+# gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_trace.py
+class trace(db.Model,Serializer):
+    __tablename__ = 'Trace'
+
+    def set_shard(suffix=None):
+       if suffix is not None:
+           name='Trace_{suffix}'.format(suffix=suffix)
+           __class__.__tablename__  = name
+           __class__.__table__.name = name
+       return __class__.__tablename__
+
+    ID   = db.Column( db.Integer, primary_key=True, autoincrement=True )
+    LINE = db.Column( db.String(128) )
+
+
+    # looking for include file: /home/gvalera/GIT/EG-Suite-Tools/Collector/code/src/include/models/flask_trace_properties.py
+    # file: /home/gvalera/GIT/EG-Suite-Tools/Collector/code/src/include/models/flask_trace_properties.py not found
     def __init__(self, ID=0, LINE='None'):
         self.ID   = ID
         self.LINE = LINE
@@ -868,18 +1417,28 @@ class trace(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2020-02-20 16:44:35
+# GLVH @ 2021-04-08 20:09:28
 # =============================================================================
 
+# gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_user_resumes.py
 class user_resumes(db.Model,Serializer):
     __tablename__ = 'User_Resumes'
+
+    def set_shard(suffix=None):
+       if suffix is not None:
+           name='User_Resumes_{suffix}'.format(suffix=suffix)
+           __class__.__tablename__  = name
+           __class__.__table__.name = name
+       return __class__.__tablename__
+
+    User_Id                = db.Column( db.Integer, primary_key=True )
     Cus_Id                 = db.Column( db.Integer )
     CR_Date_From           = db.Column( db.Date, primary_key=True )
     CR_Date_To             = db.Column( db.Date, primary_key=True )
     CIT_Status             = db.Column( db.Integer, primary_key=True )
     Cur_Code               = db.Column( db.String(3), primary_key=True )
     CIT_Count              = db.Column( db.Integer )
-    CIT_Quantity           = db.Column( db.Numeric(20,6) )
+    CIT_Quantity           = db.Column( db.Numeric(20,12) )
     CIT_Generation         = db.Column( db.Integer, default=1 )
     CU_Id                  = db.Column( db.Integer, primary_key=True )
     CI_CC_Id               = db.Column( db.Integer )
@@ -888,31 +1447,34 @@ class user_resumes(db.Model,Serializer):
     CC_Cur_Code            = db.Column( db.String(3) )
     CI_Id                  = db.Column( db.Integer, primary_key=True )
     Rat_Id                 = db.Column( db.Integer )
-    Rat_Price              = db.Column( db.Numeric(20,6) )
+    Rat_Price              = db.Column( db.Numeric(20,12) )
     Rat_MU_Code            = db.Column( db.String(3) )
     Rat_Cur_Code           = db.Column( db.String(3) )
     Rat_Period             = db.Column( db.Integer )
-    Rat_Hourly             = db.Column( db.Numeric(20,6) )
-    Rat_Daily              = db.Column( db.Numeric(20,6) )
-    Rat_Monthly            = db.Column( db.Numeric(20,6) )
-    CR_Quantity            = db.Column( db.Numeric(20,6) )
-    CR_Quantity_at_Rate    = db.Column( db.Numeric(20,6) )
-    CC_XR                  = db.Column( db.Numeric(20,10) )
-    CR_Cur_XR              = db.Column( db.Numeric(20,10) )
-    CR_ST_at_Rate_Cur      = db.Column( db.Numeric(20,6) )
-    CR_ST_at_CC_Cur        = db.Column( db.Numeric(20,6) )
-    CR_ST_at_Cur           = db.Column( db.Numeric(20,6) )
+    Rat_Hourly             = db.Column( db.Numeric(20,12) )
+    Rat_Daily              = db.Column( db.Numeric(20,12) )
+    Rat_Monthly            = db.Column( db.Numeric(20,12) )
+    CR_Quantity            = db.Column( db.Numeric(20,12) )
+    CR_Quantity_at_Rate    = db.Column( db.Numeric(20,12) )
+    CC_XR                  = db.Column( db.Numeric(20,12) )
+    CR_Cur_XR              = db.Column( db.Numeric(20,12) )
+    CR_ST_at_Rate_Cur      = db.Column( db.Numeric(20,12) )
+    CR_ST_at_CC_Cur        = db.Column( db.Numeric(20,12) )
+    CR_ST_at_Cur           = db.Column( db.Numeric(20,12) )
     Cus_Name               = db.Column( db.String(45) )
     CI_Name                = db.Column( db.String(45) )
     CU_Description         = db.Column( db.String(45) )
-    CC_Description         = db.Column( db.String(45) )
+    CC_Description         = db.Column( db.String(255) )
     Rat_Period_Description = db.Column( db.String(10) )
     CC_Code                = db.Column( db.String(45) )
     Pla_Id                 = db.Column( db.Integer )
     Pla_Name               = db.Column( db.String(45) )
 
 
-    def __init__(self, Cus_Id=None, CR_Date_From=None, CR_Date_To=None, CIT_Status=None, Cur_Code='None', CIT_Count=None, CIT_Quantity=None, CIT_Generation=1, CU_Id=None, CI_CC_Id=None, CU_Operation='None', Typ_Code='None', CC_Cur_Code='None', CI_Id=None, Rat_Id=None, Rat_Price=None, Rat_MU_Code='None', Rat_Cur_Code='None', Rat_Period=None, Rat_Hourly=None, Rat_Daily=None, Rat_Monthly=None, CR_Quantity=None, CR_Quantity_at_Rate=None, CC_XR=None, CR_Cur_XR=None, CR_ST_at_Rate_Cur=None, CR_ST_at_CC_Cur=None, CR_ST_at_Cur=None, Cus_Name='None', CI_Name='None', CU_Description='None', CC_Description='None', Rat_Period_Description='None', CC_Code='None', Pla_Id=None, Pla_Name='None'):
+    # looking for include file: /home/gvalera/GIT/EG-Suite-Tools/Collector/code/src/include/models/flask_user_resumes_properties.py
+    # file: /home/gvalera/GIT/EG-Suite-Tools/Collector/code/src/include/models/flask_user_resumes_properties.py not found
+    def __init__(self, User_Id=None, Cus_Id=None, CR_Date_From=None, CR_Date_To=None, CIT_Status=None, Cur_Code='None', CIT_Count=None, CIT_Quantity=None, CIT_Generation=1, CU_Id=None, CI_CC_Id=None, CU_Operation='None', Typ_Code='None', CC_Cur_Code='None', CI_Id=None, Rat_Id=None, Rat_Price=None, Rat_MU_Code='None', Rat_Cur_Code='None', Rat_Period=None, Rat_Hourly=None, Rat_Daily=None, Rat_Monthly=None, CR_Quantity=None, CR_Quantity_at_Rate=None, CC_XR=None, CR_Cur_XR=None, CR_ST_at_Rate_Cur=None, CR_ST_at_CC_Cur=None, CR_ST_at_Cur=None, Cus_Name='None', CI_Name='None', CU_Description='None', CC_Description='None', Rat_Period_Description='None', CC_Code='None', Pla_Id=None, Pla_Name='None'):
+        self.User_Id                = User_Id
         self.Cus_Id                 = Cus_Id
         self.CR_Date_From           = CR_Date_From
         self.CR_Date_To             = CR_Date_To
@@ -952,17 +1514,26 @@ class user_resumes(db.Model,Serializer):
         self.Pla_Name               = Pla_Name
 
     def __repr__(self):
-        return "<User_Resumes( Cus_Id='%s', CR_Date_From='%s', CR_Date_To='%s', CIT_Status='%s', Cur_Code='%s', CIT_Count='%s', CIT_Quantity='%s', CIT_Generation='%s', CU_Id='%s', CI_CC_Id='%s', CU_Operation='%s', Typ_Code='%s', CC_Cur_Code='%s', CI_Id='%s', Rat_Id='%s', Rat_Price='%s', Rat_MU_Code='%s', Rat_Cur_Code='%s', Rat_Period='%s', Rat_Hourly='%s', Rat_Daily='%s', Rat_Monthly='%s', CR_Quantity='%s', CR_Quantity_at_Rate='%s', CC_XR='%s', CR_Cur_XR='%s', CR_ST_at_Rate_Cur='%s', CR_ST_at_CC_Cur='%s', CR_ST_at_Cur='%s', Cus_Name='%s', CI_Name='%s', CU_Description='%s', CC_Description='%s', Rat_Period_Description='%s', CC_Code='%s', Pla_Id='%s', Pla_Name='%s')>" % \
-                ( self.Cus_Id, self.CR_Date_From, self.CR_Date_To, self.CIT_Status, self.Cur_Code, self.CIT_Count, self.CIT_Quantity, self.CIT_Generation, self.CU_Id, self.CI_CC_Id, self.CU_Operation, self.Typ_Code, self.CC_Cur_Code, self.CI_Id, self.Rat_Id, self.Rat_Price, self.Rat_MU_Code, self.Rat_Cur_Code, self.Rat_Period, self.Rat_Hourly, self.Rat_Daily, self.Rat_Monthly, self.CR_Quantity, self.CR_Quantity_at_Rate, self.CC_XR, self.CR_Cur_XR, self.CR_ST_at_Rate_Cur, self.CR_ST_at_CC_Cur, self.CR_ST_at_Cur, self.Cus_Name, self.CI_Name, self.CU_Description, self.CC_Description, self.Rat_Period_Description, self.CC_Code, self.Pla_Id, self.Pla_Name)
+        return "<User_Resumes( User_Id='%s', Cus_Id='%s', CR_Date_From='%s', CR_Date_To='%s', CIT_Status='%s', Cur_Code='%s', CIT_Count='%s', CIT_Quantity='%s', CIT_Generation='%s', CU_Id='%s', CI_CC_Id='%s', CU_Operation='%s', Typ_Code='%s', CC_Cur_Code='%s', CI_Id='%s', Rat_Id='%s', Rat_Price='%s', Rat_MU_Code='%s', Rat_Cur_Code='%s', Rat_Period='%s', Rat_Hourly='%s', Rat_Daily='%s', Rat_Monthly='%s', CR_Quantity='%s', CR_Quantity_at_Rate='%s', CC_XR='%s', CR_Cur_XR='%s', CR_ST_at_Rate_Cur='%s', CR_ST_at_CC_Cur='%s', CR_ST_at_Cur='%s', Cus_Name='%s', CI_Name='%s', CU_Description='%s', CC_Description='%s', Rat_Period_Description='%s', CC_Code='%s', Pla_Id='%s', Pla_Name='%s')>" % \
+                ( self.User_Id, self.Cus_Id, self.CR_Date_From, self.CR_Date_To, self.CIT_Status, self.Cur_Code, self.CIT_Count, self.CIT_Quantity, self.CIT_Generation, self.CU_Id, self.CI_CC_Id, self.CU_Operation, self.Typ_Code, self.CC_Cur_Code, self.CI_Id, self.Rat_Id, self.Rat_Price, self.Rat_MU_Code, self.Rat_Cur_Code, self.Rat_Period, self.Rat_Hourly, self.Rat_Daily, self.Rat_Monthly, self.CR_Quantity, self.CR_Quantity_at_Rate, self.CC_XR, self.CR_Cur_XR, self.CR_ST_at_Rate_Cur, self.CR_ST_at_CC_Cur, self.CR_ST_at_Cur, self.Cus_Name, self.CI_Name, self.CU_Description, self.CC_Description, self.Rat_Period_Description, self.CC_Code, self.Pla_Id, self.Pla_Name)
 
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2020-02-20 16:44:35
+# GLVH @ 2021-04-08 20:09:28
 # =============================================================================
 
+# gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_users.py
 class User(UserMixin, db.Model,Serializer):
     __tablename__ = 'Users'
+
+    def set_shard(suffix=None):
+       if suffix is not None:
+           name='Users_{suffix}'.format(suffix=suffix)
+           __class__.__tablename__  = name
+           __class__.__table__.name = name
+       return __class__.__tablename__
+
     id            = db.Column( db.Integer, primary_key=True, autoincrement=True )
     username      = db.Column( db.String(64) )
     role_id       = db.Column( db.Integer, db.ForeignKey('Roles.id') )
@@ -972,6 +1543,9 @@ class User(UserMixin, db.Model,Serializer):
     CC_Id         = db.Column( db.Integer, db.ForeignKey('Cost_Centers.CC_Id'), default=1 )
 
 
+    # looking for include file: /home/gvalera/GIT/EG-Suite-Tools/Collector/code/src/include/models/flask_users_properties.py
+    # file: /home/gvalera/GIT/EG-Suite-Tools/Collector/code/src/include/models/flask_users_properties.py not found
+    # source: code/src/include/models/flask_users_methods.py
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
         if self.role is None:

@@ -1,23 +1,33 @@
-# =============================================================================
+# ======================================================================
 # View for Get Charging Resume from DB
 # (c) Sertechno 2018
 # GLVH @ 2019-08-16
-# =============================================================================
+# ======================================================================
 
-from emtec.collector.forms       import frm_charging_resume_level
-from babel.numbers  import format_number, format_decimal, format_percent
+from emtec.collector.forms  import frm_charging_resume_level
+from babel.numbers          import format_number
+from babel.numbers          import format_decimal
+from babel.numbers          import format_percent
 
 @main.route('/forms/Get_Charging_Resume_Level', methods=['GET', 'POST'])
 @login_required
 def forms_Get_Charging_Resume_Level():
-    logger.debug('Enter: forms_Get_Charging_Resume()'%())
+    logger.debug(f'{this()}: Enter')
+    collectordata=get_collectordata()
 
-    session['data'] =  { 'Cus_Id': None, 'CIT_Date_From':None, 'CIT_Date_To':None, 'CIT_Status':1,'Cur_Code':'USD','Level':1}
+    session['data'] =  {    'Cus_Id': None, 
+                            'CIT_Date_From':collectordata['COLLECTOR_PERIOD']['start'], 
+                            'CIT_Date_To':collectordata['COLLECTOR_PERIOD']['end'], 
+                            'CIT_Status':1,
+                            'Cur_Code':'USD',
+                            'Level':1}
 
     form = frm_charging_resume_level()
 
     # ------------------------------------------------------------------------------
     # Will setup filter to consider only Currencies with actual Exchange Rates in DB
+    # Commit all pending DB states in order to refresh data
+    db.session.commit()
     # Prepare query
     query = db.session.query(exchange_rate.Cur_Code.distinct().label('Cur_Code'))
     # Execute query and convert in list for further use in choices selection
@@ -84,11 +94,9 @@ def forms_Get_Charging_Resume_Level():
                                 ))
 
         elif   form.submit_Cancel.data:
-            #print('Cancel Data Here ... does nothing')
             flash('Report discarded ...')
         else:
             flash('form validated but not submited. Report to Support ...')
-            #print('form validated but not submited ???')
         return redirect(url_for('.forms_Get_Charging_Resume_Level'))
 
     form.Cus_Id.data        = session['data']['Cus_Id']
@@ -98,7 +106,12 @@ def forms_Get_Charging_Resume_Level():
     form.Cur_Code.data      = session['data']['Cur_Code']
     form.Level.data         = session['data']['Level']
 
-    return render_template('charging_resume_level.html',form=form, data=session.get('data'))
+    return render_template(
+        'charging_resume_level.html',
+        form=form, 
+        data=session.get('data'),
+        collectordata=collectordata
+        )
 
 # =============================================================================
 
@@ -107,7 +120,30 @@ import simplejson as json
 @main.route('/report/Charging_Resume_Level', methods=['GET','POST'])
 @login_required
 def report_Charging_Resume_Level():
-    logger.debug('Enter: report_Charging_Resume_Level()')
+    logger.debug(f'{this()}: Enter')
+    collectordata=get_collectordata()
+    #table_name='Charge_Items'
+    #class_name='charge_item'
+    #template_name='Charge_Items'
+    """
+    # 20201023 GV SHARDENING CODE ---------------------------------->>>>
+    # Shardening Code goes her if needed
+    collectordata={}
+    collectordata.update({"COLLECTOR_PERIOD":get_period_data(current_user.id,db.engine,Interface)})
+    collectordata.update({"CONFIG":current_app.config})
+    suffix = collectordata['COLLECTOR_PERIOD']['active']
+    table_name='Charge_Items'
+    class_name='charge_item'
+    template_name='Charge_Items'
+    sharding=False
+
+    if 'COLLECTOR_CIT_SHARDING' in current_app.config: 
+        sharding=current_app.config['COLLECTOR_CIT_SHARDING']
+    if sharding:
+        charge_item.set_shard(suffix)
+        flash(f"{this()} Using shardened table: {charge_item.__table__.name}") 
+    # 20201023 GV SHARDENING CODE <<<<----------------------------------
+    """
     Cus_Id          =  request.args.get('Cus_Id',None,type=int)
     Cus_Name        =  request.args.get('Cus_Name',None,type=str)
     CIT_Date_From   =  request.args.get('CIT_Date_From',None,type=str)
@@ -121,27 +157,52 @@ def report_Charging_Resume_Level():
     
     # Updated cached data for this specific query if requested 
     if Update == 1:
-        CI = db.session.query(Configuration_Items.CI_Id.distinct()).\
-                filter(Configuration_Items.Cus_Id==Cus_Id).\
-                order_by(Configuration_Items.CI_Id)
-        print(CI)
-        CI=CI.all()
-        logger.debug ("report_Changing_Resume_Level: %d CI's found for customer %d"%(len(CI),Cus_Id))
+        CI = db.session.query(
+                Configuration_Items.CI_Id.distinct().label('CI_Id')
+                ).filter(Configuration_Items.Cus_Id==Cus_Id
+                ).order_by(Configuration_Items.CI_Id
+                ).all()
+        logger.debug (f"{this()}: {len(CI)} CI's found for customer {Cus_Id}")
         
         resume_records=0
 
         for ci in CI:
-            records = db.Update_Charge_Resume_CI2(CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code,ci)
+            logger.debug ("%s: calling db.Update_Charge_Resume_CI(%s,%s,%s,%s,%s,%s,%s)"%(
+                this(),
+                Cus_Id,
+                CIT_Date_From,
+                CIT_Date_To,
+                CIT_Status,
+                Cur_Code,
+                ci.CI_Id,
+                charge_item
+                ))
+
+            records = db.Update_Charge_Resume_CI(
+                Cus_Id,
+                CIT_Date_From,
+                CIT_Date_To,
+                CIT_Status,
+                Cur_Code,
+                ci.CI_Id,
+                charge_item
+                )
             if records is not None:
                 resume_records += records
             
-        logger.debug ("report_Changing_Resume_Level: resume_records = %s"%resume_records)
+        logger.debug (f"{this()}: resume_records = {resume_records}")
         
     # Get Actual Remume Data from Database
     # NOTE: Here needs some Sand-Clock Message or something in case it takes so long ...
-    rows =  db.Get_Charge_Resume(Cus_Id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code)
+    rows =  db.Get_Charge_Resume(
+                Cus_Id,
+                CIT_Date_From,
+                CIT_Date_To,
+                CIT_Status,Cur_Code
+            )
     
-    return render_template('report_charging_resume_level.html',rows=rows,
+    return render_template('report_charging_resume_level.html',
+                rows=rows,
                 Cus_Id=Cus_Id,
                 Cus_Name=Cus_Name,
                 CIT_Date_From=CIT_Date_From,
@@ -150,5 +211,6 @@ def report_Charging_Resume_Level():
                 CIT_Status_Value=CIT_Status_Value,                
                 Cur_Code=Cur_Code,
                 Cur_Name=Cur_Name,
-                Level=Level
+                Level=Level,
+                collectordata=collectordata
                 )

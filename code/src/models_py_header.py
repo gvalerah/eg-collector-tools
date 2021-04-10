@@ -1,6 +1,7 @@
 # =============================================================================
 # Models File
 # Static Header File. 
+# source: models_py_header.py
 # GLVH 2019-08-16
 # GLVH 2020-01-30 JSON Serializing code added
 # =============================================================================
@@ -24,6 +25,7 @@ from flask_login            import UserMixin, AnonymousUserMixin
 # JSON Serializing enabling code
 from sqlalchemy.inspection import inspect
 
+
 class Serializer(object):
 
     def serialize(self):
@@ -33,3 +35,7 @@ class Serializer(object):
     def serialize_list(l):
         return [m.serialize() for m in l]
 
+# 20200224 GV force import of the whole emtec db library ---------------
+from emtec.collector.db.orm_model       import *
+from emtec.collector.db.flask_models    import *
+# ----------------------------------------------------------------------

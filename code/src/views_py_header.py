@@ -1,5 +1,6 @@
 from time           import strftime
-from datetime       import datetime                         
+from datetime       import datetime     
+from pprint         import pprint,pformat                    
 from sqlalchemy     import exc
 from sqlalchemy     import func
 from flask          import render_template, session, redirect, url_for, current_app, flash
@@ -16,12 +17,14 @@ from ..             import logger
 
 from ..decorators   import admin_required, permission_required
 
-#from ..models       import User
-#from ..models       import Permission
-
 from emtec                                 import *
+#rom emtec.collector.common.functions      import *
+from emtec.common.functions                import *
 from emtec.collector.db.flask_models       import User
 from emtec.collector.db.flask_models       import Permission
+# 20200224 GV from emtec.collector.db.orm_model          import Interface
+from emtec.collector.db.flask_models       import *
+from emtec.collector.db.orm_model          import *
 
 """ Application decorators for routes """
 """ Decorators specify main routes to be handled by Collector Solution """
@@ -30,21 +33,28 @@ from emtec.collector.db.flask_models       import Permission
 def index():
     
     # Espera a capitulo 3 para mejorar procedimiento de respuesta, hard coding mucho aqui
-
+    
+    # Aqui debo setear el ambiente de variables de periodo -------------
+    try:
+        Period = get_period_data(current_user.id,db.engine,Interface)
+    except:
+        Period = get_period_data()
+    # ------------------------------------------------------------------
+    # Setup all data to render in template
     data =  {   "name":current_app.name,
-                #"app_name":C.app_name,
                 "app_name":current_app.name,
                 "date_time":strftime('%Y-%m-%d %H:%M:%S'),
                 "user_agent":request.headers.get('User-Agent'),
-                #"current_time":datetime.utcnow(),
                 "db":db,
                 "logger":logger,
-                #"C":C,
-                "current_app.logger":current_app.logger
+                "VERSION_MAYOR":VERSION_MAYOR,
+                "VERSION_MINOR":VERSION_MINOR,
+                "VERSION_PATCH":VERSION_PATCH,
             }
-    name = None
-    return render_template('collector.html',data=data)
-
+    collectordata={
+                "COLLECTOR_PERIOD":Period,
+    }
+    return render_template('collector.html',data=data,collectordata=collectordata)
 
 @main.route('/under_construction', methods=['GET','POST'])
 def under_construction():   
@@ -85,7 +95,6 @@ def test_index():
 
     return render_template('test.html',data=data, name=name,password=password, form=form)
 
-
 @main.route('/collector_faq', methods=['GET','POST'])
 def collector_faq():   
     return render_template('collector_faq.html')
@@ -93,4 +102,50 @@ def collector_faq():
 @main.route('/collector_about', methods=['GET','POST'])
 def collector_about():   
     return render_template('collector_about.html')
+
+# Flask Caching avoider
+@main.after_request
+def add_header(r):
+    """
+    Add headers to both force latest IE rendering engine or Chrome Frame,
+    and also to cache the rendered page for 10 minuyes.
+    """
+    r.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    r.headers["Pragma"] = "no-cache"
+    r.headers["Expires"] = "0"
+    r.headers["Cache-Control"] = "public, max-age=0"
+    return r
+
+# Application specific functions
+# ----------------------------------------------------------------------
+# This function is intented to define dinamic context data
+# Collector Charge Items sharding period and table setup
+# A context 'collectordata' object is returned
+# ----------------------------------------------------------------------
+def get_collectordata():
+    collectordata={}
+    # Here we'll include al important Collector context data 
+    collectordata.update({"COLLECTOR_PERIOD":get_period_data(current_user.id,db.engine,Interface)})
+    collectordata.update({"CONFIG":current_app.config})
+    suffix = collectordata['COLLECTOR_PERIOD']['active']
+    dt = datetime.strptime(suffix,"%Y%m")
+    start,end=Get_Period(dt,PERIOD_MONTH)
+    collectordata['COLLECTOR_PERIOD'].update({'start':start,'end':end})
+    logger.debug(f"{this()}: dt: {dt} suffix={suffix}") 
+    logger.debug(f"{this()}: COLLECTOR_PERIOD={collectordata['COLLECTOR_PERIOD']}") 
+    
+    sharding=False
+    # Here we'll include sharding required code
+    if 'COLLECTOR_CIT_SHARDING' in current_app.config: 
+        sharding=current_app.config['COLLECTOR_CIT_SHARDING']
+    if sharding:
+        charge_item.set_shard(suffix)
+        flash(       f"{this()}: Using shardened table: {charge_item.__table__.name}") 
+        logger.debug(f"{this()}: Using shardened table: {charge_item.__table__.name}") 
+    
+    return collectordata
+
+
+
+
 

@@ -18,13 +18,16 @@ from    sqlalchemy                          import create_engine
 # Import Emtec Group's modules
 from    emtec                               import *
 from    emtec.collector.db.orm              import *
-from    emtec.collector.common.functions    import *
+#rom    emtec.collector.common.functions    import *
+from    emtec.common.functions              import *
 from    emtec.collector.common.chk_c000001  import *
 from    emtec.collector.common.context      import Context
 # Import actual collectors codes
-from    service.collectors.Nutanix_ETL      import Nutanix_ETL_Collector
-from    service.collectors.Nutanix_CI_Check import Nutanix_CI_Check_Collector
-from    service.collectord_exec             import Execute_Collector_Daemon
+from    service.collectors.Nutanix_ETL              import Nutanix_ETL_Collector
+from    service.collectors.Nutanix_CI_Check         import Nutanix_CI_Check_Collector
+from    service.collectors.Nutanix_Image_Load       import Nutanix_Image_Load_Collector
+from    service.collectors.Nutanix_Snapshot_Load    import Nutanix_Snapshot_Load_Collector
+from    service.collectord_exec                     import Execute_Collector_Daemon
 
 # ---------------------------------------------------------------------------------------
 # Daemon functions here
@@ -50,11 +53,11 @@ db = Collector_ORM_DB()
 if (os.path.isfile(config_file)):
     config_ini = configparser.ConfigParser(interpolation=ExtendedInterpolation())
     config_ini.read( config_file )
-    handlerType=config_ini.get(driver_group,'handler_type',fallback='TIME_ROTATING')
-    when=config_ini.get(driver_group,'when',fallback='d')
-    interval=config_ini.getint(driver_group,'interval',fallback=7)
-    backupCount=config_ini.getint(driver_group,'backupCount',fallback=53)
-    c000001_seconds=config_ini.getint('General','c000001_seconds',fallback=86400)
+    handlerType     = config_ini.get(driver_group,'handler_type',fallback='TIME_ROTATING')
+    when            = config_ini.get(driver_group,'when',fallback='d')
+    interval        = config_ini.getint(driver_group,'interval',fallback=7)
+    backupCount     = config_ini.getint(driver_group,'backupCount',fallback=53)
+    c000001_seconds = config_ini.getint('General','c000001_seconds',fallback=86400)
 
     # Will work with configuration file
     C = Context(app_name="Collector for Nutanix",app_ini_file=config_file,logger=logger)    
@@ -115,50 +118,70 @@ if (os.path.isfile(config_file)):
 
         # Required to handle multiple collector services in one daemon
         # services are serialized 
-        collectors=collector.split(',')
-
+        if collector is not None:
+            collectors=collector.split(',')
+        else:
+            collectors=[]
         CHEQUEOS = 0
 
         while True:
-            logger.debug("%s: checking licence"%(COLLECTOR_DRIVER))
+            # ----------------------------------------------------------
+            # LICENSE HANDLING MAY BE REMOVED IF CENTRALLY HANDLED
+            # AT THE COLLECTOR SERVICE MODULE, OR NOT ....
+            logger.debug("{COLLECTOR_DRIVER}: checking licence")
             logger.debug("****************************************************")
             CHEQUEOS += 1
-            logger.debug("VOY A CHEQUEAR LICENCIA CHEQUEO=",CHEQUEOS)
+            logger.debug(f"VOY A CHEQUEAR LICENCIA CHEQUEO={CHEQUEOS}")
             context={}
-            rc=chk_c000001(debug=(logger.level==logging.DEBUG),seconds=c000001_seconds,context=context,silent=True,logger=logger)
-            logger.debug("%s: checking licence rc=%s"%(COLLECTOR_DRIVER,rc))
-            logger.debug("YA CHEQUEE LICENCIA CHEQUEO=",CHEQUEOS,"rc=",rc)
-            logger.debug("****************************************************")
+            rc=0
+            """
+            rc=chk_c000001( debug=(logger.level==logging.DEBUG),
+                            seconds=c000001_seconds,
+                            context=context,
+                            silent=True,
+                            logger=logger
+                            )
+            """
+            logger.debug(f"{COLLECTOR_DRIVER}: checking licence rc={rc}")
+            logger.debug(f"YA CHEQUEE LICENCIA CHEQUEO={CHEQUEOS} rc={rc}")
+            logger.debug( "****************************************************")
+            # ----------------------------------------------------------
             if (log_file_previous != log_file):
                 logger.info("%s: Logging to '%s'"%(COLLECTOR_DRIVER,log_file))
                 logger.info("*****************************************")
                 log_file_previous = log_file
             # -------------------------------------------------    
             try:
+                # Check for invalid,unexpected db engine
                 if 'sqlite' in str(C.db):
                     logger.error("DB engine not expected is      : '%s'"%(C.db))
                     logger.error("os.environ['COLLECTOR_CONFIG'] : '%s'"%(os.environ['COLLECTOR_CONFIG']))
                     logger.error("os.environ['DATABASE_URL']     : '%s'"%(os.environ['DATABASE_URL']))
                     break
+                logger.info(f"{COLLECTOR_DRIVER}: collectors '{collectors}'")
                 for collector in collectors:                    
-                    logger.info("%s: Executing collector mode '%s'"%(COLLECTOR_DRIVER,collector))
+                    logger.info(f"{COLLECTOR_DRIVER}: Executing collector mode '{collector}'")
                     if collector == 'Nutanix_ETL':
                         Execute_Collector_Daemon(C,config_ini,driver_group,Nutanix_ETL_Collector)
                     elif collector == 'Nutanix_CI_Check':
                         Execute_Collector_Daemon(C,config_ini,driver_group,Nutanix_CI_Check_Collector)
+                    elif collector == 'Nutanix_Image_Load':
+                        Execute_Collector_Daemon(C,config_ini,driver_group,Nutanix_Image_Load_Collector)
+                    elif collector == 'Nutanix_Snapshot_Load':
+                        Execute_Collector_Daemon(C,config_ini,driver_group,Nutanix_Snapshot_Load_Collector)
                     else:
-                        C.logger.error("%s: Invalid collector name '%s'."%(COLLECTOR_DRIVER, collector))
+                        C.logger.error(f"{COLLECTOR_DRIVER}: Invalid collector name '{collector}'.")
             except Exception as e:
-                C.logger.error("%s: Exception catched during ETL execution.'errno:%s,strerror:%s,args:%s'"%(COLLECTOR_DRIVER,e.errno,e.strerror,e.args))
+                C.logger.error(f"{COLLECTOR_DRIVER}: Exception catched during ETL execution.'errno:{e.errno},strerror:{e.strerror},args:{e.args}'")
                 break
             # --------------------------------------------------
-            C.logger.debug("%s: Execution completed @ %s. Waiting %d seconds ..."%(COLLECTOR_DRIVER,strftime("%H:%M:%S"),pool_seconds))
+            C.logger.debug(f"{COLLECTOR_DRIVER}: Execution completed @ {strftime('%H:%M:%S')}. Waiting {pool_seconds} seconds ...")
             if logger.level == logging.DEBUG:
-                print("%s: Execution completed @ %s. Waiting %d seconds ..."%(COLLECTOR_DRIVER,strftime("%H:%M:%S"),pool_seconds))
+                print(f"{COLLECTOR_DRIVER}: Execution completed @ {strftime('%H:%M:%S')}. Waiting {pool_seconds} seconds ...")
             try:
                 sleep(pool_seconds)
             except Exception as e:
-                logger.error("Exception catched while pooling. 'errno:%s,strerror:%s,args:%s'"%(COLLECTOR_DRIVER,e.errno,e.strerror,e.args))
+                logger.error(f"{COLLECTOR_DRIVER}:Exception catched while pooling. 'errno:{e.errno},strerror:{e.strerror},args:{e.args}'")
                 break        
         # Out of loop service should never get here unless system shutdown
         logger.warning("*** Unexpected Deamon Interruption ***")
