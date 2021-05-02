@@ -855,10 +855,16 @@ class Nutanix(ETL):
                         # Creates/Updates CI Mother Record/actually this 
                         # does not have to have any effect
                         # it should exist prior to SNP existence ..........
+                        # Check Snapshot location and sets up proper
+                        # code depending on it
+                        if location == 'local':
+                            snapshot_type_code = 'SNP'
+                        else:
+                            snapshot_type_code = 'DRP'
                         if self.db.Get_CI_Id_From_UUID(UUID) is not None:
                             # if first appereance of SNaPshot then creates Charge Unit
-                            self.tuples.append(("CU-CREATE" ,"SNP",UUID,CU_UUID,SIZEGB,"NONE",1,REF1,REF2,REF3))
-                            self.tuples.append(("CIT-CREATE","SNP",UUID,CU_UUID,SIZEGB,DATE,TIME,ACTIVE))
+                            self.tuples.append(("CU-CREATE" ,snapshot_type_code,UUID,CU_UUID,SIZEGB,"NONE",1,REF1,REF2,REF3))
+                            self.tuples.append(("CIT-CREATE",snapshot_type_code,UUID,CU_UUID,SIZEGB,DATE,TIME,ACTIVE))
                         else:
                             if (self.logger): self.logger.debug(f"{this()}:  Snapshot {snapshot.get('snapshot_id')} for an unknown VM {NAME}:{UUID}. ignored") 
                 else:

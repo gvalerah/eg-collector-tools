@@ -43,6 +43,7 @@ class GUnicornFlaskApplication(Application):
 
 from    emtec.common.functions             import *
 from    emtec.collector.common.context     import Context
+from    emtec.collector.db.orm_model       import *
 #from    emtec.collector.common.functions   import *
 # ----------------------------------------------------------------------
 
@@ -165,6 +166,17 @@ if __name__ == '__main__':
         logger.trace("os.environ=%s"%os.environ)
         logger.trace("app.config=%s"%app.config)
         logger.info("*****************************************")
+        print("*******************************************************")
+        print(f"db         = {db} {type(db)}")
+        print(f"db.engine  = {db.engine} {type(db.engine)}")
+        print(f"db.Session = {db.Session} {type(db.Session)}")
+        s1=db.Session(db.engine)
+        s2=db.Session(db.engine)
+        print(f"s1         = {s1} {type(s1)}")
+        print(f"s2         = {s2} {type(s2)}")
+        row = s1.query(Users).first()
+        print(f"row        = {row}")
+        print("*******************************************************")
         print("*****************************************")
     else:
         print("****************************************")

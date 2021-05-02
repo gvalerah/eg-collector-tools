@@ -3,39 +3,46 @@
 # (c) Sertechno 2019
 # GLVH @ 2019-08-16
 # =============================================================================
-
-from emtec.collector.forms       import frm_export_User_Resume
-from babel.numbers  import format_number, format_decimal, format_percent
+import  simplejson as json
+import  pandas
+from    pandas.io.json             import json_normalize
+from    flask                      import send_file
+from    babel.numbers  import format_number, format_decimal, format_percent
+from    emtec.collector.forms       import frm_export_User_Resume
 
 @main.route('/forms/Export_User_Resume', methods=['GET', 'POST'])
 @login_required
 def forms_Export_User_Resume():
     logger.debug('Enter: forms_Export_User_Resume()'%())
+    collectordata=get_collectordata()
 
     session['data'] =  { 'Cus_Id': None, 'CIT_Date_From':None, 'CIT_Date_To':None, 'CIT_Status':1,'Cur_Code':'USD'}
 
     form = frm_export_User_Resume()
 
-    USERCAN = db.get_user_cost_centers(current_user.id) 
+    # 20210422 GV cambio a rutina estandar USERCAN = db.get_user_cost_centers(current_user.id) 
+    USERCAN = db.get_user_cost_centers(current_user.id,) 
     rows = db.session.query(    func.count(user_resumes.CI_CC_Id).label('RECORDS'),
                         user_resumes.CI_CC_Id,
                         user_resumes.CR_Date_From,
                         user_resumes.CR_Date_To,
                         user_resumes.CIT_Status,
                         user_resumes.Cur_Code,
-                        user_resumes.CC_Description).\
-                    filter(     user_resumes.CI_CC_Id.in_(USERCAN)).\
-                    group_by(   user_resumes.CI_CC_Id,
+                        user_resumes.CC_Description
+                    ).filter(     user_resumes.CI_CC_Id.in_(USERCAN)
+                    ).group_by(   user_resumes.CI_CC_Id,
                                 user_resumes.CR_Date_From,
                                 user_resumes.CR_Date_To,
                                 user_resumes.CIT_Status,
                                 user_resumes.Cur_Code,
-                                user_resumes.CC_Description).\
-                    order_by(   user_resumes.CI_CC_Id,
+                                user_resumes.CC_Description
+                    ).order_by(   user_resumes.CI_CC_Id,
                                 user_resumes.CR_Date_From,
                                 user_resumes.CR_Date_To,
                                 user_resumes.CIT_Status,
-                                user_resumes.Cur_Code)
+                                user_resumes.Cur_Code
+                    ).all()
+
     # Load Statuses
     statuses=cit_status.query.all()
     dstatuses={}
@@ -77,10 +84,8 @@ def forms_Export_User_Resume():
                                 Cur_Name        = dcurrencies[data[4]],
                                 Format          = "pdf"
                                 ))
-        if     form.submit_XLS.data:
+        elif     form.submit_XLS.data:
             return redirect(url_for('.export_User_Resume',
-                                #Cus_Id          = data[0],
-                                #Cus_Name        = data[5],
                                 CC_Id           = data[0],
                                 CC_Code         = CC_Code,
                                 CC_Description  = data[5],
@@ -92,10 +97,8 @@ def forms_Export_User_Resume():
                                 Cur_Name        = dcurrencies[data[4]],
                                 Format          = "xlsx"
                                 ))
-        if     form.submit_CSV.data:
+        elif     form.submit_CSV.data:
             return redirect(url_for('.export_User_Resume',
-                                #Cus_Id          = data[0],
-                                #Cus_Name        = data[5],
                                 CC_Id           = data[0],
                                 CC_Code         = CC_Code,
                                 CC_Description  = data[5],
@@ -107,7 +110,7 @@ def forms_Export_User_Resume():
                                 Cur_Name        = dcurrencies[data[4]],
                                 Format          = "csv"
                                 ))
-        if     form.submit_JSON.data:
+        elif     form.submit_JSON.data:
             return redirect(url_for('.export_User_Resume',
                                 CC_Id           = data[0],
                                 CC_Code         = CC_Code,
@@ -120,7 +123,7 @@ def forms_Export_User_Resume():
                                 Cur_Name        = dcurrencies[data[4]],
                                 Format          = "json"
                                 ))
-        if     form.submit_FIX.data:
+        elif     form.submit_FIX.data:
             return redirect(url_for('.export_User_Resume',
                                 CC_Id           = data[0],
                                 CC_Code         = CC_Code,
@@ -133,129 +136,59 @@ def forms_Export_User_Resume():
                                 Cur_Name        = dcurrencies[data[4]],
                                 Format          = "fix"
                                 ))
-
+        elif     form.submit_Delete.data:
+            return redirect(url_for('.export_User_Resume',
+                                CC_Id           = data[0],
+                                CC_Code         = CC_Code,
+                                CC_Description  = data[5],
+                                CIT_Date_From   = data[1],
+                                CIT_Date_To     = data[2],
+                                CIT_Status      = data[3],
+                                CIT_Status_Value= dstatuses[int(data[3])],
+                                Cur_Code        = data[4],
+                                Cur_Name        = dcurrencies[data[4]],
+                                Format          = "del"
+                                ))
         elif   form.submit_Cancel.data:
-            print('Cancel Data Here ... does nothing')
             flash('Report discarded ...')
         else:
-            print('form validated but not submited ???')
+            flash('form validated but not submited. Report to Support')
         return redirect(url_for('.index'))
-
-
-    return render_template('export_user_resume.html',form=form)
+        
+    return render_template(
+        'export_user_resume.html',
+        form=form
+        )
 
 # =============================================================================
-from pandas.io.json             import json_normalize
-import simplejson as json
-import pandas
-from reportlab.lib.pagesizes    import letter
-from reportlab.pdfgen           import canvas
-from reportlab.lib.utils        import ImageReader
 
-def export_user_resume_to_pdf(output_file,rows,Customer,From,To,Status,Currency):
+# **********************************************************************
 
-    from reportlab.lib.pagesizes    import letter
-    from reportlab.pdfgen           import canvas
-    
-    pdf_file    ="%s/%s"%(current_app.root_path,url_for('static',filename='tmp/%s'%(output_file)))
-    logo_file   ="%s/%s"%(current_app.root_path,url_for('static',filename='img/logo_emtec.png'))
 
-    canvas = canvas.Canvas(pdf_file, pagesize=letter)
-    canvas.setLineWidth(.3)
-    canvas.setFont('Helvetica', 12)
-  
-    h               = 630
-    print_header    = True
-    page            = 0
-    count           = 0
-    sum_CI          = 0
-    sum_total       = 0
-    previo_CI       = ''
-    is_first        = True
-    
-    logo = ImageReader(logo_file)
-
-    for row in rows:
-        if print_header:
-            page = page +1
-            canvas.drawString   ( 30,750,'BILLING RESUME')
-            canvas.drawString   (250,750,'SERTECHNO.COM' )
-            canvas.drawString   (520,750,'PAGE:'        )
-            canvas.drawString   (560,750,'%3d'%(page)   )
-
-            canvas.rect         ( 20, 30,560,710)
-
-            canvas.drawString   ( 30,720,'CUSTOMER:'    )
-            canvas.drawString   (120,720,Customer       )
-            
-            canvas.drawImage(logo, 350, 660, mask='auto')
-            
-            canvas.drawString   ( 30,705,'FROM    :'    )
-            canvas.drawString   (120,705,From)
-            canvas.drawString   ( 30,690,'TO      :'    )
-            canvas.drawString   (120,690,To)
-            canvas.drawString   ( 30,675,'STATUS  :'    )
-            canvas.drawString   (120,675,Status)
-            canvas.drawString   ( 30,660,'CURRENCY:'    )
-            canvas.drawString   (120,660,Currency       )
-
-            canvas.line         ( 20,645,580,645)
-            h       = 630
-            canvas.drawString        ( 30,h, "ITEMS"         )
-            canvas.drawString        ( 80,h, "CU"            )
-            canvas.drawRightString   (280,h, "PRICE"         )
-            canvas.drawRightString   (350,h, "Q"             )
-            canvas.drawRightString   (410,h, "SUBTOT"        )
-            canvas.drawRightString   (490,h, "XR"            )
-            canvas.drawRightString   (570,h, "TOTAL"         )
-            canvas.line         ( 20,615,580,615        )
-
-            h       = 600
-
-            print_header = False
-
-        if row.CI_Id != previo_CI:
-            if is_first == False:
-                canvas.drawRightString   (570,h, "%12.2f"    % ( sum_CI  )   )
-                h -= 15
-            canvas.drawString   ( 30,h, "CI : %s"  % ( row.CI_Name           )   )
-            previo_CI=row.CI_Id
-            sum_CI = 0
-            h -= 15
-
-        if h < 70:
-            print_header = True
-            canvas.line         ( 20,30,580,30)
-            canvas.showPage()
-            
-        canvas.drawCentredString ( 30,h, "%3d"       % ( row.CIT_Count          )   )
-        canvas.drawString        ( 80,h, "%s"        % ( row.CU_Description     )   )
-        canvas.drawRightString   (280,h, "%12.2f"    % ( row.Rat_Price          )   )
-        canvas.drawRightString   (350,h, "%12.2f"    % ( row.CR_Quantity        )   )
-        canvas.drawRightString   (410,h, "%12.2f"    % ( row.CR_ST_at_Rate_Cur  )   )
-        canvas.drawRightString   (490,h, "%20.6f"    % ( row.CR_Cur_XR          )   )
-        canvas.drawRightString   (570,h, "%12.2f"    % ( row.CR_ST_at_Cur       )   )
-        sum_CI      += row.CR_ST_at_Cur
-        sum_total   += row.CR_ST_at_Cur
-        is_first = False
-        
-        count   +=  1
-        h       -=  15
-        if h < 70:
-            print_header = True
-            canvas.showPage()
-            
-    h -= 15
-
-    canvas.drawRightString   (570,h, "%12.2f"    % ( sum_CI  )   )
-    canvas.drawRightString   (570,h-15, "%12.2f"    % ( sum_total  )   )
-
-    canvas.drawString   ( 30 ,h,'RECORDS :')
-    canvas.drawRightString   (120 ,h,"%04d"%( count ) )
- 
-    canvas.save()
+def export_user_resume_to_pdf(  output_file,rows,Customer,From,To,Status,Currency,
+                    CC_Id=0,Pla_Id=0,CC_Name='',Pla_Name='',CC_Code=''):
+    # this structure is to conditionaly import report functions
+    report_name = 'rpt-ur-001'
+    if report_name == 'rpt-ur-001':
+        from emtec.collector.custom.rpt_ur_001 import export_to_pdf
+    pdf_file = export_to_pdf(
+                current_app,
+                output_file,
+                rows,
+                Customer,
+                From,
+                To,
+                Status,
+                Currency,
+                CC_Id,
+                Pla_Id,
+                CC_Name,
+                Pla_Name,
+                CC_Code
+                )
     return pdf_file
-
+    
+# **********************************************************************
 
 def export_user_resume_to_xls(output_file,rows,Customer,From,To,Status,Currency):
     json_file="%s.json"%(output_file)
@@ -278,7 +211,7 @@ def export_user_resume_to_xls(output_file,rows,Customer,From,To,Status,Currency)
        
     return xlsx_file    
 
-def export_user_resume_to_csv(output_file,rows,Customer,From,To,Status,Currency):
+def export_user_resume_to_csv(output_file,rows,Customer,From,To,Status,Currency,precision=8):
     cvs_file="%s/%s"%(current_app.root_path,url_for('static',filename='tmp/%s'%(output_file)))
     f=open(cvs_file,"w")
 
@@ -287,36 +220,113 @@ def export_user_resume_to_csv(output_file,rows,Customer,From,To,Status,Currency)
     f.write("D,Records,CU,Rate,Q,Subtotal,XR,Total\n")
     count = 0
     for row in rows:
-        f.write ("D,%s,%s,%s,%s,%s,%s,%s\n"%\
-                    (row.CIT_Count, row.CU_Description, row.Rat_Price, row.CR_Quantity, row.CR_ST_at_Rate_Cur, row.CR_Cur_XR,row.CR_ST_at_Cur)\
+        f.write ("D,%s,%s,%s,%s,%s,%s,%s\n"%
+                    (   row.CIT_Count, 
+                        row.CU_Description, 
+                        round(row.Rat_Price,precision), 
+                        round(row.CR_Quantity_at_Rate,precision), 
+                        round(row.CR_ST_at_Rate_Cur,precision), 
+                        round(row.CR_Cur_XR,precision),
+                        round(row.CR_ST_at_Cur,precision)
+                    )
                 )
         count += 1
     f.write("T,%d\n"%(count))
     f.close()
     return cvs_file
 
-def export_user_resume_to_json(output_file,rows,Customer,From,To,Status,Currency):
+RAT_PERIOD_DESCRIPTIONS={1:"HOUR",2:"DAY",3:"MONTH"}
+
+# field,cast,precision,map,error
+record_structure = {
+    'header': {
+        'customer': ('Customer',str,None,None,None),
+        'from'    : ('From'    ,str,None,None,None),
+        'to'      : ('To'      ,str,None,None,None),
+        'status'  : ('Status'  ,str,None,None,None),
+        'currency': ('Currency',str,None,None,None),
+    },
+    'detail': {
+        'ccCode'                : ('CI_CC_Id'           ,int  ,None,None                   ,0),
+        'ccDescription'         : ('CC_Description'     ,str  ,None,None                   ,'ERROR'),
+        'ciName'                : ('CI_Name'            ,str  ,None,None                   ,'ERROR'),
+        'cuDescription'         : ('CU_Description'     ,str  ,None,None                   ,'ERROR'), 
+        'items'                 : ('CIT_Count'          ,int  ,None,None                   ,0), 
+        'rate'                  : ('Rat_Price'          ,float,8   ,None                   ,0), 
+        'mu'                    : ('Rat_MU_Code'        ,str  ,None,None                   ,'ERROR'), 
+        'rateCurrency'          : ('Rat_Cur_Code'       ,str  ,None,None                   ,'ERROR'), 
+        'ratePeriodDescription' : ('Rat_Period'         ,int  ,None,RAT_PERIOD_DESCRIPTIONS,'ERROR'), 
+        'resumeQuantityAtRate'  : ('CR_Quantity_at_Rate',float,8   ,None                   ,0.0),
+        'totalAtCurrency'       : ('CR_ST_at_Rate_Cur'  ,float,8   ,None                   ,0.0)
+    }
+}
+
+def row_to_dict(row,structure):
+    d = {}
+    for name in structure:
+        Field,Type,Precision,Map,Error = structure[name]
+        value = getattr(row,Field)
+        
+        if Type == int:
+            if Map is None:
+                try:
+                    value = int(value)
+                except:
+                    value = Error
+            else:
+                try:
+                    value = Map.get(int(value),Error)
+                except:
+                    value = Error
+        elif Type == float:
+            try:
+                if Precision is not None:
+                    value = float(value)
+                else:
+                    value = round(float(value,Precision))
+            except:
+                value = Error
+        elif Type == str:
+            value=str(value)
+        else:
+            value = Error
+        d.update({name:value})
+    return d
+
+def export_user_resume_to_json(output_file,rows,Customer,From,To,Status,Currency,precision=8):
     json_file="%s/%s"%(current_app.root_path,url_for('static',filename='tmp/%s'%(output_file)))
     f=open(json_file,"w")
     
-    dict = {}
-    dict.update({'header':{}})
-    dict['header'].update({'customer':Customer})
-    dict['header'].update({'from':From})
-    dict['header'].update({'to':To})
-    dict['header'].update({'status':Status})
-    dict['header'].update({'currency':Currency})
-    dict.update({'detail':[]})
+    mydict = {}
+    mydict.update({'header':{}})
+    mydict['header'].update({'customer':Customer})
+    mydict['header'].update({'from':From})
+    mydict['header'].update({'to':To})
+    mydict['header'].update({'status':Status})
+    mydict['header'].update({'currency':Currency})
+    mydict.update({'detail':[]})
     count = 0
     for row in rows:
-        dict['detail'].append({})
-        dict['detail'][count].update( {    'items':row.CIT_Count, 'cu':row.CU_Description, 'price':row.Rat_Price, \
-                                        'q':row.CR_Quantity, 'subtotal':row.CR_ST_at_Rate_Cur,\
-                                        'xr':row.CR_Cur_XR, 'total':row.CR_ST_at_Cur \
-                                })
+        mydict['detail'].append(row_to_dict(row,record_structure['detail']))
+        '''
+        mydict['detail'].append({})
+
+        mydict['detail'][count].update( {
+            'ccCode'                : row.CI_CC_Id,
+            'ccDescription'         : row.CC_Description,
+            'ciName'                : row.CI_Name,
+            'cuDescription'         : row.CU_Description, 
+            'items'                 : row.CIT_Count, 
+            'mu'                    : row.Rat_MU_Code, 
+            'rateCurrency'          : row.Rat_Cur_Code, 
+            'ratePeriodDescription' : RAT_PERIOD_DESCRIPTIONS.get(row.Rat_Period,"ERROR"), 
+            'resumeQuantityAtRate'  : round(row.CR_Quantity_at_Rate,precision),
+            'totalAtCurrency'       : round(row.CR_ST_at_Rate_Cur,precision)
+            })
+        
         count += 1
-    dict['header'].update({'count':count})
-    jsonarray = json.dumps(dict)
+        '''
+    jsonarray = json.dumps(mydict)
     
     f.write(jsonarray)
 
@@ -328,19 +338,34 @@ def export_user_resume_to_fix(output_file,rows,Customer,From,To,Status,Currency)
 
     f=open(fix_file,"w")
 
-    f.write("H%06d%-45s%-10s%-10s%-45s%-45s*\n"%(0,Customer,From,To,Status,Currency))
+    f.write("H%06d%-60s%-10s%-10s%-45s%-45s*\n"%(0,Customer,From,To,Status,Currency))
     count = 0
     for row in rows:
-        f.write ("D%06d%-45s%020.6f%020.6f%020.6f%020.6f%020.6f%010d*\n"%\
+        f.write ("D%06d%-60s%020.8f%020.8f%020.8f%020.8f%020.8f%010d*\n"%\
                     (row.CIT_Count, row.CU_Description, row.Rat_Price, row.CR_Quantity,row.CR_ST_at_Rate_Cur,row.CR_Cur_XR,row.CR_ST_at_Cur,0)\
                 )
         count += 1
-    f.write("T%06d%0155d*\n"%(count,0))
+    f.write("T%06d%0170d*\n"%(count,0))
     f.close()
     return fix_file
 
-import simplejson as json
-from flask import send_file
+def delete_user_resume(output_files,Customer,From,To,Status,Currency):
+    result = False
+    try:
+        # deletes all matching output files
+        for output_file in output_files:
+            delete_file="%s/%s"%(current_app.root_path,url_for('static',filename='tmp/%s'%(output_file)))
+            logger.debug(f"deleting file system file: {delete_file}")
+            if os.path.exists(delete_file):
+                os.remove(delete_file)
+        logger.debug(f"delete_user_resume: will delete = {Customer},{From},{To},{Status},{Currency}")
+        result = db.Delete_User_Resume(Customer,From,To,Status,Currency)
+        logger.debug(f"delete_user_resume: result = {result}")
+    except Exception as e:
+        logger.error(f"delete_user_resume: Exception: {str(e)}")
+        flash(f"delete_user_resume: Exception: {str(e)}")
+        result = False
+    return result
 
 @main.route('/export/User_Resume', methods=['GET','POST'])
 @login_required
@@ -356,26 +381,46 @@ def export_User_Resume():
     Cur_Code        =  request.args.get('Cur_Code',None,type=str)
     Cur_Name        =  request.args.get('Cur_Name',None,type=str)
     Format          =  request.args.get('Format',None,type=str)
-    # Get Actual Data from Database
-    # NOTE: Here needs some Sand-Clock Message or something in case it takes so long ...
-    rows = db.Get_User_Resume(current_user.id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code)
 
     # Aqui hace la conversion 
     output_file = "CR_%s_%s_%s_%s_%s.%s"%(CC_Code,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code,Format)
-    if      Format == 'pdf':
-        return_file=export_user_resume_to_pdf(output_file,rows,CC_Description,CIT_Date_From,CIT_Date_To,CIT_Status_Value,Cur_Name)
-    elif    Format == 'xlsx':
-        return_file=export_user_resume_to_xls(output_file,rows,CC_Description,CIT_Date_From,CIT_Date_To,CIT_Status_Value,Cur_Name)
-    elif    Format == 'csv':
-        return_file=export_user_resume_to_csv(output_file,rows,CC_Description,CIT_Date_From,CIT_Date_To,CIT_Status_Value,Cur_Name)
-    elif    Format == 'json':
-        return_file=export_user_resume_to_json(output_file,rows,CC_Description,CIT_Date_From,CIT_Date_To,CIT_Status_Value,Cur_Name)
-    elif    Format == 'fix':
-        return_file=export_user_resume_to_fix(output_file,rows,CC_Description,CIT_Date_From,CIT_Date_To,CIT_Status_Value,Cur_Name)
+    if Format == 'del':
+        output_files=[]
+        for Format in ['pdf','xlsx','csv','json','fix']:
+            output_files.append("CR_%s_%s_%s_%s_%s.%s"%(CC_Code,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code,Format))
+        if delete_user_resume(output_files,current_user.id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code):
+            flash(f"User Resume deleted.")
     else:
-        pass    
+        # Get Actual Data from Database
+        # NOTE: Here needs some Sand-Clock Message or something in case it takes so long ...
+        return_file = None
+        rows = []
+        rows = db.Get_User_Resume(current_user.id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code)
+        if len(rows):
+            #flash(f"current_user={current_user}")
+            #flash(f"current_user.cost_center={current_user.cost_center}")
+            Customer = current_user.cost_center.CC_Description
+            if      Format == 'pdf':
+                return_file=export_user_resume_to_pdf(output_file,rows,Customer,CIT_Date_From,CIT_Date_To,CIT_Status_Value,Cur_Name)
+            elif    Format == 'xlsx':
+                return_file=export_user_resume_to_xls(output_file,rows,Customer,CIT_Date_From,CIT_Date_To,CIT_Status_Value,Cur_Name)
+            elif    Format == 'csv':
+                return_file=export_user_resume_to_csv(output_file,rows,Customer,CIT_Date_From,CIT_Date_To,CIT_Status_Value,Cur_Name)
+            elif    Format == 'json':
+                return_file=export_user_resume_to_json(output_file,rows,Customer,CIT_Date_From,CIT_Date_To,CIT_Status_Value,Cur_Name)
+            elif    Format == 'fix':
+                return_file=export_user_resume_to_fix(output_file,rows,Customer,CIT_Date_From,CIT_Date_To,CIT_Status_Value,Cur_Name)
+            else:
+                pass    
+
+        if return_file is not None:
+            if os.path.exists(return_file):
+                # Aqui debe enviar el archivo a la PC
+                return send_file(return_file,as_attachment=True,attachment_filename=output_file)
+            else:
+                flash(f"Warning: '{return_file}' does not exist.")
+        else:
+            flash(f"Warning: No exported data file available.")
     
-    # Aqui debe enviar el archivo a la PC
-    print("%s: return_file   = %s"%('export_User_Resume',return_file))
-    print("%s: att name      = %s"%('export_User_Resume',output_file))
-    return send_file(return_file,as_attachment=True,attachment_filename=output_file)
+    return redirect(url_for('.index'))
+

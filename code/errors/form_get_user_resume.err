@@ -1,0 +1,64 @@
+(1054, "Unknown column 'Charge_Resumes.Cus_Id' in 'order clause'") 
+[SQL: 
+'SELECT 
+    `User_Resumes`.`User_Id` AS `User_Resumes_User_Id`, 
+    `User_Resumes`.`Cus_Id` AS `User_Resumes_Cus_Id`, 
+    `User_Resumes`.`CR_Date_From` AS `User_Resumes_CR_Date_From`, 
+    `User_Resumes`.`CR_Date_To` AS `User_Resumes_CR_Date_To`, 
+    `User_Resumes`.`CIT_Status` AS `User_Resumes_CIT_Status`, 
+    `User_Resumes`.`Cur_Code` AS `User_Resumes_Cur_Code`, 
+    `User_Resumes`.`CIT_Count` AS `User_Resumes_CIT_Count`, 
+    `User_Resumes`.`CIT_Quantity` AS `User_Resumes_CIT_Quantity`, 
+    `User_Resumes`.`CIT_Generation` AS `User_Resumes_CIT_Generation`, 
+    `User_Resumes`.`CU_Id` AS `User_Resumes_CU_Id`, 
+    `User_Resumes`.`CI_CC_Id` AS `User_Resumes_CI_CC_Id`, 
+    `User_Resumes`.`CU_Operation` AS `User_Resumes_CU_Operation`, 
+    `User_Resumes`.`Typ_Code` AS `User_Resumes_Typ_Code`, 
+    `User_Resumes`.`CC_Cur_Code` AS `User_Resumes_CC_Cur_Code`, 
+    `User_Resumes`.`CI_Id` AS `User_Resumes_CI_Id`, 
+    `User_Resumes`.`Rat_Id` AS `User_Resumes_Rat_Id`, 
+    `User_Resumes`.`Rat_Price` AS `User_Resumes_Rat_Price`, 
+    `User_Resumes`.`Rat_MU_Code` AS `User_Resumes_Rat_MU_Code`, 
+    `User_Resumes`.`Rat_Cur_Code` AS `User_Resumes_Rat_Cur_Code`, 
+    `User_Resumes`.`Rat_Period` AS `User_Resumes_Rat_Period`, 
+    `User_Resumes`.`Rat_Hourly` AS `User_Resumes_Rat_Hourly`, 
+    `User_Resumes`.`Rat_Daily` AS `User_Resumes_Rat_Daily`, 
+    `User_Resumes`.`Rat_Monthly` AS `User_Resumes_Rat_Monthly`, 
+    `User_Resumes`.`CR_Quantity` AS `User_Resumes_CR_Quantity`, 
+    `User_Resumes`.`CR_Quantity_at_Rate` AS `User_Resumes_CR_Quantity_at_Rate`, 
+    `User_Resumes`.`CC_XR` AS `User_Resumes_CC_XR`, 
+    `User_Resumes`.`CR_Cur_XR` AS `User_Resumes_CR_Cur_XR`, 
+    `User_Resumes`.`CR_ST_at_Rate_Cur` AS `User_Resumes_CR_ST_at_Rate_Cur`, 
+    `User_Resumes`.`CR_ST_at_CC_Cur` AS `User_Resumes_CR_ST_at_CC_Cur`, 
+    `User_Resumes`.`CR_ST_at_Cur` AS `User_Resumes_CR_ST_at_Cur`, 
+    `User_Resumes`.`Cus_Name` AS `User_Resumes_Cus_Name`, 
+    `User_Resumes`.`CI_Name` AS `User_Resumes_CI_Name`, 
+    `User_Resumes`.`CU_Description` AS `User_Resumes_CU_Description`, 
+    `User_Resumes`.`CC_Description` AS `User_Resumes_CC_Description`, 
+    `User_Resumes`.`Rat_Period_Description` AS `User_Resumes_Rat_Period_Description`, 
+    `User_Resumes`.`CC_Code` AS `User_Resumes_CC_Code`, 
+    `User_Resumes`.`Pla_Id` AS `User_Resumes_Pla_Id`, 
+    `User_Resumes`.`Pla_Name` AS `User_Resumes_Pla_Name` \n
+FROM `User_Resumes` \n
+WHERE 
+    `User_Resumes`.`User_Id` = %(User_Id_1)s AND 
+    `User_Resumes`.`CR_Date_From` = %(CR_Date_From_1)s AND 
+    `User_Resumes`.`CR_Date_To` = %(CR_Date_To_1)s AND 
+    `User_Resumes`.`CIT_Status` = %(CIT_Status_1)s AND 
+    `User_Resumes`.`Cur_Code` = %(Cur_Code_1)s 
+ORDER BY 
+    `Charge_Resumes`.`Cus_Id`, 
+    `Charge_Resumes`.`CC_Code`, 
+    `Charge_Resumes`.`CI_Id`, 
+    `Charge_Resumes`.`Typ_Code`, 
+    `Charge_Resumes`.`CU_Id`'
+    
+    ] [
+    
+    parameters: {
+                    'User_Id_1': 5, 
+                    'CR_Date_From_1': '2021-04-01', 
+                    'CR_Date_To_1': '2021-04-21', 
+                    'CIT_Status_1': 1, 'Cur_Code_1': 'UF'
+                }
+    ] (Background on this error at: http://sqlalche.me/e/2j85)

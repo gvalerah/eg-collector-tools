@@ -13,21 +13,34 @@ from pprint import pprint
 
 img='xxx'
 
-def load_children(DATA,children):
+def load_children(PARENT,DATA,children,parent=0):
         cc_counter=0
         for child in children:
-            #print("%s: child=%s"%(__name__,child))
-            DATA.append({'cc_id':child.CC_Id,'cc_code':child.CC_Code,'cc_description':child.CC_Description,'children':[],'ci_list':[]})
+            DATA.append({
+                'cc_id':child.CC_Id,
+                'cc_code':child.CC_Code,
+                'cc_description':child.CC_Description,
+                'children':[],
+                'ci_list':[],
+                'ci_count':0,
+                'parent':parent
+                })
             # Load CIs
-            query=db.session.query(configuration_item.CI_Id,configuration_item.CI_Name).filter(configuration_item.CC_Id==child.CC_Id)
-            CIS=query.all()
-            ci_counter=0
+            query = db.session.query(
+                        configuration_item.CI_Id,configuration_item.CI_Name
+                        ).filter(configuration_item.CC_Id==child.CC_Id)
+            CIS = query.all()
+            ci_counter = 0
             for ci in CIS:
-                DATA[cc_counter]['ci_list'].append({'ci_id':ci.CI_Id,'ci_name':ci.CI_Name,'cu_list':[]})
+                DATA[cc_counter]['ci_list'].append({
+                    'ci_id'   : ci.CI_Id,
+                    'ci_name' : ci.CI_Name,
+                    'cu_list' : []
+                    })
                 # Load CUs
-                #query=db.session.query(charge_unit.CU_Id,charge_unit.CU_Description).filter(charge_unit.CI_Id==ci.CI_Id)
-                query=db.session.query(charge_unit).filter(charge_unit.CI_Id==ci.CI_Id)
-                CUS=query.all()
+                query = db.session.query(charge_unit
+                            ).filter(charge_unit.CI_Id==ci.CI_Id)
+                CUS = query.all()
                 for cu in CUS:
                     ref=''
                     if cu.CU_UUID is not None:
@@ -40,21 +53,30 @@ def load_children(DATA,children):
                         ref=ref+( " / %s"%cu.CU_Reference_3.strip() if (len( cu.CU_Reference_3.strip() ) > 0) else '')
                     DATA[cc_counter]['ci_list'][ci_counter]['cu_list'].append({'cu_id':cu.CU_Id,'cu_description':cu.CU_Description,'cu_reference':ref})
                 ci_counter+=1
+            #DATA[cc_counter]['ci_count']    = len(DATA[cc_counter]['ci_list'])
+            #PARENT['children']['ci_count'] += DATA[cc_counter]['ci_count']
             
             # Look for more children
-            query=db.session.query(cost_center).filter(cost_center.CC_Parent_Code==child.CC_Code,cost_center.CC_Code!=cost_center.CC_Parent_Code)
-            list_children_cc=query.all()
-            #print("%s: list_children_cc=%s"%(__name__,list_children_cc))
+            query = db.session.query(cost_center
+                        ).filter(cost_center.CC_Parent_Code == child.CC_Code,
+                                 cost_center.CC_Code        != cost_center.CC_Parent_Code
+                        )
+            list_children_cc = query.all()
             if len(list_children_cc)>0:
-                load_children(DATA[cc_counter]['children'],list_children_cc)
+                load_children(DATA,DATA[cc_counter]['children'],list_children_cc)
             cc_counter+=1
 
-def render_ci(ci,f,level):
-    img='<img src="/static/img/edit.png" width="32" height="32" title="" alt="Details">'
+def render_ci(ci,f,level,
+    render_empty_ci=False   # renders CI if empty
+    ):
+    # setup Edit Icon as per actual static icon
+    img='<img src="/static/img/search.png" width="32" height="32" title="" alt="Details">'
+    # define accordeon indentation level lof current option
     indent="  "*level
+    # Output Force/Write Whitespace indentation data
     M='<font color="white">%s</font>'%("MM"*level)
     cu_list_name="cul_%s"%ci['ci_id']
-    # If there is CUs
+    # If there is CUs, this is the deepest level, define if "renderizable")
     if len(ci['cu_list']):
         href="/forms/Configuration_Items?CI_Id=%s"%ci['ci_id']
         if ci['ci_id'] == 1:
@@ -73,11 +95,14 @@ def render_ci(ci,f,level):
                             
         f.write("%s</div>"%(indent*4))
     else:
-        href="/forms/Configuration_Items?CI_Id=%s"%ci['ci_id']
-        f.write('%s%s<a href="%s" target="_blank">Configuration Item: %s %s</a><br>\n'% (indent*3,M*2, href, ci['ci_name'],img) )                     
+        if render_empty_ci:
+            href="/forms/Configuration_Items?CI_Id=%s"%ci['ci_id']
+            f.write('%s%s<a href="%s" target="_blank">Configuration Item: %s %s</a><br>\n'% (indent*3,M*2, href, ci['ci_name'],img) )                     
 
-def render_children(DATA,f,level=1):
-    img='<img src="/static/img/edit.png" width="32" height="32" title="" alt="Details">'
+def render_children(DATA,f,level=1,
+    render_empty_cc=False
+    ):
+    img='<img src="/static/img/search.png" width="32" height="32" title="" alt="Details">'
     child_counter=0
     indent="  "*level
     M='<font color="white">%s</font>'%("MM"*level)
@@ -107,8 +132,9 @@ def render_children(DATA,f,level=1):
                 render_ci(ci,f,level)
             f.write("%s</div>"%(indent*2))
         else:
-            href="/forms/Cost_Centers?CC_Id=%s"%child['cc_id']
-            f.write('<font color="white">%s%s__</font><a href="%s" target="_blank">Cost Center: %s %s</a><br>\n'%(indent,M, href, child['cc_code'], child['cc_description'])  )      
+            if render_empty_cc:
+                href="/forms/Cost_Centers?CC_Id=%s"%child['cc_id']
+                f.write('<font color="white">%s%s__</font><a href="%s" target="_blank">Cost Center: %s %s</a><br>\n'%(indent,M, href, child['cc_code'], child['cc_description'])  )      
         if len(child['children'])>0:
             render_children(child,f,level+1)
         child_counter+=1        
@@ -119,33 +145,55 @@ def render_children(DATA,f,level=1):
 @permission_required(Permission.CUSTOMER)
 def forms_User_Data_View():
     logger.debug('Enter: forms_User_Data_View()'%())
+    collectordata=get_collectordata()
 
-    USER=current_user.id
+    USER = current_user.id
 
-    user_cc=db.session.query(User.CC_Id).filter(User.id==USER).scalar() 
-    list_cc=db.session.query(cost_center).filter(cost_center.CC_Id==user_cc).all() 
+    # Get CC of current User (Top Level CC for all query effects)
+    user_cc = db.session.query(User.CC_Id).filter(User.id==USER).scalar()
+    # Populates list with actual User's Top Cost Center attributes (must be one only) 
+    list_cc = db.session.query(cost_center).filter(cost_center.CC_Id==user_cc).all() 
 
+    # Data will be a map with structured Cost Centers details
     DATA={}
-    DATA.update({'user':{'user_id':USER},'cc_id':list_cc[0].CC_Id,'cc_code':list_cc[0].CC_Code,'cc_description':list_cc[0].CC_Description,'children':[]})
+    DATA.update({
+        'user'          : {'user_id':USER},
+        'cc_id'         : list_cc[0].CC_Id,
+        'cc_code'       : list_cc[0].CC_Code,
+        'cc_description': list_cc[0].CC_Description,
+        'children'      : [],
+        'ci_count'      : 0,
+        })
 
-    #print("Children=",DATA['children'])
-    #print("list_cc=",list_cc)
-
-    load_children(DATA['children'],list_cc)
-    #print("DATA=",DATA)
-
-    #filename="tmp/%s_%s_user_data_tree.html"%(current_user.id,id(current_user.id))
+    # will populate DATA with detaisl from childrens list
+    # starts with top CC only
+    load_children(DATA,DATA['children'],list_cc)
+    '''
+    print("***********************************************************")
+    print("***********************************************************")
+    #pprint(DATA)
+    with open("/home/gvalera/COMPARTIDO/loco.json","w") as fp:
+        fp.write(json.dumps(DATA))
+    print("***********************************************************")
+    print("***********************************************************")
+    for x in DATA['children']:
+        if x['ci_count']>0 or x['parent']>0:
+            print(x)
+    '''
+    # Temporary tree file name, will be unique for user
     filename="tmp/%s_user_data_tree.html"%(current_user.id)
     try:
-        os.remove("/%s"%filename)
-        f=open("/%s"%filename,'w')
+        # if previos version exists, then its removed
+        if os.path.exists(f"/{filename}"):
+            os.remove(f"/{filename}")
+        f=open(f"/{filename}",'w')
     except Exception as e:
         message=("Couldn't open file: '%s'. Please inform administrator. EXCEPTION: %s"%(filename,e))
         flash(message)
         logger.error(message)
+        # renders exception if required
         return render_template("exception.html",filename=filename,data=DATA)
-
-    
+        
 #  generate HTML
 
     render_children(DATA,f)
@@ -154,6 +202,7 @@ def forms_User_Data_View():
     
     print("forms_User_Data_View(): filename=",filename)
     
+    # Actual output rendering
     return render_template("user_data_view.html",filename=filename,data=DATA)
 
 # =============================================================================

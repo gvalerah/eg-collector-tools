@@ -95,6 +95,7 @@ def test_index():
 
     return render_template('test.html',data=data, name=name,password=password, form=form)
 
+''' GV 20210430
 @main.route('/collector_faq', methods=['GET','POST'])
 def collector_faq():   
     return render_template('collector_faq.html')
@@ -102,6 +103,7 @@ def collector_faq():
 @main.route('/collector_about', methods=['GET','POST'])
 def collector_about():   
     return render_template('collector_about.html')
+'''
 
 # Flask Caching avoider
 @main.after_request
@@ -123,21 +125,21 @@ def add_header(r):
 # A context 'collectordata' object is returned
 # ----------------------------------------------------------------------
 def get_collectordata():
-    collectordata={}
+    collectordata = {}
     # Here we'll include al important Collector context data 
     collectordata.update({"COLLECTOR_PERIOD":get_period_data(current_user.id,db.engine,Interface)})
     collectordata.update({"CONFIG":current_app.config})
     suffix = collectordata['COLLECTOR_PERIOD']['active']
     dt = datetime.strptime(suffix,"%Y%m")
-    start,end=Get_Period(dt,PERIOD_MONTH)
+    start,end = Get_Period(dt,PERIOD_MONTH)
     collectordata['COLLECTOR_PERIOD'].update({'start':start,'end':end})
     logger.debug(f"{this()}: dt: {dt} suffix={suffix}") 
     logger.debug(f"{this()}: COLLECTOR_PERIOD={collectordata['COLLECTOR_PERIOD']}") 
     
-    sharding=False
+    sharding = False
     # Here we'll include sharding required code
     if 'COLLECTOR_CIT_SHARDING' in current_app.config: 
-        sharding=current_app.config['COLLECTOR_CIT_SHARDING']
+        sharding = current_app.config['COLLECTOR_CIT_SHARDING']
     if sharding:
         charge_item.set_shard(suffix)
         flash(       f"{this()}: Using shardened table: {charge_item.__table__.name}") 

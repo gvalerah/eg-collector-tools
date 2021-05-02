@@ -1,0 +1,178 @@
+<h1><a name="_collector_cus_faq">Collector's FAQ for Customers: (versión en español)</a></h1>
+    <a href="#" onclick="history.go(-1)"><img src="/static/img/back.png"  color=yellow width="32" height="32" title="" alt="Add"></a>
+    <br>
+    <img src="/static/img/snapshots/main.png" alt="Collector Main view" width="50%">
+    <p>
+        <font color=blue><b>EG Collector</b></font> de Emtec Group, es una solución que permite discriminar los cargos asociados al uso de infraestructura de IT utilizando el concepto de "pago por uso", una vez identificados los "dispositivos" (ejm. Máquinas Virtuales en un Hypervisor) que forman parte de una infraestructura de TI, y los "componentes" que los conforman (CPU, Memoria, Disco, etc.).
+    </p>
+    <p>
+        <font color=blue><b>EG Collector</b></font> captura periódica y automáticamente los detalles de la cantidad provisionada de recursos para cada componente individual, considerando las variaciones durante el periodo, luego estas son sumarizadas por dispositivo y combinados con las reglas tarifarias vigentes y los esquemas de distribución de cargos estos datos consolidados se pueden utilizar como detalle de pre-facturación incluyendo distribución por "centro de costo".
+    </p>
+    <p>
+        El menú principal de <font color=blue><b>EG Collector</b></font> le da acceso a una serie de 
+        opciones via la interface de usuario final.<br>
+    </p>
+    <img src="/static/img/snapshots/main_menu.png" alt="Collector Main Menu" align="center"></td>
+    <p>
+        Este menú presenta una serie de opciones a nivel general, cada una
+        de ellas despliega un "submenu" que ofrece opciones específicas según el rol
+        del usuario, en este caso tenemos:
+    </p>
+    <table>
+        <tr>
+            <td>
+    <table border=1>
+        <tr>
+            <td><b>Collector</b></td> 
+            <td>
+                <ul>
+                    <li><a href="#_faq_collector_login">Identificación en <font color=blue><b>EG Collector</b></font></a></li> 
+                    <li><a href="#_faq_collector_logout">Cerrar sesión en <font color=blue><b>EG Collector</b></font></a></li> 
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <td><b>Customer</b></td>
+            <td>
+                <ul>
+                    <li><a href="#_faq_customer_qud">Estructura de Datos</a></li> 
+                    <li><a href="#_faq_customer_vcd">Consultar cargos del periodo</a></li> 
+                    <li><a href="#_faq_customer_rcd">Exportar cargos del periodo</a></li> 
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <td><b>Help</b></td>
+            <td>
+                <ul>
+                    <li><a href="#_faq_help_faq">Preguntas Frecuentes</a></li> 
+                    <li><a href="#_faq_help_about">Sobre <font color=blue><b>EG Collector</b></font></a></li> 
+                </ul>
+            </td>
+        </tr>
+        <tr><td><b>Account</b></td> 
+            <td>
+                <ul>
+                    <li><a href="#_faq_account_ru">Registro de usuario</a></li> 
+                    <li><a href="#_faq_account_cp">Cambio de contraseña</a></li> 
+                    <li><a href="#_faq_account_ce">Cambio de correo electrónico</a></li> 
+                    <li><a href="#_faq_account_logout">Cerrar sesión en <font color=blue><b>EG Collector</b></font></a></li> 
+                </ul>
+            </td>
+        </tr>
+    </table>
+            </td>
+            <td width=32></td>
+            <td align="center"><img src="/static/img/snapshots/submenu.png" alt="Collector SubMenu" width="50%"></td>
+        </tr>
+    </table>
+<hr>
+<!-- --------------------------------------------------------------- -->
+<h2><a name="_faq_collector_login"><span lang=EN-US>Identificación en <font color=blue><b>EG Collector</b></font></span></a></h2>
+<img src="/static/img/snapshots/login.png" alt="Login" width="50%">
+<p><span lang=EN-US>
+Esta opción es la puerta de entrada a <font color=blue><b>EG Collector</b></font>, se solicita al usuario su identificación y la contraseña asociada, en caso de éxito se inicia una nueva sesión de trabajo con <font color=blue><b>EG Collector</b></font> y se despliegan el menú principla y los sub-menues asociados segun el perfil del usuario identificado.
+</span></p>
+<a href="#_collector_cus_faq">Collector FAQs</a>
+<hr>
+<!-- --------------------------------------------------------------- -->
+<h2><a name="_faq_collector_logout"><span lang=EN-US>Cerrar sesión en <font color=blue><b>EG Collector</b></font></span></a></h2>
+<p><span lang=EN-US>
+Una vez que el usuario termina su trabajo con <font color=blue><b>EG Collector</b></font>, se recomienda cerrar su sesión de trabajo explícitamente, esto también aplica cuando se requiere cambiar de perfil se usuario. Es posible que un usuario tenga mas de un perfil, sin embargo requerirá "nombres de usuario" diferenciados por requerimientos de auditabilidad.
+</span></p>
+<a href="#_collector_cus_faq">Collector FAQs</a>
+<hr>
+<!-- --------------------------------------------------------------- -->
+<h2><a name="_faq_customer_qud"><span lang=EN-US>Estructura de Datos</span></a></h2>
+<img src="/static/img/snapshots/query_user_data.png" alt="Query User Data">    
+<p><span lang=EN-US>
+Esta opción permite al usuario dar un vistazo a la estructura de datos asociados a su perfil.
+</p><p>
+La Estructura permite visualizar los datos ordenados por "centro de costo" según su categoria, solo son visibles los detalles de los centros de costo que el usuario identificado tenga autorizados, una vez mostrado el listado delos centros de costro disponibles se puede expandir o colapsar esta hasta hasta los niveles inferiores de centro de costo, cada centro de costo a su vez puede agrupar varios dispositivos (máquinas virtuales por ejemplo) y cada dispositivo se asocia a un grupo de componentes especificados.
+</p><p>
+El listado se puede expandir o contraer según se requiera, si se selecciona un elemento (centro de costo, dispostivo o componente) se abre una nueva pestaña del navegador con los detalles del elemento en modo de "solo consulta".
+</span></p>
+<a href="#_collector_cus_faq">Collector FAQs</a>
+<hr>
+<!-- --------------------------------------------------------------- -->
+<h2><a name="_faq_customer_vcd"><span lang=EN-US>Consultar cargos del periodo</span></a></h2>
+<img src="/static/img/snapshots/view_charging_data_form.png" alt="View Charging Data Form" width="50%">
+<p><span lang=EN-US>
+Esta opción otorga la facilidad de hacer consultas específicas según el periodo de cargo seleccionado (periodo activo), se permite filtrar los datos por varios conceptos:
+<ul>
+    <li>Fecha desde la cual se consideran los cargos por uso.</li>
+    <li>Fecha hasta la cual se consideran los cargos por uso.</li>
+    <li>Estado a reportar según la implementación.</li>
+    <li>Moneda a usar en el reporte. <font color=blue><b>EG Collector</b></font> tiene la opción de utilizar diversas monedas en sus cálculos y reportes, de estar disponible esta opción se considerarán los tipos de cambio pertinentes para reportar según la consulta especificada por el usuario.</li>
+    <li>Centro de costo de nivel mas alto a reportar. El "Centro de Costo" es una asociación del dispositivo a costear con un grupo de distribución de costos, se identifica con un código único en el sistema y es administrado por Emtec Group.</li>
+</ul>
+</p><p>
+Una vez seleccionados los parámetros de la consulta, el usuario tiene la opción de reportar los resultados de la busqueda (los detalles de la consulta no se actualizan si la consulta ha sido ejecutada previamente), los cuales son mostrados por pantalla, o en su defecto, solicitar el actualizar forzosamente los resultados de la consulta y solo entonces mostrarlos.
+</p>
+<img src="/static/img/snapshots/view_charging_data_view.png" alt="View Charging Data View" width="50%">
+<p>
+Los últimos resultados son almacenados para ser "exportados" usando alguno de los formatos de exportación disponibles.
+</p><p>
+<font color=red>Todos los datos mostrados son solo referenciales y permiten estimar los montos dinámicos según los parámetros vigentes al momento de la actualización de la consulta, la información oficial es entregada una vez concluido un periodo de facturación (mes) y se considera entonces todos los cambios hasta el final del mismo (cambios tarifarios, redistribución de centros de costo, etc.). </font>
+</span>
+</p>
+<a href="#_collector_cus_faq">Collector FAQs</a>
+<hr>
+<!-- --------------------------------------------------------------- -->
+<h2><a name="_faq_customer_rcd"><span lang=EN-US>Exportar cargos del periodo</span></a></h2>
+<p><span lang=EN-US>
+La opción de exportación permite escoger entre las diferentes consultas almacenadas por el usuario y "exportar" los resultados en diversos formatos, así tenemos:
+<ul>
+    <li><b>PDF</b> Portable Data Format. Un reporte básico es incluido en la implementación estandar.</li>
+    <li><b>XLSX</b> Microsoft Office Excel. Planilla de cálculo con los datos para ser explotados de inmediato con la popular aplicación de productividad o alternativas que soporten el formato.</li>
+    <li><b>CSV</b> Valores separados por comas. Datos con estructura de registro separados por el simbolo coma (,), explotable en sistemas operativos de escritorio y midrange principalmente</li>
+    <li><b>JSON</b> JavaScript Object Notation. Formato muy útil para la integración con aplicaciones, frecuentemente utilizado como carga (payload) en integraciones de tipo REST API</li>
+    <li><b>FIX</b> Registros de tamaño fijo. Ideal para integración de aplicaciones legadas sobre infraestructuras de rango superior (midrange, mainframe).</li>
+</ul>
+<img src="/static/img/snapshots/report_charging_data.png" alt="Export Charging Data" width="50%">
+También se da la opción para eliminar de <font color=blue><b>EG Collector</b></font> las consultas almacenadas según ya no sean requeridas.
+</span></p>
+<a href="#_collector_cus_faq">Collector FAQs</a>
+<hr>
+<!-- --------------------------------------------------------------- -->
+<h2><a name="_faq_help_faq"><span lang=EN-US>Preguntas Frecuentes</span></a></h2>
+<p><span lang=EN-US>
+Esta opción muestra este documento.
+</span></p>
+<a href="#_collector_cus_faq">Collector FAQs</a>
+<hr>
+<!-- --------------------------------------------------------------- -->
+<h2><a name="_faq_help_about"><span lang=EN-US>Sobre <font color=blue><b>EG Collector</b></font></span></a></h2>
+<p><span lang=EN-US>
+Esta opción muestra detalles asociados a la implementación vigente de <font color=blue><b>EG Collector</b></font> de Emtec Group.
+</span></p>
+<a href="#_collector_cus_faq">Collector FAQs</a>
+<hr>
+<!-- --------------------------------------------------------------- -->
+<h2><a name="_faq_account_ru"><span lang=EN-US>Registro de usuario</span></a></h2>
+<p><span lang=EN-US>
+Esta opción permite el auto-registro de usuarios en implementaciones con acceso smasivo y altamente dinámicos. Por razones de seguridad puede está limitada a roles adminisatrativos de la solución.
+</span></p>
+<a href="#_collector_cus_faq">Collector FAQs</a>
+<hr>
+<!-- --------------------------------------------------------------- -->
+<h2><a name="_faq_account_cp"><span lang=EN-US>Cambio de contraseña</span></a></h2>
+<p><span lang=EN-US>
+Esta opción permite cambiar la contraseña única de acceso del usuario.
+</span></p>
+<a href="#_collector_cus_faq">Collector FAQs</a>
+<hr>
+<!-- --------------------------------------------------------------- -->
+<h2><a name="_faq_account_ce"><span lang=EN-US>Cambio de correo electrónico</span></a></h2>
+<p><span lang=EN-US>
+Esta opción permite cambiar la dirección de correo electrónico del usuario. Por razones de seguridad esta opción esta limitada al rol de administrador del sistema.
+</span></p>
+<a href="#_collector_cus_faq">Collector FAQs</a>
+<hr>
+<!-- --------------------------------------------------------------- -->
+<h2><a name="_faq_account_logout"><span lang=EN-US>Cerrar sesión en Collector</span></a></h2>
+<p><span lang=EN-US>
+Una vez que el usuario termina su trabajo con <font color=blue><b>EG Collector</b></font>, se recomienda cerrar su sesión de trabajo explícitamente, esto también aplica cuando se requiere cambiar de perfil se usuario. Es posible que un usuario tenga mas de un perfil, sin embargo requerirá "nombres de usuario" diferenciados.
+</span></p>
+<a href="#_collector_cus_faq">Collector FAQs</a>
+<hr>

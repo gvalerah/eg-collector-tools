@@ -11,7 +11,7 @@
 {% endblock %}
 {% block page_content %}
 <div class="page-header">
-    <h2>Customer {{current_user.username}} Data: </h2>
+    <h2>Customer <font color="blue">{{current_user.username}}</font> Data structure: </h2>
     <a href="#" onclick="history.go(-1)"><img src="/static/img/back.png"  color=yellow width="32" height="32" title="" alt="Add"></a>
 </div>
 {% with messages = get_flashed_messages() %}
