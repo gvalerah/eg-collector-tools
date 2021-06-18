@@ -57,6 +57,6 @@ def Nutanix_Snapshot_Load_Collector(C,config,group):
             else:
                 C.logger.info(f"{__name__}: Collector Inactive.")        
     else:
-            C.logger.critical("{__name__}: Configuration file '{nutanix_ini_file}' does not exist.")
-    C.logger.info("{__name__}: Nutanix Snapshot List Storage Loader : Completed")
+            C.logger.critical(f"{__name__}: Configuration file '{nutanix_ini_file}' does not exist.")
+    C.logger.info(f"{__name__}: Nutanix Snapshot List Storage Loader : Completed")
 

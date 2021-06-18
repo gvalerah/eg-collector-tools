@@ -25,6 +25,7 @@ from emtec.collector.db.flask_models       import Permission
 # 20200224 GV from emtec.collector.db.orm_model          import Interface
 from emtec.collector.db.flask_models       import *
 from emtec.collector.db.orm_model          import *
+from emtec.api                             import *
 
 """ Application decorators for routes """
 """ Decorators specify main routes to be handled by Collector Solution """

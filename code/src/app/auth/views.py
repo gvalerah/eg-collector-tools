@@ -21,6 +21,7 @@ from flask_login                        import login_required
 from flask_login                        import current_user
 
 # Application context
+#from ..                                 import app
 from ..                                 import db
 from ..                                 import logger
 
@@ -36,30 +37,39 @@ from .forms                             import RegistrationForm
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
     try:
-        logger.debug(f"login: login in course ...")
-        logger.debug(f"login: app        = {app}")
+        logger.debug(f"login: login in course ... viene mas data")
         logger.debug(f"login: User       = {User}")
         logger.debug(f"login: logger     = {logger}")
         logger.debug(f"login: db         = {db}")
         logger.debug(f"login: db.engine  = {db.engine}")
         logger.debug(f"login: db.Session = {db.Session}")
         logger.debug(f"login: db.session = {db.session}")
-    except:
-        print("logger is not available")
+        # Required to be sure DB connection is Up
+        # if not, further request will be reconnected
+        try:
+            logger.debug(f"login: asuring DB connection is UP ..")
+            result = db.engine.execute('SELECT 1')
+            for row in result:
+                logger.debug(f"login: row = {row}")
+        except Exception as e:
+            logger.error(f"login: DB connection test exception: {str(e)}")
+    except Exception as e:
+        print(f"login: exception: {str(e)}")
+        print(f"login: logger is not available")
     try:
         form = LoginForm()
         if form.validate_on_submit():
             try:
                 logger.debug(f"login: form.validate_on_submit() = True")
                 user = User.query.filter_by(username=form.username.data).first()
-                print(f"login: {user}")
+                #rint(f"login: {user}")
                 logger.debug(f"login: {user}")
                 if user is not None and user.verify_password(form.password.data):
                     login_user(user, False)
-                    print(       f"login: 53: request.args.get('next') = {request.args.get('next')}")
-                    logger.debug(f"login: 54: request.args.get('next') = {request.args.get('next')}")
-                    print(       f"login: 55: url_for('main.index')    =",url_for('main.index'))
-                    logger.debug(f"login: 56: url_for('main.index')    = {url_for('main.index')}")
+                    #rint(       f"login: 69: request.args.get('next') = {request.args.get('next')}")
+                    logger.debug(f"login: 70: request.args.get('next') = {request.args.get('next')}")
+                    #rint(       f"login: 71: url_for('main.index')    =",url_for('main.index'))
+                    logger.debug(f"login: 72: url_for('main.index')    = {url_for('main.index')}")
                     return redirect(request.args.get('next') or url_for('main.index'))
                 else:
                     logger.error(f"login: user = {user}")
@@ -71,7 +81,7 @@ def login():
                 print       ( f"login: form validated exception: {str(e)}")
                 logger.error( f"login: form validated exception: {str(e)}")
         else:
-            print(       "login: FORM NOT VALIDATED YET")        
+            #rint(       "login: FORM NOT VALIDATED YET")        
             logger.debug("login: FORM NOT VALIDATED YET")
         try:
             return render_template('auth/login.html', form=form)
@@ -87,10 +97,10 @@ def login():
 @login_required
 def logout():
     try:
-        print       ( f"logout: loging out user {current_user} ...")
+        #rint       ( f"logout: loging out user {current_user} ...")
         logger.debug( f"logout: loging out user {current_user} ...")
         logout_user()
-        print('You have been logged out.')
+        #rint('You have been logged out.')
         flash('You have been logged out.')
     except Exception as e:
         print       ( f"logout: exception: {str(e)}")

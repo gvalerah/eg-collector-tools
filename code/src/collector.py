@@ -166,6 +166,7 @@ if __name__ == '__main__':
         logger.trace("os.environ=%s"%os.environ)
         logger.trace("app.config=%s"%app.config)
         logger.info("*****************************************")
+        '''
         print("*******************************************************")
         print(f"db         = {db} {type(db)}")
         print(f"db.engine  = {db.engine} {type(db.engine)}")
@@ -177,6 +178,7 @@ if __name__ == '__main__':
         row = s1.query(Users).first()
         print(f"row        = {row}")
         print("*******************************************************")
+        '''
         print("*****************************************")
     else:
         print("****************************************")

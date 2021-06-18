@@ -1,13 +1,22 @@
     # source: code/src/include/models/flask_users_methods.py
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
+        ''' 20210614 GV Chance to define role at once
         if self.role is None:
             if self.username == current_app.config['COLLECTOR_ADMIN']:
                 self.role = Role.query.filter_by(permissions=0xfe).first()
             if self.role is None:
                 self.role = Role.query.filter_by(default=True).first()
-
-
+        ''' 
+        if self.role_id is None:
+            if self.role is None:
+                if self.username == current_app.config['COLLECTOR_ADMIN']:
+                    self.role = Role.query.filter_by(permissions=0xfe).first()
+                if self.role is None:
+                    self.role = Role.query.filter_by(default=True).first()
+        else:
+            self.role = Role.query.filter_by(id=self.role_id).first()
+    
     @property
     def password(self):
         raise AttributeError('password is not a readable attribute')

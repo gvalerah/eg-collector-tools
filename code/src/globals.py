@@ -22,7 +22,7 @@ db          = SQLAlchemy(app)
 
 # Configuration Defaults
 
-app.config['SECRET_KEY'] = 'hard to guess string'   # Check chapter 7 for more secure method of Key generation instead of hard codding
+app.config['SECRET_KEY'] = 'Hard to guess string'   # Check chapter 7 for more secure method of Key generation instead of hard codding
 app.config['SQLALCHEMY_DATABASE_URI'] ='sqlite:///' + os.path.join(basedir, '%s.sqlite'%(__name__))
 app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
 

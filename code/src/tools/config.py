@@ -5,7 +5,7 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 class Config:
     print("OS COLLECTOR_CONFIG_FILE=%s" % os.environ.get('COLLECTOR_CONFIG_FILE'))
-    SECRET_KEY                      = os.environ.get('SECRET_KEY') or 'hard to guess string'
+    SECRET_KEY                      = os.environ.get('SECRET_KEY') or 'Hard to guess string'
     SQLALCHEMY_COMMIT_ON_TEARDOWN   = os.environ.get('SQLALCHEMY_COMMIT_ON_TEARDOWN') or True
     SQLALCHEMY_TRACK_MODIFICATIONS  = os.environ.get('SQLALCHEMY_TRACK_MODIFICATIONS') or False
     MAIL_SERVER                     = os.environ.get('MAIL_SERVER') or 'localhost'
