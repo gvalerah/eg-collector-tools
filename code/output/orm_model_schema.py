@@ -1,7 +1,7 @@
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-06-14 18:09:27
+# GLVH @ 2021-06-18 19:25:59
 # =============================================================================
 
 # gen_model_flask.py:67 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/ORM_model_schema.py

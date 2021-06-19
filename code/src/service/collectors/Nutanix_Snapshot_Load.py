@@ -44,7 +44,6 @@ def Nutanix_Snapshot_Load_Collector(C,config,group):
                 N.sharding        = config.getboolean('General','collector_cit_sharding',fallback=False)
                 C.logger.debug(f"{__name__}: will enter loop has more data = {N.has_more_data}")  
                 while N.has_more_data:
-                    #etcode=N.Extract_Snapshots(API_version=N.API_version) version 2 API available only
                     retcode=N.Extract_Snapshots(API_version=2)
                     if retcode is not None and retcode==200:
                         N.Transform_Snapshots() 

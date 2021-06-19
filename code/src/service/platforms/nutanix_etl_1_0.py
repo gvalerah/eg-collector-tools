@@ -304,81 +304,72 @@ class Nutanix(ETL):
                     '',
                     'protection_domains/dr_snapshots/',
                     ''
-                    ]
+                ]
         
-        # gets list of hosts in implementation
-        hosts   = prism_central_get_hosts(
-                        self.host,
-                        self.port,
-                        self.username,
-                        self.password,
-                        self.protocol,
-                        timeout=self.connection_timeout,
-                        logger=self.logger
-                        )
         data   = []
         status = 0
-        if hosts is not None:
-            for host in hosts:
-                if version == 2:
-                    self.session.headers.update( {'Accept': 'application/json' } )   
-                    host_base_url =  f"https://{host}:{self.port}/PrismGateway/services/rest/v2.0/"
-                # 20210510 GV snapshotsURL = self.base_url[version] + call[version]
-                snapshotsURL = self.base_url[version] + call[version]
+        if version == 2:
+            self.session.headers.update( {'Accept': 'application/json' } )   
+            host_base_url =  f"https://{self.host}:{self.port}/PrismGateway/services/rest/v2.0/"
+        # 20210510 GV snapshotsURL = self.base_url[version] + call[version]
+        # snapshotsURL = self.base_url[version] + call[version]
+        snapshotsURL = host_base_url + call[version]
+        
+        self.logger.warning(f"{this()}: version={version} snapshotsURL={snapshotsURL}")            
 
-                parameters=None
+        parameters = None
+        
+        call_type  = None
+        server_Response = None
+        try:
+            if version == 2:
+                call_type="GET"
+                h=strftime("%H:%M:%S")
                 
-                call_type=None
-                server_Response=None
-                try:
-                    if version == 2:
-                        call_type="GET"
-                        h=strftime("%H:%M:%S")
-                        
-                        parameters = {
-                            "fulldetails":True,
-                            "offset":self.processed_snapshots,
-                            "count":self.chunk_size,
-                            "timeout":(
-                                self.connection_timeout,
-                                self.read_timeout),
-                            }
-                        
-                        serverResponse = self.session.get(
-                            snapshotsURL
-                            )
-                    else:
-                        call_type="GET"
-                        serverResponse = self.session.get(
-                            snapshotsURL,
-                            timeout=(
-                                self.connection_timeout,
-                                self.read_timeout)
-                            )
-                except ConnectionError:
-                    if self.logger:
-                        self.logger.error(f"{this()}: Connection Error trying version={version} call={call_type} URL={snapshotsURL}")            
-                    return None,None
-                except ConnectTimeout:
-                    if self.logger:
-                        self.logger.error(f"{this()}: Connection Timeout trying version={version} call={call_type} URL={snapshotsURL}")            
-                    return None,None
-                except Exception as e:
-                    emtec_handle_general_exception(e,logger=self.logger,module=__name__,function=this())
-                    return None,None
-                if (self.logger):
-                    self.logger.debug(f"{this()}: version        = {version}")
-                    self.logger.debug(f"{this()}: snapshotsURL   = {snapshotsURL}")
-                    self.logger.debug(f"{this()}: call_Type      = {call_type} {parameters}")
-                    self.logger.debug(f"{this()}: serverResponse = {serverResponse}")
-                    if serverResponse is not None:
-                        self.logger.debug(f"{this()}:       Code     = {serverResponse.status_code}")
-                        self.logger.debug(f"{this()}:       Text     = {serverResponse.text}")
+                parameters = {
+                    "fulldetails":True,
+                    "offset":self.processed_snapshots,
+                    "count":self.chunk_size,
+                    "timeout":(
+                        self.connection_timeout,
+                        self.read_timeout),
+                    }
+                
+                serverResponse = self.session.get(
+                    snapshotsURL
+                    )
+            else:
+                call_type="GET"
+                serverResponse = self.session.get(
+                    snapshotsURL,
+                    timeout=(
+                        self.connection_timeout,
+                        self.read_timeout)
+                    )
+        except ConnectionError:
+            if self.logger:
+                self.logger.error(f"{this()}: Connection Error trying version={version} call={call_type} URL={snapshotsURL}")            
+            return None,None
+        except ConnectTimeout:
+            if self.logger:
+                self.logger.error(f"{this()}: Connection Timeout trying version={version} call={call_type} URL={snapshotsURL}")            
+            return None,None
+        except Exception as e:
+            emtec_handle_general_exception(e,logger=self.logger,module=__name__,function=this())
+            return None,None
+        if (self.logger):
+            self.logger.debug(f"{this()}: version        = {version}")
+            self.logger.debug(f"{this()}: snapshotsURL   = {snapshotsURL}")
+            self.logger.debug(f"{this()}: call_Type      = {call_type} {parameters}")
+            self.logger.debug(f"{this()}: serverResponse = {serverResponse}")
+            if serverResponse is not None:
+                self.logger.debug(f"{this()}:       Code     = {serverResponse.status_code}")
+                self.logger.debug(f"{this()}:       Text     = {serverResponse.text[:100]}")
 
-                if serverResponse is not None:
-                    status = max(status,serverResponse.status_code)
-                    if is_json(serverResponse.text):
-                        data.append(json.loads(serverResponse.text))
+        if serverResponse is not None:
+            status = max(status,serverResponse.status_code)
+            if is_json(serverResponse.text):
+                data.append(json.loads(serverResponse.text))
                     
         # data here is a list of data members and need to be treated as so
         return status,data
@@ -828,13 +819,11 @@ class Nutanix(ETL):
             self.logger.debug("%s: Transform. OUT"%(__name__))
         return 0
 
-    def Transform_Snapshots(self):
+    def Transform_Snapshots(self,API_version=None):
         if self.logger:
             self.logger.debug(f"{__name__}: Transform_Snapshots(). IN")
             if type(self.data) == list: # list of snapshots ... 
                 self.logger.debug(f"{__name__}: len(self.data) = {len(self.data)}")
-
-        API_version = self.API_version
 
         if API_version is None:
             API_version = self.API_version
@@ -908,7 +897,7 @@ class Nutanix(ETL):
                                         
                                     if CI_Id is not None:
                                         # if first appereance of SNaPshot then creates Charge Unit
-                                        CU_Id = Get_CU_Id_From_CI(CI_Id,snapshot_type_code)
+                                        CU_Id = self.db.Get_CU_Id_From_CI(CI_Id,snapshot_type_code)
                                         if CU_Id == 0:
                                             self.tuples.append(("CU-CREATE" ,snapshot_type_code,UUID,CU_UUID,SIZEGB,"NONE",1,REF1,REF2,REF3))
                                         self.tuples.append(("CIT-CREATE",snapshot_type_code,UUID,CU_UUID,SIZEGB,DATE,TIME,ACTIVE))
@@ -924,12 +913,12 @@ class Nutanix(ETL):
                 if (self.logger): self.logger.error("%s:  API_version %d can't be processed"%(__name__,API_version)) 
                 return 1
         if (self.logger):
-            self.logger.debug(f"{__name__}: OUTPUT TUPLE")
-            self.logger.debug(f"**************************************")
+            self.logger.warning(f"{__name__}: OUTPUT TUPLE")
+            self.logger.warning(f"**************************************")
             for t in self.tuples:
-                self.logger.debug(t)
-            self.logger.debug(f"**************************************")
-            self.logger.debug(f"{__name__}: Transform. OUT")
+                self.logger.warning(t)
+            self.logger.warning(f"**************************************")
+            self.logger.warning(f"{__name__}: Transform. OUT")
         return 0
 
 # ----------------------------------------------------------------------
