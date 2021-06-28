@@ -134,7 +134,7 @@ def forms_Get_User_Resume():
 def report_User_Resume():
     function_name=sys._getframe().f_code.co_name
     logger.debug('%s: Enter'%(function_name))
-    
+    print(137)
     db.logger        = logger
     view_session     = db.Session(db.engine)
     table_name       = 'Charge_Items'
@@ -153,6 +153,7 @@ def report_User_Resume():
     
     # Updated cached data for this specific query if requested 
     if Update == 1:
+        print(155,"Update requerido ...")
         # -------------------------------------------------------------------------------------------------------------- #
         # Previous Code faster but requires more memory will be replaced by an by CI loop                                #
         # query="C*ALL Update_Charge_Resume(%d,'%s','%s',%d,'%s')"%(Cus_Id,CIT_Date_From,CIT_Date_To,CIT_Status,Cur_Code) #
@@ -218,7 +219,9 @@ def report_User_Resume():
         
     # Get Actual Resume Data from Database
     # NOTE: Here needs some Sand-Clock Message or something in case it takes so long ...
+    print(222)
     try:
+        print(224)
         logger.debug("%s: rows = db.Get_User_Resume(%s,%s,%s,%s,%s,%s)"%(
             function_name,
             current_user.id,
@@ -229,6 +232,7 @@ def report_User_Resume():
             CC_Id)
             )
         if current_user.CC_Id == 1:
+            print(235,f"current_user.CC_Id ={current_user.CC_Id}")
             # user has a super top level CC_Id
             user_id=view_session.query(User.id).filter(User.CC_Id==CC_Id).one()      
             logger.debug(f"User with super top level CC_Id will look for CC_Id={CC_Id}")
@@ -242,6 +246,7 @@ def report_User_Resume():
                         CC_Id=CC_Id
                         )
         else:
+            print(249)
             # 20210423 force CC_Id in the call to filter report
             rows = db.Get_User_Resume(
                         current_user.id,
@@ -253,6 +258,14 @@ def report_User_Resume():
                         )
         logger.debug(f"{function_name}: user {current_user}")
         logger.debug("%s: %s rows in resume for user %s %s as role %s"%(
+            function_name,
+            len(rows),
+            current_user.id,
+            current_user.username,
+            current_user.role_id
+            )
+        )
+        print("%s: 268 %s rows in resume for user %s %s as role %s"%(
             function_name,
             len(rows),
             current_user.id,

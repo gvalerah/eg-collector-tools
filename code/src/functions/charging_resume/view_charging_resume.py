@@ -6,6 +6,7 @@
 # GLVH @ 2020-10-25 Proper sharding and initialization handling
 # ======================================================================
 
+from pprint                         import pformat
 from emtec.collector.forms          import frm_charging_resume
 from babel.numbers                  import format_number
 from babel.numbers                  import format_decimal
@@ -125,13 +126,16 @@ def report_Charging_Resume():
         
     # Updated cached data for this specific query if requested 
     if Update == 1:
-        CI = db.session.query(
+        query = db.session.query(
                 Configuration_Items.CI_Id
                 ).filter(Configuration_Items.Cus_Id==Cus_Id
                 ).order_by( Configuration_Items.CC_Id,
                             Configuration_Items.CI_Id
-                ).all()
+                )
+        logger.debug (f"{this()}: Cus_Id= {Cus_Id} query: {query}")
+        CI = query.all()
         logger.debug (f"{this()}: {len(CI)} CI's found for customer {Cus_Id}")
+        logger.debug (f"{this()}: {pformat(CI)}")
         resume_records=0
 
         for ci in CI:
