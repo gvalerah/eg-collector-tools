@@ -127,15 +127,17 @@ def register():
             password=form.password.data)
         try:
             #flash("Trying to register user: '%s'"%user)
-            db.session.close()
+            #20210630 GV db.session. close()
             db.session.add(user)
             db.session.commit()
-            db.session.close()
+            #20210630 GV db.session. close()
+            db.session.flush() #20210630 GV 
             flash('New user "%s" can login now.'%form.username.data)
             return redirect(url_for('main.index'))
         except Exception as e:
             db.session.rollback()
-            db.session.close()
+            #20210630 GV db.session. close()
+            db.session.flush() #20210630 GV 
             flash('Form Data is: [name=%s,role_id=%s,email=%s,password=%s]'%( form.username.data, form.role_id.data, form.email.data, form.password.data))
             flash('Error creating new user. %s'%(e))
             return redirect(url_for('auth.register'))

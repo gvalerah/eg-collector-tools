@@ -50,7 +50,8 @@ def Monthly_Auto_Collector(C,config,group):
                 C.db.session.merge(CIT)
                 CITs_generated = CITs_generated + 1
             C.db.session.commit()
-            C.db.session.close()  
+            #20210630 GV  C.db.session. close()  #20210630 GV
+            C.db.session.flush() 
             C.logger.info("%s: Generated %d Monthly Charge Items."%(__name__,CITs_generated))
         else:
             C.logger.info("%s: Collector Inactive."%(__name__))        

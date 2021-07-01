@@ -236,7 +236,7 @@ for t in range(len(TABLES)):
             logger.warning("\tDuplicate Key Ignored : (%s/%s)"%(Table,F.Field))
 
 
-session.close()
+session. close()
 
 print("*********************************************")
 print("%d new fields found"%new_fields)

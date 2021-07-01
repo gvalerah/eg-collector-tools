@@ -57,7 +57,8 @@ def Nutanix_CI_Check_Collector(C,config,group):
                         C.logger.audit("%s:UPD:%s"%(name,CI))
                         CIs_decommissioned  +=  1
                 C.db.session.commit()
-                C.db.session.close()  
+                #20210630 GV C.db.session. close()
+                C.db.session.flush()  
                 C.logger.info("%s: %d Configuration Items searched in platform '%s'."%(__name__,CIs_searched,platform_name[0]))
                 C.logger.info("%s: %d Configuration Items decommissioned from platform '%s' detected."%(__name__,CIs_decommissioned,platform_name[0]))
             else:

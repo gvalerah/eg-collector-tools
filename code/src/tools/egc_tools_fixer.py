@@ -90,7 +90,7 @@ def create_cit_shards(session,args):
             result=session.execute(create_sentence)
             count=session.execute("SELECT COUNT(*) FROM %s"%shard_table).scalar()
             print("{:12,d} records.".format(count))
-        session.close()
+        session.flush() #20210630 GV session. close()
     except exception as e:
             print(str(e))
 
@@ -113,7 +113,7 @@ def create_shard(session,args):
             create_sentence="CREATE TABLE IF NOT EXISTS %s LIKE %s"%(shard_table,args.table)
             print("Executing %s ..."%create_sentence)
             result=session.execute(create_sentence)
-            session.close()
+            session.flush() #20210630 GV session. close()
         except Exception as e:
             print(str(e))
 
@@ -177,7 +177,7 @@ def drop_table(session,args):
             print("dropping table '%s' ..."%args.table)
             sentence="DROP TABLE IF EXISTS %s"%args.table
             session.execute(sentence)
-            session.close()
+            session.flush() #20210630 GV session. close()
         except Exception as e:
             print(str(e))
     else:

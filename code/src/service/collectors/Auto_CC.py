@@ -58,7 +58,8 @@ def Auto_CC_Collector(C,config,group):
                             CIs_updated +=1
                             break   # Only first match will cause update
             C.db.session.commit()
-            C.db.session.close()  
+            #20210630 GV C.db.session. close()
+            C.db.session.flush()  
             C.logger.info("%s: Identified %d Configuration Item candidates."%(__name__,CIs_candidates))
             C.logger.info("%s: Updated %d Configuration Items to matching CC pattern."%(__name__,CIs_updated))
         else:

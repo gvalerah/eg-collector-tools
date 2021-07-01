@@ -155,7 +155,7 @@ def get_collectordata():
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-06-28 15:17:57
+# GLVH @ 2021-06-30 21:54:29
 # =============================================================================
 # gen_models_code.py:445 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/includes/models_py_imports.py
 from emtec.collector.db.flask_models import cit_generation
@@ -214,15 +214,15 @@ from emtec.collector.forms import frm_User,frm_User_delete
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-06-28 15:17:57
+# GLVH @ 2021-06-30 21:54:29
 # =============================================================================
 # gen_views.py:32 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/views/view_charge_items.py
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:17:59.121922
+#  GLVH @ 2021-06-30 21:54:31.978230
 # ======================================================================        
-# gen_views_form.html:AG 2021-06-28 15:17:59.121938
+# gen_views_form.html:AG 2021-06-30 21:54:31.978245
 @main.route('/forms/Charge_Items', methods=['GET', 'POST'])
 @login_required
 
@@ -285,9 +285,10 @@ def forms_Charge_Items():
             
             try:
                session['new_row']=str(row)
-               db.session.close()
+               db.session.flush()
                db.session.add(row)
                db.session.commit()
+               db.session.flush()
                if session['is_new_row']==True:
                    logger.audit ( '%s:NEW:%s' % (current_user.username,session['new_row'] ) )
                    flash('New Charge Item created OK')
@@ -296,10 +297,10 @@ def forms_Charge_Items():
                    logger.audit ( '%s:UPD:%s' % (current_user.username,session['new_row'] ) )    
                    message=Markup('<b>Charge Item CU_Id,CIT_DateTime saved OK</b>')
                    flash(message)
-               db.session.close()
+               db.session.flush()
             except Exception as e:
                db.session.rollback()
-               db.session.close()
+               db.session.flush()
                message=Markup('ERROR saving Charge Item record : %s'%(e))
                flash(message)
             return redirect(url_for('.select_Charge_Items_query'))
@@ -309,7 +310,7 @@ def forms_Charge_Items():
         elif   form.submit_New.data and current_user.role_id>1:
             #print('New Data Here ...')
             session['is_new_row']=True
-            db.session.close()
+            db.session.flush()
             row=charge_item()
     
             return redirect(url_for('.forms_Charge_Items'))    
@@ -352,9 +353,9 @@ def forms_Charge_Items():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:17:59.164495
+#  GLVH @ 2021-06-30 21:54:31.999483
 # ======================================================================        
-# gen_views_delete.html:AG 2021-06-28 15:17:59.164518
+# gen_views_delete.html:AG 2021-06-30 21:54:31.999499
 @main.route('/forms/Charge_Items_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -388,9 +389,10 @@ def forms_Charge_Items_delete():
     #f.write(        "            print('Delete Data Here...')
             try:
                 session['deleted_row']=str(row)
-                db.session.close()
+                db.session.flush()
                 db.session.delete(row)
                 db.session.commit()
+                db.session.flush()
                 logger.audit ( '%s:DEL:%s' % (current_user.username,session['deleted_row']) )
                 flash('Charge Item CU_Id,CIT_DateTime deleted OK')
             except exc.IntegrityError as e:
@@ -422,10 +424,10 @@ def forms_Charge_Items_delete():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:17:59.232304
+#  GLVH @ 2021-06-30 21:54:32.047161
 # ======================================================================
 
-# gen_views_select_query.html:AG 2021-06-28 15:17:59.232318        
+# gen_views_select_query.html:AG 2021-06-30 21:54:32.047198        
 @main.route('/select/Charge_Items_Query', methods=['GET','POST'])
 @login_required
 @admin_required
@@ -704,9 +706,9 @@ def select_Charge_Items_query():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:17:59.317485
+#  GLVH @ 2021-06-30 21:54:32.116723
 # ======================================================================
-# gen_views_api.html:AG 2021-06-28 15:17:59.317509
+# gen_views_api.html:AG 2021-06-30 21:54:32.116758
 # table_name: Charge_Items
 # class_name: charge_item
 # is shardened: True
@@ -735,7 +737,7 @@ def api_get_Charge_Items(id=None):
                 id_values=[id]
             # Codigo para un solo campo de id
             # chequear si marcado explicitamente
-            db.session.close()
+            db.session.flush()
             query = db.session.query(Charge_Items)
             if id is not None:
                 query = query.filter(Charge_Items.CU_Id == id_values[id_counter])
@@ -804,8 +806,9 @@ def api_post_Charge_Items():
             db.session.add(row)
             db.session.flush()
             db.session.commit()
+            db.session.flush()
             db.session.refresh(row)
-            db.session.close()
+            db.session.flush()
             message = f"Created 'Charge_Items' CU_Id = {row.CU_Id}"
             row     = json.loads(row.get_json())
         except Exception as e:
@@ -857,8 +860,9 @@ def api_put_Charge_Items(id):
                 db.session.merge(row)
                 db.session.flush()
                 db.session.commit()
+                db.session.flush()
                 db.session.refresh(row)
-                db.session.close()
+                db.session.flush()
                 message = f"Modified 'Charge_Items' CU_Id = {id}"
                 row     = json.loads(row.get_json())
             else:
@@ -915,8 +919,9 @@ def api_patch_Charge_Items(id):
                 db.session.merge(row)
                 db.session.flush()
                 db.session.commit()
+                db.session.flush()
                 db.session.refresh(row)
-                db.session.close()
+                db.session.flush()
                 message = f"Modified 'Charge_Items' CU_Id = {id}"
                 try:
                     row     = json.loads(row.get_json())
@@ -967,7 +972,7 @@ def api_delete_Charge_Items(id):
                 db.session.delete(row)
                 db.session.flush()
                 db.session.commit()
-                db.session.close()
+                db.session.flush()
                 message = f"Deleted 'Charge_Items' CU_Id = {id}"
                 row     = json.loads(row.get_json())
             else:
@@ -986,15 +991,15 @@ def api_delete_Charge_Items(id):
 # ======================================================================# =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-06-28 15:17:57
+# GLVH @ 2021-06-30 21:54:29
 # =============================================================================
 # gen_views.py:32 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/views/view_charge_resumes.py
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:17:59.527084
+#  GLVH @ 2021-06-30 21:54:32.472846
 # ======================================================================        
-# gen_views_form.html:AG 2021-06-28 15:17:59.527100
+# gen_views_form.html:AG 2021-06-30 21:54:32.472862
 @main.route('/forms/Charge_Resumes', methods=['GET', 'POST'])
 @login_required
 
@@ -1074,9 +1079,10 @@ def forms_Charge_Resumes():
             row.Pla_Name = form.Pla_Name.data
             try:
                session['new_row']=str(row)
-               db.session.close()
+               db.session.flush()
                db.session.add(row)
                db.session.commit()
+               db.session.flush()
                if session['is_new_row']==True:
                    logger.audit ( '%s:NEW:%s' % (current_user.username,session['new_row'] ) )
                    flash('New Charge Resume created OK')
@@ -1085,10 +1091,10 @@ def forms_Charge_Resumes():
                    logger.audit ( '%s:UPD:%s' % (current_user.username,session['new_row'] ) )    
                    message=Markup('<b>Charge Resume Cus_Id,CR_Date_From,CR_Date_To,CIT_Status,Cur_Code,CU_Id saved OK</b>')
                    flash(message)
-               db.session.close()
+               db.session.flush()
             except Exception as e:
                db.session.rollback()
-               db.session.close()
+               db.session.flush()
                message=Markup('ERROR saving Charge Resume record : %s'%(e))
                flash(message)
             return redirect(url_for('.select_Charge_Resumes_query'))
@@ -1098,7 +1104,7 @@ def forms_Charge_Resumes():
         elif   form.submit_New.data and current_user.role_id>1:
             #print('New Data Here ...')
             session['is_new_row']=True
-            db.session.close()
+            db.session.flush()
             row=charge_resume()
     
             return redirect(url_for('.forms_Charge_Resumes'))    
@@ -1172,9 +1178,9 @@ def forms_Charge_Resumes():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:17:59.536461
+#  GLVH @ 2021-06-30 21:54:32.488798
 # ======================================================================        
-# gen_views_delete.html:AG 2021-06-28 15:17:59.536477
+# gen_views_delete.html:AG 2021-06-30 21:54:32.488828
 @main.route('/forms/Charge_Resumes_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -1210,9 +1216,10 @@ def forms_Charge_Resumes_delete():
     #f.write(        "            print('Delete Data Here...')
             try:
                 session['deleted_row']=str(row)
-                db.session.close()
+                db.session.flush()
                 db.session.delete(row)
                 db.session.commit()
+                db.session.flush()
                 logger.audit ( '%s:DEL:%s' % (current_user.username,session['deleted_row']) )
                 flash('Charge Resume Cus_Id,CR_Date_From,CR_Date_To,CIT_Status,Cur_Code,CU_Id deleted OK')
             except exc.IntegrityError as e:
@@ -1244,10 +1251,10 @@ def forms_Charge_Resumes_delete():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:17:59.553657
+#  GLVH @ 2021-06-30 21:54:32.515422
 # ======================================================================
 
-# gen_views_select_query.html:AG 2021-06-28 15:17:59.553712        
+# gen_views_select_query.html:AG 2021-06-30 21:54:32.515436        
 @main.route('/select/Charge_Resumes_Query', methods=['GET','POST'])
 @login_required
 
@@ -1949,9 +1956,9 @@ def select_Charge_Resumes_query():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:17:59.615997
+#  GLVH @ 2021-06-30 21:54:32.584645
 # ======================================================================
-# gen_views_api.html:AG 2021-06-28 15:17:59.616014
+# gen_views_api.html:AG 2021-06-30 21:54:32.584663
 # table_name: Charge_Resumes
 # class_name: charge_resume
 # is shardened: None
@@ -1988,7 +1995,7 @@ def api_get_Charge_Resumes(id=None):
                 id_values=[id]
             # Codigo para un solo campo de id
             # chequear si marcado explicitamente
-            db.session.close()
+            db.session.flush()
             query = db.session.query(Charge_Resumes)
             if id is not None:
                 query = query.filter(Charge_Resumes.Cus_Id == id_values[id_counter])
@@ -2147,8 +2154,9 @@ def api_post_Charge_Resumes():
             db.session.add(row)
             db.session.flush()
             db.session.commit()
+            db.session.flush()
             db.session.refresh(row)
-            db.session.close()
+            db.session.flush()
             message = f"Created 'Charge_Resumes' Cus_Id = {row.Cus_Id}"
             row     = json.loads(row.get_json())
         except Exception as e:
@@ -2260,8 +2268,9 @@ def api_put_Charge_Resumes(id):
                 db.session.merge(row)
                 db.session.flush()
                 db.session.commit()
+                db.session.flush()
                 db.session.refresh(row)
-                db.session.close()
+                db.session.flush()
                 message = f"Modified 'Charge_Resumes' Cus_Id = {id}"
                 row     = json.loads(row.get_json())
             else:
@@ -2378,8 +2387,9 @@ def api_patch_Charge_Resumes(id):
                 db.session.merge(row)
                 db.session.flush()
                 db.session.commit()
+                db.session.flush()
                 db.session.refresh(row)
-                db.session.close()
+                db.session.flush()
                 message = f"Modified 'Charge_Resumes' Cus_Id = {id}"
                 try:
                     row     = json.loads(row.get_json())
@@ -2442,7 +2452,7 @@ def api_delete_Charge_Resumes(id):
                 db.session.delete(row)
                 db.session.flush()
                 db.session.commit()
-                db.session.close()
+                db.session.flush()
                 message = f"Deleted 'Charge_Resumes' Cus_Id = {id}"
                 row     = json.loads(row.get_json())
             else:
@@ -2461,15 +2471,15 @@ def api_delete_Charge_Resumes(id):
 # ======================================================================# =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-06-28 15:17:57
+# GLVH @ 2021-06-30 21:54:29
 # =============================================================================
 # gen_views.py:32 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/views/view_charge_unit_egm.py
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:17:59.828534
+#  GLVH @ 2021-06-30 21:54:32.722234
 # ======================================================================        
-# gen_views_form.html:AG 2021-06-28 15:17:59.828555
+# gen_views_form.html:AG 2021-06-30 21:54:32.722249
 @main.route('/forms/Charge_Unit_EGM', methods=['GET', 'POST'])
 @login_required
 
@@ -2528,9 +2538,10 @@ def forms_Charge_Unit_EGM():
             row.Passphrase = form.Passphrase.data
             try:
                session['new_row']=str(row)
-               db.session.close()
+               db.session.flush()
                db.session.add(row)
                db.session.commit()
+               db.session.flush()
                if session['is_new_row']==True:
                    logger.audit ( '%s:NEW:%s' % (current_user.username,session['new_row'] ) )
                    flash('New Charge Unit EGM created OK')
@@ -2539,10 +2550,10 @@ def forms_Charge_Unit_EGM():
                    logger.audit ( '%s:UPD:%s' % (current_user.username,session['new_row'] ) )    
                    message=Markup('<b>Charge Unit EGM CU_Id saved OK</b>')
                    flash(message)
-               db.session.close()
+               db.session.flush()
             except Exception as e:
                db.session.rollback()
-               db.session.close()
+               db.session.flush()
                message=Markup('ERROR saving Charge Unit EGM record : %s'%(e))
                flash(message)
             return redirect(url_for('.select_Charge_Unit_EGM_query'))
@@ -2552,7 +2563,7 @@ def forms_Charge_Unit_EGM():
         elif   form.submit_New.data and current_user.role_id>1:
             #print('New Data Here ...')
             session['is_new_row']=True
-            db.session.close()
+            db.session.flush()
             row=charge_unit_egm()
     
             return redirect(url_for('.forms_Charge_Unit_EGM'))    
@@ -2599,9 +2610,9 @@ def forms_Charge_Unit_EGM():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:17:59.840823
+#  GLVH @ 2021-06-30 21:54:32.730896
 # ======================================================================        
-# gen_views_delete.html:AG 2021-06-28 15:17:59.840845
+# gen_views_delete.html:AG 2021-06-30 21:54:32.730911
 @main.route('/forms/Charge_Unit_EGM_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -2634,9 +2645,10 @@ def forms_Charge_Unit_EGM_delete():
     #f.write(        "            print('Delete Data Here...')
             try:
                 session['deleted_row']=str(row)
-                db.session.close()
+                db.session.flush()
                 db.session.delete(row)
                 db.session.commit()
+                db.session.flush()
                 logger.audit ( '%s:DEL:%s' % (current_user.username,session['deleted_row']) )
                 flash('Charge Unit EGM CU_Id deleted OK')
             except exc.IntegrityError as e:
@@ -2668,10 +2680,10 @@ def forms_Charge_Unit_EGM_delete():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:17:59.860922
+#  GLVH @ 2021-06-30 21:54:32.759073
 # ======================================================================
 
-# gen_views_select_query.html:AG 2021-06-28 15:17:59.860937        
+# gen_views_select_query.html:AG 2021-06-30 21:54:32.759087        
 @main.route('/select/Charge_Unit_EGM_Query', methods=['GET','POST'])
 @login_required
 
@@ -2978,9 +2990,9 @@ def select_Charge_Unit_EGM_query():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:17:59.895646
+#  GLVH @ 2021-06-30 21:54:32.789231
 # ======================================================================
-# gen_views_api.html:AG 2021-06-28 15:17:59.895663
+# gen_views_api.html:AG 2021-06-30 21:54:32.789246
 # table_name: Charge_Unit_EGM
 # class_name: charge_unit_egm
 # is shardened: None
@@ -3007,7 +3019,7 @@ def api_get_Charge_Unit_EGM(id=None):
                 id_values=[id]
             # Codigo para un solo campo de id
             # chequear si marcado explicitamente
-            db.session.close()
+            db.session.flush()
             query = db.session.query(Charge_Unit_EGM)
             if id is not None:
                 query = query.filter(Charge_Unit_EGM.CU_Id == id_values[id_counter])
@@ -3085,8 +3097,9 @@ def api_post_Charge_Unit_EGM():
             db.session.add(row)
             db.session.flush()
             db.session.commit()
+            db.session.flush()
             db.session.refresh(row)
-            db.session.close()
+            db.session.flush()
             message = f"Created 'Charge_Unit_EGM' CU_Id = {row.CU_Id}"
             row     = json.loads(row.get_json())
         except Exception as e:
@@ -3144,8 +3157,9 @@ def api_put_Charge_Unit_EGM(id):
                 db.session.merge(row)
                 db.session.flush()
                 db.session.commit()
+                db.session.flush()
                 db.session.refresh(row)
-                db.session.close()
+                db.session.flush()
                 message = f"Modified 'Charge_Unit_EGM' CU_Id = {id}"
                 row     = json.loads(row.get_json())
             else:
@@ -3208,8 +3222,9 @@ def api_patch_Charge_Unit_EGM(id):
                 db.session.merge(row)
                 db.session.flush()
                 db.session.commit()
+                db.session.flush()
                 db.session.refresh(row)
-                db.session.close()
+                db.session.flush()
                 message = f"Modified 'Charge_Unit_EGM' CU_Id = {id}"
                 try:
                     row     = json.loads(row.get_json())
@@ -3257,7 +3272,7 @@ def api_delete_Charge_Unit_EGM(id):
                 db.session.delete(row)
                 db.session.flush()
                 db.session.commit()
-                db.session.close()
+                db.session.flush()
                 message = f"Deleted 'Charge_Unit_EGM' CU_Id = {id}"
                 row     = json.loads(row.get_json())
             else:
@@ -3276,15 +3291,15 @@ def api_delete_Charge_Unit_EGM(id):
 # ======================================================================# =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-06-28 15:17:57
+# GLVH @ 2021-06-30 21:54:29
 # =============================================================================
 # gen_views.py:32 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/views/view_charge_units.py
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:00.123410
+#  GLVH @ 2021-06-30 21:54:32.913192
 # ======================================================================        
-# gen_views_form.html:AG 2021-06-28 15:18:00.123425
+# gen_views_form.html:AG 2021-06-30 21:54:32.913207
 @main.route('/forms/Charge_Units', methods=['GET', 'POST'])
 @login_required
 
@@ -3350,9 +3365,10 @@ def forms_Charge_Units():
             row.CU_Reference_3 = form.CU_Reference_3.data
             try:
                session['new_row']=str(row)
-               db.session.close()
+               db.session.flush()
                db.session.add(row)
                db.session.commit()
+               db.session.flush()
                if session['is_new_row']==True:
                    logger.audit ( '%s:NEW:%s' % (current_user.username,session['new_row'] ) )
                    flash('New Charge Unit created OK')
@@ -3361,10 +3377,10 @@ def forms_Charge_Units():
                    logger.audit ( '%s:UPD:%s' % (current_user.username,session['new_row'] ) )    
                    message=Markup('<b>Charge Unit CU_Id saved OK</b>')
                    flash(message)
-               db.session.close()
+               db.session.flush()
             except Exception as e:
                db.session.rollback()
-               db.session.close()
+               db.session.flush()
                message=Markup('ERROR saving Charge Unit record : %s'%(e))
                flash(message)
             return redirect(url_for('.select_Charge_Units_query'))
@@ -3374,7 +3390,7 @@ def forms_Charge_Units():
         elif   form.submit_New.data and current_user.role_id>1:
             #print('New Data Here ...')
             session['is_new_row']=True
-            db.session.close()
+            db.session.flush()
             row=charge_unit()
     
             return redirect(url_for('.forms_Charge_Units',CU_Id=row.CU_Id))
@@ -3438,9 +3454,9 @@ def forms_Charge_Units():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:00.133098
+#  GLVH @ 2021-06-30 21:54:32.922548
 # ======================================================================        
-# gen_views_delete.html:AG 2021-06-28 15:18:00.133113
+# gen_views_delete.html:AG 2021-06-30 21:54:32.922564
 @main.route('/forms/Charge_Units_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -3473,9 +3489,10 @@ def forms_Charge_Units_delete():
     #f.write(        "            print('Delete Data Here...')
             try:
                 session['deleted_row']=str(row)
-                db.session.close()
+                db.session.flush()
                 db.session.delete(row)
                 db.session.commit()
+                db.session.flush()
                 logger.audit ( '%s:DEL:%s' % (current_user.username,session['deleted_row']) )
                 flash('Charge Unit CU_Id deleted OK')
             except exc.IntegrityError as e:
@@ -3507,10 +3524,10 @@ def forms_Charge_Units_delete():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:00.155510
+#  GLVH @ 2021-06-30 21:54:32.939449
 # ======================================================================
 
-# gen_views_select_query.html:AG 2021-06-28 15:18:00.155562        
+# gen_views_select_query.html:AG 2021-06-30 21:54:32.939466        
 @main.route('/select/Charge_Units_Query', methods=['GET','POST'])
 @login_required
 @admin_required
@@ -3889,9 +3906,9 @@ def select_Charge_Units_query():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:00.193249
+#  GLVH @ 2021-06-30 21:54:32.970084
 # ======================================================================
-# gen_views_api.html:AG 2021-06-28 15:18:00.193275
+# gen_views_api.html:AG 2021-06-30 21:54:32.970100
 # table_name: Charge_Units
 # class_name: charge_unit
 # is shardened: False
@@ -3918,7 +3935,7 @@ def api_get_Charge_Units(id=None):
                 id_values=[id]
             # Codigo para un solo campo de id
             # chequear si marcado explicitamente
-            db.session.close()
+            db.session.flush()
             query = db.session.query(Charge_Units)
             if id is not None:
                 query = query.filter(Charge_Units.CU_Id == id_values[id_counter])
@@ -4008,8 +4025,9 @@ def api_post_Charge_Units():
             db.session.add(row)
             db.session.flush()
             db.session.commit()
+            db.session.flush()
             db.session.refresh(row)
-            db.session.close()
+            db.session.flush()
             message = f"Created 'Charge_Units' CU_Id = {row.CU_Id}"
             row     = json.loads(row.get_json())
         except Exception as e:
@@ -4075,8 +4093,9 @@ def api_put_Charge_Units(id):
                 db.session.merge(row)
                 db.session.flush()
                 db.session.commit()
+                db.session.flush()
                 db.session.refresh(row)
-                db.session.close()
+                db.session.flush()
                 message = f"Modified 'Charge_Units' CU_Id = {id}"
                 row     = json.loads(row.get_json())
             else:
@@ -4147,8 +4166,9 @@ def api_patch_Charge_Units(id):
                 db.session.merge(row)
                 db.session.flush()
                 db.session.commit()
+                db.session.flush()
                 db.session.refresh(row)
-                db.session.close()
+                db.session.flush()
                 message = f"Modified 'Charge_Units' CU_Id = {id}"
                 try:
                     row     = json.loads(row.get_json())
@@ -4194,7 +4214,7 @@ def api_delete_Charge_Units(id):
                 db.session.delete(row)
                 db.session.flush()
                 db.session.commit()
-                db.session.close()
+                db.session.flush()
                 message = f"Deleted 'Charge_Units' CU_Id = {id}"
                 row     = json.loads(row.get_json())
             else:
@@ -4213,15 +4233,15 @@ def api_delete_Charge_Units(id):
 # ======================================================================# =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-06-28 15:17:57
+# GLVH @ 2021-06-30 21:54:29
 # =============================================================================
 # gen_views.py:32 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/views/view_cit_generations.py
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:17:58.181915
+#  GLVH @ 2021-06-30 21:54:31.040108
 # ======================================================================        
-# gen_views_form.html:AG 2021-06-28 15:17:58.181935
+# gen_views_form.html:AG 2021-06-30 21:54:31.040128
 @main.route('/forms/CIT_Generations', methods=['GET', 'POST'])
 @login_required
 
@@ -4261,9 +4281,10 @@ def forms_CIT_Generations():
             row.Value = form.Value.data
             try:
                session['new_row']=str(row)
-               db.session.close()
+               db.session.flush()
                db.session.add(row)
                db.session.commit()
+               db.session.flush()
                if session['is_new_row']==True:
                    logger.audit ( '%s:NEW:%s' % (current_user.username,session['new_row'] ) )
                    flash('New Configuration Item Generation Type created OK')
@@ -4272,10 +4293,10 @@ def forms_CIT_Generations():
                    logger.audit ( '%s:UPD:%s' % (current_user.username,session['new_row'] ) )    
                    message=Markup('<b>Configuration Item Generation Type CIT_Generation saved OK</b>')
                    flash(message)
-               db.session.close()
+               db.session.flush()
             except Exception as e:
                db.session.rollback()
-               db.session.close()
+               db.session.flush()
                message=Markup('ERROR saving Configuration Item Generation Type record : %s'%(e))
                flash(message)
             return redirect(url_for('.select_CIT_Generations_query'))
@@ -4285,7 +4306,7 @@ def forms_CIT_Generations():
         elif   form.submit_New.data and current_user.role_id>1:
             #print('New Data Here ...')
             session['is_new_row']=True
-            db.session.close()
+            db.session.flush()
             row=cit_generation()
     
             return redirect(url_for('.forms_CIT_Generations'))    
@@ -4333,9 +4354,9 @@ def forms_CIT_Generations():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:17:58.190961
+#  GLVH @ 2021-06-30 21:54:31.049195
 # ======================================================================        
-# gen_views_delete.html:AG 2021-06-28 15:17:58.190979
+# gen_views_delete.html:AG 2021-06-30 21:54:31.049211
 @main.route('/forms/CIT_Generations_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -4366,9 +4387,10 @@ def forms_CIT_Generations_delete():
     #f.write(        "            print('Delete Data Here...')
             try:
                 session['deleted_row']=str(row)
-                db.session.close()
+                db.session.flush()
                 db.session.delete(row)
                 db.session.commit()
+                db.session.flush()
                 logger.audit ( '%s:DEL:%s' % (current_user.username,session['deleted_row']) )
                 flash('Configuration Item Generation Type CIT_Generation deleted OK')
             except exc.IntegrityError as e:
@@ -4400,10 +4422,10 @@ def forms_CIT_Generations_delete():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:17:58.215360
+#  GLVH @ 2021-06-30 21:54:31.066570
 # ======================================================================
 
-# gen_views_select_query.html:AG 2021-06-28 15:17:58.215376        
+# gen_views_select_query.html:AG 2021-06-30 21:54:31.066866        
 @main.route('/select/CIT_Generations_Query', methods=['GET','POST'])
 @login_required
 @admin_required
@@ -4580,9 +4602,9 @@ def select_CIT_Generations_query():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:17:58.255952
+#  GLVH @ 2021-06-30 21:54:31.097231
 # ======================================================================
-# gen_views_api.html:AG 2021-06-28 15:17:58.255971
+# gen_views_api.html:AG 2021-06-30 21:54:31.097247
 # table_name: CIT_Generations
 # class_name: cit_generation
 # is shardened: None
@@ -4609,7 +4631,7 @@ def api_get_CIT_Generations(id=None):
                 id_values=[id]
             # Codigo para un solo campo de id
             # chequear si marcado explicitamente
-            db.session.close()
+            db.session.flush()
             query = db.session.query(CIT_Generations)
             if id is not None:
                 query = query.filter(CIT_Generations.CIT_Generation == id_values[id_counter])
@@ -4663,8 +4685,9 @@ def api_post_CIT_Generations():
             db.session.add(row)
             db.session.flush()
             db.session.commit()
+            db.session.flush()
             db.session.refresh(row)
-            db.session.close()
+            db.session.flush()
             message = f"Created 'CIT_Generations' CIT_Generation = {row.CIT_Generation}"
             row     = json.loads(row.get_json())
         except Exception as e:
@@ -4706,8 +4729,9 @@ def api_put_CIT_Generations(id):
                 db.session.merge(row)
                 db.session.flush()
                 db.session.commit()
+                db.session.flush()
                 db.session.refresh(row)
-                db.session.close()
+                db.session.flush()
                 message = f"Modified 'CIT_Generations' CIT_Generation = {id}"
                 row     = json.loads(row.get_json())
             else:
@@ -4754,8 +4778,9 @@ def api_patch_CIT_Generations(id):
                 db.session.merge(row)
                 db.session.flush()
                 db.session.commit()
+                db.session.flush()
                 db.session.refresh(row)
-                db.session.close()
+                db.session.flush()
                 message = f"Modified 'CIT_Generations' CIT_Generation = {id}"
                 try:
                     row     = json.loads(row.get_json())
@@ -4803,7 +4828,7 @@ def api_delete_CIT_Generations(id):
                 db.session.delete(row)
                 db.session.flush()
                 db.session.commit()
-                db.session.close()
+                db.session.flush()
                 message = f"Deleted 'CIT_Generations' CIT_Generation = {id}"
                 row     = json.loads(row.get_json())
             else:
@@ -4822,15 +4847,15 @@ def api_delete_CIT_Generations(id):
 # ======================================================================# =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-06-28 15:17:57
+# GLVH @ 2021-06-30 21:54:29
 # =============================================================================
 # gen_views.py:32 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/views/view_cit_statuses.py
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:17:58.364085
+#  GLVH @ 2021-06-30 21:54:31.195832
 # ======================================================================        
-# gen_views_form.html:AG 2021-06-28 15:17:58.364109
+# gen_views_form.html:AG 2021-06-30 21:54:31.195853
 @main.route('/forms/CIT_Statuses', methods=['GET', 'POST'])
 @login_required
 
@@ -4870,9 +4895,10 @@ def forms_CIT_Statuses():
             row.Value = form.Value.data
             try:
                session['new_row']=str(row)
-               db.session.close()
+               db.session.flush()
                db.session.add(row)
                db.session.commit()
+               db.session.flush()
                if session['is_new_row']==True:
                    logger.audit ( '%s:NEW:%s' % (current_user.username,session['new_row'] ) )
                    flash('New Configuration Item Status Type created OK')
@@ -4881,10 +4907,10 @@ def forms_CIT_Statuses():
                    logger.audit ( '%s:UPD:%s' % (current_user.username,session['new_row'] ) )    
                    message=Markup('<b>Configuration Item Status Type CIT_Status saved OK</b>')
                    flash(message)
-               db.session.close()
+               db.session.flush()
             except Exception as e:
                db.session.rollback()
-               db.session.close()
+               db.session.flush()
                message=Markup('ERROR saving Configuration Item Status Type record : %s'%(e))
                flash(message)
             return redirect(url_for('.select_CIT_Statuses_query'))
@@ -4894,7 +4920,7 @@ def forms_CIT_Statuses():
         elif   form.submit_New.data and current_user.role_id>1:
             #print('New Data Here ...')
             session['is_new_row']=True
-            db.session.close()
+            db.session.flush()
             row=cit_status()
     
             return redirect(url_for('.forms_CIT_Statuses'))    
@@ -4942,9 +4968,9 @@ def forms_CIT_Statuses():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:17:58.377597
+#  GLVH @ 2021-06-30 21:54:31.210589
 # ======================================================================        
-# gen_views_delete.html:AG 2021-06-28 15:17:58.377613
+# gen_views_delete.html:AG 2021-06-30 21:54:31.210620
 @main.route('/forms/CIT_Statuses_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -4975,9 +5001,10 @@ def forms_CIT_Statuses_delete():
     #f.write(        "            print('Delete Data Here...')
             try:
                 session['deleted_row']=str(row)
-                db.session.close()
+                db.session.flush()
                 db.session.delete(row)
                 db.session.commit()
+                db.session.flush()
                 logger.audit ( '%s:DEL:%s' % (current_user.username,session['deleted_row']) )
                 flash('Configuration Item Status Type CIT_Status deleted OK')
             except exc.IntegrityError as e:
@@ -5009,10 +5036,10 @@ def forms_CIT_Statuses_delete():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:17:58.406557
+#  GLVH @ 2021-06-30 21:54:31.234776
 # ======================================================================
 
-# gen_views_select_query.html:AG 2021-06-28 15:17:58.406573        
+# gen_views_select_query.html:AG 2021-06-30 21:54:31.234792        
 @main.route('/select/CIT_Statuses_Query', methods=['GET','POST'])
 @login_required
 @admin_required
@@ -5189,9 +5216,9 @@ def select_CIT_Statuses_query():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:17:58.441155
+#  GLVH @ 2021-06-30 21:54:31.264271
 # ======================================================================
-# gen_views_api.html:AG 2021-06-28 15:17:58.441177
+# gen_views_api.html:AG 2021-06-30 21:54:31.264286
 # table_name: CIT_Statuses
 # class_name: cit_status
 # is shardened: None
@@ -5218,7 +5245,7 @@ def api_get_CIT_Statuses(id=None):
                 id_values=[id]
             # Codigo para un solo campo de id
             # chequear si marcado explicitamente
-            db.session.close()
+            db.session.flush()
             query = db.session.query(CIT_Statuses)
             if id is not None:
                 query = query.filter(CIT_Statuses.CIT_Status == id_values[id_counter])
@@ -5272,8 +5299,9 @@ def api_post_CIT_Statuses():
             db.session.add(row)
             db.session.flush()
             db.session.commit()
+            db.session.flush()
             db.session.refresh(row)
-            db.session.close()
+            db.session.flush()
             message = f"Created 'CIT_Statuses' CIT_Status = {row.CIT_Status}"
             row     = json.loads(row.get_json())
         except Exception as e:
@@ -5315,8 +5343,9 @@ def api_put_CIT_Statuses(id):
                 db.session.merge(row)
                 db.session.flush()
                 db.session.commit()
+                db.session.flush()
                 db.session.refresh(row)
-                db.session.close()
+                db.session.flush()
                 message = f"Modified 'CIT_Statuses' CIT_Status = {id}"
                 row     = json.loads(row.get_json())
             else:
@@ -5363,8 +5392,9 @@ def api_patch_CIT_Statuses(id):
                 db.session.merge(row)
                 db.session.flush()
                 db.session.commit()
+                db.session.flush()
                 db.session.refresh(row)
-                db.session.close()
+                db.session.flush()
                 message = f"Modified 'CIT_Statuses' CIT_Status = {id}"
                 try:
                     row     = json.loads(row.get_json())
@@ -5412,7 +5442,7 @@ def api_delete_CIT_Statuses(id):
                 db.session.delete(row)
                 db.session.flush()
                 db.session.commit()
-                db.session.close()
+                db.session.flush()
                 message = f"Deleted 'CIT_Statuses' CIT_Status = {id}"
                 row     = json.loads(row.get_json())
             else:
@@ -5431,15 +5461,15 @@ def api_delete_CIT_Statuses(id):
 # ======================================================================# =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-06-28 15:17:57
+# GLVH @ 2021-06-30 21:54:29
 # =============================================================================
 # gen_views.py:32 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/views/view_configuration_items.py
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:00.356774
+#  GLVH @ 2021-06-30 21:54:33.084575
 # ======================================================================        
-# gen_views_form.html:AG 2021-06-28 15:18:00.356790
+# gen_views_form.html:AG 2021-06-30 21:54:33.084590
 @main.route('/forms/Configuration_Items', methods=['GET', 'POST'])
 @login_required
 
@@ -5491,9 +5521,10 @@ def forms_Configuration_Items():
             row.CI_Decommissioning_DateTime = form.CI_Decommissioning_DateTime.data
             try:
                session['new_row']=str(row)
-               db.session.close()
+               db.session.flush()
                db.session.add(row)
                db.session.commit()
+               db.session.flush()
                if session['is_new_row']==True:
                    logger.audit ( '%s:NEW:%s' % (current_user.username,session['new_row'] ) )
                    flash('New Configuration Item created OK')
@@ -5502,10 +5533,10 @@ def forms_Configuration_Items():
                    logger.audit ( '%s:UPD:%s' % (current_user.username,session['new_row'] ) )    
                    message=Markup('<b>Configuration Item CI_Id saved OK</b>')
                    flash(message)
-               db.session.close()
+               db.session.flush()
             except Exception as e:
                db.session.rollback()
-               db.session.close()
+               db.session.flush()
                message=Markup('ERROR saving Configuration Item record : %s'%(e))
                flash(message)
             return redirect(url_for('.select_Configuration_Items_query'))
@@ -5515,7 +5546,7 @@ def forms_Configuration_Items():
         elif   form.submit_New.data and current_user.role_id>1:
             #print('New Data Here ...')
             session['is_new_row']=True
-            db.session.close()
+            db.session.flush()
             row=configuration_item()
     
             return redirect(url_for('.forms_Configuration_Items',CI_Id=row.CI_Id))
@@ -5573,9 +5604,9 @@ def forms_Configuration_Items():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:00.367772
+#  GLVH @ 2021-06-30 21:54:33.093821
 # ======================================================================        
-# gen_views_delete.html:AG 2021-06-28 15:18:00.367791
+# gen_views_delete.html:AG 2021-06-30 21:54:33.093871
 @main.route('/forms/Configuration_Items_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -5608,9 +5639,10 @@ def forms_Configuration_Items_delete():
     #f.write(        "            print('Delete Data Here...')
             try:
                 session['deleted_row']=str(row)
-                db.session.close()
+                db.session.flush()
                 db.session.delete(row)
                 db.session.commit()
+                db.session.flush()
                 logger.audit ( '%s:DEL:%s' % (current_user.username,session['deleted_row']) )
                 flash('Configuration Item CI_Id deleted OK')
             except exc.IntegrityError as e:
@@ -5642,10 +5674,10 @@ def forms_Configuration_Items_delete():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:00.439994
+#  GLVH @ 2021-06-30 21:54:33.111396
 # ======================================================================
 
-# gen_views_select_query.html:AG 2021-06-28 15:18:00.440049        
+# gen_views_select_query.html:AG 2021-06-30 21:54:33.111467        
 @main.route('/select/Configuration_Items_Query', methods=['GET','POST'])
 @login_required
 @admin_required
@@ -5930,9 +5962,9 @@ def select_Configuration_Items_query():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:00.478472
+#  GLVH @ 2021-06-30 21:54:33.142829
 # ======================================================================
-# gen_views_api.html:AG 2021-06-28 15:18:00.478499
+# gen_views_api.html:AG 2021-06-30 21:54:33.142852
 # table_name: Configuration_Items
 # class_name: configuration_item
 # is shardened: None
@@ -5959,7 +5991,7 @@ def api_get_Configuration_Items(id=None):
                 id_values=[id]
             # Codigo para un solo campo de id
             # chequear si marcado explicitamente
-            db.session.close()
+            db.session.flush()
             query = db.session.query(Configuration_Items)
             if id is not None:
                 query = query.filter(Configuration_Items.CI_Id == id_values[id_counter])
@@ -6031,8 +6063,9 @@ def api_post_Configuration_Items():
             db.session.add(row)
             db.session.flush()
             db.session.commit()
+            db.session.flush()
             db.session.refresh(row)
-            db.session.close()
+            db.session.flush()
             message = f"Created 'Configuration_Items' CI_Id = {row.CI_Id}"
             row     = json.loads(row.get_json())
         except Exception as e:
@@ -6086,8 +6119,9 @@ def api_put_Configuration_Items(id):
                 db.session.merge(row)
                 db.session.flush()
                 db.session.commit()
+                db.session.flush()
                 db.session.refresh(row)
-                db.session.close()
+                db.session.flush()
                 message = f"Modified 'Configuration_Items' CI_Id = {id}"
                 row     = json.loads(row.get_json())
             else:
@@ -6146,8 +6180,9 @@ def api_patch_Configuration_Items(id):
                 db.session.merge(row)
                 db.session.flush()
                 db.session.commit()
+                db.session.flush()
                 db.session.refresh(row)
-                db.session.close()
+                db.session.flush()
                 message = f"Modified 'Configuration_Items' CI_Id = {id}"
                 try:
                     row     = json.loads(row.get_json())
@@ -6193,7 +6228,7 @@ def api_delete_Configuration_Items(id):
                 db.session.delete(row)
                 db.session.flush()
                 db.session.commit()
-                db.session.close()
+                db.session.flush()
                 message = f"Deleted 'Configuration_Items' CI_Id = {id}"
                 row     = json.loads(row.get_json())
             else:
@@ -6212,15 +6247,15 @@ def api_delete_Configuration_Items(id):
 # ======================================================================# =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-06-28 15:17:57
+# GLVH @ 2021-06-30 21:54:29
 # =============================================================================
 # gen_views.py:32 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/views/view_cost_centers.py
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:00.619311
+#  GLVH @ 2021-06-30 21:54:33.249396
 # ======================================================================        
-# gen_views_form.html:AG 2021-06-28 15:18:00.619350
+# gen_views_form.html:AG 2021-06-30 21:54:33.249410
 @main.route('/forms/Cost_Centers', methods=['GET', 'POST'])
 @login_required
 
@@ -6269,9 +6304,10 @@ def forms_Cost_Centers():
             row.CC_Reference = form.CC_Reference.data
             try:
                session['new_row']=str(row)
-               db.session.close()
+               db.session.flush()
                db.session.add(row)
                db.session.commit()
+               db.session.flush()
                if session['is_new_row']==True:
                    logger.audit ( '%s:NEW:%s' % (current_user.username,session['new_row'] ) )
                    flash('New Cost Center created OK')
@@ -6280,10 +6316,10 @@ def forms_Cost_Centers():
                    logger.audit ( '%s:UPD:%s' % (current_user.username,session['new_row'] ) )    
                    message=Markup('<b>Cost Center CC_Id saved OK</b>')
                    flash(message)
-               db.session.close()
+               db.session.flush()
             except Exception as e:
                db.session.rollback()
-               db.session.close()
+               db.session.flush()
                message=Markup('ERROR saving Cost Center record : %s'%(e))
                flash(message)
             return redirect(url_for('.select_Cost_Centers_query'))
@@ -6293,7 +6329,7 @@ def forms_Cost_Centers():
         elif   form.submit_New.data and current_user.role_id>1:
             #print('New Data Here ...')
             session['is_new_row']=True
-            db.session.close()
+            db.session.flush()
             row=cost_center()
     
             return redirect(url_for('.forms_Cost_Centers',CC_Id=row.CC_Id))
@@ -6360,9 +6396,9 @@ def forms_Cost_Centers():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:00.629903
+#  GLVH @ 2021-06-30 21:54:33.258744
 # ======================================================================        
-# gen_views_delete.html:AG 2021-06-28 15:18:00.629920
+# gen_views_delete.html:AG 2021-06-30 21:54:33.258760
 @main.route('/forms/Cost_Centers_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -6395,9 +6431,10 @@ def forms_Cost_Centers_delete():
     #f.write(        "            print('Delete Data Here...')
             try:
                 session['deleted_row']=str(row)
-                db.session.close()
+                db.session.flush()
                 db.session.delete(row)
                 db.session.commit()
+                db.session.flush()
                 logger.audit ( '%s:DEL:%s' % (current_user.username,session['deleted_row']) )
                 flash('Cost Center CC_Id deleted OK')
             except exc.IntegrityError as e:
@@ -6429,10 +6466,10 @@ def forms_Cost_Centers_delete():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:00.660996
+#  GLVH @ 2021-06-30 21:54:33.276674
 # ======================================================================
 
-# gen_views_select_query.html:AG 2021-06-28 15:18:00.661012        
+# gen_views_select_query.html:AG 2021-06-30 21:54:33.276688        
 @main.route('/select/Cost_Centers_Query', methods=['GET','POST'])
 @login_required
 @admin_required
@@ -6683,9 +6720,9 @@ def select_Cost_Centers_query():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:00.708269
+#  GLVH @ 2021-06-30 21:54:33.307415
 # ======================================================================
-# gen_views_api.html:AG 2021-06-28 15:18:00.708285
+# gen_views_api.html:AG 2021-06-30 21:54:33.307431
 # table_name: Cost_Centers
 # class_name: cost_center
 # is shardened: None
@@ -6712,7 +6749,7 @@ def api_get_Cost_Centers(id=None):
                 id_values=[id]
             # Codigo para un solo campo de id
             # chequear si marcado explicitamente
-            db.session.close()
+            db.session.flush()
             query = db.session.query(Cost_Centers)
             if id is not None:
                 query = query.filter(Cost_Centers.CC_Id == id_values[id_counter])
@@ -6781,8 +6818,9 @@ def api_post_Cost_Centers():
             db.session.add(row)
             db.session.flush()
             db.session.commit()
+            db.session.flush()
             db.session.refresh(row)
-            db.session.close()
+            db.session.flush()
             message = f"Created 'Cost_Centers' CC_Id = {row.CC_Id}"
             row     = json.loads(row.get_json())
         except Exception as e:
@@ -6834,8 +6872,9 @@ def api_put_Cost_Centers(id):
                 db.session.merge(row)
                 db.session.flush()
                 db.session.commit()
+                db.session.flush()
                 db.session.refresh(row)
-                db.session.close()
+                db.session.flush()
                 message = f"Modified 'Cost_Centers' CC_Id = {id}"
                 row     = json.loads(row.get_json())
             else:
@@ -6892,8 +6931,9 @@ def api_patch_Cost_Centers(id):
                 db.session.merge(row)
                 db.session.flush()
                 db.session.commit()
+                db.session.flush()
                 db.session.refresh(row)
-                db.session.close()
+                db.session.flush()
                 message = f"Modified 'Cost_Centers' CC_Id = {id}"
                 try:
                     row     = json.loads(row.get_json())
@@ -6939,7 +6979,7 @@ def api_delete_Cost_Centers(id):
                 db.session.delete(row)
                 db.session.flush()
                 db.session.commit()
-                db.session.close()
+                db.session.flush()
                 message = f"Deleted 'Cost_Centers' CC_Id = {id}"
                 row     = json.loads(row.get_json())
             else:
@@ -6958,15 +6998,15 @@ def api_delete_Cost_Centers(id):
 # ======================================================================# =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-06-28 15:17:57
+# GLVH @ 2021-06-30 21:54:29
 # =============================================================================
 # gen_views.py:32 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/views/view_countries_currencies.py
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:01.079758
+#  GLVH @ 2021-06-30 21:54:33.596211
 # ======================================================================        
-# gen_views_form.html:AG 2021-06-28 15:18:01.079773
+# gen_views_form.html:AG 2021-06-30 21:54:33.596226
 @main.route('/forms/Countries_Currencies', methods=['GET', 'POST'])
 @login_required
 
@@ -7013,9 +7053,10 @@ def forms_Countries_Currencies():
             row.Cou_Cur_Comment = form.Cou_Cur_Comment.data
             try:
                session['new_row']=str(row)
-               db.session.close()
+               db.session.flush()
                db.session.add(row)
                db.session.commit()
+               db.session.flush()
                if session['is_new_row']==True:
                    logger.audit ( '%s:NEW:%s' % (current_user.username,session['new_row'] ) )
                    flash('New Country vs Currency created OK')
@@ -7024,10 +7065,10 @@ def forms_Countries_Currencies():
                    logger.audit ( '%s:UPD:%s' % (current_user.username,session['new_row'] ) )    
                    message=Markup('<b>Country vs Currency Cou_Code,Cur_Code saved OK</b>')
                    flash(message)
-               db.session.close()
+               db.session.flush()
             except Exception as e:
                db.session.rollback()
-               db.session.close()
+               db.session.flush()
                message=Markup('ERROR saving Country vs Currency record : %s'%(e))
                flash(message)
             return redirect(url_for('.select_Countries_Currencies_query'))
@@ -7037,7 +7078,7 @@ def forms_Countries_Currencies():
         elif   form.submit_New.data and current_user.role_id>1:
             #print('New Data Here ...')
             session['is_new_row']=True
-            db.session.close()
+            db.session.flush()
             row=country_currency()
     
             return redirect(url_for('.forms_Countries_Currencies'))    
@@ -7077,9 +7118,9 @@ def forms_Countries_Currencies():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:01.091481
+#  GLVH @ 2021-06-30 21:54:33.604733
 # ======================================================================        
-# gen_views_delete.html:AG 2021-06-28 15:18:01.091498
+# gen_views_delete.html:AG 2021-06-30 21:54:33.604748
 @main.route('/forms/Countries_Currencies_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -7113,9 +7154,10 @@ def forms_Countries_Currencies_delete():
     #f.write(        "            print('Delete Data Here...')
             try:
                 session['deleted_row']=str(row)
-                db.session.close()
+                db.session.flush()
                 db.session.delete(row)
                 db.session.commit()
+                db.session.flush()
                 logger.audit ( '%s:DEL:%s' % (current_user.username,session['deleted_row']) )
                 flash('Country vs Currency Cou_Code,Cur_Code deleted OK')
             except exc.IntegrityError as e:
@@ -7147,10 +7189,10 @@ def forms_Countries_Currencies_delete():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:01.120940
+#  GLVH @ 2021-06-30 21:54:33.621829
 # ======================================================================
 
-# gen_views_select_query.html:AG 2021-06-28 15:18:01.120960        
+# gen_views_select_query.html:AG 2021-06-30 21:54:33.621844        
 @main.route('/select/Countries_Currencies_Query', methods=['GET','POST'])
 @login_required
 @admin_required
@@ -7356,9 +7398,9 @@ def select_Countries_Currencies_query():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:01.161118
+#  GLVH @ 2021-06-30 21:54:33.650936
 # ======================================================================
-# gen_views_api.html:AG 2021-06-28 15:18:01.161136
+# gen_views_api.html:AG 2021-06-30 21:54:33.650980
 # table_name: Countries_Currencies
 # class_name: country_currency
 # is shardened: None
@@ -7387,7 +7429,7 @@ def api_get_Countries_Currencies(id=None):
                 id_values=[id]
             # Codigo para un solo campo de id
             # chequear si marcado explicitamente
-            db.session.close()
+            db.session.flush()
             query = db.session.query(Countries_Currencies)
             if id is not None:
                 query = query.filter(Countries_Currencies.Cou_Code == id_values[id_counter])
@@ -7444,8 +7486,9 @@ def api_post_Countries_Currencies():
             db.session.add(row)
             db.session.flush()
             db.session.commit()
+            db.session.flush()
             db.session.refresh(row)
-            db.session.close()
+            db.session.flush()
             message = f"Created 'Countries_Currencies' Cou_Code = {row.Cou_Code}"
             row     = json.loads(row.get_json())
         except Exception as e:
@@ -7489,8 +7532,9 @@ def api_put_Countries_Currencies(id):
                 db.session.merge(row)
                 db.session.flush()
                 db.session.commit()
+                db.session.flush()
                 db.session.refresh(row)
-                db.session.close()
+                db.session.flush()
                 message = f"Modified 'Countries_Currencies' Cou_Code = {id}"
                 row     = json.loads(row.get_json())
             else:
@@ -7539,8 +7583,9 @@ def api_patch_Countries_Currencies(id):
                 db.session.merge(row)
                 db.session.flush()
                 db.session.commit()
+                db.session.flush()
                 db.session.refresh(row)
-                db.session.close()
+                db.session.flush()
                 message = f"Modified 'Countries_Currencies' Cou_Code = {id}"
                 try:
                     row     = json.loads(row.get_json())
@@ -7591,7 +7636,7 @@ def api_delete_Countries_Currencies(id):
                 db.session.delete(row)
                 db.session.flush()
                 db.session.commit()
-                db.session.close()
+                db.session.flush()
                 message = f"Deleted 'Countries_Currencies' Cou_Code = {id}"
                 row     = json.loads(row.get_json())
             else:
@@ -7610,15 +7655,15 @@ def api_delete_Countries_Currencies(id):
 # ======================================================================# =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-06-28 15:17:57
+# GLVH @ 2021-06-30 21:54:29
 # =============================================================================
 # gen_views.py:32 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/views/view_countries.py
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:00.867013
+#  GLVH @ 2021-06-30 21:54:33.400212
 # ======================================================================        
-# gen_views_form.html:AG 2021-06-28 15:18:00.867029
+# gen_views_form.html:AG 2021-06-30 21:54:33.400227
 @main.route('/forms/Countries', methods=['GET', 'POST'])
 @login_required
 
@@ -7660,9 +7705,10 @@ def forms_Countries():
             row.Cou_N = form.Cou_N.data
             try:
                session['new_row']=str(row)
-               db.session.close()
+               db.session.flush()
                db.session.add(row)
                db.session.commit()
+               db.session.flush()
                if session['is_new_row']==True:
                    logger.audit ( '%s:NEW:%s' % (current_user.username,session['new_row'] ) )
                    flash('New Country created OK')
@@ -7671,10 +7717,10 @@ def forms_Countries():
                    logger.audit ( '%s:UPD:%s' % (current_user.username,session['new_row'] ) )    
                    message=Markup('<b>Country Cou_Code saved OK</b>')
                    flash(message)
-               db.session.close()
+               db.session.flush()
             except Exception as e:
                db.session.rollback()
-               db.session.close()
+               db.session.flush()
                message=Markup('ERROR saving Country record : %s'%(e))
                flash(message)
             return redirect(url_for('.select_Countries_query'))
@@ -7684,7 +7730,7 @@ def forms_Countries():
         elif   form.submit_New.data and current_user.role_id>1:
             #print('New Data Here ...')
             session['is_new_row']=True
-            db.session.close()
+            db.session.flush()
             row=country()
     
             return redirect(url_for('.forms_Countries'))    
@@ -7734,9 +7780,9 @@ def forms_Countries():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:00.878130
+#  GLVH @ 2021-06-30 21:54:33.410858
 # ======================================================================        
-# gen_views_delete.html:AG 2021-06-28 15:18:00.878147
+# gen_views_delete.html:AG 2021-06-30 21:54:33.410872
 @main.route('/forms/Countries_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -7767,9 +7813,10 @@ def forms_Countries_delete():
     #f.write(        "            print('Delete Data Here...')
             try:
                 session['deleted_row']=str(row)
-                db.session.close()
+                db.session.flush()
                 db.session.delete(row)
                 db.session.commit()
+                db.session.flush()
                 logger.audit ( '%s:DEL:%s' % (current_user.username,session['deleted_row']) )
                 flash('Country Cou_Code deleted OK')
             except exc.IntegrityError as e:
@@ -7801,10 +7848,10 @@ def forms_Countries_delete():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:00.901000
+#  GLVH @ 2021-06-30 21:54:33.434035
 # ======================================================================
 
-# gen_views_select_query.html:AG 2021-06-28 15:18:00.901015        
+# gen_views_select_query.html:AG 2021-06-30 21:54:33.434069        
 @main.route('/select/Countries_Query', methods=['GET','POST'])
 @login_required
 @admin_required
@@ -8011,9 +8058,9 @@ def select_Countries_query():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:00.943552
+#  GLVH @ 2021-06-30 21:54:33.499790
 # ======================================================================
-# gen_views_api.html:AG 2021-06-28 15:18:00.943570
+# gen_views_api.html:AG 2021-06-30 21:54:33.499821
 # table_name: Countries
 # class_name: country
 # is shardened: None
@@ -8040,7 +8087,7 @@ def api_get_Countries(id=None):
                 id_values=[id]
             # Codigo para un solo campo de id
             # chequear si marcado explicitamente
-            db.session.close()
+            db.session.flush()
             query = db.session.query(Countries)
             if id is not None:
                 query = query.filter(Countries.Cou_Code == id_values[id_counter])
@@ -8100,8 +8147,9 @@ def api_post_Countries():
             db.session.add(row)
             db.session.flush()
             db.session.commit()
+            db.session.flush()
             db.session.refresh(row)
-            db.session.close()
+            db.session.flush()
             message = f"Created 'Countries' Cou_Code = {row.Cou_Code}"
             row     = json.loads(row.get_json())
         except Exception as e:
@@ -8147,8 +8195,9 @@ def api_put_Countries(id):
                 db.session.merge(row)
                 db.session.flush()
                 db.session.commit()
+                db.session.flush()
                 db.session.refresh(row)
-                db.session.close()
+                db.session.flush()
                 message = f"Modified 'Countries' Cou_Code = {id}"
                 row     = json.loads(row.get_json())
             else:
@@ -8199,8 +8248,9 @@ def api_patch_Countries(id):
                 db.session.merge(row)
                 db.session.flush()
                 db.session.commit()
+                db.session.flush()
                 db.session.refresh(row)
-                db.session.close()
+                db.session.flush()
                 message = f"Modified 'Countries' Cou_Code = {id}"
                 try:
                     row     = json.loads(row.get_json())
@@ -8248,7 +8298,7 @@ def api_delete_Countries(id):
                 db.session.delete(row)
                 db.session.flush()
                 db.session.commit()
-                db.session.close()
+                db.session.flush()
                 message = f"Deleted 'Countries' Cou_Code = {id}"
                 row     = json.loads(row.get_json())
             else:
@@ -8267,15 +8317,15 @@ def api_delete_Countries(id):
 # ======================================================================# =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-06-28 15:17:57
+# GLVH @ 2021-06-30 21:54:29
 # =============================================================================
 # gen_views.py:32 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/views/view_cu_operations.py
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:17:58.566970
+#  GLVH @ 2021-06-30 21:54:31.364019
 # ======================================================================        
-# gen_views_form.html:AG 2021-06-28 15:17:58.566990
+# gen_views_form.html:AG 2021-06-30 21:54:31.364034
 @main.route('/forms/CU_Operations', methods=['GET', 'POST'])
 @login_required
 
@@ -8317,9 +8367,10 @@ def forms_CU_Operations():
             row.Factor = form.Factor.data
             try:
                session['new_row']=str(row)
-               db.session.close()
+               db.session.flush()
                db.session.add(row)
                db.session.commit()
+               db.session.flush()
                if session['is_new_row']==True:
                    logger.audit ( '%s:NEW:%s' % (current_user.username,session['new_row'] ) )
                    flash('New Charge Unit Conversion Operation created OK')
@@ -8328,10 +8379,10 @@ def forms_CU_Operations():
                    logger.audit ( '%s:UPD:%s' % (current_user.username,session['new_row'] ) )    
                    message=Markup('<b>Charge Unit Conversion Operation CU_Operation saved OK</b>')
                    flash(message)
-               db.session.close()
+               db.session.flush()
             except Exception as e:
                db.session.rollback()
-               db.session.close()
+               db.session.flush()
                message=Markup('ERROR saving Charge Unit Conversion Operation record : %s'%(e))
                flash(message)
             return redirect(url_for('.select_CU_Operations_query'))
@@ -8341,7 +8392,7 @@ def forms_CU_Operations():
         elif   form.submit_New.data and current_user.role_id>1:
             #print('New Data Here ...')
             session['is_new_row']=True
-            db.session.close()
+            db.session.flush()
             row=cu_operation()
     
             return redirect(url_for('.forms_CU_Operations'))    
@@ -8391,9 +8442,9 @@ def forms_CU_Operations():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:17:58.576952
+#  GLVH @ 2021-06-30 21:54:31.372394
 # ======================================================================        
-# gen_views_delete.html:AG 2021-06-28 15:17:58.577012
+# gen_views_delete.html:AG 2021-06-30 21:54:31.372409
 @main.route('/forms/CU_Operations_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -8424,9 +8475,10 @@ def forms_CU_Operations_delete():
     #f.write(        "            print('Delete Data Here...')
             try:
                 session['deleted_row']=str(row)
-                db.session.close()
+                db.session.flush()
                 db.session.delete(row)
                 db.session.commit()
+                db.session.flush()
                 logger.audit ( '%s:DEL:%s' % (current_user.username,session['deleted_row']) )
                 flash('Charge Unit Conversion Operation CU_Operation deleted OK')
             except exc.IntegrityError as e:
@@ -8458,10 +8510,10 @@ def forms_CU_Operations_delete():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:17:58.595487
+#  GLVH @ 2021-06-30 21:54:31.390872
 # ======================================================================
 
-# gen_views_select_query.html:AG 2021-06-28 15:17:58.595502        
+# gen_views_select_query.html:AG 2021-06-30 21:54:31.390887        
 @main.route('/select/CU_Operations_Query', methods=['GET','POST'])
 @login_required
 @admin_required
@@ -8668,9 +8720,9 @@ def select_CU_Operations_query():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:17:58.655159
+#  GLVH @ 2021-06-30 21:54:31.432239
 # ======================================================================
-# gen_views_api.html:AG 2021-06-28 15:17:58.655180
+# gen_views_api.html:AG 2021-06-30 21:54:31.432255
 # table_name: CU_Operations
 # class_name: cu_operation
 # is shardened: None
@@ -8697,7 +8749,7 @@ def api_get_CU_Operations(id=None):
                 id_values=[id]
             # Codigo para un solo campo de id
             # chequear si marcado explicitamente
-            db.session.close()
+            db.session.flush()
             query = db.session.query(CU_Operations)
             if id is not None:
                 query = query.filter(CU_Operations.CU_Operation == id_values[id_counter])
@@ -8757,8 +8809,9 @@ def api_post_CU_Operations():
             db.session.add(row)
             db.session.flush()
             db.session.commit()
+            db.session.flush()
             db.session.refresh(row)
-            db.session.close()
+            db.session.flush()
             message = f"Created 'CU_Operations' CU_Operation = {row.CU_Operation}"
             row     = json.loads(row.get_json())
         except Exception as e:
@@ -8804,8 +8857,9 @@ def api_put_CU_Operations(id):
                 db.session.merge(row)
                 db.session.flush()
                 db.session.commit()
+                db.session.flush()
                 db.session.refresh(row)
-                db.session.close()
+                db.session.flush()
                 message = f"Modified 'CU_Operations' CU_Operation = {id}"
                 row     = json.loads(row.get_json())
             else:
@@ -8856,8 +8910,9 @@ def api_patch_CU_Operations(id):
                 db.session.merge(row)
                 db.session.flush()
                 db.session.commit()
+                db.session.flush()
                 db.session.refresh(row)
-                db.session.close()
+                db.session.flush()
                 message = f"Modified 'CU_Operations' CU_Operation = {id}"
                 try:
                     row     = json.loads(row.get_json())
@@ -8905,7 +8960,7 @@ def api_delete_CU_Operations(id):
                 db.session.delete(row)
                 db.session.flush()
                 db.session.commit()
-                db.session.close()
+                db.session.flush()
                 message = f"Deleted 'CU_Operations' CU_Operation = {id}"
                 row     = json.loads(row.get_json())
             else:
@@ -8924,15 +8979,15 @@ def api_delete_CU_Operations(id):
 # ======================================================================# =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-06-28 15:17:57
+# GLVH @ 2021-06-30 21:54:29
 # =============================================================================
 # gen_views.py:32 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/views/view_currencies.py
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:01.276923
+#  GLVH @ 2021-06-30 21:54:33.744273
 # ======================================================================        
-# gen_views_form.html:AG 2021-06-28 15:18:01.276939
+# gen_views_form.html:AG 2021-06-30 21:54:33.744287
 @main.route('/forms/Currencies', methods=['GET', 'POST'])
 @login_required
 
@@ -8974,9 +9029,10 @@ def forms_Currencies():
             row.Cur_Comment = form.Cur_Comment.data
             try:
                session['new_row']=str(row)
-               db.session.close()
+               db.session.flush()
                db.session.add(row)
                db.session.commit()
+               db.session.flush()
                if session['is_new_row']==True:
                    logger.audit ( '%s:NEW:%s' % (current_user.username,session['new_row'] ) )
                    flash('New Currency created OK')
@@ -8985,10 +9041,10 @@ def forms_Currencies():
                    logger.audit ( '%s:UPD:%s' % (current_user.username,session['new_row'] ) )    
                    message=Markup('<b>Currency Cur_Code saved OK</b>')
                    flash(message)
-               db.session.close()
+               db.session.flush()
             except Exception as e:
                db.session.rollback()
-               db.session.close()
+               db.session.flush()
                message=Markup('ERROR saving Currency record : %s'%(e))
                flash(message)
             return redirect(url_for('.select_Currencies_query'))
@@ -8998,7 +9054,7 @@ def forms_Currencies():
         elif   form.submit_New.data and current_user.role_id>1:
             #print('New Data Here ...')
             session['is_new_row']=True
-            db.session.close()
+            db.session.flush()
             row=currency()
     
             return redirect(url_for('.forms_Currencies'))    
@@ -9063,9 +9119,9 @@ def forms_Currencies():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:01.293439
+#  GLVH @ 2021-06-30 21:54:33.753702
 # ======================================================================        
-# gen_views_delete.html:AG 2021-06-28 15:18:01.293472
+# gen_views_delete.html:AG 2021-06-30 21:54:33.753716
 @main.route('/forms/Currencies_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -9096,9 +9152,10 @@ def forms_Currencies_delete():
     #f.write(        "            print('Delete Data Here...')
             try:
                 session['deleted_row']=str(row)
-                db.session.close()
+                db.session.flush()
                 db.session.delete(row)
                 db.session.commit()
+                db.session.flush()
                 logger.audit ( '%s:DEL:%s' % (current_user.username,session['deleted_row']) )
                 flash('Currency Cur_Code deleted OK')
             except exc.IntegrityError as e:
@@ -9130,10 +9187,10 @@ def forms_Currencies_delete():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:01.314880
+#  GLVH @ 2021-06-30 21:54:33.787217
 # ======================================================================
 
-# gen_views_select_query.html:AG 2021-06-28 15:18:01.314946        
+# gen_views_select_query.html:AG 2021-06-30 21:54:33.787234        
 @main.route('/select/Currencies_Query', methods=['GET','POST'])
 @login_required
 @admin_required
@@ -9340,9 +9397,9 @@ def select_Currencies_query():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:01.351791
+#  GLVH @ 2021-06-30 21:54:33.818155
 # ======================================================================
-# gen_views_api.html:AG 2021-06-28 15:18:01.352031
+# gen_views_api.html:AG 2021-06-30 21:54:33.818170
 # table_name: Currencies
 # class_name: currency
 # is shardened: None
@@ -9369,7 +9426,7 @@ def api_get_Currencies(id=None):
                 id_values=[id]
             # Codigo para un solo campo de id
             # chequear si marcado explicitamente
-            db.session.close()
+            db.session.flush()
             query = db.session.query(Currencies)
             if id is not None:
                 query = query.filter(Currencies.Cur_Code == id_values[id_counter])
@@ -9429,8 +9486,9 @@ def api_post_Currencies():
             db.session.add(row)
             db.session.flush()
             db.session.commit()
+            db.session.flush()
             db.session.refresh(row)
-            db.session.close()
+            db.session.flush()
             message = f"Created 'Currencies' Cur_Code = {row.Cur_Code}"
             row     = json.loads(row.get_json())
         except Exception as e:
@@ -9476,8 +9534,9 @@ def api_put_Currencies(id):
                 db.session.merge(row)
                 db.session.flush()
                 db.session.commit()
+                db.session.flush()
                 db.session.refresh(row)
-                db.session.close()
+                db.session.flush()
                 message = f"Modified 'Currencies' Cur_Code = {id}"
                 row     = json.loads(row.get_json())
             else:
@@ -9528,8 +9587,9 @@ def api_patch_Currencies(id):
                 db.session.merge(row)
                 db.session.flush()
                 db.session.commit()
+                db.session.flush()
                 db.session.refresh(row)
-                db.session.close()
+                db.session.flush()
                 message = f"Modified 'Currencies' Cur_Code = {id}"
                 try:
                     row     = json.loads(row.get_json())
@@ -9577,7 +9637,7 @@ def api_delete_Currencies(id):
                 db.session.delete(row)
                 db.session.flush()
                 db.session.commit()
-                db.session.close()
+                db.session.flush()
                 message = f"Deleted 'Currencies' Cur_Code = {id}"
                 row     = json.loads(row.get_json())
             else:
@@ -9596,15 +9656,15 @@ def api_delete_Currencies(id):
 # ======================================================================# =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-06-28 15:17:57
+# GLVH @ 2021-06-30 21:54:29
 # =============================================================================
 # gen_views.py:32 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/views/view_customers.py
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:01.531325
+#  GLVH @ 2021-06-30 21:54:33.923696
 # ======================================================================        
-# gen_views_form.html:AG 2021-06-28 15:18:01.531340
+# gen_views_form.html:AG 2021-06-30 21:54:33.923712
 @main.route('/forms/Customers', methods=['GET', 'POST'])
 @login_required
 
@@ -9649,9 +9709,10 @@ def forms_Customers():
             row.CC_Id = form.CC_Id.data
             try:
                session['new_row']=str(row)
-               db.session.close()
+               db.session.flush()
                db.session.add(row)
                db.session.commit()
+               db.session.flush()
                if session['is_new_row']==True:
                    logger.audit ( '%s:NEW:%s' % (current_user.username,session['new_row'] ) )
                    flash('New Customer created OK')
@@ -9660,10 +9721,10 @@ def forms_Customers():
                    logger.audit ( '%s:UPD:%s' % (current_user.username,session['new_row'] ) )    
                    message=Markup('<b>Customer Cus_Id saved OK</b>')
                    flash(message)
-               db.session.close()
+               db.session.flush()
             except Exception as e:
                db.session.rollback()
-               db.session.close()
+               db.session.flush()
                message=Markup('ERROR saving Customer record : %s'%(e))
                flash(message)
             return redirect(url_for('.select_Customers_query'))
@@ -9673,7 +9734,7 @@ def forms_Customers():
         elif   form.submit_New.data and current_user.role_id>1:
             #print('New Data Here ...')
             session['is_new_row']=True
-            db.session.close()
+            db.session.flush()
             row=customer()
     
             return redirect(url_for('.forms_Customers',Cus_Id=row.Cus_Id))
@@ -9726,9 +9787,9 @@ def forms_Customers():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:01.542464
+#  GLVH @ 2021-06-30 21:54:33.931909
 # ======================================================================        
-# gen_views_delete.html:AG 2021-06-28 15:18:01.542479
+# gen_views_delete.html:AG 2021-06-30 21:54:33.931923
 @main.route('/forms/Customers_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -9761,9 +9822,10 @@ def forms_Customers_delete():
     #f.write(        "            print('Delete Data Here...')
             try:
                 session['deleted_row']=str(row)
-                db.session.close()
+                db.session.flush()
                 db.session.delete(row)
                 db.session.commit()
+                db.session.flush()
                 logger.audit ( '%s:DEL:%s' % (current_user.username,session['deleted_row']) )
                 flash('Customer Cus_Id deleted OK')
             except exc.IntegrityError as e:
@@ -9795,10 +9857,10 @@ def forms_Customers_delete():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:01.561770
+#  GLVH @ 2021-06-30 21:54:33.948682
 # ======================================================================
 
-# gen_views_select_query.html:AG 2021-06-28 15:18:01.561788        
+# gen_views_select_query.html:AG 2021-06-30 21:54:33.948696        
 @main.route('/select/Customers_Query', methods=['GET','POST'])
 @login_required
 @admin_required
@@ -10000,9 +10062,9 @@ def select_Customers_query():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:01.597937
+#  GLVH @ 2021-06-30 21:54:33.979544
 # ======================================================================
-# gen_views_api.html:AG 2021-06-28 15:18:01.597956
+# gen_views_api.html:AG 2021-06-30 21:54:33.979559
 # table_name: Customers
 # class_name: customer
 # is shardened: None
@@ -10029,7 +10091,7 @@ def api_get_Customers(id=None):
                 id_values=[id]
             # Codigo para un solo campo de id
             # chequear si marcado explicitamente
-            db.session.close()
+            db.session.flush()
             query = db.session.query(Customers)
             if id is not None:
                 query = query.filter(Customers.Cus_Id == id_values[id_counter])
@@ -10086,8 +10148,9 @@ def api_post_Customers():
             db.session.add(row)
             db.session.flush()
             db.session.commit()
+            db.session.flush()
             db.session.refresh(row)
-            db.session.close()
+            db.session.flush()
             message = f"Created 'Customers' Cus_Id = {row.Cus_Id}"
             row     = json.loads(row.get_json())
         except Exception as e:
@@ -10131,8 +10194,9 @@ def api_put_Customers(id):
                 db.session.merge(row)
                 db.session.flush()
                 db.session.commit()
+                db.session.flush()
                 db.session.refresh(row)
-                db.session.close()
+                db.session.flush()
                 message = f"Modified 'Customers' Cus_Id = {id}"
                 row     = json.loads(row.get_json())
             else:
@@ -10181,8 +10245,9 @@ def api_patch_Customers(id):
                 db.session.merge(row)
                 db.session.flush()
                 db.session.commit()
+                db.session.flush()
                 db.session.refresh(row)
-                db.session.close()
+                db.session.flush()
                 message = f"Modified 'Customers' Cus_Id = {id}"
                 try:
                     row     = json.loads(row.get_json())
@@ -10228,7 +10293,7 @@ def api_delete_Customers(id):
                 db.session.delete(row)
                 db.session.flush()
                 db.session.commit()
-                db.session.close()
+                db.session.flush()
                 message = f"Deleted 'Customers' Cus_Id = {id}"
                 row     = json.loads(row.get_json())
             else:
@@ -10247,15 +10312,15 @@ def api_delete_Customers(id):
 # ======================================================================# =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-06-28 15:17:57
+# GLVH @ 2021-06-30 21:54:29
 # =============================================================================
 # gen_views.py:32 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/views/view_cu_types.py
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:17:58.847768
+#  GLVH @ 2021-06-30 21:54:31.593822
 # ======================================================================        
-# gen_views_form.html:AG 2021-06-28 15:17:58.847783
+# gen_views_form.html:AG 2021-06-30 21:54:31.593838
 @main.route('/forms/CU_Types', methods=['GET', 'POST'])
 @login_required
 
@@ -10295,9 +10360,10 @@ def forms_CU_Types():
             row.Typ_Description = form.Typ_Description.data
             try:
                session['new_row']=str(row)
-               db.session.close()
+               db.session.flush()
                db.session.add(row)
                db.session.commit()
+               db.session.flush()
                if session['is_new_row']==True:
                    logger.audit ( '%s:NEW:%s' % (current_user.username,session['new_row'] ) )
                    flash('New Configuration Unit Type created OK')
@@ -10306,10 +10372,10 @@ def forms_CU_Types():
                    logger.audit ( '%s:UPD:%s' % (current_user.username,session['new_row'] ) )    
                    message=Markup('<b>Configuration Unit Type Typ_Code saved OK</b>')
                    flash(message)
-               db.session.close()
+               db.session.flush()
             except Exception as e:
                db.session.rollback()
-               db.session.close()
+               db.session.flush()
                message=Markup('ERROR saving Configuration Unit Type record : %s'%(e))
                flash(message)
             return redirect(url_for('.select_CU_Types_query'))
@@ -10319,7 +10385,7 @@ def forms_CU_Types():
         elif   form.submit_New.data and current_user.role_id>1:
             #print('New Data Here ...')
             session['is_new_row']=True
-            db.session.close()
+            db.session.flush()
             row=cu_type()
     
             return redirect(url_for('.forms_CU_Types'))    
@@ -10372,9 +10438,9 @@ def forms_CU_Types():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:17:58.881099
+#  GLVH @ 2021-06-30 21:54:31.614625
 # ======================================================================        
-# gen_views_delete.html:AG 2021-06-28 15:17:58.881116
+# gen_views_delete.html:AG 2021-06-30 21:54:31.614640
 @main.route('/forms/CU_Types_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -10405,9 +10471,10 @@ def forms_CU_Types_delete():
     #f.write(        "            print('Delete Data Here...')
             try:
                 session['deleted_row']=str(row)
-                db.session.close()
+                db.session.flush()
                 db.session.delete(row)
                 db.session.commit()
+                db.session.flush()
                 logger.audit ( '%s:DEL:%s' % (current_user.username,session['deleted_row']) )
                 flash('Configuration Unit Type Typ_Code deleted OK')
             except exc.IntegrityError as e:
@@ -10439,10 +10506,10 @@ def forms_CU_Types_delete():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:17:58.908250
+#  GLVH @ 2021-06-30 21:54:31.681850
 # ======================================================================
 
-# gen_views_select_query.html:AG 2021-06-28 15:17:58.908266        
+# gen_views_select_query.html:AG 2021-06-30 21:54:31.681865        
 @main.route('/select/CU_Types_Query', methods=['GET','POST'])
 @login_required
 @admin_required
@@ -10619,9 +10686,9 @@ def select_CU_Types_query():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:17:58.943899
+#  GLVH @ 2021-06-30 21:54:31.736141
 # ======================================================================
-# gen_views_api.html:AG 2021-06-28 15:17:58.943916
+# gen_views_api.html:AG 2021-06-30 21:54:31.736156
 # table_name: CU_Types
 # class_name: cu_type
 # is shardened: None
@@ -10648,7 +10715,7 @@ def api_get_CU_Types(id=None):
                 id_values=[id]
             # Codigo para un solo campo de id
             # chequear si marcado explicitamente
-            db.session.close()
+            db.session.flush()
             query = db.session.query(CU_Types)
             if id is not None:
                 query = query.filter(CU_Types.Typ_Code == id_values[id_counter])
@@ -10702,8 +10769,9 @@ def api_post_CU_Types():
             db.session.add(row)
             db.session.flush()
             db.session.commit()
+            db.session.flush()
             db.session.refresh(row)
-            db.session.close()
+            db.session.flush()
             message = f"Created 'CU_Types' Typ_Code = {row.Typ_Code}"
             row     = json.loads(row.get_json())
         except Exception as e:
@@ -10745,8 +10813,9 @@ def api_put_CU_Types(id):
                 db.session.merge(row)
                 db.session.flush()
                 db.session.commit()
+                db.session.flush()
                 db.session.refresh(row)
-                db.session.close()
+                db.session.flush()
                 message = f"Modified 'CU_Types' Typ_Code = {id}"
                 row     = json.loads(row.get_json())
             else:
@@ -10793,8 +10862,9 @@ def api_patch_CU_Types(id):
                 db.session.merge(row)
                 db.session.flush()
                 db.session.commit()
+                db.session.flush()
                 db.session.refresh(row)
-                db.session.close()
+                db.session.flush()
                 message = f"Modified 'CU_Types' Typ_Code = {id}"
                 try:
                     row     = json.loads(row.get_json())
@@ -10842,7 +10912,7 @@ def api_delete_CU_Types(id):
                 db.session.delete(row)
                 db.session.flush()
                 db.session.commit()
-                db.session.close()
+                db.session.flush()
                 message = f"Deleted 'CU_Types' Typ_Code = {id}"
                 row     = json.loads(row.get_json())
             else:
@@ -10861,15 +10931,15 @@ def api_delete_CU_Types(id):
 # ======================================================================# =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-06-28 15:17:57
+# GLVH @ 2021-06-30 21:54:29
 # =============================================================================
 # gen_views.py:32 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/views/view_exchange_rates.py
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:02.114973
+#  GLVH @ 2021-06-30 21:54:34.082950
 # ======================================================================        
-# gen_views_form.html:AG 2021-06-28 15:18:02.115001
+# gen_views_form.html:AG 2021-06-30 21:54:34.082966
 @main.route('/forms/Exchange_Rates', methods=['GET', 'POST'])
 @login_required
 
@@ -10915,9 +10985,10 @@ def forms_Exchange_Rates():
             row.ER_Date = form.ER_Date.data
             try:
                session['new_row']=str(row)
-               db.session.close()
+               db.session.flush()
                db.session.add(row)
                db.session.commit()
+               db.session.flush()
                if session['is_new_row']==True:
                    logger.audit ( '%s:NEW:%s' % (current_user.username,session['new_row'] ) )
                    flash('New Exchange Rate created OK')
@@ -10926,10 +10997,10 @@ def forms_Exchange_Rates():
                    logger.audit ( '%s:UPD:%s' % (current_user.username,session['new_row'] ) )    
                    message=Markup('<b>Exchange Rate ER_Id saved OK</b>')
                    flash(message)
-               db.session.close()
+               db.session.flush()
             except Exception as e:
                db.session.rollback()
-               db.session.close()
+               db.session.flush()
                message=Markup('ERROR saving Exchange Rate record : %s'%(e))
                flash(message)
             return redirect(url_for('.select_Exchange_Rates_query'))
@@ -10939,7 +11010,7 @@ def forms_Exchange_Rates():
         elif   form.submit_New.data and current_user.role_id>1:
             #print('New Data Here ...')
             session['is_new_row']=True
-            db.session.close()
+            db.session.flush()
             row=exchange_rate()
     
             return redirect(url_for('.forms_Exchange_Rates',ER_Id=row.ER_Id))
@@ -10979,9 +11050,9 @@ def forms_Exchange_Rates():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:02.167353
+#  GLVH @ 2021-06-30 21:54:34.091333
 # ======================================================================        
-# gen_views_delete.html:AG 2021-06-28 15:18:02.167368
+# gen_views_delete.html:AG 2021-06-30 21:54:34.091347
 @main.route('/forms/Exchange_Rates_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -11014,9 +11085,10 @@ def forms_Exchange_Rates_delete():
     #f.write(        "            print('Delete Data Here...')
             try:
                 session['deleted_row']=str(row)
-                db.session.close()
+                db.session.flush()
                 db.session.delete(row)
                 db.session.commit()
+                db.session.flush()
                 logger.audit ( '%s:DEL:%s' % (current_user.username,session['deleted_row']) )
                 flash('Exchange Rate ER_Id deleted OK')
             except exc.IntegrityError as e:
@@ -11048,10 +11120,10 @@ def forms_Exchange_Rates_delete():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:02.254816
+#  GLVH @ 2021-06-30 21:54:34.109339
 # ======================================================================
 
-# gen_views_select_query.html:AG 2021-06-28 15:18:02.254830        
+# gen_views_select_query.html:AG 2021-06-30 21:54:34.109354        
 @main.route('/select/Exchange_Rates_Query', methods=['GET','POST'])
 @login_required
 @admin_required
@@ -11268,9 +11340,9 @@ def select_Exchange_Rates_query():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:02.424810
+#  GLVH @ 2021-06-30 21:54:34.140181
 # ======================================================================
-# gen_views_api.html:AG 2021-06-28 15:18:02.424825
+# gen_views_api.html:AG 2021-06-30 21:54:34.140196
 # table_name: Exchange_Rates
 # class_name: exchange_rate
 # is shardened: None
@@ -11297,7 +11369,7 @@ def api_get_Exchange_Rates(id=None):
                 id_values=[id]
             # Codigo para un solo campo de id
             # chequear si marcado explicitamente
-            db.session.close()
+            db.session.flush()
             query = db.session.query(Exchange_Rates)
             if id is not None:
                 query = query.filter(Exchange_Rates.ER_Id == id_values[id_counter])
@@ -11357,8 +11429,9 @@ def api_post_Exchange_Rates():
             db.session.add(row)
             db.session.flush()
             db.session.commit()
+            db.session.flush()
             db.session.refresh(row)
-            db.session.close()
+            db.session.flush()
             message = f"Created 'Exchange_Rates' ER_Id = {row.ER_Id}"
             row     = json.loads(row.get_json())
         except Exception as e:
@@ -11404,8 +11477,9 @@ def api_put_Exchange_Rates(id):
                 db.session.merge(row)
                 db.session.flush()
                 db.session.commit()
+                db.session.flush()
                 db.session.refresh(row)
-                db.session.close()
+                db.session.flush()
                 message = f"Modified 'Exchange_Rates' ER_Id = {id}"
                 row     = json.loads(row.get_json())
             else:
@@ -11456,8 +11530,9 @@ def api_patch_Exchange_Rates(id):
                 db.session.merge(row)
                 db.session.flush()
                 db.session.commit()
+                db.session.flush()
                 db.session.refresh(row)
-                db.session.close()
+                db.session.flush()
                 message = f"Modified 'Exchange_Rates' ER_Id = {id}"
                 try:
                     row     = json.loads(row.get_json())
@@ -11503,7 +11578,7 @@ def api_delete_Exchange_Rates(id):
                 db.session.delete(row)
                 db.session.flush()
                 db.session.commit()
-                db.session.close()
+                db.session.flush()
                 message = f"Deleted 'Exchange_Rates' ER_Id = {id}"
                 row     = json.loads(row.get_json())
             else:
@@ -11522,15 +11597,15 @@ def api_delete_Exchange_Rates(id):
 # ======================================================================# =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-06-28 15:17:57
+# GLVH @ 2021-06-30 21:54:29
 # =============================================================================
 # gen_views.py:32 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/views/view_interface.py
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:02.972253
+#  GLVH @ 2021-06-30 21:54:34.253976
 # ======================================================================        
-# gen_views_form.html:AG 2021-06-28 15:18:02.972270
+# gen_views_form.html:AG 2021-06-30 21:54:34.254006
 @main.route('/forms/Interface', methods=['GET', 'POST'])
 @login_required
 
@@ -11576,9 +11651,10 @@ def forms_Interface():
             row.Is_Active = form.Is_Active.data
             try:
                session['new_row']=str(row)
-               db.session.close()
+               db.session.flush()
                db.session.add(row)
                db.session.commit()
+               db.session.flush()
                if session['is_new_row']==True:
                    logger.audit ( '%s:NEW:%s' % (current_user.username,session['new_row'] ) )
                    flash('New Interface created OK')
@@ -11587,10 +11663,10 @@ def forms_Interface():
                    logger.audit ( '%s:UPD:%s' % (current_user.username,session['new_row'] ) )    
                    message=Markup('<b>Interface Id saved OK</b>')
                    flash(message)
-               db.session.close()
+               db.session.flush()
             except Exception as e:
                db.session.rollback()
-               db.session.close()
+               db.session.flush()
                message=Markup('ERROR saving Interface record : %s'%(e))
                flash(message)
             return redirect(url_for('.select_Interface_query'))
@@ -11600,7 +11676,7 @@ def forms_Interface():
         elif   form.submit_New.data and current_user.role_id>1:
             #print('New Data Here ...')
             session['is_new_row']=True
-            db.session.close()
+            db.session.flush()
             row=interface()
     
             return redirect(url_for('.forms_Interface',Id=row.Id))
@@ -11644,9 +11720,9 @@ def forms_Interface():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:02.980760
+#  GLVH @ 2021-06-30 21:54:34.267661
 # ======================================================================        
-# gen_views_delete.html:AG 2021-06-28 15:18:02.980775
+# gen_views_delete.html:AG 2021-06-30 21:54:34.267678
 @main.route('/forms/Interface_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -11677,9 +11753,10 @@ def forms_Interface_delete():
     #f.write(        "            print('Delete Data Here...')
             try:
                 session['deleted_row']=str(row)
-                db.session.close()
+                db.session.flush()
                 db.session.delete(row)
                 db.session.commit()
+                db.session.flush()
                 logger.audit ( '%s:DEL:%s' % (current_user.username,session['deleted_row']) )
                 flash('Interface Id deleted OK')
             except exc.IntegrityError as e:
@@ -11711,10 +11788,10 @@ def forms_Interface_delete():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:03.078561
+#  GLVH @ 2021-06-30 21:54:34.286021
 # ======================================================================
 
-# gen_views_select_query.html:AG 2021-06-28 15:18:03.078578        
+# gen_views_select_query.html:AG 2021-06-30 21:54:34.286038        
 @main.route('/select/Interface_Query', methods=['GET','POST'])
 @login_required
 @admin_required
@@ -11981,9 +12058,9 @@ def select_Interface_query():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:03.268283
+#  GLVH @ 2021-06-30 21:54:34.316352
 # ======================================================================
-# gen_views_api.html:AG 2021-06-28 15:18:03.268299
+# gen_views_api.html:AG 2021-06-30 21:54:34.316366
 # table_name: Interface
 # class_name: interface
 # is shardened: None
@@ -12010,7 +12087,7 @@ def api_get_Interface(id=None):
                 id_values=[id]
             # Codigo para un solo campo de id
             # chequear si marcado explicitamente
-            db.session.close()
+            db.session.flush()
             query = db.session.query(Interface)
             if id is not None:
                 query = query.filter(Interface.Id == id_values[id_counter])
@@ -12082,8 +12159,9 @@ def api_post_Interface():
             db.session.add(row)
             db.session.flush()
             db.session.commit()
+            db.session.flush()
             db.session.refresh(row)
-            db.session.close()
+            db.session.flush()
             message = f"Created 'Interface' Id = {row.Id}"
             row     = json.loads(row.get_json())
         except Exception as e:
@@ -12137,8 +12215,9 @@ def api_put_Interface(id):
                 db.session.merge(row)
                 db.session.flush()
                 db.session.commit()
+                db.session.flush()
                 db.session.refresh(row)
-                db.session.close()
+                db.session.flush()
                 message = f"Modified 'Interface' Id = {id}"
                 row     = json.loads(row.get_json())
             else:
@@ -12197,8 +12276,9 @@ def api_patch_Interface(id):
                 db.session.merge(row)
                 db.session.flush()
                 db.session.commit()
+                db.session.flush()
                 db.session.refresh(row)
-                db.session.close()
+                db.session.flush()
                 message = f"Modified 'Interface' Id = {id}"
                 try:
                     row     = json.loads(row.get_json())
@@ -12244,7 +12324,7 @@ def api_delete_Interface(id):
                 db.session.delete(row)
                 db.session.flush()
                 db.session.commit()
-                db.session.close()
+                db.session.flush()
                 message = f"Deleted 'Interface' Id = {id}"
                 row     = json.loads(row.get_json())
             else:
@@ -12263,15 +12343,15 @@ def api_delete_Interface(id):
 # ======================================================================# =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-06-28 15:17:57
+# GLVH @ 2021-06-30 21:54:29
 # =============================================================================
 # gen_views.py:32 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/views/view_measure_units.py
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:03.718174
+#  GLVH @ 2021-06-30 21:54:34.411917
 # ======================================================================        
-# gen_views_form.html:AG 2021-06-28 15:18:03.718190
+# gen_views_form.html:AG 2021-06-30 21:54:34.411932
 @main.route('/forms/Measure_Units', methods=['GET', 'POST'])
 @login_required
 
@@ -12311,9 +12391,10 @@ def forms_Measure_Units():
             row.MU_Description = form.MU_Description.data
             try:
                session['new_row']=str(row)
-               db.session.close()
+               db.session.flush()
                db.session.add(row)
                db.session.commit()
+               db.session.flush()
                if session['is_new_row']==True:
                    logger.audit ( '%s:NEW:%s' % (current_user.username,session['new_row'] ) )
                    flash('New Measure Unit created OK')
@@ -12322,10 +12403,10 @@ def forms_Measure_Units():
                    logger.audit ( '%s:UPD:%s' % (current_user.username,session['new_row'] ) )    
                    message=Markup('<b>Measure Unit MU_Code saved OK</b>')
                    flash(message)
-               db.session.close()
+               db.session.flush()
             except Exception as e:
                db.session.rollback()
-               db.session.close()
+               db.session.flush()
                message=Markup('ERROR saving Measure Unit record : %s'%(e))
                flash(message)
             return redirect(url_for('.select_Measure_Units_query'))
@@ -12335,7 +12416,7 @@ def forms_Measure_Units():
         elif   form.submit_New.data and current_user.role_id>1:
             #print('New Data Here ...')
             session['is_new_row']=True
-            db.session.close()
+            db.session.flush()
             row=measure_unit()
     
             return redirect(url_for('.forms_Measure_Units'))    
@@ -12383,9 +12464,9 @@ def forms_Measure_Units():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:03.764057
+#  GLVH @ 2021-06-30 21:54:34.420479
 # ======================================================================        
-# gen_views_delete.html:AG 2021-06-28 15:18:03.764074
+# gen_views_delete.html:AG 2021-06-30 21:54:34.420492
 @main.route('/forms/Measure_Units_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -12416,9 +12497,10 @@ def forms_Measure_Units_delete():
     #f.write(        "            print('Delete Data Here...')
             try:
                 session['deleted_row']=str(row)
-                db.session.close()
+                db.session.flush()
                 db.session.delete(row)
                 db.session.commit()
+                db.session.flush()
                 logger.audit ( '%s:DEL:%s' % (current_user.username,session['deleted_row']) )
                 flash('Measure Unit MU_Code deleted OK')
             except exc.IntegrityError as e:
@@ -12450,10 +12532,10 @@ def forms_Measure_Units_delete():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:03.857748
+#  GLVH @ 2021-06-30 21:54:34.438110
 # ======================================================================
 
-# gen_views_select_query.html:AG 2021-06-28 15:18:03.857765        
+# gen_views_select_query.html:AG 2021-06-30 21:54:34.438123        
 @main.route('/select/Measure_Units_Query', methods=['GET','POST'])
 @login_required
 @admin_required
@@ -12630,9 +12712,9 @@ def select_Measure_Units_query():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:04.046614
+#  GLVH @ 2021-06-30 21:54:34.468082
 # ======================================================================
-# gen_views_api.html:AG 2021-06-28 15:18:04.046628
+# gen_views_api.html:AG 2021-06-30 21:54:34.468097
 # table_name: Measure_Units
 # class_name: measure_unit
 # is shardened: None
@@ -12659,7 +12741,7 @@ def api_get_Measure_Units(id=None):
                 id_values=[id]
             # Codigo para un solo campo de id
             # chequear si marcado explicitamente
-            db.session.close()
+            db.session.flush()
             query = db.session.query(Measure_Units)
             if id is not None:
                 query = query.filter(Measure_Units.MU_Code == id_values[id_counter])
@@ -12713,8 +12795,9 @@ def api_post_Measure_Units():
             db.session.add(row)
             db.session.flush()
             db.session.commit()
+            db.session.flush()
             db.session.refresh(row)
-            db.session.close()
+            db.session.flush()
             message = f"Created 'Measure_Units' MU_Code = {row.MU_Code}"
             row     = json.loads(row.get_json())
         except Exception as e:
@@ -12756,8 +12839,9 @@ def api_put_Measure_Units(id):
                 db.session.merge(row)
                 db.session.flush()
                 db.session.commit()
+                db.session.flush()
                 db.session.refresh(row)
-                db.session.close()
+                db.session.flush()
                 message = f"Modified 'Measure_Units' MU_Code = {id}"
                 row     = json.loads(row.get_json())
             else:
@@ -12804,8 +12888,9 @@ def api_patch_Measure_Units(id):
                 db.session.merge(row)
                 db.session.flush()
                 db.session.commit()
+                db.session.flush()
                 db.session.refresh(row)
-                db.session.close()
+                db.session.flush()
                 message = f"Modified 'Measure_Units' MU_Code = {id}"
                 try:
                     row     = json.loads(row.get_json())
@@ -12853,7 +12938,7 @@ def api_delete_Measure_Units(id):
                 db.session.delete(row)
                 db.session.flush()
                 db.session.commit()
-                db.session.close()
+                db.session.flush()
                 message = f"Deleted 'Measure_Units' MU_Code = {id}"
                 row     = json.loads(row.get_json())
             else:
@@ -13919,15 +14004,15 @@ def select_NEW_CUS_query():
    # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-06-28 15:17:57
+# GLVH @ 2021-06-30 21:54:29
 # =============================================================================
 # gen_views.py:32 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/views/view_platforms.py
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:04.215001
+#  GLVH @ 2021-06-30 21:54:34.613880
 # ======================================================================        
-# gen_views_form.html:AG 2021-06-28 15:18:04.215018
+# gen_views_form.html:AG 2021-06-30 21:54:34.613895
 @main.route('/forms/Platforms', methods=['GET', 'POST'])
 @login_required
 
@@ -13971,9 +14056,10 @@ def forms_Platforms():
             row.Pla_Password = form.Pla_Password.data
             try:
                session['new_row']=str(row)
-               db.session.close()
+               db.session.flush()
                db.session.add(row)
                db.session.commit()
+               db.session.flush()
                if session['is_new_row']==True:
                    logger.audit ( '%s:NEW:%s' % (current_user.username,session['new_row'] ) )
                    flash('New Platform created OK')
@@ -13982,10 +14068,10 @@ def forms_Platforms():
                    logger.audit ( '%s:UPD:%s' % (current_user.username,session['new_row'] ) )    
                    message=Markup('<b>Platform Pla_Id saved OK</b>')
                    flash(message)
-               db.session.close()
+               db.session.flush()
             except Exception as e:
                db.session.rollback()
-               db.session.close()
+               db.session.flush()
                message=Markup('ERROR saving Platform record : %s'%(e))
                flash(message)
             return redirect(url_for('.select_Platforms_query'))
@@ -13995,7 +14081,7 @@ def forms_Platforms():
         elif   form.submit_New.data and current_user.role_id>1:
             #print('New Data Here ...')
             session['is_new_row']=True
-            db.session.close()
+            db.session.flush()
             row=platform()
     
             return redirect(url_for('.forms_Platforms',Pla_Id=row.Pla_Id))
@@ -14051,9 +14137,9 @@ def forms_Platforms():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:04.225625
+#  GLVH @ 2021-06-30 21:54:34.622310
 # ======================================================================        
-# gen_views_delete.html:AG 2021-06-28 15:18:04.225640
+# gen_views_delete.html:AG 2021-06-30 21:54:34.622326
 @main.route('/forms/Platforms_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -14084,9 +14170,10 @@ def forms_Platforms_delete():
     #f.write(        "            print('Delete Data Here...')
             try:
                 session['deleted_row']=str(row)
-                db.session.close()
+                db.session.flush()
                 db.session.delete(row)
                 db.session.commit()
+                db.session.flush()
                 logger.audit ( '%s:DEL:%s' % (current_user.username,session['deleted_row']) )
                 flash('Platform Pla_Id deleted OK')
             except exc.IntegrityError as e:
@@ -14118,10 +14205,10 @@ def forms_Platforms_delete():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:04.253318
+#  GLVH @ 2021-06-30 21:54:34.649593
 # ======================================================================
 
-# gen_views_select_query.html:AG 2021-06-28 15:18:04.253335        
+# gen_views_select_query.html:AG 2021-06-30 21:54:34.649607        
 @main.route('/select/Platforms_Query', methods=['GET','POST'])
 @login_required
 @admin_required
@@ -14358,9 +14445,9 @@ def select_Platforms_query():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:04.340102
+#  GLVH @ 2021-06-30 21:54:34.679040
 # ======================================================================
-# gen_views_api.html:AG 2021-06-28 15:18:04.340126
+# gen_views_api.html:AG 2021-06-30 21:54:34.679055
 # table_name: Platforms
 # class_name: platform
 # is shardened: None
@@ -14387,7 +14474,7 @@ def api_get_Platforms(id=None):
                 id_values=[id]
             # Codigo para un solo campo de id
             # chequear si marcado explicitamente
-            db.session.close()
+            db.session.flush()
             query = db.session.query(Platforms)
             if id is not None:
                 query = query.filter(Platforms.Pla_Id == id_values[id_counter])
@@ -14453,8 +14540,9 @@ def api_post_Platforms():
             db.session.add(row)
             db.session.flush()
             db.session.commit()
+            db.session.flush()
             db.session.refresh(row)
-            db.session.close()
+            db.session.flush()
             message = f"Created 'Platforms' Pla_Id = {row.Pla_Id}"
             row     = json.loads(row.get_json())
         except Exception as e:
@@ -14504,8 +14592,9 @@ def api_put_Platforms(id):
                 db.session.merge(row)
                 db.session.flush()
                 db.session.commit()
+                db.session.flush()
                 db.session.refresh(row)
-                db.session.close()
+                db.session.flush()
                 message = f"Modified 'Platforms' Pla_Id = {id}"
                 row     = json.loads(row.get_json())
             else:
@@ -14560,8 +14649,9 @@ def api_patch_Platforms(id):
                 db.session.merge(row)
                 db.session.flush()
                 db.session.commit()
+                db.session.flush()
                 db.session.refresh(row)
-                db.session.close()
+                db.session.flush()
                 message = f"Modified 'Platforms' Pla_Id = {id}"
                 try:
                     row     = json.loads(row.get_json())
@@ -14607,7 +14697,7 @@ def api_delete_Platforms(id):
                 db.session.delete(row)
                 db.session.flush()
                 db.session.commit()
-                db.session.close()
+                db.session.flush()
                 message = f"Deleted 'Platforms' Pla_Id = {id}"
                 row     = json.loads(row.get_json())
             else:
@@ -14626,15 +14716,15 @@ def api_delete_Platforms(id):
 # ======================================================================# =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-06-28 15:17:57
+# GLVH @ 2021-06-30 21:54:29
 # =============================================================================
 # gen_views.py:32 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/views/view_rates.py
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:04.757061
+#  GLVH @ 2021-06-30 21:54:34.974901
 # ======================================================================        
-# gen_views_form.html:AG 2021-06-28 15:18:04.757079
+# gen_views_form.html:AG 2021-06-30 21:54:34.974917
 @main.route('/forms/Rates', methods=['GET', 'POST'])
 @login_required
 
@@ -14694,9 +14784,10 @@ def forms_Rates():
             
             try:
                session['new_row']=str(row)
-               db.session.close()
+               db.session.flush()
                db.session.add(row)
                db.session.commit()
+               db.session.flush()
                if session['is_new_row']==True:
                    logger.audit ( '%s:NEW:%s' % (current_user.username,session['new_row'] ) )
                    flash('New Rate created OK')
@@ -14705,10 +14796,10 @@ def forms_Rates():
                    logger.audit ( '%s:UPD:%s' % (current_user.username,session['new_row'] ) )    
                    message=Markup('<b>Rate Rat_Id saved OK</b>')
                    flash(message)
-               db.session.close()
+               db.session.flush()
             except Exception as e:
                db.session.rollback()
-               db.session.close()
+               db.session.flush()
                message=Markup('ERROR saving Rate record : %s'%(e))
                flash(message)
             return redirect(url_for('.select_Rates_query'))
@@ -14718,7 +14809,7 @@ def forms_Rates():
         elif   form.submit_New.data and current_user.role_id>1:
             #print('New Data Here ...')
             session['is_new_row']=True
-            db.session.close()
+            db.session.flush()
             row=rate()
     
             return redirect(url_for('.forms_Rates',Rat_Id=row.Rat_Id))
@@ -14764,9 +14855,9 @@ def forms_Rates():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:04.766499
+#  GLVH @ 2021-06-30 21:54:34.983373
 # ======================================================================        
-# gen_views_delete.html:AG 2021-06-28 15:18:04.766514
+# gen_views_delete.html:AG 2021-06-30 21:54:34.983388
 @main.route('/forms/Rates_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -14799,9 +14890,10 @@ def forms_Rates_delete():
     #f.write(        "            print('Delete Data Here...')
             try:
                 session['deleted_row']=str(row)
-                db.session.close()
+                db.session.flush()
                 db.session.delete(row)
                 db.session.commit()
+                db.session.flush()
                 logger.audit ( '%s:DEL:%s' % (current_user.username,session['deleted_row']) )
                 flash('Rate Rat_Id deleted OK')
             except exc.IntegrityError as e:
@@ -14833,10 +14925,10 @@ def forms_Rates_delete():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:04.795729
+#  GLVH @ 2021-06-30 21:54:35.010487
 # ======================================================================
 
-# gen_views_select_query.html:AG 2021-06-28 15:18:04.795763        
+# gen_views_select_query.html:AG 2021-06-30 21:54:35.010504        
 @main.route('/select/Rates_Query', methods=['GET','POST'])
 @login_required
 @admin_required
@@ -15186,9 +15278,9 @@ def select_Rates_query():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:04.851445
+#  GLVH @ 2021-06-30 21:54:35.052715
 # ======================================================================
-# gen_views_api.html:AG 2021-06-28 15:18:04.851465
+# gen_views_api.html:AG 2021-06-30 21:54:35.052731
 # table_name: Rates
 # class_name: rate
 # is shardened: None
@@ -15215,7 +15307,7 @@ def api_get_Rates(id=None):
                 id_values=[id]
             # Codigo para un solo campo de id
             # chequear si marcado explicitamente
-            db.session.close()
+            db.session.flush()
             query = db.session.query(Rates)
             if id is not None:
                 query = query.filter(Rates.Rat_Id == id_values[id_counter])
@@ -15296,8 +15388,9 @@ def api_post_Rates():
             db.session.add(row)
             db.session.flush()
             db.session.commit()
+            db.session.flush()
             db.session.refresh(row)
-            db.session.close()
+            db.session.flush()
             message = f"Created 'Rates' Rat_Id = {row.Rat_Id}"
             row     = json.loads(row.get_json())
         except Exception as e:
@@ -15357,8 +15450,9 @@ def api_put_Rates(id):
                 db.session.merge(row)
                 db.session.flush()
                 db.session.commit()
+                db.session.flush()
                 db.session.refresh(row)
-                db.session.close()
+                db.session.flush()
                 message = f"Modified 'Rates' Rat_Id = {id}"
                 row     = json.loads(row.get_json())
             else:
@@ -15423,8 +15517,9 @@ def api_patch_Rates(id):
                 db.session.merge(row)
                 db.session.flush()
                 db.session.commit()
+                db.session.flush()
                 db.session.refresh(row)
-                db.session.close()
+                db.session.flush()
                 message = f"Modified 'Rates' Rat_Id = {id}"
                 try:
                     row     = json.loads(row.get_json())
@@ -15470,7 +15565,7 @@ def api_delete_Rates(id):
                 db.session.delete(row)
                 db.session.flush()
                 db.session.commit()
-                db.session.close()
+                db.session.flush()
                 message = f"Deleted 'Rates' Rat_Id = {id}"
                 row     = json.loads(row.get_json())
             else:
@@ -15489,15 +15584,15 @@ def api_delete_Rates(id):
 # ======================================================================# =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-06-28 15:17:57
+# GLVH @ 2021-06-30 21:54:29
 # =============================================================================
 # gen_views.py:32 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/views/view_rat_periods.py
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:04.461305
+#  GLVH @ 2021-06-30 21:54:34.772700
 # ======================================================================        
-# gen_views_form.html:AG 2021-06-28 15:18:04.461321
+# gen_views_form.html:AG 2021-06-30 21:54:34.772715
 @main.route('/forms/Rat_Periods', methods=['GET', 'POST'])
 @login_required
 
@@ -15537,9 +15632,10 @@ def forms_Rat_Periods():
             row.Value = form.Value.data
             try:
                session['new_row']=str(row)
-               db.session.close()
+               db.session.flush()
                db.session.add(row)
                db.session.commit()
+               db.session.flush()
                if session['is_new_row']==True:
                    logger.audit ( '%s:NEW:%s' % (current_user.username,session['new_row'] ) )
                    flash('New Rate Period created OK')
@@ -15548,10 +15644,10 @@ def forms_Rat_Periods():
                    logger.audit ( '%s:UPD:%s' % (current_user.username,session['new_row'] ) )    
                    message=Markup('<b>Rate Period Rat_Period saved OK</b>')
                    flash(message)
-               db.session.close()
+               db.session.flush()
             except Exception as e:
                db.session.rollback()
-               db.session.close()
+               db.session.flush()
                message=Markup('ERROR saving Rate Period record : %s'%(e))
                flash(message)
             return redirect(url_for('.select_Rat_Periods_query'))
@@ -15561,7 +15657,7 @@ def forms_Rat_Periods():
         elif   form.submit_New.data and current_user.role_id>1:
             #print('New Data Here ...')
             session['is_new_row']=True
-            db.session.close()
+            db.session.flush()
             row=rat_period()
     
             return redirect(url_for('.forms_Rat_Periods'))    
@@ -15609,9 +15705,9 @@ def forms_Rat_Periods():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:04.471281
+#  GLVH @ 2021-06-30 21:54:34.781193
 # ======================================================================        
-# gen_views_delete.html:AG 2021-06-28 15:18:04.471297
+# gen_views_delete.html:AG 2021-06-30 21:54:34.781208
 @main.route('/forms/Rat_Periods_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -15642,9 +15738,10 @@ def forms_Rat_Periods_delete():
     #f.write(        "            print('Delete Data Here...')
             try:
                 session['deleted_row']=str(row)
-                db.session.close()
+                db.session.flush()
                 db.session.delete(row)
                 db.session.commit()
+                db.session.flush()
                 logger.audit ( '%s:DEL:%s' % (current_user.username,session['deleted_row']) )
                 flash('Rate Period Rat_Period deleted OK')
             except exc.IntegrityError as e:
@@ -15676,10 +15773,10 @@ def forms_Rat_Periods_delete():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:04.494325
+#  GLVH @ 2021-06-30 21:54:34.801926
 # ======================================================================
 
-# gen_views_select_query.html:AG 2021-06-28 15:18:04.494341        
+# gen_views_select_query.html:AG 2021-06-30 21:54:34.801944        
 @main.route('/select/Rat_Periods_Query', methods=['GET','POST'])
 @login_required
 @admin_required
@@ -15856,9 +15953,9 @@ def select_Rat_Periods_query():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:04.534232
+#  GLVH @ 2021-06-30 21:54:34.849078
 # ======================================================================
-# gen_views_api.html:AG 2021-06-28 15:18:04.534258
+# gen_views_api.html:AG 2021-06-30 21:54:34.849094
 # table_name: Rat_Periods
 # class_name: rat_period
 # is shardened: None
@@ -15885,7 +15982,7 @@ def api_get_Rat_Periods(id=None):
                 id_values=[id]
             # Codigo para un solo campo de id
             # chequear si marcado explicitamente
-            db.session.close()
+            db.session.flush()
             query = db.session.query(Rat_Periods)
             if id is not None:
                 query = query.filter(Rat_Periods.Rat_Period == id_values[id_counter])
@@ -15939,8 +16036,9 @@ def api_post_Rat_Periods():
             db.session.add(row)
             db.session.flush()
             db.session.commit()
+            db.session.flush()
             db.session.refresh(row)
-            db.session.close()
+            db.session.flush()
             message = f"Created 'Rat_Periods' Rat_Period = {row.Rat_Period}"
             row     = json.loads(row.get_json())
         except Exception as e:
@@ -15982,8 +16080,9 @@ def api_put_Rat_Periods(id):
                 db.session.merge(row)
                 db.session.flush()
                 db.session.commit()
+                db.session.flush()
                 db.session.refresh(row)
-                db.session.close()
+                db.session.flush()
                 message = f"Modified 'Rat_Periods' Rat_Period = {id}"
                 row     = json.loads(row.get_json())
             else:
@@ -16030,8 +16129,9 @@ def api_patch_Rat_Periods(id):
                 db.session.merge(row)
                 db.session.flush()
                 db.session.commit()
+                db.session.flush()
                 db.session.refresh(row)
-                db.session.close()
+                db.session.flush()
                 message = f"Modified 'Rat_Periods' Rat_Period = {id}"
                 try:
                     row     = json.loads(row.get_json())
@@ -16079,7 +16179,7 @@ def api_delete_Rat_Periods(id):
                 db.session.delete(row)
                 db.session.flush()
                 db.session.commit()
-                db.session.close()
+                db.session.flush()
                 message = f"Deleted 'Rat_Periods' Rat_Period = {id}"
                 row     = json.loads(row.get_json())
             else:
@@ -16098,15 +16198,15 @@ def api_delete_Rat_Periods(id):
 # ======================================================================# =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-06-28 15:17:57
+# GLVH @ 2021-06-30 21:54:29
 # =============================================================================
 # gen_views.py:32 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/views/view_roles.py
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:04.981738
+#  GLVH @ 2021-06-30 21:54:35.153521
 # ======================================================================        
-# gen_views_form.html:AG 2021-06-28 15:18:04.981755
+# gen_views_form.html:AG 2021-06-30 21:54:35.153535
 @main.route('/forms/Roles', methods=['GET', 'POST'])
 @login_required
 
@@ -16148,9 +16248,10 @@ def forms_Roles():
             row.permissions = form.permissions.data
             try:
                session['new_row']=str(row)
-               db.session.close()
+               db.session.flush()
                db.session.add(row)
                db.session.commit()
+               db.session.flush()
                if session['is_new_row']==True:
                    logger.audit ( '%s:NEW:%s' % (current_user.username,session['new_row'] ) )
                    flash('New Role created OK')
@@ -16159,10 +16260,10 @@ def forms_Roles():
                    logger.audit ( '%s:UPD:%s' % (current_user.username,session['new_row'] ) )    
                    message=Markup('<b>Role id saved OK</b>')
                    flash(message)
-               db.session.close()
+               db.session.flush()
             except Exception as e:
                db.session.rollback()
-               db.session.close()
+               db.session.flush()
                message=Markup('ERROR saving Role record : %s'%(e))
                flash(message)
             return redirect(url_for('.select_Roles_query'))
@@ -16172,7 +16273,7 @@ def forms_Roles():
         elif   form.submit_New.data and current_user.role_id>1:
             #print('New Data Here ...')
             session['is_new_row']=True
-            db.session.close()
+            db.session.flush()
             row=Role()
     
             return redirect(url_for('.forms_Roles'))    
@@ -16222,9 +16323,9 @@ def forms_Roles():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:04.992129
+#  GLVH @ 2021-06-30 21:54:35.163498
 # ======================================================================        
-# gen_views_delete.html:AG 2021-06-28 15:18:04.992147
+# gen_views_delete.html:AG 2021-06-30 21:54:35.163513
 @main.route('/forms/Roles_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -16255,9 +16356,10 @@ def forms_Roles_delete():
     #f.write(        "            print('Delete Data Here...')
             try:
                 session['deleted_row']=str(row)
-                db.session.close()
+                db.session.flush()
                 db.session.delete(row)
                 db.session.commit()
+                db.session.flush()
                 logger.audit ( '%s:DEL:%s' % (current_user.username,session['deleted_row']) )
                 flash('Role id deleted OK')
             except exc.IntegrityError as e:
@@ -16289,10 +16391,10 @@ def forms_Roles_delete():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:05.014325
+#  GLVH @ 2021-06-30 21:54:35.188073
 # ======================================================================
 
-# gen_views_select_query.html:AG 2021-06-28 15:18:05.014347        
+# gen_views_select_query.html:AG 2021-06-30 21:54:35.188091        
 @main.route('/select/Roles_Query', methods=['GET','POST'])
 @login_required
 @admin_required
@@ -16499,9 +16601,9 @@ def select_Roles_query():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:05.051521
+#  GLVH @ 2021-06-30 21:54:35.225731
 # ======================================================================
-# gen_views_api.html:AG 2021-06-28 15:18:05.051547
+# gen_views_api.html:AG 2021-06-30 21:54:35.225747
 # table_name: Roles
 # class_name: Role
 # is shardened: None
@@ -16528,7 +16630,7 @@ def api_get_Roles(id=None):
                 id_values=[id]
             # Codigo para un solo campo de id
             # chequear si marcado explicitamente
-            db.session.close()
+            db.session.flush()
             query = db.session.query(Roles)
             if id is not None:
                 query = query.filter(Roles.id == id_values[id_counter])
@@ -16588,8 +16690,9 @@ def api_post_Roles():
             db.session.add(row)
             db.session.flush()
             db.session.commit()
+            db.session.flush()
             db.session.refresh(row)
-            db.session.close()
+            db.session.flush()
             message = f"Created 'Roles' id = {row.id}"
             row     = json.loads(row.get_json())
         except Exception as e:
@@ -16635,8 +16738,9 @@ def api_put_Roles(id):
                 db.session.merge(row)
                 db.session.flush()
                 db.session.commit()
+                db.session.flush()
                 db.session.refresh(row)
-                db.session.close()
+                db.session.flush()
                 message = f"Modified 'Roles' id = {id}"
                 row     = json.loads(row.get_json())
             else:
@@ -16687,8 +16791,9 @@ def api_patch_Roles(id):
                 db.session.merge(row)
                 db.session.flush()
                 db.session.commit()
+                db.session.flush()
                 db.session.refresh(row)
-                db.session.close()
+                db.session.flush()
                 message = f"Modified 'Roles' id = {id}"
                 try:
                     row     = json.loads(row.get_json())
@@ -16736,7 +16841,7 @@ def api_delete_Roles(id):
                 db.session.delete(row)
                 db.session.flush()
                 db.session.commit()
-                db.session.close()
+                db.session.flush()
                 message = f"Deleted 'Roles' id = {id}"
                 row     = json.loads(row.get_json())
             else:
@@ -16755,15 +16860,15 @@ def api_delete_Roles(id):
 # ======================================================================# =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-06-28 15:17:57
+# GLVH @ 2021-06-30 21:54:29
 # =============================================================================
 # gen_views.py:32 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/views/view_st_use_per_cu.py
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:05.224376
+#  GLVH @ 2021-06-30 21:54:35.374636
 # ======================================================================        
-# gen_views_form.html:AG 2021-06-28 15:18:05.224392
+# gen_views_form.html:AG 2021-06-30 21:54:35.374650
 @main.route('/forms/ST_Use_Per_CU', methods=['GET', 'POST'])
 @login_required
 
@@ -16826,9 +16931,10 @@ def forms_ST_Use_Per_CU():
             row.Max = form.Max.data
             try:
                session['new_row']=str(row)
-               db.session.close()
+               db.session.flush()
                db.session.add(row)
                db.session.commit()
+               db.session.flush()
                if session['is_new_row']==True:
                    logger.audit ( '%s:NEW:%s' % (current_user.username,session['new_row'] ) )
                    flash('New ST Use Per CU created OK')
@@ -16837,10 +16943,10 @@ def forms_ST_Use_Per_CU():
                    logger.audit ( '%s:UPD:%s' % (current_user.username,session['new_row'] ) )    
                    message=Markup('<b>ST Use Per CU CU_Id,From,To saved OK</b>')
                    flash(message)
-               db.session.close()
+               db.session.flush()
             except Exception as e:
                db.session.rollback()
-               db.session.close()
+               db.session.flush()
                message=Markup('ERROR saving ST Use Per CU record : %s'%(e))
                flash(message)
             return redirect(url_for('.select_ST_Use_Per_CU_query'))
@@ -16850,7 +16956,7 @@ def forms_ST_Use_Per_CU():
         elif   form.submit_New.data and current_user.role_id>1:
             #print('New Data Here ...')
             session['is_new_row']=True
-            db.session.close()
+            db.session.flush()
             row=st_use_per_cu()
     
             return redirect(url_for('.forms_ST_Use_Per_CU'))    
@@ -16910,9 +17016,9 @@ def forms_ST_Use_Per_CU():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:05.233654
+#  GLVH @ 2021-06-30 21:54:35.383432
 # ======================================================================        
-# gen_views_delete.html:AG 2021-06-28 15:18:05.233668
+# gen_views_delete.html:AG 2021-06-30 21:54:35.383445
 @main.route('/forms/ST_Use_Per_CU_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -16945,9 +17051,10 @@ def forms_ST_Use_Per_CU_delete():
     #f.write(        "            print('Delete Data Here...')
             try:
                 session['deleted_row']=str(row)
-                db.session.close()
+                db.session.flush()
                 db.session.delete(row)
                 db.session.commit()
+                db.session.flush()
                 logger.audit ( '%s:DEL:%s' % (current_user.username,session['deleted_row']) )
                 flash('ST Use Per CU CU_Id,From,To deleted OK')
             except exc.IntegrityError as e:
@@ -16979,10 +17086,10 @@ def forms_ST_Use_Per_CU_delete():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:05.255938
+#  GLVH @ 2021-06-30 21:54:35.400855
 # ======================================================================
 
-# gen_views_select_query.html:AG 2021-06-28 15:18:05.255956        
+# gen_views_select_query.html:AG 2021-06-30 21:54:35.400870        
 @main.route('/select/ST_Use_Per_CU_Query', methods=['GET','POST'])
 @login_required
 
@@ -17474,9 +17581,9 @@ def select_ST_Use_Per_CU_query():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:05.296950
+#  GLVH @ 2021-06-30 21:54:35.432173
 # ======================================================================
-# gen_views_api.html:AG 2021-06-28 15:18:05.296966
+# gen_views_api.html:AG 2021-06-30 21:54:35.432194
 # table_name: ST_Use_Per_CU
 # class_name: st_use_per_cu
 # is shardened: None
@@ -17507,7 +17614,7 @@ def api_get_ST_Use_Per_CU(id=None):
                 id_values=[id]
             # Codigo para un solo campo de id
             # chequear si marcado explicitamente
-            db.session.close()
+            db.session.flush()
             query = db.session.query(ST_Use_Per_CU)
             if id is not None:
                 query = query.filter(ST_Use_Per_CU.CU_Id == id_values[id_counter])
@@ -17624,8 +17731,9 @@ def api_post_ST_Use_Per_CU():
             db.session.add(row)
             db.session.flush()
             db.session.commit()
+            db.session.flush()
             db.session.refresh(row)
-            db.session.close()
+            db.session.flush()
             message = f"Created 'ST_Use_Per_CU' CU_Id = {row.CU_Id}"
             row     = json.loads(row.get_json())
         except Exception as e:
@@ -17709,8 +17817,9 @@ def api_put_ST_Use_Per_CU(id):
                 db.session.merge(row)
                 db.session.flush()
                 db.session.commit()
+                db.session.flush()
                 db.session.refresh(row)
-                db.session.close()
+                db.session.flush()
                 message = f"Modified 'ST_Use_Per_CU' CU_Id = {id}"
                 row     = json.loads(row.get_json())
             else:
@@ -17799,8 +17908,9 @@ def api_patch_ST_Use_Per_CU(id):
                 db.session.merge(row)
                 db.session.flush()
                 db.session.commit()
+                db.session.flush()
                 db.session.refresh(row)
-                db.session.close()
+                db.session.flush()
                 message = f"Modified 'ST_Use_Per_CU' CU_Id = {id}"
                 try:
                     row     = json.loads(row.get_json())
@@ -17854,7 +17964,7 @@ def api_delete_ST_Use_Per_CU(id):
                 db.session.delete(row)
                 db.session.flush()
                 db.session.commit()
-                db.session.close()
+                db.session.flush()
                 message = f"Deleted 'ST_Use_Per_CU' CU_Id = {id}"
                 row     = json.loads(row.get_json())
             else:
@@ -17873,15 +17983,15 @@ def api_delete_ST_Use_Per_CU(id):
 # ======================================================================# =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-06-28 15:17:57
+# GLVH @ 2021-06-30 21:54:29
 # =============================================================================
 # gen_views.py:32 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/views/view_st_use_per_type.py
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:05.449525
+#  GLVH @ 2021-06-30 21:54:35.603615
 # ======================================================================        
-# gen_views_form.html:AG 2021-06-28 15:18:05.449541
+# gen_views_form.html:AG 2021-06-30 21:54:35.603643
 @main.route('/forms/ST_Use_Per_Type', methods=['GET', 'POST'])
 @login_required
 
@@ -17938,9 +18048,10 @@ def forms_ST_Use_Per_Type():
             row.Max = form.Max.data
             try:
                session['new_row']=str(row)
-               db.session.close()
+               db.session.flush()
                db.session.add(row)
                db.session.commit()
+               db.session.flush()
                if session['is_new_row']==True:
                    logger.audit ( '%s:NEW:%s' % (current_user.username,session['new_row'] ) )
                    flash('New ST Use Per Type created OK')
@@ -17949,10 +18060,10 @@ def forms_ST_Use_Per_Type():
                    logger.audit ( '%s:UPD:%s' % (current_user.username,session['new_row'] ) )    
                    message=Markup('<b>ST Use Per Type Typ_Code,Cus_Id,Pla_Id,CC_Id,CI_Id,Year,Month saved OK</b>')
                    flash(message)
-               db.session.close()
+               db.session.flush()
             except Exception as e:
                db.session.rollback()
-               db.session.close()
+               db.session.flush()
                message=Markup('ERROR saving ST Use Per Type record : %s'%(e))
                flash(message)
             return redirect(url_for('.select_ST_Use_Per_Type_query'))
@@ -17962,7 +18073,7 @@ def forms_ST_Use_Per_Type():
         elif   form.submit_New.data and current_user.role_id>1:
             #print('New Data Here ...')
             session['is_new_row']=True
-            db.session.close()
+            db.session.flush()
             row=st_use_per_type()
     
             return redirect(url_for('.forms_ST_Use_Per_Type'))    
@@ -18012,9 +18123,9 @@ def forms_ST_Use_Per_Type():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:05.459276
+#  GLVH @ 2021-06-30 21:54:35.613230
 # ======================================================================        
-# gen_views_delete.html:AG 2021-06-28 15:18:05.459294
+# gen_views_delete.html:AG 2021-06-30 21:54:35.613246
 @main.route('/forms/ST_Use_Per_Type_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -18051,9 +18162,10 @@ def forms_ST_Use_Per_Type_delete():
     #f.write(        "            print('Delete Data Here...')
             try:
                 session['deleted_row']=str(row)
-                db.session.close()
+                db.session.flush()
                 db.session.delete(row)
                 db.session.commit()
+                db.session.flush()
                 logger.audit ( '%s:DEL:%s' % (current_user.username,session['deleted_row']) )
                 flash('ST Use Per Type Typ_Code,Cus_Id,Pla_Id,CC_Id,CI_Id,Year,Month deleted OK')
             except exc.IntegrityError as e:
@@ -18085,10 +18197,10 @@ def forms_ST_Use_Per_Type_delete():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:05.479647
+#  GLVH @ 2021-06-30 21:54:35.641096
 # ======================================================================
 
-# gen_views_select_query.html:AG 2021-06-28 15:18:05.479663        
+# gen_views_select_query.html:AG 2021-06-30 21:54:35.641109        
 @main.route('/select/ST_Use_Per_Type_Query', methods=['GET','POST'])
 @login_required
 
@@ -18430,9 +18542,9 @@ def select_ST_Use_Per_Type_query():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:05.513137
+#  GLVH @ 2021-06-30 21:54:35.673703
 # ======================================================================
-# gen_views_api.html:AG 2021-06-28 15:18:05.513154
+# gen_views_api.html:AG 2021-06-30 21:54:35.673719
 # table_name: ST_Use_Per_Type
 # class_name: st_use_per_type
 # is shardened: None
@@ -18471,7 +18583,7 @@ def api_get_ST_Use_Per_Type(id=None):
                 id_values=[id]
             # Codigo para un solo campo de id
             # chequear si marcado explicitamente
-            db.session.close()
+            db.session.flush()
             query = db.session.query(ST_Use_Per_Type)
             if id is not None:
                 query = query.filter(ST_Use_Per_Type.Typ_Code == id_values[id_counter])
@@ -18558,8 +18670,9 @@ def api_post_ST_Use_Per_Type():
             db.session.add(row)
             db.session.flush()
             db.session.commit()
+            db.session.flush()
             db.session.refresh(row)
-            db.session.close()
+            db.session.flush()
             message = f"Created 'ST_Use_Per_Type' Typ_Code = {row.Typ_Code}"
             row     = json.loads(row.get_json())
         except Exception as e:
@@ -18623,8 +18736,9 @@ def api_put_ST_Use_Per_Type(id):
                 db.session.merge(row)
                 db.session.flush()
                 db.session.commit()
+                db.session.flush()
                 db.session.refresh(row)
-                db.session.close()
+                db.session.flush()
                 message = f"Modified 'ST_Use_Per_Type' Typ_Code = {id}"
                 row     = json.loads(row.get_json())
             else:
@@ -18693,8 +18807,9 @@ def api_patch_ST_Use_Per_Type(id):
                 db.session.merge(row)
                 db.session.flush()
                 db.session.commit()
+                db.session.flush()
                 db.session.refresh(row)
-                db.session.close()
+                db.session.flush()
                 message = f"Modified 'ST_Use_Per_Type' Typ_Code = {id}"
                 try:
                     row     = json.loads(row.get_json())
@@ -18760,7 +18875,7 @@ def api_delete_ST_Use_Per_Type(id):
                 db.session.delete(row)
                 db.session.flush()
                 db.session.commit()
-                db.session.close()
+                db.session.flush()
                 message = f"Deleted 'ST_Use_Per_Type' Typ_Code = {id}"
                 row     = json.loads(row.get_json())
             else:
@@ -19547,15 +19662,15 @@ def select_Trace_202101_query():
    # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-06-28 15:17:57
+# GLVH @ 2021-06-30 21:54:29
 # =============================================================================
 # gen_views.py:32 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/views/view_trace.py
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:05.622999
+#  GLVH @ 2021-06-30 21:54:35.766569
 # ======================================================================        
-# gen_views_form.html:AG 2021-06-28 15:18:05.623015
+# gen_views_form.html:AG 2021-06-30 21:54:35.766587
 @main.route('/forms/Trace', methods=['GET', 'POST'])
 @login_required
 
@@ -19595,9 +19710,10 @@ def forms_Trace():
             row.LINE = form.LINE.data
             try:
                session['new_row']=str(row)
-               db.session.close()
+               db.session.flush()
                db.session.add(row)
                db.session.commit()
+               db.session.flush()
                if session['is_new_row']==True:
                    logger.audit ( '%s:NEW:%s' % (current_user.username,session['new_row'] ) )
                    flash('New Trace line created OK')
@@ -19606,10 +19722,10 @@ def forms_Trace():
                    logger.audit ( '%s:UPD:%s' % (current_user.username,session['new_row'] ) )    
                    message=Markup('<b>Trace line ID saved OK</b>')
                    flash(message)
-               db.session.close()
+               db.session.flush()
             except Exception as e:
                db.session.rollback()
-               db.session.close()
+               db.session.flush()
                message=Markup('ERROR saving Trace line record : %s'%(e))
                flash(message)
             return redirect(url_for('.select_Trace_query'))
@@ -19619,7 +19735,7 @@ def forms_Trace():
         elif   form.submit_New.data and current_user.role_id>1:
             #print('New Data Here ...')
             session['is_new_row']=True
-            db.session.close()
+            db.session.flush()
             row=trace()
     
             return redirect(url_for('.forms_Trace',ID=row.ID))
@@ -19657,9 +19773,9 @@ def forms_Trace():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:05.631883
+#  GLVH @ 2021-06-30 21:54:35.775432
 # ======================================================================        
-# gen_views_delete.html:AG 2021-06-28 15:18:05.631899
+# gen_views_delete.html:AG 2021-06-30 21:54:35.775447
 @main.route('/forms/Trace_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -19690,9 +19806,10 @@ def forms_Trace_delete():
     #f.write(        "            print('Delete Data Here...')
             try:
                 session['deleted_row']=str(row)
-                db.session.close()
+                db.session.flush()
                 db.session.delete(row)
                 db.session.commit()
+                db.session.flush()
                 logger.audit ( '%s:DEL:%s' % (current_user.username,session['deleted_row']) )
                 flash('Trace line ID deleted OK')
             except exc.IntegrityError as e:
@@ -19724,10 +19841,10 @@ def forms_Trace_delete():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:05.653649
+#  GLVH @ 2021-06-30 21:54:35.793291
 # ======================================================================
 
-# gen_views_select_query.html:AG 2021-06-28 15:18:05.653665        
+# gen_views_select_query.html:AG 2021-06-30 21:54:35.793304        
 @main.route('/select/Trace_Query', methods=['GET','POST'])
 @login_required
 @admin_required
@@ -19904,9 +20021,9 @@ def select_Trace_query():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:05.692524
+#  GLVH @ 2021-06-30 21:54:35.823986
 # ======================================================================
-# gen_views_api.html:AG 2021-06-28 15:18:05.692557
+# gen_views_api.html:AG 2021-06-30 21:54:35.824001
 # table_name: Trace
 # class_name: trace
 # is shardened: None
@@ -19933,7 +20050,7 @@ def api_get_Trace(id=None):
                 id_values=[id]
             # Codigo para un solo campo de id
             # chequear si marcado explicitamente
-            db.session.close()
+            db.session.flush()
             query = db.session.query(Trace)
             if id is not None:
                 query = query.filter(Trace.ID == id_values[id_counter])
@@ -19987,8 +20104,9 @@ def api_post_Trace():
             db.session.add(row)
             db.session.flush()
             db.session.commit()
+            db.session.flush()
             db.session.refresh(row)
-            db.session.close()
+            db.session.flush()
             message = f"Created 'Trace' ID = {row.ID}"
             row     = json.loads(row.get_json())
         except Exception as e:
@@ -20030,8 +20148,9 @@ def api_put_Trace(id):
                 db.session.merge(row)
                 db.session.flush()
                 db.session.commit()
+                db.session.flush()
                 db.session.refresh(row)
-                db.session.close()
+                db.session.flush()
                 message = f"Modified 'Trace' ID = {id}"
                 row     = json.loads(row.get_json())
             else:
@@ -20078,8 +20197,9 @@ def api_patch_Trace(id):
                 db.session.merge(row)
                 db.session.flush()
                 db.session.commit()
+                db.session.flush()
                 db.session.refresh(row)
-                db.session.close()
+                db.session.flush()
                 message = f"Modified 'Trace' ID = {id}"
                 try:
                     row     = json.loads(row.get_json())
@@ -20125,7 +20245,7 @@ def api_delete_Trace(id):
                 db.session.delete(row)
                 db.session.flush()
                 db.session.commit()
-                db.session.close()
+                db.session.flush()
                 message = f"Deleted 'Trace' ID = {id}"
                 row     = json.loads(row.get_json())
             else:
@@ -20144,15 +20264,15 @@ def api_delete_Trace(id):
 # ======================================================================# =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-06-28 15:17:57
+# GLVH @ 2021-06-30 21:54:29
 # =============================================================================
 # gen_views.py:32 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/views/view_user_resumes.py
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:05.902521
+#  GLVH @ 2021-06-30 21:54:35.987341
 # ======================================================================        
-# gen_views_form.html:AG 2021-06-28 15:18:05.902537
+# gen_views_form.html:AG 2021-06-30 21:54:35.987356
 @main.route('/forms/User_Resumes', methods=['GET', 'POST'])
 @login_required
 
@@ -20234,9 +20354,10 @@ def forms_User_Resumes():
             row.Pla_Name = form.Pla_Name.data
             try:
                session['new_row']=str(row)
-               db.session.close()
+               db.session.flush()
                db.session.add(row)
                db.session.commit()
+               db.session.flush()
                if session['is_new_row']==True:
                    logger.audit ( '%s:NEW:%s' % (current_user.username,session['new_row'] ) )
                    flash('New User Resume created OK')
@@ -20245,10 +20366,10 @@ def forms_User_Resumes():
                    logger.audit ( '%s:UPD:%s' % (current_user.username,session['new_row'] ) )    
                    message=Markup('<b>User Resume User_Id,CR_Date_From,CR_Date_To,CIT_Status,Cur_Code,CU_Id,CI_Id saved OK</b>')
                    flash(message)
-               db.session.close()
+               db.session.flush()
             except Exception as e:
                db.session.rollback()
-               db.session.close()
+               db.session.flush()
                message=Markup('ERROR saving User Resume record : %s'%(e))
                flash(message)
             return redirect(url_for('.select_User_Resumes_query'))
@@ -20258,7 +20379,7 @@ def forms_User_Resumes():
         elif   form.submit_New.data and current_user.role_id>1:
             #print('New Data Here ...')
             session['is_new_row']=True
-            db.session.close()
+            db.session.flush()
             row=user_resumes()
     
             return redirect(url_for('.forms_User_Resumes'))    
@@ -20333,9 +20454,9 @@ def forms_User_Resumes():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:05.912234
+#  GLVH @ 2021-06-30 21:54:35.995954
 # ======================================================================        
-# gen_views_delete.html:AG 2021-06-28 15:18:05.912251
+# gen_views_delete.html:AG 2021-06-30 21:54:35.995966
 @main.route('/forms/User_Resumes_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -20372,9 +20493,10 @@ def forms_User_Resumes_delete():
     #f.write(        "            print('Delete Data Here...')
             try:
                 session['deleted_row']=str(row)
-                db.session.close()
+                db.session.flush()
                 db.session.delete(row)
                 db.session.commit()
+                db.session.flush()
                 logger.audit ( '%s:DEL:%s' % (current_user.username,session['deleted_row']) )
                 flash('User Resume User_Id,CR_Date_From,CR_Date_To,CIT_Status,Cur_Code,CU_Id,CI_Id deleted OK')
             except exc.IntegrityError as e:
@@ -20406,10 +20528,10 @@ def forms_User_Resumes_delete():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:05.951575
+#  GLVH @ 2021-06-30 21:54:36.013555
 # ======================================================================
 
-# gen_views_select_query.html:AG 2021-06-28 15:18:05.951599        
+# gen_views_select_query.html:AG 2021-06-30 21:54:36.013569        
 @main.route('/select/User_Resumes_Query', methods=['GET','POST'])
 @login_required
 
@@ -21126,9 +21248,9 @@ def select_User_Resumes_query():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:05.983240
+#  GLVH @ 2021-06-30 21:54:36.043910
 # ======================================================================
-# gen_views_api.html:AG 2021-06-28 15:18:05.983258
+# gen_views_api.html:AG 2021-06-30 21:54:36.043925
 # table_name: User_Resumes
 # class_name: user_resumes
 # is shardened: None
@@ -21167,7 +21289,7 @@ def api_get_User_Resumes(id=None):
                 id_values=[id]
             # Codigo para un solo campo de id
             # chequear si marcado explicitamente
-            db.session.close()
+            db.session.flush()
             query = db.session.query(User_Resumes)
             if id is not None:
                 query = query.filter(User_Resumes.User_Id == id_values[id_counter])
@@ -21329,8 +21451,9 @@ def api_post_User_Resumes():
             db.session.add(row)
             db.session.flush()
             db.session.commit()
+            db.session.flush()
             db.session.refresh(row)
-            db.session.close()
+            db.session.flush()
             message = f"Created 'User_Resumes' User_Id = {row.User_Id}"
             row     = json.loads(row.get_json())
         except Exception as e:
@@ -21444,8 +21567,9 @@ def api_put_User_Resumes(id):
                 db.session.merge(row)
                 db.session.flush()
                 db.session.commit()
+                db.session.flush()
                 db.session.refresh(row)
-                db.session.close()
+                db.session.flush()
                 message = f"Modified 'User_Resumes' User_Id = {id}"
                 row     = json.loads(row.get_json())
             else:
@@ -21564,8 +21688,9 @@ def api_patch_User_Resumes(id):
                 db.session.merge(row)
                 db.session.flush()
                 db.session.commit()
+                db.session.flush()
                 db.session.refresh(row)
-                db.session.close()
+                db.session.flush()
                 message = f"Modified 'User_Resumes' User_Id = {id}"
                 try:
                     row     = json.loads(row.get_json())
@@ -21631,7 +21756,7 @@ def api_delete_User_Resumes(id):
                 db.session.delete(row)
                 db.session.flush()
                 db.session.commit()
-                db.session.close()
+                db.session.flush()
                 message = f"Deleted 'User_Resumes' User_Id = {id}"
                 row     = json.loads(row.get_json())
             else:
@@ -21650,15 +21775,15 @@ def api_delete_User_Resumes(id):
 # ======================================================================# =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-06-28 15:17:57
+# GLVH @ 2021-06-30 21:54:29
 # =============================================================================
 # gen_views.py:32 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/views/view_users.py
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:06.137403
+#  GLVH @ 2021-06-30 21:54:36.163970
 # ======================================================================        
-# gen_views_form.html:AG 2021-06-28 15:18:06.137419
+# gen_views_form.html:AG 2021-06-30 21:54:36.163985
 @main.route('/forms/Users', methods=['GET', 'POST'])
 @login_required
 
@@ -21708,9 +21833,10 @@ def forms_Users():
             row.CC_Id = form.CC_Id.data
             try:
                session['new_row']=str(row)
-               db.session.close()
+               db.session.flush()
                db.session.add(row)
                db.session.commit()
+               db.session.flush()
                if session['is_new_row']==True:
                    logger.audit ( '%s:NEW:%s' % (current_user.username,session['new_row'] ) )
                    flash('New User created OK')
@@ -21719,10 +21845,10 @@ def forms_Users():
                    logger.audit ( '%s:UPD:%s' % (current_user.username,session['new_row'] ) )    
                    message=Markup('<b>User id saved OK</b>')
                    flash(message)
-               db.session.close()
+               db.session.flush()
             except Exception as e:
                db.session.rollback()
-               db.session.close()
+               db.session.flush()
                message=Markup('ERROR saving User record : %s'%(e))
                flash(message)
             return redirect(url_for('.select_Users_query'))
@@ -21732,7 +21858,7 @@ def forms_Users():
         elif   form.submit_New.data and current_user.role_id>1:
             #print('New Data Here ...')
             session['is_new_row']=True
-            db.session.close()
+            db.session.flush()
             row=User()
     
             return redirect(url_for('.forms_Users',Id=row.Id))
@@ -21775,9 +21901,9 @@ def forms_Users():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:06.146534
+#  GLVH @ 2021-06-30 21:54:36.174344
 # ======================================================================        
-# gen_views_delete.html:AG 2021-06-28 15:18:06.146549
+# gen_views_delete.html:AG 2021-06-30 21:54:36.174359
 @main.route('/forms/Users_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -21810,9 +21936,10 @@ def forms_Users_delete():
     #f.write(        "            print('Delete Data Here...')
             try:
                 session['deleted_row']=str(row)
-                db.session.close()
+                db.session.flush()
                 db.session.delete(row)
                 db.session.commit()
+                db.session.flush()
                 logger.audit ( '%s:DEL:%s' % (current_user.username,session['deleted_row']) )
                 flash('User id deleted OK')
             except exc.IntegrityError as e:
@@ -21844,10 +21971,10 @@ def forms_Users_delete():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:06.165614
+#  GLVH @ 2021-06-30 21:54:36.192171
 # ======================================================================
 
-# gen_views_select_query.html:AG 2021-06-28 15:18:06.165642        
+# gen_views_select_query.html:AG 2021-06-30 21:54:36.192186        
 @main.route('/select/Users_Query', methods=['GET','POST'])
 @login_required
 @admin_required
@@ -22113,9 +22240,9 @@ def select_Users_query():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2021-06-28 15:18:06.209730
+#  GLVH @ 2021-06-30 21:54:36.223761
 # ======================================================================
-# gen_views_api.html:AG 2021-06-28 15:18:06.209748
+# gen_views_api.html:AG 2021-06-30 21:54:36.223780
 # table_name: Users
 # class_name: User
 # is shardened: None
@@ -22142,7 +22269,7 @@ def api_get_Users(id=None):
                 id_values=[id]
             # Codigo para un solo campo de id
             # chequear si marcado explicitamente
-            db.session.close()
+            db.session.flush()
             query = db.session.query(Users)
             if id is not None:
                 query = query.filter(Users.id == id_values[id_counter])
@@ -22211,8 +22338,9 @@ def api_post_Users():
             db.session.add(row)
             db.session.flush()
             db.session.commit()
+            db.session.flush()
             db.session.refresh(row)
-            db.session.close()
+            db.session.flush()
             message = f"Created 'Users' id = {row.id}"
             row     = json.loads(row.get_json())
         except Exception as e:
@@ -22264,8 +22392,9 @@ def api_put_Users(id):
                 db.session.merge(row)
                 db.session.flush()
                 db.session.commit()
+                db.session.flush()
                 db.session.refresh(row)
-                db.session.close()
+                db.session.flush()
                 message = f"Modified 'Users' id = {id}"
                 row     = json.loads(row.get_json())
             else:
@@ -22322,8 +22451,9 @@ def api_patch_Users(id):
                 db.session.merge(row)
                 db.session.flush()
                 db.session.commit()
+                db.session.flush()
                 db.session.refresh(row)
-                db.session.close()
+                db.session.flush()
                 message = f"Modified 'Users' id = {id}"
                 try:
                     row     = json.loads(row.get_json())
@@ -22369,7 +22499,7 @@ def api_delete_Users(id):
                 db.session.delete(row)
                 db.session.flush()
                 db.session.commit()
-                db.session.close()
+                db.session.flush()
                 message = f"Deleted 'Users' id = {id}"
                 row     = json.loads(row.get_json())
             else:
@@ -23349,6 +23479,7 @@ def forms_Get_Charging_Resume():
     # Will setup filter to consider only Currencies with actual Exchange Rates in DB
     # Commit all pending DB states in order to refresh data
     db.session.commit()
+    db.session.flush()
     # Prepare query
     query = db.session.query(exchange_rate.Cur_Code.distinct().label('Cur_Code'))
     # Execute query and convert in list for further use in choices selection
@@ -23430,6 +23561,9 @@ def report_Charging_Resume():
     logger.debug(f'{this()}: Enter')    
     collectordata=get_collectordata()
     
+    db.session.flush()
+    db.session.commit()
+    
     Cus_Id          =  request.args.get('Cus_Id',None,type=int)
     Cus_Name        =  request.args.get('Cus_Name',None,type=str)
     CIT_Date_From   =  request.args.get('CIT_Date_From',None,type=str)
@@ -23501,6 +23635,91 @@ def report_Charging_Resume():
                 Cur_Name=Cur_Name,
                 collectordata=get_collectordata()
                 )
+
+@main.route('/download/Charging_Resume', methods=['GET','POST'])
+@login_required
+def download_Charging_Resume():
+    logger.debug(f'{this()}: Enter')    
+    collectordata=get_collectordata()
+    
+    db.session.flush()
+    db.session.commit()
+    
+    Cus_Id          =  request.args.get('Cus_Id',None,type=int)
+    Cus_Name        =  request.args.get('Cus_Name',None,type=str)
+    CIT_Date_From   =  request.args.get('CIT_Date_From',None,type=str)
+    CIT_Date_To     =  request.args.get('CIT_Date_To',None,type=str)
+    CIT_Status      =  request.args.get('CIT_Status',None,type=int)
+    CIT_Status_Value=  request.args.get('CIT_Status_Value',None,type=str)
+    Cur_Code        =  request.args.get('Cur_Code',None,type=str)
+    Cur_Name        =  request.args.get('Cur_Name',None,type=str)
+    Update          =  request.args.get('Update',0,type=int)
+        
+    # Get Actual Remume Data from Database
+    # NOTE: Here needs some Sand-Clock Message or something in case it takes so long ...
+    # Gets Charge Resume from DB
+    rows = db.Get_Charge_Resume(
+                Cus_Id,
+                CIT_Date_From,
+                CIT_Date_To,
+                CIT_Status,
+                Cur_Code
+                )
+                
+    temp_name   = next(tempfile._get_candidate_names())
+    output_file = f"{temp_name}.xlsx"
+    
+    d = {
+        'detail':[],
+        'Cus-Id':Cus_Id,
+        'CIT_Date_From':CIT_Date_From,
+        'CIT_Date_To':CIT_Date_To,
+        'CIT_Status':CIT_Status,
+        'Cur_Code':Cur_Code,
+        'file':output_file,
+        'rows':len(rows)
+    }
+    # Build list of records to export from query
+    for row in rows:
+        d['detail'].append({
+                'ccCode':row.CC_Code,
+                'ccDescription':row.CC_Description,
+                'ciName':row.CI_Name,
+                'cuDescription':row.CU_Description,
+                'items':row.CIT_Count,
+                'mu':row.Rat_MU_Code,
+                'price':float(row.Rat_Price),
+                'rateCurrency':row.Cur_Code,
+                'ratePeriodDescription':row.Rat_Period_Description,
+                'resumeQuantityAtRate':float(row.CR_Quantity_at_Rate),
+                'totalAtCurrency':float(row.CR_ST_at_Rate_Cur),
+                'from':row.CR_Date_From,
+                'to':row.CR_Date_To,
+        })
+    # List of fields in desired order 
+    headers=[
+                'ccCode',
+                'ccDescription',
+                'ciName',
+                'cuDescription',
+                'items',
+                'mu',
+                'price',
+                'rateCurrency',
+                'ratePeriodDescription',
+                'resumeQuantityAtRate',
+                'totalAtCurrency',
+                'from',
+                'to',
+    ]
+    # Normalize data into a Pandas Dataframe
+    df1 = json_normalize(d, 'detail')
+    # Reorder columns
+    df1 = df1.reindex(columns=headers)
+    # create temporary filename       
+    xlsx_file="%s/%s"%(current_app.root_path,url_for('static',filename='tmp/%s'%(output_file)))
+    df1.to_excel(xlsx_file,'Sheet 1')
+    return send_file(xlsx_file,as_attachment=True,attachment_filename=output_file)
 # ======================================================================
 # COLLECTOR API routes
 # (c) Sertechno 2020

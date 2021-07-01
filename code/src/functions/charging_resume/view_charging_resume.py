@@ -33,6 +33,7 @@ def forms_Get_Charging_Resume():
     # Will setup filter to consider only Currencies with actual Exchange Rates in DB
     # Commit all pending DB states in order to refresh data
     db.session.commit()
+    db.session.flush()
     # Prepare query
     query = db.session.query(exchange_rate.Cur_Code.distinct().label('Cur_Code'))
     # Execute query and convert in list for further use in choices selection
@@ -114,6 +115,9 @@ def report_Charging_Resume():
     logger.debug(f'{this()}: Enter')    
     collectordata=get_collectordata()
     
+    db.session.flush()
+    db.session.commit()
+    
     Cus_Id          =  request.args.get('Cus_Id',None,type=int)
     Cus_Name        =  request.args.get('Cus_Name',None,type=str)
     CIT_Date_From   =  request.args.get('CIT_Date_From',None,type=str)
@@ -185,3 +189,88 @@ def report_Charging_Resume():
                 Cur_Name=Cur_Name,
                 collectordata=get_collectordata()
                 )
+
+@main.route('/download/Charging_Resume', methods=['GET','POST'])
+@login_required
+def download_Charging_Resume():
+    logger.debug(f'{this()}: Enter')    
+    collectordata=get_collectordata()
+    
+    db.session.flush()
+    db.session.commit()
+    
+    Cus_Id          =  request.args.get('Cus_Id',None,type=int)
+    Cus_Name        =  request.args.get('Cus_Name',None,type=str)
+    CIT_Date_From   =  request.args.get('CIT_Date_From',None,type=str)
+    CIT_Date_To     =  request.args.get('CIT_Date_To',None,type=str)
+    CIT_Status      =  request.args.get('CIT_Status',None,type=int)
+    CIT_Status_Value=  request.args.get('CIT_Status_Value',None,type=str)
+    Cur_Code        =  request.args.get('Cur_Code',None,type=str)
+    Cur_Name        =  request.args.get('Cur_Name',None,type=str)
+    Update          =  request.args.get('Update',0,type=int)
+        
+    # Get Actual Remume Data from Database
+    # NOTE: Here needs some Sand-Clock Message or something in case it takes so long ...
+    # Gets Charge Resume from DB
+    rows = db.Get_Charge_Resume(
+                Cus_Id,
+                CIT_Date_From,
+                CIT_Date_To,
+                CIT_Status,
+                Cur_Code
+                )
+                
+    temp_name   = next(tempfile._get_candidate_names())
+    output_file = f"{temp_name}.xlsx"
+    
+    d = {
+        'detail':[],
+        'Cus-Id':Cus_Id,
+        'CIT_Date_From':CIT_Date_From,
+        'CIT_Date_To':CIT_Date_To,
+        'CIT_Status':CIT_Status,
+        'Cur_Code':Cur_Code,
+        'file':output_file,
+        'rows':len(rows)
+    }
+    # Build list of records to export from query
+    for row in rows:
+        d['detail'].append({
+                'ccCode':row.CC_Code,
+                'ccDescription':row.CC_Description,
+                'ciName':row.CI_Name,
+                'cuDescription':row.CU_Description,
+                'items':row.CIT_Count,
+                'mu':row.Rat_MU_Code,
+                'price':float(row.Rat_Price),
+                'rateCurrency':row.Cur_Code,
+                'ratePeriodDescription':row.Rat_Period_Description,
+                'resumeQuantityAtRate':float(row.CR_Quantity_at_Rate),
+                'totalAtCurrency':float(row.CR_ST_at_Rate_Cur),
+                'from':row.CR_Date_From,
+                'to':row.CR_Date_To,
+        })
+    # List of fields in desired order 
+    headers=[
+                'ccCode',
+                'ccDescription',
+                'ciName',
+                'cuDescription',
+                'items',
+                'mu',
+                'price',
+                'rateCurrency',
+                'ratePeriodDescription',
+                'resumeQuantityAtRate',
+                'totalAtCurrency',
+                'from',
+                'to',
+    ]
+    # Normalize data into a Pandas Dataframe
+    df1 = json_normalize(d, 'detail')
+    # Reorder columns
+    df1 = df1.reindex(columns=headers)
+    # create temporary filename       
+    xlsx_file="%s/%s"%(current_app.root_path,url_for('static',filename='tmp/%s'%(output_file)))
+    df1.to_excel(xlsx_file,'Sheet 1')
+    return send_file(xlsx_file,as_attachment=True,attachment_filename=output_file)
