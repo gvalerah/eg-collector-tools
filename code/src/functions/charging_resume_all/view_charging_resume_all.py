@@ -123,7 +123,7 @@ def report_Charging_Resume_All():
         for ci in CI:
             
             cis_count+=1
-            logger.debug ("%s: %.2f%% calling db.Update_Charge_Resume_CI(%s,%s,%s,%s,%s,%s,%s)"%(
+            logger.debug ("%s: %.2f%% calling db.Update_Charge_Resume_CI(%s,%s,%s,%s,%s,%s,%s,%s)"%(
                 this(),
                 cis_count*100/cis,
                 ci.Cus_Id,
@@ -132,7 +132,8 @@ def report_Charging_Resume_All():
                 CIT_Status,
                 Cur_Code,
                 ci.CI_Id,
-                charge_item
+                charge_item,
+                current_user.id
                 ))
 
             records = db.Update_Charge_Resume_CI(
@@ -142,7 +143,8 @@ def report_Charging_Resume_All():
                         CIT_Status,
                         Cur_Code,
                         ci.CI_Id,
-                        charge_item
+                        charge_item,
+                        current_user.id
                         )
             if records is not None:
                 resume_records += records # OJO AQUI ME QUEDE 
@@ -151,6 +153,7 @@ def report_Charging_Resume_All():
         
     # Get Actual Remume Data from Database
     # NOTE: Here needs some Sand-Clock Message or something in case it takes so long ...
+    '''
     rows = db.Get_Charge_Resume2(
                 4,
                 0,
@@ -159,7 +162,15 @@ def report_Charging_Resume_All():
                 CIT_Status,
                 Cur_Code
             )
-    
+    '''
+    rows = db.Get_Charge_Resume_Filter(
+                FILTER_ALL,
+                0,
+                CIT_Date_From,
+                CIT_Date_To,
+                CIT_Status,
+                Cur_Code
+            )
     return render_template('report_charging_resume_all.html',
                 rows=rows,
                 CIT_Date_From=CIT_Date_From,

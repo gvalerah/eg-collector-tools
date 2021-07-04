@@ -16,4 +16,5 @@ class frm_export_Charging_Resume(Form):
     submit_JSON     = SubmitField ('JSON')
     submit_FIX      = SubmitField ('FIX')
     submit_Cancel   = SubmitField ('Cancel')
+    submit_Delete   = SubmitField ('Delete')
 

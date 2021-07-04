@@ -31,10 +31,15 @@
     
     {% set sum_Total = [0] -%}
         <div class="page-header">
-            <h2>Charging Report:<h2>
+            <h2>Charging Report: report_charging_resume.html<h2>
             <h3>
             <table>
-                <tr><td>Customer   </td><td> : </td><td>{{Cus_Name}}</td></tr> 
+                {%- if Cus_Name is defined and Cus_name is not none %}
+                <tr><td>Customer   </td><td> : </td><td>{{Cus_Name}}</td></tr>
+                {%- endif %} 
+                {%- if CC_Description is defined and CC_Description is not none %}
+                <tr><td>Cost Center</td><td> : </td><td>{{CC_Description}}</td></tr>
+                {%- endif %} 
                 <tr><td>Report From</td><td> : </td><td>{{CIT_Date_From}}</td></tr>
                 <tr><td>Report To  </td><td> : </td><td>{{CIT_Date_To}}</td></tr>
                 <tr><td>Status     </td><td> : </td><td>{{CIT_Status_Value}}</td></tr>
@@ -42,7 +47,7 @@
             </table>
         
             <a href="#" onclick="history.go(-1)"><img src="/static/img/back.png"  color=yellow width="32" height="32" title="" alt="Add"></a>
-            <a href="/download/Charging_Resume?Cus_Id={{Cus_Id}}&CIT_Date_From={{CIT_Date_From}}&CIT_Date_To={{CIT_Date_To}}&CIT_Status={{CIT_Status}}&Cur_Code={{Cur_Code}}"> 
+            <a href="/download/Charging_Resume?Cus_Id={{Cus_Id}}&CIT_Date_From={{CIT_Date_From}}&CIT_Date_To={{CIT_Date_To}}&CIT_Status={{CIT_Status}}&Cur_Code={{Cur_Code}}&filter_type={{filter_type}}&filter_code={{filter_code}}"> 
                 <img src="/static/img/download.png"
                 color=yellow width="32" height="32" title="" alt="Download">
             </a>

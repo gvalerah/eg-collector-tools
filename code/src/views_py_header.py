@@ -143,7 +143,7 @@ def get_collectordata():
         sharding = current_app.config['COLLECTOR_CIT_SHARDING']
     if sharding:
         charge_item.set_shard(suffix)
-        flash(       f"{this()}: Using shardened table: {charge_item.__table__.name}") 
+        flash(                 f"Using shardened table: {charge_item.__table__.name}") 
         logger.debug(f"{this()}: Using shardened table: {charge_item.__table__.name}") 
     
     return collectordata

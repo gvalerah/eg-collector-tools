@@ -30,6 +30,11 @@ def forms_Export_Charging_Resume():
 
     form = frm_export_Charging_Resume()
     
+    # BE SURE all CU records has proper rate id
+    updated_cus = db.Update_CU_Rates()
+    
+    logger.warning(f"Updated CUs = {updated_cus}")
+    
     rows = db.session.query( 
             func.count(charge_resume.Cus_Id).label('RECORDS'),
             charge_resume.Cus_Id,
@@ -38,6 +43,7 @@ def forms_Export_Charging_Resume():
             charge_resume.CIT_Status,
             charge_resume.Cur_Code,
             charge_resume.Cus_Name
+            ).filter(charge_resume.User_Id==current_user.id
             ).group_by( charge_resume.Cus_Id,
                         charge_resume.CR_Date_From,
                         charge_resume.CR_Date_To,
@@ -66,7 +72,8 @@ def forms_Export_Charging_Resume():
 
     export_choices = []
     for row in rows:
-        option="%s_%s_%s_%s_%s_%s"%(
+        option="%s_%s_%s_%s_%s_%s_%s"%(
+                current_user.id,
                 row.Cus_Id,
                 row.CR_Date_From,
                 row.CR_Date_To,
@@ -74,7 +81,8 @@ def forms_Export_Charging_Resume():
                 row.Cur_Code,
                 row.Cus_Name
             )
-        value ="%s from %s to %s status=%s currency=%s (%s)"%(
+        value ="%s %s from %s to %s status=%s currency=%s (%s)"%(
+                current_user.id,
                 row.Cus_Name,
                 row.CR_Date_From,
                 row.CR_Date_To,
@@ -116,16 +124,16 @@ def forms_Export_Charging_Resume():
             for pla,name in form.Platform.choices:
                 if platform == form.Platform.data:
                     Pla_Name=name
-            print("CC =",CC_Name,"Pla =",Pla_Name)
             return redirect(url_for('.export_Charging_Resume',
-                                Cus_Id          = data[0],
-                                Cus_Name        = data[5],
-                                CIT_Date_From   = data[1],
-                                CIT_Date_To     = data[2],
-                                CIT_Status      = data[3],
-                                CIT_Status_Value= dstatuses[int(data[3])],
-                                Cur_Code        = data[4],
-                                Cur_Name        = dcurrencies[data[4]],
+                                User_Id         = current_user.id,
+                                Cus_Id          = data[1],
+                                Cus_Name        = data[6],
+                                CIT_Date_From   = data[2],
+                                CIT_Date_To     = data[3],
+                                CIT_Status      = data[4],
+                                CIT_Status_Value= dstatuses[int(data[4])],
+                                Cur_Code        = data[5],
+                                Cur_Name        = dcurrencies[data[5]],
                                 Format          = "pdf",
                                 CC_Id           = form.CC.data.split(':')[0],
                                 CC_Code         = form.CC.data.split(':')[1],
@@ -133,64 +141,68 @@ def forms_Export_Charging_Resume():
                                 CC_Name         = CC_Name,
                                 Pla_Name        = Pla_Name
                                 ))
-        if     form.submit_XLS.data:
+        elif   form.submit_XLS.data:
             return redirect(url_for('.export_Charging_Resume',
-                                Cus_Id          = data[0],
-                                Cus_Name        = data[5],
-                                CIT_Date_From   = data[1],
-                                CIT_Date_To     = data[2],
-                                CIT_Status      = data[3],
-                                CIT_Status_Value= dstatuses[int(data[3])],
-                                Cur_Code        = data[4],
-                                Cur_Name        = dcurrencies[data[4]],
+                                User_Id         = current_user.id,
+                                Cus_Id          = data[1],
+                                Cus_Name        = data[6],
+                                CIT_Date_From   = data[2],
+                                CIT_Date_To     = data[3],
+                                CIT_Status      = data[4],
+                                CIT_Status_Value= dstatuses[int(data[4])],
+                                Cur_Code        = data[5],
+                                Cur_Name        = dcurrencies[data[5]],
                                 Format          = "xlsx"
                                 ))
-        if     form.submit_CSV.data:
+        elif   form.submit_CSV.data:
             return redirect(url_for('.export_Charging_Resume',
-                                Cus_Id          = data[0],
-                                Cus_Name        = data[5],
-                                CIT_Date_From   = data[1],
-                                CIT_Date_To     = data[2],
-                                CIT_Status      = data[3],
-                                CIT_Status_Value= dstatuses[int(data[3])],
-                                Cur_Code        = data[4],
-                                Cur_Name        = dcurrencies[data[4]],
+                                User_Id         = current_user.id,
+                                Cus_Id          = data[1],
+                                Cus_Name        = data[6],
+                                CIT_Date_From   = data[2],
+                                CIT_Date_To     = data[3],
+                                CIT_Status      = data[4],
+                                CIT_Status_Value= dstatuses[int(data[4])],
+                                Cur_Code        = data[5],
+                                Cur_Name        = dcurrencies[data[5]],
                                 Format          = "csv"
                                 ))
-        if     form.submit_JSON.data:
+        elif   form.submit_JSON.data:
             return redirect(url_for('.export_Charging_Resume',
-                                Cus_Id          = data[0],
-                                Cus_Name        = data[5],
-                                CIT_Date_From   = data[1],
-                                CIT_Date_To     = data[2],
-                                CIT_Status      = data[3],
-                                CIT_Status_Value= dstatuses[int(data[3])],
-                                Cur_Code        = data[4],
-                                Cur_Name        = dcurrencies[data[4]],
+                                User_Id         = current_user.id,
+                                Cus_Id          = data[1],
+                                Cus_Name        = data[6],
+                                CIT_Date_From   = data[2],
+                                CIT_Date_To     = data[3],
+                                CIT_Status      = data[4],
+                                CIT_Status_Value= dstatuses[int(data[4])],
+                                Cur_Code        = data[5],
+                                Cur_Name        = dcurrencies[data[5]],
                                 Format          = "json"
                                 ))
-        if     form.submit_FIX.data:
+        elif   form.submit_FIX.data:
             return redirect(url_for('.export_Charging_Resume',
-                                Cus_Id          = data[0],
-                                Cus_Name        = data[5],
-                                CIT_Date_From   = data[1],
-                                CIT_Date_To     = data[2],
-                                CIT_Status      = data[3],
-                                CIT_Status_Value= dstatuses[int(data[3])],
-                                Cur_Code        = data[4],
-                                Cur_Name        = dcurrencies[data[4]],
+                                User_Id         = current_user.id,
+                                Cus_Id          = data[1],
+                                Cus_Name        = data[6],
+                                CIT_Date_From   = data[2],
+                                CIT_Date_To     = data[3],
+                                CIT_Status      = data[4],
+                                CIT_Status_Value= dstatuses[int(data[4])],
+                                Cur_Code        = data[5],
+                                Cur_Name        = dcurrencies[data[5]],
                                 Format          = "fix"
                                 ))
-
+        elif   form.submit_Delete.data:
+            flash('Report deleted (PLACEHOLDER) ...')
+            logger.warning('Report deleted (PLACEHOLDER) ...')
         elif   form.submit_Cancel.data:
-            #print('Cancel Data Here ... does nothing')
             flash('Report discarded ...')
         else:
             pass
-            #print('form validated but not submited ???')
+        logger.warning(" ... return redirect(url_for('.index')) ...")
         return redirect(url_for('.index'))
-
-
+    logger.warning(" ... return render template .....")
     return render_template(
         'export_charging_resume.html',
         form=form,
@@ -618,6 +630,8 @@ def export_to_fix(output_file,rows,Customer,From,To,Status,Currency):
 @login_required
 def export_Charging_Resume():
     logger.debug('Enter: Export_Charging_Resume()')
+    print ('Enter: Export_Charging_Resume()')
+    User_Id         =  request.args.get('User_Id',0,type=int)
     Cus_Id          =  request.args.get('Cus_Id',None,type=int)
     Cus_Name        =  request.args.get('Cus_Name',None,type=str)
     CIT_Date_From   =  request.args.get('CIT_Date_From',None,type=str)
@@ -634,6 +648,7 @@ def export_Charging_Resume():
     Pla_Name        =  request.args.get('Pla_Name',"",type=str)
     # Get Actual Data from Database
     # NOTE: Here needs some Sand-Clock Message or something in case it takes so long ...
+    '''
     rows = db.Get_Charge_Resume(
             Cus_Id,
             CIT_Date_From,
@@ -643,12 +658,27 @@ def export_Charging_Resume():
             CC_Id=CC_Id,
             Pla_Id=Pla_Id
             )
+    '''
+    rows = db.Get_Charge_Resume_Filter(
+            FILTER_CUSTOMER,
+            Cus_Id,
+            CIT_Date_From,
+            CIT_Date_To,
+            CIT_Status,
+            Cur_Code,
+            CC_Id=CC_Id,
+            Pla_Id=Pla_Id,
+            User_Id=User_Id            
+            )
+
+            
     # Aqui hace la conversion
     if   CC_Id >  0 and Pla_Id > 0:     tail="_%s_%s"%(CC_Id,Pla_Id)
     elif CC_Id == 0 and Pla_Id > 0:     tail="_%s"%(Pla_Id)
     elif CC_Id >  0 and Pla_Id == 0:    tail="_%s"%(CC_Id)
     else:                               tail=""
-    output_file = "CR_%d_%s_%s_%s_%s%s.%s"%(
+    output_file = "CR_%s_%s_%s_%s_%s_%s%s.%s"%(
+        User_Id,
         Cus_Id,
         CIT_Date_From,
         CIT_Date_To,
@@ -657,6 +687,7 @@ def export_Charging_Resume():
         tail,
         Format
         )
+    return_file=None
     if      Format == 'pdf':
         #return_file=export_to_pdf(output_file,rows,Cus_Name,CIT_Date_From,CIT_Date_To,CIT_Status_Value,Cur_Name)
         return_file=export_to_pdf(  output_file,
@@ -684,7 +715,8 @@ def export_Charging_Resume():
         pass    
     
     # Aqui debe enviar el archivo a la PC
-    logger.debug("%s: return_file   = %s"%('export_Charging_Resume',return_file))
-    logger.debug("%s: att name      = %s"%('export_Charging_Resume',output_file))
-    return send_file(return_file,as_attachment=True,attachment_filename=output_file)
-
+    if return_file is not None:
+        logger.debug("%s: return_file   = %s"%('export_Charging_Resume',return_file))
+        logger.debug("%s: att name      = %s"%('export_Charging_Resume',output_file))
+        return send_file(return_file,as_attachment=True,attachment_filename=output_file)
+    return

@@ -185,7 +185,8 @@ def report_Charging_Resume_Level():
                 CIT_Status,
                 Cur_Code,
                 ci.CI_Id,
-                charge_item
+                charge_item,
+                current_user.id
                 )
             if records is not None:
                 resume_records += records
@@ -194,11 +195,21 @@ def report_Charging_Resume_Level():
         
     # Get Actual Remume Data from Database
     # NOTE: Here needs some Sand-Clock Message or something in case it takes so long ...
+    '''
     rows =  db.Get_Charge_Resume(
                 Cus_Id,
                 CIT_Date_From,
                 CIT_Date_To,
                 CIT_Status,Cur_Code
+            )
+    '''
+    rows =  db.Get_Charge_Resume_Filter(
+                FILTER_CUSTOMER,
+                Cus_Id,
+                CIT_Date_From,
+                CIT_Date_To,
+                CIT_Status,
+                Cur_Code
             )
     
     return render_template('report_charging_resume_level.html',

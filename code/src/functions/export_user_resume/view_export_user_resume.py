@@ -22,133 +22,152 @@ def forms_Export_User_Resume():
 
     # 20210422 GV cambio a rutina estandar USERCAN = db.get_user_cost_centers(current_user.id) 
     USERCAN = db.get_user_cost_centers(current_user.id,) 
-    rows = db.session.query(    func.count(user_resumes.CI_CC_Id).label('RECORDS'),
-                        user_resumes.CI_CC_Id,
-                        user_resumes.CR_Date_From,
-                        user_resumes.CR_Date_To,
-                        user_resumes.CIT_Status,
-                        user_resumes.Cur_Code,
-                        user_resumes.CC_Description
-                    ).filter(     user_resumes.CI_CC_Id.in_(USERCAN)
-                    ).group_by(   user_resumes.CI_CC_Id,
-                                user_resumes.CR_Date_From,
-                                user_resumes.CR_Date_To,
-                                user_resumes.CIT_Status,
-                                user_resumes.Cur_Code,
-                                user_resumes.CC_Description
-                    ).order_by(   user_resumes.CI_CC_Id,
-                                user_resumes.CR_Date_From,
-                                user_resumes.CR_Date_To,
-                                user_resumes.CIT_Status,
-                                user_resumes.Cur_Code
+    rows = db.session.query(    func.count(charge_resume.CI_CC_Id).label('RECORDS'),
+                        charge_resume.CI_CC_Id,
+                        charge_resume.CR_Date_From,
+                        charge_resume.CR_Date_To,
+                        charge_resume.CIT_Status,
+                        charge_resume.Cur_Code,
+                        charge_resume.CC_Description
+                    ).filter(     charge_resume.User_Id==current_user.id
+                    ).filter(     charge_resume.CI_CC_Id>=min(USERCAN)
+                    ).filter(     charge_resume.CI_CC_Id<=max(USERCAN)
+                    ).group_by(   charge_resume.CI_CC_Id,
+                                charge_resume.CR_Date_From,
+                                charge_resume.CR_Date_To,
+                                charge_resume.CIT_Status,
+                                charge_resume.Cur_Code,
+                                charge_resume.CC_Description
+                    ).order_by(   charge_resume.CI_CC_Id,
+                                charge_resume.CR_Date_From,
+                                charge_resume.CR_Date_To,
+                                charge_resume.CIT_Status,
+                                charge_resume.Cur_Code
                     ).all()
-
+    
     # Load Statuses
-    statuses=cit_status.query.all()
-    dstatuses={}
+    statuses  = cit_status.query.all()
+    dstatuses = {}
     for s in statuses:
-        dstatuses[s.CIT_Status]=s.Value
+        dstatuses[s.CIT_Status] = s.Value
         
-    currencies=currency.query.all()
-    dcurrencies={}
+    currencies  = currency.query.all()
+    dcurrencies = {}
     for c in currencies:
-        dcurrencies[c.Cur_Code]=c.Cur_Name
+        dcurrencies[c.Cur_Code] = c.Cur_Name
     
     # Load Currency Names
 
     export_choices = []
     for row in rows:
-        option="%s_%s_%s_%s_%s_%s"%(row.CI_CC_Id,row.CR_Date_From,row.CR_Date_To,row.CIT_Status,row.Cur_Code,row.CC_Description)
-        value ="%s from %s to %s status=%s currency=%s"%(row.CC_Description,row.CR_Date_From,row.CR_Date_To,dstatuses[row.CIT_Status],dcurrencies[row.Cur_Code])
+        option="%s_%s_%s_%s_%s_%s_%s"%(
+            current_user.id,
+            row.CI_CC_Id,
+            row.CR_Date_From,
+            row.CR_Date_To,
+            row.CIT_Status,
+            row.Cur_Code,
+            row.CC_Description
+            )
+        value ="%s:%s:%s from %s to %s status=%s currency=%s"%(
+            current_user.id,
+            row.RECORDS,
+            row.CC_Description,
+            row.CR_Date_From,
+            row.CR_Date_To,
+            dstatuses[row.CIT_Status],
+            dcurrencies[row.Cur_Code]
+            )
         export_choices.append((option,value))
     
-    form.Export.choices   = export_choices
+    form.Export.choices = export_choices
 
     if form.validate_on_submit():
 
         data=form.Export.data.split("_")
-        print("data=",data)
         
-        CC_Code=db.session.query(cost_center.CC_Code).filter(cost_center.CC_Id==data[0]).one()
+        CC_Code=db.session.query(cost_center.CC_Code).filter(cost_center.CC_Id==data[1]).one()
         
-        if     form.submit_PDF.data:
-            return redirect(url_for('.export_User_Resume',
-                                CC_Id           = data[0],
+        if hasattr(form,'submit_PDF') and form.submit_PDF.data:
+            flash('Report export to PDF ...')
+            return redirect(url_for('.under_construction'))
+            return redirect(url_for('.export_Charging_Resume',
+                                User_Id         = current_user.id,
+                                Cus_Id          = current_user.cost_center.Cus_Id,
+                                CC_Id           = data[1],
                                 CC_Code         = CC_Code,
-                                CC_Description  = data[5],
-                                CIT_Date_From   = data[1],
-                                CIT_Date_To     = data[2],
-                                CIT_Status      = data[3],
-                                CIT_Status_Value= dstatuses[int(data[3])],
-                                Cur_Code        = data[4],
-                                Cur_Name        = dcurrencies[data[4]],
+                                CC_Description  = data[6],
+                                CIT_Date_From   = data[2],
+                                CIT_Date_To     = data[3],
+                                CIT_Status      = data[4],
+                                CIT_Status_Value= dstatuses[int(data[4])],
+                                Cur_Code        = data[5],
+                                Cur_Name        = dcurrencies[data[5]],
                                 Format          = "pdf"
                                 ))
         elif     form.submit_XLS.data:
-            return redirect(url_for('.export_User_Resume',
-                                CC_Id           = data[0],
+            return redirect(url_for('.export_Charging_Resume',
+                                User_Id         = current_user.id,
+                                Cus_Id          = current_user.cost_center.Cus_Id,
+                                CC_Id           = data[1],
                                 CC_Code         = CC_Code,
-                                CC_Description  = data[5],
-                                CIT_Date_From   = data[1],
-                                CIT_Date_To     = data[2],
-                                CIT_Status      = data[3],
-                                CIT_Status_Value= dstatuses[int(data[3])],
-                                Cur_Code        = data[4],
-                                Cur_Name        = dcurrencies[data[4]],
+                                CC_Description  = data[6],
+                                CIT_Date_From   = data[2],
+                                CIT_Date_To     = data[3],
+                                CIT_Status      = data[4],
+                                CIT_Status_Value= dstatuses[int(data[4])],
+                                Cur_Code        = data[5],
+                                Cur_Name        = dcurrencies[data[5]],
                                 Format          = "xlsx"
                                 ))
         elif     form.submit_CSV.data:
-            return redirect(url_for('.export_User_Resume',
-                                CC_Id           = data[0],
+            return redirect(url_for('.export_Charging_Resume',
+                                User_Id         = current_user.id,
+                                Cus_Id          = current_user.cost_center.Cus_Id,
+                                CC_Id           = data[1],
                                 CC_Code         = CC_Code,
-                                CC_Description  = data[5],
-                                CIT_Date_From   = data[1],
-                                CIT_Date_To     = data[2],
-                                CIT_Status      = data[3],
-                                CIT_Status_Value= dstatuses[int(data[3])],
-                                Cur_Code        = data[4],
-                                Cur_Name        = dcurrencies[data[4]],
+                                CC_Description  = data[6],
+                                CIT_Date_From   = data[2],
+                                CIT_Date_To     = data[3],
+                                CIT_Status      = data[4],
+                                CIT_Status_Value= dstatuses[int(data[4])],
+                                Cur_Code        = data[5],
+                                Cur_Name        = dcurrencies[data[5]],
                                 Format          = "csv"
                                 ))
         elif     form.submit_JSON.data:
-            return redirect(url_for('.export_User_Resume',
-                                CC_Id           = data[0],
+            return redirect(url_for('.export_Charging_Resume',
+                                User_Id         = current_user.id,
+                                Cus_Id          = current_user.cost_center.Cus_Id,
+                                CC_Id           = data[1],
                                 CC_Code         = CC_Code,
-                                CC_Description  = data[5],
-                                CIT_Date_From   = data[1],
-                                CIT_Date_To     = data[2],
-                                CIT_Status      = data[3],
-                                CIT_Status_Value= dstatuses[int(data[3])],
-                                Cur_Code        = data[4],
-                                Cur_Name        = dcurrencies[data[4]],
+                                CC_Description  = data[6],
+                                CIT_Date_From   = data[2],
+                                CIT_Date_To     = data[3],
+                                CIT_Status      = data[4],
+                                CIT_Status_Value= dstatuses[int(data[4])],
+                                Cur_Code        = data[5],
+                                Cur_Name        = dcurrencies[data[5]],
                                 Format          = "json"
                                 ))
         elif     form.submit_FIX.data:
-            return redirect(url_for('.export_User_Resume',
-                                CC_Id           = data[0],
+            return redirect(url_for('.export_Charging_Resume',
+                                User_Id         = current_user.id,
+                                Cus_Id          = current_user.cost_center.Cus_Id,
+                                CC_Id           = data[1],
                                 CC_Code         = CC_Code,
-                                CC_Description  = data[5],
-                                CIT_Date_From   = data[1],
-                                CIT_Date_To     = data[2],
-                                CIT_Status      = data[3],
-                                CIT_Status_Value= dstatuses[int(data[3])],
-                                Cur_Code        = data[4],
-                                Cur_Name        = dcurrencies[data[4]],
+                                CC_Description  = data[6],
+                                CIT_Date_From   = data[2],
+                                CIT_Date_To     = data[3],
+                                CIT_Status      = data[4],
+                                CIT_Status_Value= dstatuses[int(data[4])],
+                                Cur_Code        = data[5],
+                                Cur_Name        = dcurrencies[data[5]],
                                 Format          = "fix"
                                 ))
-        elif     form.submit_Delete.data:
-            return redirect(url_for('.export_User_Resume',
-                                CC_Id           = data[0],
-                                CC_Code         = CC_Code,
-                                CC_Description  = data[5],
-                                CIT_Date_From   = data[1],
-                                CIT_Date_To     = data[2],
-                                CIT_Status      = data[3],
-                                CIT_Status_Value= dstatuses[int(data[3])],
-                                Cur_Code        = data[4],
-                                Cur_Name        = dcurrencies[data[4]],
-                                Format          = "del"
-                                ))
+        elif hasattr(form,'submit_Delete') and  form.submit_Delete.data:
+            flash('Report deleted ...')
+            return redirect(url_for('.under_construction'))
         elif   form.submit_Cancel.data:
             flash('Report discarded ...')
         else:

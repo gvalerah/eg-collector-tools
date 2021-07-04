@@ -158,7 +158,9 @@ def report_Charging_Resume_CC():
                 CIT_Status,
                 Cur_Code,
                 ci.CI_Id,
-                charge_item)
+                charge_item,
+                current_user.id
+                )
             if records is not None:
                 resume_records += records
             
@@ -174,11 +176,12 @@ def report_Charging_Resume_CC():
                 CIT_Date_From,
                 CIT_Date_To,
                 CIT_Status,
-                Cur_Code
+                Cur_Code,
+                User_Id=current_user.id
             )
-    logger.debug(f"rows from Charge Resume Filter count={rows.count(CC_Id)}")
     return render_template(
-                'report_charging_resume_cc.html',
+                #report_charging_resume_cc.html',
+                'report_charging_resume.html',
                 rows=rows,
                 CC_Id=CC_Id,
                 CC_Description=CC_Description,

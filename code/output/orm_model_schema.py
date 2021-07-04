@@ -1,7 +1,7 @@
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-06-30 21:54:29
+# GLVH @ 2021-07-03 20:39:29
 # =============================================================================
 
 # gen_model_flask.py:67 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/ORM_model_schema.py
@@ -63,15 +63,16 @@ def Create_Tables(engine):
     try:
         Charge_Resumes = Table(
                 'Charge_Resumes',Meta,
+                Column( 'User_Id',Integer, primary_key=True ),
                 Column( 'Cus_Id',Integer, primary_key=True ),
                 Column( 'CR_Date_From',Date, primary_key=True ),
                 Column( 'CR_Date_To',Date, primary_key=True ),
                 Column( 'CIT_Status',Integer, primary_key=True ),
                 Column( 'Cur_Code',String(3), primary_key=True ),
+                Column( 'CU_Id',Integer, primary_key=True ),
                 Column( 'CIT_Count',Integer ),
                 Column( 'CIT_Quantity',Numeric(20,12) ),
                 Column( 'CIT_Generation',Integer ),
-                Column( 'CU_Id',Integer, primary_key=True ),
                 Column( 'CI_CC_Id',Integer ),
                 Column( 'CU_Operation',String(10) ),
                 Column( 'Typ_Code',String(10) ),
@@ -92,14 +93,14 @@ def Create_Tables(engine):
                 Column( 'CR_ST_at_Rate_Cur',Numeric(20,12) ),
                 Column( 'CR_ST_at_CC_Cur',Numeric(20,12) ),
                 Column( 'CR_ST_at_Cur',Numeric(20,12) ),
-                Column( 'Cus_Name',String(45) ),
-                Column( 'CI_Name',String(45) ),
-                Column( 'CU_Description',String(45) ),
+                Column( 'Cus_Name',String(255) ),
+                Column( 'CI_Name',String(255) ),
+                Column( 'CU_Description',String(255) ),
                 Column( 'CC_Description',String(255) ),
                 Column( 'Rat_Period_Description',String(10) ),
                 Column( 'CC_Code',String(45) ),
                 Column( 'Pla_Id',Integer ),
-                Column( 'Pla_Name',String(45) ),
+                Column( 'Pla_Name',String(255) ),
         )
     except Exception as e:
         print('EXCEPTION:',e)
@@ -163,6 +164,7 @@ def Create_Tables(engine):
                 Column( 'CC_Parent_Code',String(45) ),
                 Column( 'CC_Reg_Exp',String(45) ),
                 Column( 'CC_Reference',String(245) ),
+                Column( 'Cus_Id',Integer ),
         )
     except Exception as e:
         print('EXCEPTION:',e)
@@ -199,7 +201,7 @@ def Create_Tables(engine):
         Customers = Table(
                 'Customers',Meta,
                 Column( 'Cus_Id',Integer, primary_key=True, autoincrement=True ),
-                Column( 'Cus_Name',String(45) ),
+                Column( 'Cus_Name',String(255) ),
                 Column( 'CC_Id',Integer, ForeignKey('Cost_Centers.CC_Id') ),
         )
     except Exception as e:
@@ -240,7 +242,7 @@ def Create_Tables(engine):
         Platforms = Table(
                 'Platforms',Meta,
                 Column( 'Pla_Id',Integer, primary_key=True, autoincrement=True ),
-                Column( 'Pla_Name',String(45) ),
+                Column( 'Pla_Name',String(255) ),
                 Column( 'Pla_Host',String(45) ),
                 Column( 'Pla_Port',String(45) ),
                 Column( 'Pla_User',String(45) ),
@@ -348,10 +350,10 @@ def Create_Tables(engine):
                 Column( 'CR_Date_To',Date, primary_key=True ),
                 Column( 'CIT_Status',Integer, primary_key=True ),
                 Column( 'Cur_Code',String(3), primary_key=True ),
+                Column( 'CU_Id',Integer, primary_key=True ),
                 Column( 'CIT_Count',Integer ),
                 Column( 'CIT_Quantity',Numeric(20,12) ),
                 Column( 'CIT_Generation',Integer ),
-                Column( 'CU_Id',Integer, primary_key=True ),
                 Column( 'CI_CC_Id',Integer ),
                 Column( 'CU_Operation',String(10) ),
                 Column( 'Typ_Code',String(10) ),
@@ -372,14 +374,14 @@ def Create_Tables(engine):
                 Column( 'CR_ST_at_Rate_Cur',Numeric(20,12) ),
                 Column( 'CR_ST_at_CC_Cur',Numeric(20,12) ),
                 Column( 'CR_ST_at_Cur',Numeric(20,12) ),
-                Column( 'Cus_Name',String(45) ),
-                Column( 'CI_Name',String(45) ),
-                Column( 'CU_Description',String(45) ),
+                Column( 'Cus_Name',String(255) ),
+                Column( 'CI_Name',String(255) ),
+                Column( 'CU_Description',String(255) ),
                 Column( 'CC_Description',String(255) ),
                 Column( 'Rat_Period_Description',String(10) ),
                 Column( 'CC_Code',String(45) ),
                 Column( 'Pla_Id',Integer ),
-                Column( 'Pla_Name',String(45) ),
+                Column( 'Pla_Name',String(255) ),
         )
     except Exception as e:
         print('EXCEPTION:',e)

@@ -21,11 +21,14 @@ def forms_Get_Charging_Resume():
     logger.debug(f'{this()}: Enter')
     collectordata=get_collectordata()
 
-    session['data'] =  {    'Cus_Id': None,
-                            'CIT_Date_From':collectordata['COLLECTOR_PERIOD']['start'], 
-                            'CIT_Date_To':collectordata['COLLECTOR_PERIOD']['end'], 
-                            'CIT_Status':1,
-                            'Cur_Code':'USD'}
+    session['data'] =  {    
+        'User_Id': 0,
+        'Cus_Id': None,
+        'CIT_Date_From':collectordata['COLLECTOR_PERIOD']['start'], 
+        'CIT_Date_To':collectordata['COLLECTOR_PERIOD']['end'], 
+        'CIT_Status':1,
+        'Cur_Code':'USD'
+        }
 
     form = frm_charging_resume()
 
@@ -44,11 +47,14 @@ def forms_Get_Charging_Resume():
     form.Cur_Code.choices   = db.session.query(currency.Cur_Code,currency.Cur_Name).filter(currency.Cur_Code.in_(cur_choices)).all()
 
     if form.validate_on_submit():
+        session['data']['User_Id'       ] = form.User_Id 
         session['data']['Cus_Id'        ] = form.Cus_Id.data
         session['data']['CIT_Date_From' ] = form.CIT_Date_From.data
         session['data']['CIT_Date_To'   ] = form.CIT_Date_To.data
         session['data']['CIT-Status'    ] = form.CIT_Status.data
         session['data']['Cur_Code'      ] = form.Cur_Code.data
+        print(f"session[data]={session.get('data')}")
+        print(f"current_user={current_user}")
         if     form.submit_Report.data:
             # Get the Selected options index for string lists
             for i in range(len(form.Cus_Id.choices)):
@@ -58,6 +64,7 @@ def forms_Get_Charging_Resume():
                 if form.Cur_Code.choices[i][0]==form.Cur_Code.data:
                     cur_index=i
             return redirect(url_for('.report_Charging_Resume',
+                                User_Id         = current_user.id,
                                 Cus_Id          = form.Cus_Id.data,
                                 Cus_Name        = form.Cus_Id.choices[cus_index][1],
                                 CIT_Date_From   = form.CIT_Date_From.data,
@@ -77,6 +84,7 @@ def forms_Get_Charging_Resume():
                 if form.Cur_Code.choices[i][0]==form.Cur_Code.data:
                     cur_index=i
             return redirect(url_for('.report_Charging_Resume',
+                                User_Id         = current_user.id,
                                 Cus_Id          = form.Cus_Id.data,
                                 Cus_Name        = form.Cus_Id.choices[cus_index][1],
                                 CIT_Date_From   = form.CIT_Date_From.data,
@@ -92,7 +100,8 @@ def forms_Get_Charging_Resume():
         else:
             flash('form validated but not submited. Report to Support ...')
         return redirect(url_for('.forms_Get_Charging_Resume'))
-
+    
+    form.User_Id            = session['data']['User_Id']
     form.Cus_Id.data        = session['data']['Cus_Id']
     form.CIT_Date_From.data = session['data']['CIT_Date_From']
     form.CIT_Date_To.data   = session['data']['CIT_Date_To']
@@ -118,6 +127,7 @@ def report_Charging_Resume():
     db.session.flush()
     db.session.commit()
     
+    User_Id         =  request.args.get('User_Id',None,type=int)
     Cus_Id          =  request.args.get('Cus_Id',None,type=int)
     Cus_Name        =  request.args.get('Cus_Name',None,type=str)
     CIT_Date_From   =  request.args.get('CIT_Date_From',None,type=str)
@@ -130,6 +140,13 @@ def report_Charging_Resume():
         
     # Updated cached data for this specific query if requested 
     if Update == 1:
+        
+        # BE SURE all CU records has proper rate id --------------------
+        updated_cus = db.Update_CU_Rates()
+        if updated_cus:
+            logger.warning(f"{this()}: Updated CUs = {updated_cus}")
+        # --------------------------------------------------------------
+        
         query = db.session.query(
                 Configuration_Items.CI_Id
                 ).filter(Configuration_Items.Cus_Id==Cus_Id
@@ -143,8 +160,7 @@ def report_Charging_Resume():
         resume_records=0
 
         for ci in CI:
-            logger.debug ("%s: db.Update_Charge_Resume_CI(%s,%s,%s,%s,%s,%s,%s,%s)"%(
-                this(),
+            logger.debug(f"{this()}: db.Update_Charge_Resume_CI(%s,%s,%s,%s,%s,%s,%s,%s)"%(
                 Cus_Id,
                 CIT_Date_From,
                 CIT_Date_To,
@@ -162,13 +178,16 @@ def report_Charging_Resume():
                 CIT_Status,
                 Cur_Code,
                 ci.CI_Id,
-                charge_item)
+                charge_item,
+                current_user.id
+                )
             resume_records += records
 
-        logger.debug (f"{this()}: resume_records updated = {resume_records}")
+        logger.info (f"{this()}: resume_records updated = {resume_records}")
         
     # Get Actual Remume Data from Database
     # NOTE: Here needs some Sand-Clock Message or something in case it takes so long ...
+    '''
     rows = db.Get_Charge_Resume(
                 Cus_Id,
                 CIT_Date_From,
@@ -176,20 +195,45 @@ def report_Charging_Resume():
                 CIT_Status,
                 Cur_Code
                 )
-
-    return render_template('report_charging_resume.html',
-                rows=rows,
-                Cus_Id=Cus_Id,
-                Cus_Name=Cus_Name,
-                CIT_Date_From=CIT_Date_From,
-                CIT_Date_To=CIT_Date_To,
-                CIT_Status=CIT_Status,
-                CIT_Status_Value=CIT_Status_Value,                
-                Cur_Code=Cur_Code,
-                Cur_Name=Cur_Name,
-                collectordata=get_collectordata()
+    '''
+    rows = db.Get_Charge_Resume_Filter(
+                FILTER_CUSTOMER,
+                Cus_Id,
+                CIT_Date_From,
+                CIT_Date_To,
+                CIT_Status,
+                Cur_Code,
+                User_Id=current_user.id
                 )
-
+    logger.warning(f"{this()}: PRE RENDER")
+    logger.warning(f"{this()}: len rows         = {len(rows)}")
+    logger.warning(f"{this()}: Cus_Id           = {Cus_Id}")
+    logger.warning(f"{this()}: Cus_Name         = {Cus_Name}")
+    logger.warning(f"{this()}: CIT_Date_From    = {CIT_Date_From}")
+    logger.warning(f"{this()}: CIT_Date_To      = {CIT_Date_To}")
+    logger.warning(f"{this()}: CIT_Status       = {CIT_Status}")
+    logger.warning(f"{this()}: CIT_Status_Value = {CIT_Status_Value}")                
+    logger.warning(f"{this()}: Cur_Code         = {Cur_Code}")
+    logger.warning(f"{this()}: Cur_Name         = {Cur_Name}")
+    logger.warning(f"{this()}: template         : report_charging_resume.html")
+    try:
+        return render_template('report_charging_resume.html',
+                    rows=rows,
+                    Cus_Id=Cus_Id,
+                    Cus_Name=Cus_Name,
+                    CIT_Date_From=CIT_Date_From,
+                    CIT_Date_To=CIT_Date_To,
+                    CIT_Status=CIT_Status,
+                    CIT_Status_Value=CIT_Status_Value,                
+                    Cur_Code=Cur_Code,
+                    Cur_Name=Cur_Name,
+                    collectordata=get_collectordata(),
+                    filter_type=FILTER_CUSTOMER,
+                    filter_code=Cus_Id
+                    )
+    except Exception as e:
+        return f"{this()}: Exception:  {str(e)}"
+        
 @main.route('/download/Charging_Resume', methods=['GET','POST'])
 @login_required
 def download_Charging_Resume():
@@ -208,12 +252,19 @@ def download_Charging_Resume():
     Cur_Code        =  request.args.get('Cur_Code',None,type=str)
     Cur_Name        =  request.args.get('Cur_Name',None,type=str)
     Update          =  request.args.get('Update',0,type=int)
+    FILTER          =  request.args.get('filter_type',0,type=int)
+    CODE            =  request.args.get('filter_code',None)
+        
+    print(f"**********************************************************")
+    print(f"{this()}: FILTER={FILTER} CODE={CODE}")
+    print(f"**********************************************************")
         
     # Get Actual Remume Data from Database
     # NOTE: Here needs some Sand-Clock Message or something in case it takes so long ...
     # Gets Charge Resume from DB
-    rows = db.Get_Charge_Resume(
-                Cus_Id,
+    rows = db.Get_Charge_Resume_Filter(
+                FILTER,
+                CODE,
                 CIT_Date_From,
                 CIT_Date_To,
                 CIT_Status,
