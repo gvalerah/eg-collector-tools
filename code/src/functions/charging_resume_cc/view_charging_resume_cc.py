@@ -113,6 +113,9 @@ def report_Charging_Resume_CC():
     
     collectordata=get_collectordata()
     
+    db.session.flush()
+    db.session.commit()
+
     CC_Id           =  request.args.get('CC_Id',None,type=int)
     CC_Description  =  request.args.get('CC_Description',None,type=str)
     CIT_Date_From   =  request.args.get('CIT_Date_From',None,type=str)
@@ -129,6 +132,11 @@ def report_Charging_Resume_CC():
         # -------------------------------------------------------------------------------------------------------------- #
         # Previous Code faster but requires more memory will be replaced by an by CI loop                                #
         # -------------------------------------------------------------------------------------------------------------- #
+        Cus_Id=db.session.query(Cost_Centers.Cus_Id
+            ).filter(Cost_Centers.CC_Id==CC_Id
+            ).first(
+            )[0]
+            
         LISTA = db.get_cost_centers(CC_Id)
         logger.debug(f"{this()}: LISTA de CCs= {LISTA}")
         CI = db.session.query(Configuration_Items.CI_Id,Configuration_Items.Cus_Id).\
@@ -138,32 +146,23 @@ def report_Charging_Resume_CC():
         logger.debug (f"{this()}: {len(CI)} CI's found for cost center {CC_Id}")
         
         resume_records=0
-
+        
+        logger.info(f"{this()}: Updating Charge Resume Update ...")
+        ci_list = []
+        
         for ci in CI:
-            logger.debug (f"{this()}: CI={ci}")
-            logger.debug ("%s: Calls db.Update_Charge_Resume_CI(from:%s,to:%s,status:%s,cur:%s,ci:%s,table:%s)"%(
-                this(),
-                CIT_Date_From,
-                CIT_Date_To,
-                CIT_Status,
-                Cur_Code,
-                ci.CI_Id,
-                charge_item.__table__.name
-                )
+            ci_list.append(ci.CI_Id)
+        records = db.Update_Charge_Resume_CIS(
+            Cus_Id,
+            CIT_Date_From,
+            CIT_Date_To,
+            CIT_Status,
+            Cur_Code,
+            ci_list,             # <-- Lista de CIs Requeridos          
+            charge_item,
+            current_user.id
             )
-            records = db.Update_Charge_Resume_CI(
-                ci.Cus_Id,
-                CIT_Date_From,
-                CIT_Date_To,
-                CIT_Status,
-                Cur_Code,
-                ci.CI_Id,
-                charge_item,
-                current_user.id
-                )
-            if records is not None:
-                resume_records += records
-            
+    
         logger.debug (f"{this()}: Resume_records updated= {resume_records}")
     else:
         logger.debug (f"{this()}: Update is NOT requested")
@@ -180,7 +179,6 @@ def report_Charging_Resume_CC():
                 User_Id=current_user.id
             )
     return render_template(
-                #report_charging_resume_cc.html',
                 'report_charging_resume.html',
                 rows=rows,
                 CC_Id=CC_Id,

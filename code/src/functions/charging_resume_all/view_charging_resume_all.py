@@ -13,9 +13,20 @@ from babel.numbers          import format_percent
 @login_required
 def forms_Get_Charging_Resume_All():
     logger.debug(f'{this()}: Enter')
+
+    db.session.flush()
+    db.session.commit()
+
     collectordata=get_collectordata()
 
-    session['data'] =  { 'CIT_Date_From':None, 'CIT_Date_To':None, 'CIT_Status':1,'Cur_Code':'USD'}
+    session['data'] =  {    
+        'User_Id': current_user.id,
+        'Cus_Id': None,
+        'CIT_Date_From':collectordata['COLLECTOR_PERIOD']['start'], 
+        'CIT_Date_To':collectordata['COLLECTOR_PERIOD']['end'], 
+        'CIT_Status':1,
+        'Cur_Code':'USD'
+        }
 
     form = frm_charging_resume_all()
 
@@ -91,6 +102,10 @@ import simplejson as json
 @login_required
 def report_Charging_Resume_All():
     logger.debug(f'{this()}: Enter')    
+
+    db.session.flush()
+    db.session.commit()
+
     collectordata=get_collectordata()
 
     CIT_Date_From   =  request.args.get('CIT_Date_From',None,type=str)
@@ -100,7 +115,6 @@ def report_Charging_Resume_All():
     Cur_Code        =  request.args.get('Cur_Code',None,type=str)
     Cur_Name        =  request.args.get('Cur_Name',None,type=str)
     Update          =  request.args.get('Update',0,type=int)
-    
     
     # Updated cached data for this specific query if requested 
     if Update == 1:
@@ -113,64 +127,37 @@ def report_Charging_Resume_All():
                 ).all()
         
         logger.debug (f"{this()}: {len(CI)} CI's found ")
-        
-        resume_records=0
-
-        if CI is not None:
-            cis=len(CI)
-            cis_count=0
-
+        Cus_Id=None
+        logger.info(f"{this()}: Updating Charge Resume Update ...")
+        ci_list = []
         for ci in CI:
+            ci_list.append(ci.CI_Id)
+            if Cus_Id is None: Cus_Id = ci.Cus_Id 
             
-            cis_count+=1
-            logger.debug ("%s: %.2f%% calling db.Update_Charge_Resume_CI(%s,%s,%s,%s,%s,%s,%s,%s)"%(
-                this(),
-                cis_count*100/cis,
-                ci.Cus_Id,
-                CIT_Date_From,
-                CIT_Date_To,
-                CIT_Status,
-                Cur_Code,
-                ci.CI_Id,
-                charge_item,
-                current_user.id
-                ))
+        records = db.Update_Charge_Resume_CIS(
+            Cus_Id,
+            CIT_Date_From,
+            CIT_Date_To,
+            CIT_Status,
+            Cur_Code,
+            ci_list,             # <-- Lista de CIs Requeridos          
+            charge_item,
+            current_user.id
+            )
 
-            records = db.Update_Charge_Resume_CI(
-                        ci.Cus_Id,
-                        CIT_Date_From,
-                        CIT_Date_To,
-                        CIT_Status,
-                        Cur_Code,
-                        ci.CI_Id,
-                        charge_item,
-                        current_user.id
-                        )
-            if records is not None:
-                resume_records += records # OJO AQUI ME QUEDE 
-
-        logger.debug (f"{this()}: resume_records = {resume_records}")
-        
     # Get Actual Remume Data from Database
     # NOTE: Here needs some Sand-Clock Message or something in case it takes so long ...
-    '''
-    rows = db.Get_Charge_Resume2(
-                4,
-                0,
-                CIT_Date_From,
-                CIT_Date_To,
-                CIT_Status,
-                Cur_Code
-            )
-    '''
+
     rows = db.Get_Charge_Resume_Filter(
                 FILTER_ALL,
                 0,
                 CIT_Date_From,
                 CIT_Date_To,
                 CIT_Status,
-                Cur_Code
+                Cur_Code,
+                User_Id=current_user.id
             )
+
     return render_template('report_charging_resume_all.html',
                 rows=rows,
                 CIT_Date_From=CIT_Date_From,

@@ -89,8 +89,6 @@ def forms_Export_User_Resume():
         CC_Code=db.session.query(cost_center.CC_Code).filter(cost_center.CC_Id==data[1]).one()
         
         if hasattr(form,'submit_PDF') and form.submit_PDF.data:
-            flash('Report export to PDF ...')
-            return redirect(url_for('.under_construction'))
             return redirect(url_for('.export_Charging_Resume',
                                 User_Id         = current_user.id,
                                 Cus_Id          = current_user.cost_center.Cus_Id,
@@ -166,8 +164,25 @@ def forms_Export_User_Resume():
                                 Format          = "fix"
                                 ))
         elif hasattr(form,'submit_Delete') and  form.submit_Delete.data:
-            flash('Report deleted ...')
-            return redirect(url_for('.under_construction'))
+            query = db.session.query(Charge_Resumes
+                    ).filter(and_(
+                        Charge_Resumes.User_Id       == current_user.id,
+                        Charge_Resumes.CI_CC_Id      == data[1],
+                        Charge_Resumes.CC_Description== data[6],
+                        Charge_Resumes.CR_Date_From  == data[2],
+                        Charge_Resumes.CR_Date_To    == data[3],
+                        Charge_Resumes.CIT_Status    == data[4],
+                        Charge_Resumes.Cur_Code      == data[5],
+                        ))
+            try:
+                records_to_delete = query.count()
+                query.delete(synchronize_session=False)
+                db.session.commit()
+                db.session.flush()
+                flash(f"{records_to_delete} registros de resumen borrados del reporte")
+            except Exception as e:
+                logger.error(f"{this()}: exception: {str(e)}")
+                flash(f"{this()}: Reporte no eliminado. exception: {str(e)}")
         elif   form.submit_Cancel.data:
             flash('Report discarded ...')
         else:

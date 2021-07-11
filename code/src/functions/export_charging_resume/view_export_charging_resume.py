@@ -29,11 +29,16 @@ def forms_Export_Charging_Resume():
     session['data'] =  { 'Cus_Id': None, 'CIT_Date_From':None, 'CIT_Date_To':None, 'CIT_Status':1,'Cur_Code':'USD'}
 
     form = frm_export_Charging_Resume()
-    
+        
+    # BE SURE all CU records has proper description --------------------
+    updated_cus = db.Update_CU_Names()
+    if updated_cus:
+        logger.warning(f"Updated Name CUs = {updated_cus}")
     # BE SURE all CU records has proper rate id
     updated_cus = db.Update_CU_Rates()
-    
-    logger.warning(f"Updated CUs = {updated_cus}")
+    if updated_cus:
+        logger.warning(f"Updated Rate CUs = {updated_cus}")
+    # ------------------------------------------------------------------
     
     rows = db.session.query( 
             func.count(charge_resume.Cus_Id).label('RECORDS'),
@@ -194,8 +199,25 @@ def forms_Export_Charging_Resume():
                                 Format          = "fix"
                                 ))
         elif   form.submit_Delete.data:
-            flash('Report deleted (PLACEHOLDER) ...')
-            logger.warning('Report deleted (PLACEHOLDER) ...')
+            query = db.session.query(Charge_Resumes
+                    ).filter(and_(
+                        Charge_Resumes.User_Id       == current_user.id,
+                        Charge_Resumes.Cus_Id        == data[1],
+                        Charge_Resumes.Cus_Name      == data[6],
+                        Charge_Resumes.CR_Date_From  == data[2],
+                        Charge_Resumes.CR_Date_To    == data[3],
+                        Charge_Resumes.CIT_Status    == data[4],
+                        Charge_Resumes.Cur_Code      == data[5],
+                        ))
+            try:
+                records_to_delete = query.count()
+                query.delete(synchronize_session=False)
+                db.session.commit()
+                db.session.flush()
+                flash(f"{records_to_delete} registros de resumen borrados del reporte")
+            except Exception as e:
+                logger.error(f"{this()}: exception: {str(e)}")
+                flash(f"{this()}: Reporte no eliminado. exception: {str(e)}")
         elif   form.submit_Cancel.data:
             flash('Report discarded ...')
         else:
@@ -629,36 +651,25 @@ def export_to_fix(output_file,rows,Customer,From,To,Status,Currency):
 @main.route('/export/Charging_Resume', methods=['GET','POST'])
 @login_required
 def export_Charging_Resume():
-    logger.debug('Enter: Export_Charging_Resume()')
-    print ('Enter: Export_Charging_Resume()')
-    User_Id         =  request.args.get('User_Id',0,type=int)
-    Cus_Id          =  request.args.get('Cus_Id',None,type=int)
-    Cus_Name        =  request.args.get('Cus_Name',None,type=str)
-    CIT_Date_From   =  request.args.get('CIT_Date_From',None,type=str)
-    CIT_Date_To     =  request.args.get('CIT_Date_To',None,type=str)
-    CIT_Status      =  request.args.get('CIT_Status',None,type=int)
-    CIT_Status_Value=  request.args.get('CIT_Status_Value',None,type=str)
-    Cur_Code        =  request.args.get('Cur_Code',None,type=str)
-    Cur_Name        =  request.args.get('Cur_Name',None,type=str)
-    Format          =  request.args.get('Format',None,type=str)
-    CC_Id           =  request.args.get('CC_Id',0,type=int)
-    CC_Code         =  request.args.get('CC_Code',"",type=str)
-    CC_Name         =  request.args.get('CC_Name',"",type=str)
-    Pla_Id          =  request.args.get('Pla_Id',0,type=int)
-    Pla_Name        =  request.args.get('Pla_Name',"",type=str)
+    logger.debug(f'{this()}: Enter')
+    User_Id          =  request.args.get('User_Id',0,type=int)
+    Cus_Id           =  request.args.get('Cus_Id',None,type=int)
+    Cus_Name         =  request.args.get('Cus_Name',None,type=str)
+    CIT_Date_From    =  request.args.get('CIT_Date_From',None,type=str)
+    CIT_Date_To      =  request.args.get('CIT_Date_To',None,type=str)
+    CIT_Status       =  request.args.get('CIT_Status',None,type=int)
+    CIT_Status_Value =  request.args.get('CIT_Status_Value',None,type=str)
+    Cur_Code         =  request.args.get('Cur_Code',None,type=str)
+    Cur_Name         =  request.args.get('Cur_Name',None,type=str)
+    Format           =  request.args.get('Format',None,type=str)
+    CC_Id            =  request.args.get('CC_Id',0,type=int)
+    CC_Code          =  request.args.get('CC_Code',"",type=str)
+    CC_Name          =  request.args.get('CC_Name',"",type=str)
+    Pla_Id           =  request.args.get('Pla_Id',0,type=int)
+    Pla_Name         =  request.args.get('Pla_Name',"",type=str)
     # Get Actual Data from Database
     # NOTE: Here needs some Sand-Clock Message or something in case it takes so long ...
-    '''
-    rows = db.Get_Charge_Resume(
-            Cus_Id,
-            CIT_Date_From,
-            CIT_Date_To,
-            CIT_Status,
-            Cur_Code,
-            CC_Id=CC_Id,
-            Pla_Id=Pla_Id
-            )
-    '''
+
     rows = db.Get_Charge_Resume_Filter(
             FILTER_CUSTOMER,
             Cus_Id,
@@ -670,7 +681,10 @@ def export_Charging_Resume():
             Pla_Id=Pla_Id,
             User_Id=User_Id            
             )
-
+    if rows is not None:
+        logger.debug(f"{this()}: rows = {len(rows)}")
+    else:
+        logger.debug(f"{this()}: rows = {len(rows)}")
             
     # Aqui hace la conversion
     if   CC_Id >  0 and Pla_Id > 0:     tail="_%s_%s"%(CC_Id,Pla_Id)
@@ -688,8 +702,24 @@ def export_Charging_Resume():
         Format
         )
     return_file=None
+    if len(rows):
+        if Cus_Name is None: Cus_Name  = rows[0].Cus_Name
+        if CC_Name  is None: CC_Name   = rows[0].CC_Name
+        if Pla_Name is None: Pla_Name  = rows[0].Pla_Name
+        if Pla_Id   == 0   : Pla_Id    = rows[0].Pla_Id
     if      Format == 'pdf':
-        #return_file=export_to_pdf(output_file,rows,Cus_Name,CIT_Date_From,CIT_Date_To,CIT_Status_Value,Cur_Name)
+        logger.debug(f"{this}: output_file = {output_file}")
+        logger.debug(f"{this}: rows        = {len(rows)}")
+        logger.debug(f"{this}: Cus_Name    = {Cus_Name}")
+        logger.debug(f"{this}: From        = {CIT_Date_From}")
+        logger.debug(f"{this}: To          = {CIT_Date_To}")
+        logger.debug(f"{this}: Status      = {CIT_Status_Value}")
+        logger.debug(f"{this}: Currency    = {Cur_Name}")
+        logger.debug(f"{this}: CC_Id       = {CC_Id}")
+        logger.debug(f"{this}: Pla_Id      = {Pla_Id}")
+        logger.debug(f"{this}: CC_Name     = {CC_Name}")
+        logger.debug(f"{this}: Pla_Name    = {Pla_Name}")
+        logger.debug(f"{this}: CC_Code     = {CC_Code}")
         return_file=export_to_pdf(  output_file,
                                     rows,
                                     Cus_Name,

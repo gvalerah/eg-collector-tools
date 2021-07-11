@@ -13,6 +13,11 @@ from    flask_mail                          import Mail
 from    flask_moment                        import Moment
 from    flask_sqlalchemy                    import SQLAlchemy
 from    flask_login                         import LoginManager
+# GV 20210705
+from flask_login                        import login_user
+from flask_login                        import logout_user
+from flask_login                        import login_required
+from flask_login                        import current_user
 
 from    emtec.common.functions              import *
 #from    emtec.collector.common.functions    import *

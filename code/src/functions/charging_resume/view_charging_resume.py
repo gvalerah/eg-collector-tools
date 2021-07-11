@@ -141,10 +141,14 @@ def report_Charging_Resume():
     # Updated cached data for this specific query if requested 
     if Update == 1:
         
-        # BE SURE all CU records has proper rate id --------------------
+        # BE SURE all CU records has proper description ----------------
+        updated_cus = db.Update_CU_Names()
+        if updated_cus:
+            logger.warning(f"Updated Name CUs = {updated_cus}")
+        # BE SURE all CU records has proper rate id
         updated_cus = db.Update_CU_Rates()
         if updated_cus:
-            logger.warning(f"{this()}: Updated CUs = {updated_cus}")
+            logger.warning(f"Updated Rate CUs = {updated_cus}")
         # --------------------------------------------------------------
         
         query = db.session.query(
@@ -159,43 +163,22 @@ def report_Charging_Resume():
         logger.debug (f"{this()}: {pformat(CI)}")
         resume_records=0
 
+        logger.info(f"{this()}: Updating Charge Resume Update ...")
+        ci_list = []
         for ci in CI:
-            logger.debug(f"{this()}: db.Update_Charge_Resume_CI(%s,%s,%s,%s,%s,%s,%s,%s)"%(
-                Cus_Id,
-                CIT_Date_From,
-                CIT_Date_To,
-                CIT_Status,
-                Cur_Code,
-                ci.CI_Id,
-                charge_item.__table__.name,
-                charge_item.__tablename__
-                )
+            ci_list.append(ci.CI_Id)
+        records = db.Update_Charge_Resume_CIS(
+            Cus_Id,
+            CIT_Date_From,
+            CIT_Date_To,
+            CIT_Status,
+            Cur_Code,
+            ci_list,             # <-- Lista de CIs Requeridos          
+            charge_item,
+            current_user.id
             )
-            records = db.Update_Charge_Resume_CI(
-                Cus_Id,
-                CIT_Date_From,
-                CIT_Date_To,
-                CIT_Status,
-                Cur_Code,
-                ci.CI_Id,
-                charge_item,
-                current_user.id
-                )
-            resume_records += records
-
-        logger.info (f"{this()}: resume_records updated = {resume_records}")
-        
+    
     # Get Actual Remume Data from Database
-    # NOTE: Here needs some Sand-Clock Message or something in case it takes so long ...
-    '''
-    rows = db.Get_Charge_Resume(
-                Cus_Id,
-                CIT_Date_From,
-                CIT_Date_To,
-                CIT_Status,
-                Cur_Code
-                )
-    '''
     rows = db.Get_Charge_Resume_Filter(
                 FILTER_CUSTOMER,
                 Cus_Id,
@@ -205,17 +188,17 @@ def report_Charging_Resume():
                 Cur_Code,
                 User_Id=current_user.id
                 )
-    logger.warning(f"{this()}: PRE RENDER")
-    logger.warning(f"{this()}: len rows         = {len(rows)}")
-    logger.warning(f"{this()}: Cus_Id           = {Cus_Id}")
-    logger.warning(f"{this()}: Cus_Name         = {Cus_Name}")
-    logger.warning(f"{this()}: CIT_Date_From    = {CIT_Date_From}")
-    logger.warning(f"{this()}: CIT_Date_To      = {CIT_Date_To}")
-    logger.warning(f"{this()}: CIT_Status       = {CIT_Status}")
-    logger.warning(f"{this()}: CIT_Status_Value = {CIT_Status_Value}")                
-    logger.warning(f"{this()}: Cur_Code         = {Cur_Code}")
-    logger.warning(f"{this()}: Cur_Name         = {Cur_Name}")
-    logger.warning(f"{this()}: template         : report_charging_resume.html")
+    logger.debug(f"{this()}: PRE RENDER")
+    logger.debug(f"{this()}: len rows         = {len(rows)}")
+    logger.debug(f"{this()}: Cus_Id           = {Cus_Id}")
+    logger.debug(f"{this()}: Cus_Name         = {Cus_Name}")
+    logger.debug(f"{this()}: CIT_Date_From    = {CIT_Date_From}")
+    logger.debug(f"{this()}: CIT_Date_To      = {CIT_Date_To}")
+    logger.debug(f"{this()}: CIT_Status       = {CIT_Status}")
+    logger.debug(f"{this()}: CIT_Status_Value = {CIT_Status_Value}")                
+    logger.debug(f"{this()}: Cur_Code         = {Cur_Code}")
+    logger.debug(f"{this()}: Cur_Name         = {Cur_Name}")
+    logger.debug(f"{this()}: template         : report_charging_resume.html")
     try:
         return render_template('report_charging_resume.html',
                     rows=rows,
@@ -256,23 +239,34 @@ def download_Charging_Resume():
     CODE            =  request.args.get('filter_code',None)
         
     print(f"**********************************************************")
-    print(f"{this()}: FILTER={FILTER} CODE={CODE}")
+    print(f"{this()}: FILTER={FILTER} CODE={CODE} {type(CODE)}")
     print(f"**********************************************************")
-        
+    CODE=int(CODE)
     # Get Actual Remume Data from Database
     # NOTE: Here needs some Sand-Clock Message or something in case it takes so long ...
     # Gets Charge Resume from DB
+    logger.debug(f"**********************************************************")
+    logger.debug(f"{this()}: FILTER={FILTER} CODE={CODE} {type(CODE)}")
+    logger.debug(f"{this()}: FROM={CIT_Date_From} TO={CIT_Date_To} ST:{CIT_Status} CUR:{Cur_Code}")
+    logger.debug(f"{this()}: User={current_user}")
+    logger.debug(f"**********************************************************")
+    
     rows = db.Get_Charge_Resume_Filter(
                 FILTER,
                 CODE,
                 CIT_Date_From,
                 CIT_Date_To,
                 CIT_Status,
-                Cur_Code
+                Cur_Code,
+                User_Id=current_user.id
                 )
-                
+    if rows is not None:
+        logger.debug(f"{this()}: {len(rows)} rows found to export ...")
+    else:
+        logger.error(f"{this()}: None rows found to export ...")
+        
     temp_name   = next(tempfile._get_candidate_names())
-    output_file = f"{temp_name}.xlsx"
+    output_file = f"CR_{FILTER}_{CODE}_{CIT_Date_From}_{CIT_Date_To}_{CIT_Status}_{current_user.id}_{temp_name}.xlsx"
     
     d = {
         'detail':[],

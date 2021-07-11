@@ -14,15 +14,6 @@
     <h2>Charging Report: </h2>
     <a href="#" onclick="history.go(-1)"><img src="/static/img/back.png"  color=yellow width="32" height="32" title="" alt="Add"></a>
 </div>
-{% with messages = get_flashed_messages() %}
-  {% if messages %}
-    <ul class=flashes>
-    {% for message in messages %}
-      <li>{{ message }}</li>
-    {% endfor %}
-    </ul>
-  {% endif %}
-{% endwith %}
 {{ wtf.quick_form(form) }}
 <hr>
 {% endblock %}

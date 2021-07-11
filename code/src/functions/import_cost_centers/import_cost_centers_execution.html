@@ -14,15 +14,6 @@
     <h2>Inject Cost Centers: </h2>
     <a href="#" onclick="history.go(-1)"><img src="/static/img/back.png"  color=yellow width="32" height="32" title="" alt="Add"></a>
 </div>
-{% with messages = get_flashed_messages() %}
-  {% if messages %}
-    <ul class=flashes>
-    {% for message in messages %}
-      <li>{{ message }}</li>
-    {% endfor %}
-    </ul>
-  {% endif %}
-{% endwith %}
 <H1>{{ filename }} </H1><h3>uploaded, DB updated</h3>
 <table>
 <tr><td>Cost Centers</td><td><b>{{ "{:6,.0f}".format(result.0) }}</b></td></tr>

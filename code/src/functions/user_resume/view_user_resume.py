@@ -19,7 +19,8 @@ def forms_Get_User_Resume():
     logger.debug("collectordata=")
     logger.debug(pformat(collectordata))
     db.logger=logger
-    view_session = db.Session(db.engine)
+    #view_session = db.Session(db.engine)
+    view_session = db.session
 
     session['data'] =  { 
         'CIT_Date_From':collectordata['COLLECTOR_PERIOD']['start'], 
@@ -136,7 +137,8 @@ def report_User_Resume():
     logger.debug(f'{this()}: Enter')
     collectordata=get_collectordata()
     db.logger        = logger
-    view_session     = db.Session(db.engine)
+    #view_session     = db.Session(db.engine)
+    view_session     = db.session
     #table_name       = 'Charge_Items'
     #class_name       = 'charge_item'
     #template_name    = 'Charge_Items'
@@ -192,6 +194,26 @@ def report_User_Resume():
         
         resume_records=0
 
+        total_cis=len(CI)
+        proce_cis=0
+
+        logger.info(f"{this()}: Updating Charge Resume Update ...")
+        ci_list = []
+        for ci in CI:
+            ci_list.append(ci.CI_Id)
+        records = db.Update_Charge_Resume_CIS(
+            Cus_Id,
+            CIT_Date_From,
+            CIT_Date_To,
+            CIT_Status,
+            Cur_Code,
+            ci_list,             # <-- Lista de CIs Requeridos          
+            charge_item,
+            current_user.id
+            )
+
+
+        """
         for ci in CI:
             logger.debug(f"{this()}: records = db.Update_User_Resume_CI(%s,%s,%s,%s,%s,%s,%s)"%(
                 current_user.id,
@@ -213,13 +235,14 @@ def report_User_Resume():
                 charge_item,
                 current_user.id
                 )
-
-            logger.debug(f"{this()}: ci = {ci} records = {records}")
+            proce_cis+=1
+            avance=proce_cis*100/total_cis
+            logger.info(f"{this()}:{proce_cis}/{total_cis} {avance:.1f}% ci = {ci} records = {records}")
             if records is not None:
                 resume_records += records
             
-        logger.debug(f"{this()}: resume_records = {resume_records}")
-        
+        logger.info(f"{this()}: resume_records = {resume_records}")
+    """    
     # Get Actual Resume Data from Database
     # NOTE: Here needs some Sand-Clock Message or something in case it takes so long ...
     try:
@@ -231,9 +254,11 @@ def report_User_Resume():
             Cur_Code,
             CC_Id)
             )
-        if current_user.CC_Id == 1:
+        
+        if False:
+            #if current_user.CC_Id == 1:
             # user has a super top level CC_Id
-            user_id=view_session.query(User.id).filter(User.CC_Id==CC_Id).one()      
+            user_id=view_session.query(User.id).filter(User.CC_Id==CC_Id).first()      
             logger.debug(f"{this()}: User with super top level CC_Id will look for CC_Id={CC_Id}")
             rows = db.Get_Charge_Resume_Filter(
                         FILTER_COST_CENTER,

@@ -122,28 +122,10 @@ import simplejson as json
 def report_Charging_Resume_Level():
     logger.debug(f'{this()}: Enter')
     collectordata=get_collectordata()
-    #table_name='Charge_Items'
-    #class_name='charge_item'
-    #template_name='Charge_Items'
-    """
-    # 20201023 GV SHARDENING CODE ---------------------------------->>>>
-    # Shardening Code goes her if needed
-    collectordata={}
-    collectordata.update({"COLLECTOR_PERIOD":get_period_data(current_user.id,db.engine,Interface)})
-    collectordata.update({"CONFIG":current_app.config})
-    suffix = collectordata['COLLECTOR_PERIOD']['active']
-    table_name='Charge_Items'
-    class_name='charge_item'
-    template_name='Charge_Items'
-    sharding=False
-
-    if 'COLLECTOR_CIT_SHARDING' in current_app.config: 
-        sharding=current_app.config['COLLECTOR_CIT_SHARDING']
-    if sharding:
-        charge_item.set_shard(suffix)
-        flash(f"{this()} Using shardened table: {charge_item.__table__.name}") 
-    # 20201023 GV SHARDENING CODE <<<<----------------------------------
-    """
+    
+    db.session.flush()
+    db.session.commit()
+    
     Cus_Id          =  request.args.get('Cus_Id',None,type=int)
     Cus_Name        =  request.args.get('Cus_Name',None,type=str)
     CIT_Date_From   =  request.args.get('CIT_Date_From',None,type=str)
@@ -166,50 +148,34 @@ def report_Charging_Resume_Level():
         
         resume_records=0
 
+        logger.info(f"{this()}: Updating Charge Resume Update ...")
+        ci_list = []
         for ci in CI:
-            logger.debug ("%s: calling db.Update_Charge_Resume_CI(%s,%s,%s,%s,%s,%s,%s)"%(
-                this(),
-                Cus_Id,
-                CIT_Date_From,
-                CIT_Date_To,
-                CIT_Status,
-                Cur_Code,
-                ci.CI_Id,
-                charge_item
-                ))
-
-            records = db.Update_Charge_Resume_CI(
-                Cus_Id,
-                CIT_Date_From,
-                CIT_Date_To,
-                CIT_Status,
-                Cur_Code,
-                ci.CI_Id,
-                charge_item,
-                current_user.id
-                )
-            if records is not None:
-                resume_records += records
-            
+            ci_list.append(ci.CI_Id)
+        records = db.Update_Charge_Resume_CIS(
+            Cus_Id,
+            CIT_Date_From,
+            CIT_Date_To,
+            CIT_Status,
+            Cur_Code,
+            ci_list,             # <-- Lista de CIs Requeridos          
+            charge_item,
+            current_user.id
+            )
+    
         logger.debug (f"{this()}: resume_records = {resume_records}")
         
     # Get Actual Remume Data from Database
     # NOTE: Here needs some Sand-Clock Message or something in case it takes so long ...
-    '''
-    rows =  db.Get_Charge_Resume(
-                Cus_Id,
-                CIT_Date_From,
-                CIT_Date_To,
-                CIT_Status,Cur_Code
-            )
-    '''
+
     rows =  db.Get_Charge_Resume_Filter(
                 FILTER_CUSTOMER,
                 Cus_Id,
                 CIT_Date_From,
                 CIT_Date_To,
                 CIT_Status,
-                Cur_Code
+                Cur_Code,
+                User_Id=current_user.id
             )
     
     return render_template('report_charging_resume_level.html',

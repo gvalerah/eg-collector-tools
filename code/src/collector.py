@@ -65,11 +65,13 @@ if len(sys.argv) > 2:
 if (os.path.isfile(config_file)):
         config_ini = configparser.ConfigParser(interpolation=ExtendedInterpolation())
         config_ini.read( config_file )        
-        run_mode      = config_ini.getint('General','run_mode'     ,fallback=run_mode)
         flask_host    = config_ini.getint('General','flask_host'   ,fallback='0.0.0.0')
-        flask_port    = config_ini.getint('General','flask_port'   ,fallback=5000)
+        flask_port    = config_ini.getint('General','flask_port'   ,fallback=8000)
         gunicorn_host = config_ini.getint('General','gunicorn_host',fallback='0.0.0.0')
         gunicorn_port = config_ini.getint('General','gunicorn_port',fallback=8000)
+        max_workers   = config_ini.getint('General','max_workers'  ,fallback=0)
+        timeout       = config_ini.getint('General','timeout'      ,fallback=120)
+
 else:
     sys.exit(1)
 
@@ -165,20 +167,7 @@ if __name__ == '__main__':
         logger.audit    ("audit Init Collector Web Server Execution")
         logger.trace("os.environ=%s"%os.environ)
         logger.trace("app.config=%s"%app.config)
-        logger.info("*****************************************")
-        '''
-        print("*******************************************************")
-        print(f"db         = {db} {type(db)}")
-        print(f"db.engine  = {db.engine} {type(db.engine)}")
-        print(f"db.Session = {db.Session} {type(db.Session)}")
-        s1=db.Session(db.engine)
-        s2=db.Session(db.engine)
-        print(f"s1         = {s1} {type(s1)}")
-        print(f"s2         = {s2} {type(s2)}")
-        row = s1.query(Users).first()
-        print(f"row        = {row}")
-        print("*******************************************************")
-        '''
+        logger.info("*****************************************")        
         print("*****************************************")
     else:
         print("****************************************")
@@ -191,7 +180,7 @@ if __name__ == '__main__':
     # ------------------------------------------------------------------
     # Will be replaced by embedded Green Unicorn HTTP Server
     if run_mode == 'FLASK':
-        print(" * Running in Flask app mode")
+        print(f" * Running in Flask app mode ({flask_host}:{flask_port})")
         app.run(host=flask_host,port=flask_port)
     else:
         # Calculates maximum number of workers or by config
@@ -200,8 +189,9 @@ if __name__ == '__main__':
             'bind': '%s:%s' % (gunicorn_host, gunicorn_port),
             'workers': number_of_workers(max_workers),
             'worker_class':"gunicorn.workers.sync.SyncWorker",
+            'timeout': timeout
         }
-        print(f" * Running in Green Unicorn powered mode {options['workers']}/{max_workers} workers")
+        print(f" * Running in Green Unicorn powered mode {options['workers']}/{max_workers} workers ({options.get('bind')})")
         logger.debug("Application CPUs   = %s" % multiprocessing.cpu_count())
         logger.debug("Application options= %s" % options)
         logger.debug("Application Flask  = %s" % app)

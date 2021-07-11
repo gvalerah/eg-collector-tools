@@ -105,6 +105,9 @@ def report_Charging_Resume_Platform():
     
     collectordata=get_collectordata()
 
+    db.session.flush()
+    db.session.commit()
+
     Pla_Id          =  request.args.get('Pla_Id',None,type=int)
     Pla_Name        =  request.args.get('Pla_Name',None,type=str)
     CIT_Date_From   =  request.args.get('CIT_Date_From',None,type=str)
@@ -133,54 +136,32 @@ def report_Charging_Resume_Platform():
         if CI is not None:
             cis=len(CI)
             cis_count=0
-            
+        
+        Cus_Id = None
+        logger.info(f"{this()}: Updating Charge Resume Update ...")
+        ci_list = []
         for ci in CI:
-            cis_count+=1
-            logger.debug ("%s: %.2f%% calling db.Update_Charge_Resume_CI(%s,%s,%s,%s,%s,%s,%s)"%(
-                this(),
-                cis_count*100/cis,
-                ci.Cus_Id,
-                CIT_Date_From,
-                CIT_Date_To,
-                CIT_Status,
-                Cur_Code,
-                ci.CI_Id,
-                charge_item
-                )
+            ci_list.append(ci.CI_Id)
+            if Cus_Id is None: Cus_Id = ci.Cus_Id 
+        records = db.Update_Charge_Resume_CIS(
+            Cus_Id,
+            CIT_Date_From,
+            CIT_Date_To,
+            CIT_Status,
+            Cur_Code,
+            ci_list,             # <-- Lista de CIs Requeridos          
+            charge_item,
+            current_user.id
             )
 
-            records = db.Update_Charge_Resume_CI(
-                ci.Cus_Id,
-                CIT_Date_From,
-                CIT_Date_To,
-                CIT_Status,
-                Cur_Code,
-                ci.CI_Id,
-                charge_item,
-                current_user.id
-                )
-            if records is not None:
-                resume_records += records
-        logger.debug (f"{this()}: resume_records = {resume_records}")
-        
-    # Get Actual Remume Data from Database
-    # NOTE: Here needs some Sand-Clock Message or something in case it takes so long ...
-    '''
-    rows = db.Get_Charge_Resume2(
-                3,
-                Pla_Id,
-                CIT_Date_From,
-                CIT_Date_To,
-                CIT_Status,Cur_Code
-            )
-    '''
     rows =  db.Get_Charge_Resume_Filter(
             FILTER_PLATFORM,
             Pla_Id,
             CIT_Date_From,
             CIT_Date_To,
             CIT_Status,
-            Cur_Code
+            Cur_Code,
+            User_Id=current_user.id
         )
 
     return render_template('report_charging_resume_platform.html',

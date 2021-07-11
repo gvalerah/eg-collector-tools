@@ -52,7 +52,7 @@
             {% if not loop.first %}
                 {% if Level == "Device" %}
                 <tr>
-                    <td><b>Configuration Item Z: <a href="/forms/Configuration_Items?CI_Id={{ prev_CI.0 }}">{{ prev_CI_Name.0 }}</a></b></td>
+                    <td><b>Configuration Item: <a href="/forms/Configuration_Items?CI_Id={{ prev_CI.0 }}">{{ prev_CI_Name.0 }}</a></b></td>
                     <td align="right"><b>{{ "{:,.12f}".format(sum_CI.0) }}</b> {{Cur_Code}}</td>
                 </tr> 
                 {% endif %}              
@@ -104,7 +104,7 @@
             {% if Level == "Component" %}
                 <table>
                     <tr>
-                        <b>Configuration Item Y: <a href="/forms/Configuration_Items?CI_Id={{ row.CI_Id }}">{{ row.CI_Name }}</a></b>
+                        <b>Configuration Item: <a href="/forms/Configuration_Items?CI_Id={{ row.CI_Id }}">{{ row.CI_Name }}</a></b>
                     </tr> 
                 </table>
             {% endif %}
@@ -175,7 +175,7 @@
             {# Report partial and total sums in final currency for last Configuration Item #}
                 {% if Level == "Device" %}
                 <tr>
-                    <td><b>Configuration Item X: <a href="/forms/Configuration_Items?CI_Id={{ prev_CI.0 }}">{{ prev_CI_Name.0 }}</a></b></td>
+                    <td><b>Configuration Item: <a href="/forms/Configuration_Items?CI_Id={{ prev_CI.0 }}">{{ prev_CI_Name.0 }}</a></b></td>
                     <td align="right"><b>{{ "{:,.12f}".format(sum_CI.0) }}</b> {{Cur_Code}}</td>
                 </tr> 
                 {% endif %}

@@ -31,6 +31,7 @@ from emtec.collector.db.flask_models    import User
 # Interface
 from .forms                             import LoginForm
 from .forms                             import ChangePasswordForm
+from .forms                             import ResetPasswordForm
 from .forms                             import ChangeEmailForm
 from .forms                             import RegistrationForm
 
@@ -107,36 +108,29 @@ def logout():
         logger.error( f"logout: exception: {str(e)}")
     return redirect(url_for('main.index'))
     
-    
 # Only Administrator can register users, include decorator here
 @auth.route('/register', methods=['GET', 'POST'])
 @login_required
 @admin_required
 def register():
+    db.session.commit()
+    db.session.flush()
     form = RegistrationForm()
     if form.validate_on_submit():
-        #user = User(email=form.email.data,
-        #username=form.username.data,
-        
-        #print("******** role_id = %s *** type=%s ********"%(form.role_id.data,type(form.role_id.data)))
-        
-        
+                
         user = User(username=form.username.data,
             role_id=form.role_id.data,
             email=form.email.data,
             password=form.password.data)
         try:
             #flash("Trying to register user: '%s'"%user)
-            #20210630 GV db.session. close()
             db.session.add(user)
             db.session.commit()
-            #20210630 GV db.session. close()
             db.session.flush() #20210630 GV 
             flash('New user "%s" can login now.'%form.username.data)
             return redirect(url_for('main.index'))
         except Exception as e:
             db.session.rollback()
-            #20210630 GV db.session. close()
             db.session.flush() #20210630 GV 
             flash('Form Data is: [name=%s,role_id=%s,email=%s,password=%s]'%( form.username.data, form.role_id.data, form.email.data, form.password.data))
             flash('Error creating new user. %s'%(e))
@@ -144,7 +138,7 @@ def register():
             
     return render_template('auth/register.html', form=form)
     
-  
+'''  
 @auth.route('/change-password', methods=['GET', 'POST'])
 @login_required
 def change_password():
@@ -158,6 +152,39 @@ def change_password():
         else:
             flash('Invalid password.')
     return render_template("auth/change_password.html", form=form)
+'''
+@auth.route('/change-password', methods=['GET', 'POST'])
+@login_required
+def change_password():
+    # 20210609 cambio 
+    db.session.flush()
+    db.session.commit()
+    if current_user.role_id in (4,6):
+        form = ResetPasswordForm()
+    else:
+        form = ChangePasswordForm()
+        username = current_user.username
+    if form.validate_on_submit():
+        flash('Change Password')
+        if current_user.verify_password(form.old_password.data):
+            if hasattr(form,'username'):
+                user = db.session.query(User
+                        ).filter(User.username==form.username.data
+                        ).first()
+            else:
+                user = current_user
+            user.password = form.password.data
+            db.session.merge(user)
+            db.session.flush()
+            db.session.commit()
+            if user.username == current_user.username:
+                flash('Your password has been updated.')
+            else:
+                flash(f"'{user.username}' password has been updated.")
+            return redirect(url_for('main.index'))
+        else:
+            flash('Invalid password.')
+    return render_template("auth/change_password.html", form=form,user=current_user)
 
 @auth.route('/change-email', methods=['GET', 'POST'])
 @login_required
@@ -178,7 +205,6 @@ def change_email_request():
             flash('Invalid email or password.')
     return render_template("auth/change_email.html", form=form)
 
-    
 """    
 from flask import render_template, redirect, request, url_for, flash
 from flask_login import login_user, logout_user, login_required, \
