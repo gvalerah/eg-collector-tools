@@ -293,6 +293,104 @@ class Nutanix(ETL):
         else:
             return None, None
 
+    # GET Protection Domains DATA
+    # D.Lira must get data from all nodes
+    def getProtectionDomainsInformation(self,version=None):
+        if self.logger:
+            self.logger.debug(f'{this()}: version={version}')
+        if version is None:
+            version = self.api_version
+        self.logger.debug(f'{this()}: self.session={self.session} {type(self.session)}')
+
+        call = [    '',
+                    '',
+                    'protection_domains/',
+                    ''
+                ]
+        
+        data   = []
+        status = 0
+        if version == 2:
+            self.session.headers.update( {'Accept': 'application/json' } )   
+            host_base_url =  f"https://{self.host}:{self.port}/api/nutanix/v2.0/"
+
+        pdURL = host_base_url + call[version]
+        
+        self.logger.debug(f"{this()}: version={version} pdURL={snapshotsURL}")            
+
+        parameters = None
+        
+        call_type  = None
+        server_Response = None
+        try:
+            if version == 2:
+                call_type="GET"
+                h=strftime("%H:%M:%S")
+                
+                parameters = {
+                    "timeout":(
+                        self.connection_timeout,
+                        self.read_timeout
+                        )
+                    }
+                
+                self.logger.debug(f"{this()}:V{version}  pdURL = {pdURL}")
+                self.logger.debug(f"{this()}:V{version}  parameters   = {parameters}")
+                
+                serverResponse = self.session.get(
+                    pdURL,
+                    data=parameters
+                    )
+            else:
+                call_type="GET"
+                logger.debug(f"{this()}:V{version}  pdURL = {snapshotsURL}")
+
+                serverResponse = self.session.get(
+                    pdURL,
+                    timeout=(
+                        self.connection_timeout,
+                        self.read_timeout)
+                    )
+        except ConnectionError:
+            if self.logger:
+                self.logger.error(f"{this()}: Connection Error trying version={version} call={call_type} URL={pdURL}")            
+            return None,None
+        except ConnectTimeout:
+            if self.logger:
+                self.logger.error(f"{this()}: Connection Timeout trying version={version} call={call_type} URL={pdURL}")            
+            return None,None
+        except Exception as e:
+            emtec_handle_general_exception(e,logger=self.logger,module=this(),function=this())
+            return None,None
+        if (self.logger):
+            self.logger.debug(f"{this()}: version        = {version}")
+            self.logger.debug(f"{this()}: pdURL          = {pdURL}")
+            self.logger.debug(f"{this()}: call_Type      = {call_type} {parameters}")
+            self.logger.debug(f"{this()}: serverResponse = {serverResponse}")
+            if serverResponse is not None:
+                self.logger.debug(f"{this()}:       Code     = {serverResponse.status_code}")
+                self.logger.debug(f"{this()}:       Text     = {serverResponse.text[:100]}")
+
+        if serverResponse is not None:
+            status = max(status,serverResponse.status_code)
+            if is_json(serverResponse.text):
+                data.append(json.loads(serverResponse.text))
+                    
+        # data here is a list of data members and need to be treated as so
+        if self.logger:
+            self.logger.debug(f"{this()}: status = {status}")
+            self.logger.debug(f"{this()}: data   = START -----------------------------")
+            self.logger.debug(f"{this()}: data.type   = {type(data)}")
+            self.logger.debug(f"{this()}: data.len    = {len(data)}")
+            if data is not None and len(data):
+                self.logger.debug("data.0.type",type(data[0]))
+                self.logger.debug("data.0.metadata",pformat(data[0].get('metadata')))
+                with open ("/tmp/protection_domains.json","w") as fp:
+                    fp.write(json.dumps(data[0]))
+            
+            self.logger.debug(f"{this()}: data   = ------------------------------- END")
+        return status,data
+
     # GET Snapshots DATA
     # D.Lira must get data from all nodes
     def getSnapshotsInformation(self,version=None):
@@ -836,7 +934,7 @@ class Nutanix(ETL):
             self.logger.debug("%s: Transform. OUT"%(this()))
         return 0
 
-    def Transform_Snapshots(self,API_version=None):
+    def Transform_Snapshots(self,API_version=None,use_size_in_bytes=True):
         if self.logger:
             self.logger.debug(f"{this()}: Transform_Snapshots(). IN")
             if type(self.data) == list: # list of snapshots ... 
@@ -895,8 +993,10 @@ class Nutanix(ETL):
                                 #CU_UUID = ''
                                 UUID   = snapshot['vms'][0].get('vm_id',None)       # <==== Por ahora solo consdera UUID de 1ra maquina
                                 ACTIVE = snapshot.get('state',None) ############## OJO ###############################
-                                #IZE   = snapshot.get('exclusive_usage_in_bytes',0) # Usable para calculo de recuperacion al borrado
-                                SIZE   = snapshot.get('size_in_bytes',0)            # Este campo representa consumo del snapshot
+                                if use_size_in_bytes:
+                                    SIZE   = snapshot.get('size_in_bytes',0)            # Este campo representa consumo del snapshot
+                                else:
+                                    SIZE   = snapshot.get('exclusive_usage_in_bytes',0) # Usable para calculo de recuperacion al borrado
                                 SIZEKB = SIZE/1024
                                 SIZEMB = SIZEKB/1024
                                 SIZEGB = SIZEMB/1024
@@ -906,9 +1006,6 @@ class Nutanix(ETL):
                                 REF1   = snapshot.get('protection_domain_name',None)
                                 REF2   = snapshot['vms'][0].get('consistency_group',None)
                                 REF3   = snapshot['remote_site_names'][0] if len(snapshot['remote_site_names']) else None 
-                                #EF1   = None
-                                #EF2   = None
-                                #EF3   = None
                                 
                                 ID     = snapshot.get('snapshot_id','0') 
                                 
@@ -971,7 +1068,7 @@ class Nutanix(ETL):
                                         size_gb = local_tuples.get(UUID).get(snapshot_type_code).get('size_gb',0)
                                         self.logger.debug(f"size_gb={size_gb} SIZEGB={SIZEGB}")
                                         # here accummulates sizes for all snapshots of each typep on VM
-                                        if ACTIVE== "AVAILABLE":
+                                        if ACTIVE != "EXPIRED":
                                             local_tuples.get(UUID).get(snapshot_type_code).update({ 'size_gb' : SIZEGB+size_gb })
                                         self.logger.debug(f"local_tuples.get({UUID}).get({snapshot_type_code})={local_tuples.get(UUID).get(snapshot_type_code)}")                                        
                                     else:

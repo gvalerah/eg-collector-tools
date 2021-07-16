@@ -26,6 +26,7 @@ def Nutanix_Snapshot_Load_Collector(C,config,group):
         platform        =   config.getint(group,'platform')
         active          =   config.getboolean(group,'active')
         nodes           =   config.get(group,'nodes').split(',')
+        use_size        =   config.getboolean(group,'use_size',fallback=True)
         # Will Probe all nodes (Prism Elements asociated to Prism Central
         # at once
         C.logger.info(f"{this()}: nodes = {nodes}")
@@ -48,7 +49,7 @@ def Nutanix_Snapshot_Load_Collector(C,config,group):
                 while N.has_more_data:
                     retcode=N.Extract_Snapshots(API_version=2)
                     if retcode is not None and retcode==200:
-                        N.Transform_Snapshots() 
+                        N.Transform_Snapshots(use_size_in_bytes=use_size) 
                         N.ETL_Load()
                     else:
                         C.logger.error(f"{this()}: got error {retcode} getting data for collector : '{name}'")

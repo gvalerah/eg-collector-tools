@@ -4,7 +4,7 @@ from    configparser        import ConfigParser, ExtendedInterpolation
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 class Config:
-    print("OS COLLECTOR_CONFIG_FILE=%s" % os.environ.get('COLLECTOR_CONFIG_FILE'))
+    #print("OS COLLECTOR_CONFIG_FILE=%s" % os.environ.get('COLLECTOR_CONFIG_FILE'))
     SECRET_KEY                      = os.environ.get('SECRET_KEY') or 'Hard to guess string'
     SQLALCHEMY_COMMIT_ON_TEARDOWN   = os.environ.get('SQLALCHEMY_COMMIT_ON_TEARDOWN') or True
     SQLALCHEMY_TRACK_MODIFICATIONS  = os.environ.get('SQLALCHEMY_TRACK_MODIFICATIONS') or False
@@ -25,7 +25,7 @@ class Config:
 
 
     if COLLECTOR_CONFIG_FILE is not None and os.path.isfile(COLLECTOR_CONFIG_FILE):
-                print("config.py.__init__app: reading %s"%COLLECTOR_CONFIG_FILE)
+                #print("config.py.__init__app: reading %s"%COLLECTOR_CONFIG_FILE)
                 config_ini = configparser.ConfigParser(interpolation=ExtendedInterpolation())
                 config_ini.read( COLLECTOR_CONFIG_FILE )
                 
@@ -49,7 +49,7 @@ class Config:
     else:
                 print("config.py.__init__app: no environment configuration file evaluated.")
 
-    if True:
+    if False:
         print(SECRET_KEY)
         print(SQLALCHEMY_COMMIT_ON_TEARDOWN)
         print(SQLALCHEMY_TRACK_MODIFICATIONS)
@@ -68,9 +68,9 @@ class Config:
         
     @staticmethod
     def init_app(app):
-        print("*******************************************************")
-        print("%s: Config.init_app (idle/pass function). Configuration oportunity here."%__name__)
-        print("*******************************************************")
+        #print("*******************************************************")
+        #print("%s: Config.init_app (idle/pass function). Configuration oportunity here."%__name__)
+        #print("*******************************************************")
         pass
 
 
