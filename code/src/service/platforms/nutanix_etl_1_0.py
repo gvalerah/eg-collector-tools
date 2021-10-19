@@ -3,6 +3,7 @@
 # code/src/service/platforms/nutanix_etl_1_0.py
 # GLVH 2018
 # GVLV 2021-04-03 Refactoring + Add snapshots
+# GVLV 2021-09-12 Add volume groups
 # Gerardo L Valera
 # gvalera@emtecgroup.net
 # ----------------------------------------------------------------------
@@ -49,6 +50,7 @@ class Nutanix(ETL):
     processed_vms       = 0
     processed_images    = 0
     processed_snapshots = 0
+    processed_vgroups   = 0
     chunk_size          = 100
     has_more_data       = True
     sharding            = False
@@ -484,12 +486,115 @@ class Nutanix(ETL):
             self.logger.debug(f"{this()}: data.type   = {type(data)}")
             self.logger.debug(f"{this()}: data.len    = {len(data)}")
             if data is not None and len(data):
-                self.logger.debug("data.0.type",type(data[0]))
-                self.logger.debug("data.0.metadata",pformat(data[0].get('metadata')))
+                self.logger.debug(f"data.0.type {type(data[0])}")
+                self.logger.debug(f"data.0.metadata {pformat(data[0].get('metadata'))}")
                 with open ("/tmp/snapshots.json","w") as fp:
                     fp.write(json.dumps(data[0]))
             
             self.logger.debug(f"{this()}: data   = ------------------------------- END")
+        return status,data
+
+    # GET Volume Groups DATA
+    # D.Lira must get data from all nodes
+    def getVGroupsInformation(self,version=None):
+        if self.logger:
+            self.logger.debug(f'{this()}: version={version}')
+        if version is None:
+            version = self.api_version
+        self.logger.debug(f'{this()}: self.session={self.session} {type(self.session)}')
+
+        call = [    '',
+                    '',
+                    'volume_groups/',
+                    ''
+                ]
+        
+        data   = []
+        status = 0
+        if version == 2:
+            self.session.headers.update( {'Accept': 'application/json' } )   
+            host_base_url =  f"https://{self.host}:{self.port}/PrismGateway/services/rest/v2.0/"
+
+        VGroupsURL = host_base_url + call[version]
+        
+        self.logger.debug(f"{this()}: version={version} VGroupsURL={VGroupsURL}")            
+
+        parameters = None
+        
+        call_type  = None
+        server_Response = None
+        try:
+            if version == 2:
+                call_type="GET"
+                h=strftime("%H:%M:%S")
+                
+                parameters = {
+                    "include_disk_size":True,
+                    "include_disk_path":True,
+                    "timeout":(
+                        self.connection_timeout,
+                        self.read_timeout
+                        )
+                    }
+                
+                self.logger.debug(f"{this()}:V{version}  VGroupsURL = {VGroupsURL}")
+                self.logger.debug(f"{this()}:V{version}  parameters   = {parameters}")
+                
+                serverResponse = self.session.get(
+                    VGroupsURL,
+                    data=parameters
+                    )
+            else:
+                call_type="GET"
+                logger.debug(f"{this()}:V{version}  VGroupsURL = {VGroupsURL}")
+
+                serverResponse = self.session.get(
+                    VGroupsURL,
+                    timeout=(
+                        self.connection_timeout,
+                        self.read_timeout)
+                    )
+        except ConnectionError:
+            if self.logger:
+                self.logger.error(f"{this()}: Connection Error trying version={version} call={call_type} URL={VGroupsURL}")            
+            return None,None
+        except ConnectTimeout:
+            if self.logger:
+                self.logger.error(f"{this()}: Connection Timeout trying version={version} call={call_type} URL={VGroupsURL}")            
+            return None,None
+        except Exception as e:
+            emtec_handle_general_exception(e,logger=self.logger,module=this(),function=this())
+            return None,None
+        if (self.logger):
+            self.logger.debug(f"{this()}: version        = {version}")
+            self.logger.debug(f"{this()}: VGroupsURL     = {VGroupsURL}")
+            self.logger.debug(f"{this()}: call_Type      = {call_type} {parameters}")
+            self.logger.debug(f"{this()}: serverResponse = {serverResponse}")
+            if serverResponse is not None:
+                self.logger.debug(f"{this()}:       Code     = {serverResponse.status_code}")
+                self.logger.debug(f"{this()}:       Text     = {serverResponse.text[:100]}")
+
+        if serverResponse is not None:
+            status = max(status,serverResponse.status_code)
+            if is_json(serverResponse.text):
+                data.append(json.loads(serverResponse.text))
+                    
+        # data here is a list of data members and need to be treated as so
+        if self.logger:
+            try:
+                self.logger.debug(f"{this()}: status = {status}")
+                self.logger.debug(f"{this()}: data   = START -----------------------------")
+                self.logger.debug(f"{this()}: data.type   = {type(data)}")
+                self.logger.debug(f"{this()}: data.len    = {len(data)}")
+                if data is not None and len(data):
+                    self.logger.debug(f"data.0.type {type(data[0])}")
+                    self.logger.debug(f"data.0.metadata {pformat(data[0].get('metadata'))}")
+                    with open ("/tmp/volume_groups.json","w") as fp:
+                        fp.write(json.dumps(data[0]))
+                
+                self.logger.debug(f"{this()}: data   = ------------------------------- END")
+            except Exception as e:
+                self.logger.error(f"{this()}EXCEPTION: {str(e)}")
         return status,data
 
     def Read_Configuration(self,ini_file):
@@ -583,6 +688,47 @@ class Nutanix(ETL):
         status, self.data = self.getSnapshotsInformation(API_version)
         entities = self.data[0].get('metadata').get('grand_total_entities')
         self.logger.info(f"{this()}: host:{self.host} status={status} entities={entities} snapshots")
+        try:
+            self.total_matches = 0
+            # need to calculate new totals for all list previously
+            for data in self.data:
+                if status == 200:
+                    if   API_version == 2:
+                        self.total_matches += int(data['metadata']['grand_total_entities'])
+                    elif API_version == 3:
+                        self.total_matches += int(data['metadata']['total_matches'])
+            # actual loop
+            for data in self.data:
+                if status == 200:
+                    if   API_version == 2:
+                        self.processed_snapshots += int(data['metadata']['total_entities'])
+                    elif API_version == 3:
+                        self.processed_snapshots += int(data['metadata']['length'])
+                    if self.processed_snapshots >= self.total_matches:
+                        self.has_more_data = False
+                else:
+                    if (self.logger):
+                        self.logger.error(f"{this()}: status={status} data={data}")
+        except Exception as e:
+            self.logger.error(f"{this()}: exception={str(e)}")
+            
+        return status
+        # -----------------------------------------------------------
+
+    def Extract_VGroups(self,API_version=None):
+        """ Method that actually request data from Platform Connection data should be available """
+        # Here executes request to platform using platform parameters
+        # -----------------------------------------------------------
+        if (self.logger):
+            self.logger.debug(f"{this()}: file=%s API_version={API_version}")
+        else:
+            print            (f"{this()}: file=%s API_version={API_version}")
+        if API_version is None:
+            API_version = self.API_version
+        
+        status, self.data = self.getVGroupsInformation(API_version)
+        entities = self.data[0].get('metadata').get('grand_total_entities')
+        self.logger.info(f"{this()}: host:{self.host} status={status} entities={entities} volume groups")
         try:
             self.total_matches = 0
             # need to calculate new totals for all list previously
@@ -1134,6 +1280,308 @@ class Nutanix(ETL):
             self.logger.debug(f"{this()}: **************************************")
             for t in self.tuples:
                 self.logger.debug(f"{this()}:{self.host}: {t}")
+            self.logger.debug(f"{this()}: **************************************")
+            self.logger.debug(f"{this()}: Transform. OUT")
+        return 0
+
+    def Transform_VGroups(self,API_version=None,use_size_in_bytes=True):
+        if self.logger:
+            self.logger.debug(f"{this()}: Transform_VGroups(). IN")
+            if type(self.data) == list: # list of volume groups ... 
+                self.logger.debug(f"{this()}: len(self.data) = {len(self.data)}")
+
+        if API_version is None:
+            API_version = self.API_version
+        
+        if      API_version == 0:    
+            return 1
+        elif    API_version == 1:    
+            return 1
+        elif    API_version == 2:    
+            # 20210605 GV entities = len(self.data['entities'])
+            entities = len(self.data)
+        elif    API_version == 3:    
+            return 1
+        else:    
+            if (self.logger): self.logger.error("%s:  API_version %d can't be processed"%(this(),API_version)) 
+            return 1
+            
+        if (self.logger): self.logger.debug("%s: ETL_data_to_tuples. IN. %d entities to process"%(this(),entities)) 
+
+        self.tuples.clear()
+
+        NAME   = '' 
+        UUID   = ''
+        DATE   = strftime("%Y-%m-%d")
+        TIME   = strftime("%H:00:00")
+        # data is actually a list of volume group's disks, an item for
+        # each disk
+        
+        self.logger.debug(f"{this()} len self.data = {len(self.data)}")
+        metadata=None
+        entities=[]
+        if len(self.data):
+            metadata = self.data[0].get('metadata')
+            entities = self.data[0].get('entities')
+            self.logger.debug(f"{this()} metadata = {metadata}")
+            self.logger.debug(f"{this()} entities = {len(entities)}")
+            self.logger.debug(f"{this()} self..cc = {self.config.get('Services','default_cost_center')}")
+        
+        #for vg in range(len(entities)):
+        vg_counter=0
+        total_cits=0
+        cits_counter=0
+        ci_uuids=[]
+        cu_uuids=[]
+        vm_uuids=[]
+        for vg in entities:
+            ci_uuids.append(vg.get('uuid'))
+            disk_list = vg.get('disk_list',[])
+            attachment_list = vg.get('attachment_list',[])
+            for disk in disk_list:
+                if disk.get('vmdisk_uuid') is not None:
+                    cu_uuids.append(disk.get('vmdisk_uuid'))
+            for attachment in attachment_list:
+                if attachment.get('client_uuid') is not None:
+                    if self.logger:
+                        self.logger.debug(f"{vg.get('uuid')} client {attachment.get('client_uuid')}")
+                    vm_uuids.append(attachment.get('client_uuid'))
+                elif attachment.get('vm_uuid') is not None:
+                    if self.logger:
+                        self.logger.debug(f"{vg.get('uuid')} vm {attachment.get('vm_uuid')}")
+                    vm_uuids.append(attachment.get('vm_uuid'))
+        if self.logger:
+            self.logger.debug(f"input lists ...")
+        self.logger.debug(f"ci_uuids={len(ci_uuids)}")
+        self.logger.debug(f"cu_uuids={len(cu_uuids)}")
+        self.logger.debug(f"vm_uuids={len(vm_uuids)}")
+        ci_uuids = unique_list(ci_uuids)
+        cu_uuids = unique_list(cu_uuids)
+        vm_uuids = unique_list(vm_uuids)
+        if self.logger:
+            self.logger.debug(f"compacted lists ...")
+        self.logger.debug(f"ci_uuids={len(ci_uuids)}")
+        self.logger.debug(f"cu_uuids={len(cu_uuids)}")
+        self.logger.debug(f"vm_uuids={len(vm_uuids)} {vm_uuids}")
+        VMS=self.db.session.query(
+            Configuration_Items.CI_UUID,    
+            Configuration_Items.CI_Id,
+            Configuration_Items.CC_Id
+                ).filter(Configuration_Items.CC_Id!=None
+                ).filter(Configuration_Items.CI_UUID.in_(vm_uuids)
+                )
+        #print(f"VMS query = {VMS}")
+        VMS=VMS.all()
+        #print(f"{len(VMS)} VMS={VMS}")
+        
+        CIS=self.db.session.query(
+                Configuration_Items.CI_UUID,
+                Configuration_Items.CI_Id                
+                ).filter(Configuration_Items.CI_UUID.in_(ci_uuids)
+                ).all()
+        ci_ids = []
+        for CI in CIS:
+            ci_ids.append(CI[1])
+        #print(f"{len(CIS)} CIS={CIS}")
+        #print(f"{len(ci_ids)} CI ids={ci_ids}")
+        CUS=self.db.session.query(Charge_Units.CU_UUID,Charge_Units.CU_Id
+            ).filter(Charge_Units.CI_Id.in_(ci_ids)
+            ).all()
+        #print(f"{len(CUS)} CUS={CUS}")
+        data={'CI':{},'CU':{},'VM':{},'CI_count':0,'CU_count':0,'VM_count':0}
+        for CI in CIS:
+            data['CI'].update({CI.CI_UUID:CI.CI_Id})
+        for CU in CUS:
+            data['CU'].update({CU.CU_UUID:CU.CU_Id})
+        for VM in VMS:
+            data['VM'].update({VM.CI_UUID:VM.CI_Id})
+        data.update({
+            'CI_count':len(data['CI']),
+            'CU_count':len(data['CU']),
+            'VM_count':len(data['VM']),
+        })
+        #print(f"data ci {len(data['CI'])}")
+        #print(f"data cu {len(data['CU'])}")
+        #print(f"data vm {len(data['VM'])}")
+        #pprint(data)
+        #print(time.strftime("%H:%M:%S"))
+        #return
+        prev=time.time()
+        for vg in entities:
+            vg_counter+=1
+            if self.logger:
+                self.logger.debug(f"vg {vg_counter} of {len(entities)} {vg_counter*100/len(entities):.1f}% {time.time()-prev:6.3f} seconds")
+            prev=time.time()
+            self.logger.debug("+++++++++++++++++++++++++++++++++++++++")
+            # 20210605 GV snapshot = self.data['entities'][e]
+            
+            '''
+            disk_list       = vg.get('disk_list',[]) 
+            attachment_list = vg.get('attachment_list',[])
+            uuid            = vg.get('uuid',None)
+            name            = vg.get('name',None)
+            description     = vg.get('description',None)
+            is_shared       = vg.get('is_shared',False)
+            '''
+            
+            try:
+                disk_list       = vg['disk_list']       
+            except: 
+                disk_list=[] 
+            try: 
+                attachment_list = vg['attachment_list'] 
+            except: 
+                attachment_list=[]
+            try: 
+                uuid            = vg['uuid']            
+            except: 
+                uuid=None
+            try: 
+                name            = vg['name']            
+            except: name=None
+            
+            # Calculates Total storage space provisionned --------------
+            total_size_bytes = 0
+            total_size_mb    = 0
+            total_size_gb    = 0
+            for d in range(len(disk_list)):
+                disk=disk_list[d]
+                try: 
+                    size_mb    = disk['vmdisk_size_mb']    
+                except: 
+                    size_mb=0
+                try: 
+                    size_bytes = disk['vmdisk_size_bytes'] 
+                except: 
+                    size_bytes=0
+                total_size_mb    += size_mb
+                total_size_bytes += size_bytes
+            total_size_gb = total_size_mb/1024
+            # ----------------------------------------------------------
+            self.logger.debug(f"{this()} uuid            = {uuid}")
+            self.logger.debug(f"{this()} name            = {name}")
+            #self.logger.debug(f"{this()} description     = {description}")
+            #self.logger.debug(f"{this()} is_shared       = {is_shared}")
+            self.logger.debug(f"{this()} disk_list       = {len(disk_list)}")
+            self.logger.debug(f"{this()} Total Size      = {total_size_bytes} {total_size_mb} {total_size_gb}")
+            self.logger.debug(f"{this()} attachment_list = {len(attachment_list)}")
+            self.logger.debug(f"{this()} default cost c  = {self.config['Services']['default_cost_center']}")
+            self.logger.debug(f"**************************************************")
+            
+            if API_version == 2:
+                if self.logger: 
+                    self.logger.debug(f"{this()}: {len(disk_list)} disks found ..." )
+                disks_found       = 0
+                vms_found         = 0
+                existent_ci       = 0
+                non_existent_ci   = 0
+                non_existent      = []
+                non_existent_dict = {}
+                control_vm        = []
+                local_tuples      = {}
+                disk_counter = 0  
+                total_cits += len(disk_list)
+                prev_disk=time.time()              
+                for disk in disk_list:
+                    disk_counter+=1
+                    if self.logger:
+                        self.logger.debug(f"  disk {disk_counter:3} of {len(disk_list):3} {disk_counter*100/len(disk_list):5.1f}% {time.time()-prev_disk:6.3f} seconds")
+                        prev_disk=time.time()
+                    try: 
+                        NAME    = vg['name']
+                        UUID    = vg['uuid']
+                        CU_UUID = disk['vmdisk_uuid']
+                        ACTIVE  = 'on'
+                        SIZE    = disk['vmdisk_size_bytes']
+                        SIZEKB  = SIZE/1024
+                        SIZEMB  = SIZEKB/1024
+                        SIZEGB  = SIZEMB/1024
+                        DATE    = strftime("%Y-%m-%d")
+                        TIME    = strftime("%H:00:00")
+                        
+                        REF1   = 'Shared'
+                        REF2   = f"disk {disk['index']}"
+                        REF3   = f"{SIZEGB}GB of {total_size_gb}GB"
+                        
+                        ID     = None
+                        
+                        if self.logger:
+                            self.logger.debug(f"NAME={NAME} UUID={UUID} SIZE={SIZE}")
+                            self.logger.debug(f"ACTIVE={ACTIVE} DATE={DATE} TIME={TIME}")
+                                                
+                        # Only valid data will be recorded -------------------------
+                        if NAME is not None and UUID is not None and SIZE > 0:
+                            # Creates/Updates CI Mother Record/actually this 
+                            # does not have to have any effect
+                            # it should exist prior to disk existence ..
+                            try: 
+                                CI_Id = data['CI'][UUID] 
+                            except: 
+                                CI_Id=None
+                            if self.logger: self.logger.debug(f"{this()}: CI_Id={CI_Id} UUID={UUID} CU_UUID={CU_UUID}")
+                            # Failure VM UUID not found  will be logged and ignored
+                            if CI_Id is not None:
+                                #### if first appereance of Volume Group then creates Charge Unit if required
+                                try: 
+                                    CU_Id=data['CU'][CU_UUID] 
+                                except:
+                                    CU_Id=None
+                                if self.logger:
+                                    self.logger.debug(f"{this()}: CU_Id = {CU_Id} for CI:{CI_Id} Type:{'DSK'}") 
+                            else:                                
+                                ''' Not required until CI Tuple management accepts CC
+                                # Gets CI CC if required -----------------------------------
+                                cc_list = []
+                                for a in range(len(attachment_list)):
+                                    cc = None
+                                    vm_uuid = attachment_list[a].get('vm_uuid')
+                                    cc = data['VM'].get(vm_uuid,None)
+                                    if cc is not None:
+                                        cc_list.append(cc)
+                                    self.logger.debug(f"{this()} vm_uuid={vm_uuid} cc = {cc}")
+                                self.logger.debug(f"{this()} cc_list = {cc_list}")
+                                cc_list = unique_list(cc_list)
+                                self.logger.debug(f"{this()} cc_list = {cc_list}")
+                                
+                                if len(cc_list)==1:
+                                    vg_cc = cc_list[0]
+                                else:
+                                    vg_cc = self.config.get('Services','default_cost_center')                                
+                                '''
+                                self.tuples.append(("CI-CREATE",NAME,UUID))
+                                if (self.logger):
+                                    self.logger.debug    (("CI-CREATE" ,NAME,UUID))
+                                CU_Id = 0
+                            if self.logger: self.logger.debug(f"{this()}: CI_Id={CI_Id} CU_Id={CU_Id} CU_UUID={CU_UUID}")
+                            if CU_Id is None or CU_Id == 0:
+                                # NOTE: CU Create Tuple may accept aditional Name Field
+                                self.tuples.append(("CU-CREATE" ,'DSK',UUID,CU_UUID,SIZEGB,"NONE",1,REF1,REF2,REF3))
+                                if self.logger:
+                                    self.logger.debug    (("CU-CREATE" ,'DSK',UUID,CU_UUID,SIZEGB,"NONE",1,REF1,REF2,REF3))
+                            self.tuples.append                  (("CIT-CREATE",'DSK',UUID,CU_UUID,SIZEGB,DATE,TIME,ACTIVE))
+                            cits_counter+=1
+                            if (self.logger):
+                                self.logger.debug(("CIT-CREATE",'DSK',UUID,CU_UUID,SIZEGB,DATE,TIME,ACTIVE))
+                            self.logger.debug(f"{cits_counter}/{total_cits} {cits_counter*100/total_cits:.1f}%")
+                    except Exception as e:
+                        if (self.logger): 
+                            self.logger.error(f"{this()}: Exception {str(e)} processing disk {disk['uuid']}.")
+                    '''
+                    if self.logger:
+                        for t in self.tuples:
+                            self.logger.debug(f"{this()}:{self.host}: {t}")
+                        self.logger.debug("++++++++++++++++++++++++++++++")
+                    '''   
+            else:
+                if (self.logger): self.logger.error(f"{this()}: API_version {API_version} can't be processed") 
+                return 1
+
+        if (self.logger):
+            self.logger.debug(f"{this()}: **************************************")
+            self.logger.info (f"{this()}: {len(self.tuples)} OUTPUT TUPLES")
+            self.logger.debug(f"{this()}: **************************************")
+            for t in self.tuples:
+                self.logger.debug(f"{this()}:1582 {self.host}: {t}")
             self.logger.debug(f"{this()}: **************************************")
             self.logger.debug(f"{this()}: Transform. OUT")
         return 0

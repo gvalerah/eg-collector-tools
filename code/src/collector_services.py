@@ -38,9 +38,9 @@ driver_group = sys.argv[2]
 add_Logging_Levels()
 
 # create logger
-logger  = logging.getLogger('Collector Services')
-logger.propagate=False
-handler=None
+logger           = logging.getLogger('Collector Services')
+logger.propagate = False
+handler          = None
 
 db = Collector_ORM_DB()
 
@@ -82,17 +82,17 @@ if (os.path.isfile(config_file)):
                         interval=interval,
                         backupCount=backupCount
                         )
-        logger.info("****** Daemon Start *********************")
-        logger.info("%s: as '%s' Using configuration: '%s'"%(sys.argv[0],getpass.getuser(),config_file))
-        logger.info("*****************************************")
         log_file_previous = None
-        name            = config_ini.get(driver_group,'name',fallback=driver_group)
-        collector       = config_ini.get(driver_group,'collector',fallback=None)
+        name            = config_ini.get   (driver_group,'name'        ,fallback=driver_group)
+        collector       = config_ini.get   (driver_group,'collector'   ,fallback=None)
         pool_seconds    = config_ini.getint(driver_group,'pool_seconds',fallback=C.pool_seconds)
+        logger.info(f"{name}: ****** Daemon Start *********************")
+        logger.info(f"{name}: as '{getpass.getuser()}' Using configuration: '{config_file}'")
+        logger.info(f"{name}: *****************************************")
         # --------------------------------------------------------------
         # Overrides default log level for this driver group only
         log_level       = config_ini.get(driver_group,'log_level',fallback=C.log_level)        
-        logger.info("%s: log level from config is  =%s"%(__name__,log_level))
+        logger.info(f"{name}: log level from config is  = {log_level}")
         if type(log_level) == str:
             log_level=log_level.lower()
             if      log_level == 'debug':       log_level=logging.DEBUG
@@ -103,61 +103,79 @@ if (os.path.isfile(config_file)):
             elif    log_level == 'fatal':       log_level=logging.FATAL
             else:                               log_level=C.log_level
         logger.setLevel(log_level)
-        logger.info("%s: driver %s log level set to =%s"%(__name__,name,logger.level))
-        logger.info("%s: driver %s log level set to =%s"%(__name__,name,logger.getEffectiveLevel()))
-        logger.info("%s: driver %s logger           =%s"%(__name__,name,logger))
+        logger.info(f"{name}: driver {name} log level set to           = {logger.level}")
+        logger.info(f"{name}: driver {name} log effective level set to = {logger.getEffectiveLevel()}")
+        logger.info(f"{name}: driver {name} logger                     = {logger}")
         # --------------------------------------------------------------
-        logger.debug("%s: name        =%s"%(__name__,name))
-        logger.debug("%s: collector   =%s"%(__name__,collector))
-        logger.debug("%s: pool_seconds=%s"%(__name__,pool_seconds))
+        logger.debug(f"{name}: name         = {name}")
+        logger.debug(f"{name}: collector    = {collector}")
+        logger.debug(f"{name}: pool_seconds = {pool_seconds}")
 
         # Required to handle multiple collector services in one daemon
         # services are serialized 
         collectors=collector.split(',')
         while True:
+            # Check for propper log file for this iteration
             if (log_file_previous != log_file):
-                logger.info("%s: Logging to '%s'"%(sys.argv[0],log_file))
-                logger.info("*****************************************")
+                logger.info(f"{name}: Logging to '{log_file}'")
+                logger.info(f"{name}: *****************************************")
                 log_file_previous = log_file
-            # -------------------------------------------------    
-            try:
-                if 'sqlite' in str(C.db):
-                    logger.error("DB engine not expected is      : '%s'"%(C.db))
-                    logger.error("os.environ['COLLECTOR_CONFIG'] : '%s'"%(os.environ['COLLECTOR_CONFIG']))
-                    logger.error("os.environ['DATABASE_URL']     : '%s'"%(os.environ['DATABASE_URL']))
-                    break
-                for collector in collectors:
-                    logger.info("Executing collector mode '%s'"%(collector))
-                    if collector == 'Monthly_Auto':
-                        Execute_Collector_Daemon(C,config_ini,driver_group,Monthly_Auto_Collector)
-                    elif collector == 'Auto_CC':
-                        Execute_Collector_Daemon(C,config_ini,driver_group,Auto_CC_Collector)
-                    elif collector == 'Fill_CU_Rates':
-                        Execute_Collector_Daemon(C,config_ini,driver_group,Fill_CU_Rates_Collector)
-                    else:
-                        C.logger.error("%s: Invalid collector name '%s'."%(__name__, collector))
-            except Exception as e:
-                C.logger.error("%s: Exception catched during ETL execution.'errno:%s,strerror:%s,args:%s'"%(sys.argv[0],e.errno,e.strerror,e.args))
-                break
-            # --------------------------------------------------
-            C.logger.debug("%s: Execution completed @ %s. Waiting %d seconds ..."%(sys.argv[0],strftime("%H:%M:%S"),pool_seconds))
-            if logger.level < logging.INFO:
-                print("%s: Execution completed @ %s. Waiting %d seconds ..."%(sys.argv[0],strftime("%H:%M:%S"),pool_seconds))
-            try:
-                sleep(pool_seconds)
-            except Exception as e:
-                logger.error("Exception catched while pooling. 'errno:%s,strerror:%s,args:%s'"%(sys.argv[0],e.errno,e.strerror,e.args))
-                break        
+            # Will create a new child process to isolate service
+            child_pid = os.fork()
+            if child_pid == 0:
+                # Child new process instantiated
+                # -------------------------------------------------    
+                try:
+                    if 'sqlite' in str(C.db):
+                        logger.error(f"{name}: DB engine not expected is      : '{C.db}'")
+                        logger.error(f"{name}: os.environ['COLLECTOR_CONFIG'] : '{os.environ['COLLECTOR_CONFIG']}'")
+                        logger.error(f"{name}: os.environ['DATABASE_URL']     : '{os.environ['DATABASE_URL']}'")
+                        break
+                    for collector in collectors:
+                        logger.info(f"{name}: Executing collector mode '{collector}'")
+                        if collector == 'Monthly_Auto':
+                            Execute_Collector_Daemon(C,config_ini,driver_group,Monthly_Auto_Collector)
+                        elif collector == 'Auto_CC':
+                            Execute_Collector_Daemon(C,config_ini,driver_group,Auto_CC_Collector)
+                        elif collector == 'Fill_CU_Rates':
+                            Execute_Collector_Daemon(C,config_ini,driver_group,Fill_CU_Rates_Collector)
+                        else:
+                            C.logger.error(f"{name}: Invalid collector name '{collector}'.")
+                except Exception as e:
+                    C.logger.error(f"{name}: Exception catched during ETL execution.'errno:{e.errno},strerror:{e.strerror},args:{e.args}'")
+                    #break
+                os._exit(0)
+                # --------------------------------------------------
+                C.logger.debug(f"{name}: Execution completed @ {strftime('%H:%M:%S')}. Waiting {pool_seconds} seconds ...")
+            else:
+                # Parent main loop process continues
+                # WAIT FOR PROCESS # child_pid
+                logger.info(f"{name}: Child Process started as pid={child_pid} @ {strftime('%H:%M:%S')}.")
+                if logger.level < logging.INFO:
+                    print(f"{name}: Child Process started as pid={child_pid} @ {strftime('%H:%M:%S')}.")
+                try:
+                    # WAIT FOR PROCESS # child_pid
+                    childProcExitInfo = os.wait()
+                    print(f"{name}: Child process %d exited with status %d %d"%(
+                        childProcExitInfo[0],
+                        childProcExitInfo[1],
+                        int(childProcExitInfo[1]/256)
+                        ))
+                    print(f"{name}: Waiting {pool_seconds} seconds ...")
+                    sleep(pool_seconds)
+                except Exception as e:
+                    logger.error(f"{name}: Exception catched while pooling. 'errno:{e.errno},strerror:{e.strerror},args:{e.args}'")
+                    break        
         # Out of loop service should never get here unless system shutdown
-        logger.warning("*** Unexpected Deamon Interruption ***")
+        logger.warning(f"{name}: *** Unexpected Deamon Interruption ***")
 else:
     # Configuration error
-    print("ERROR: Configuration file '%s' does not exists. aborting."%config_file)
-    print('ERROR: Number of arguments:', len(sys.argv), 'arguments.')
-    print('ERROR: Argument List:', str(sys.argv))
+    print(f"{sys.argv[0]}: ERROR: Configuration file '{config_file}' does not exists. aborting.")
+    print(f"{sys.argv[0]}: ERROR: Number of arguments: {len(sys.argv)} arguments.")
+    print(f"{sys.argv[0]}: ERROR: Argument List: {str(sys.argv)}")
 
 print()    
-print("ERROR: Collector Deamon FAIL **********************")
+print(f"{sys.argv[0]}: ERROR: Collector Deamon FAIL **********************")
 print()
 
 

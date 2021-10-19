@@ -78,7 +78,7 @@ def load_user(user_id):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-07-16 16:51:06
+# GLVH @ 2021-10-18 17:09:16
 # =============================================================================
 
 # gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_charge_items.py
@@ -119,7 +119,7 @@ class charge_item(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-07-16 16:51:06
+# GLVH @ 2021-10-18 17:09:16
 # =============================================================================
 
 # gen_model_flask.py:670 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_charge_items.py
@@ -196,7 +196,7 @@ def get_charge_item(table_name_sufix):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-07-16 16:51:06
+# GLVH @ 2021-10-18 17:09:16
 # =============================================================================
 
 # gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_charge_resumes.py
@@ -299,7 +299,7 @@ class charge_resume(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-07-16 16:51:06
+# GLVH @ 2021-10-18 17:09:16
 # =============================================================================
 
 # gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_charge_unit_egm.py
@@ -346,7 +346,7 @@ class charge_unit_egm(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-07-16 16:51:06
+# GLVH @ 2021-10-18 17:09:16
 # =============================================================================
 
 # gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_charge_units.py
@@ -452,7 +452,7 @@ def get_charge_unit(table_name_sufix):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-07-16 16:51:06
+# GLVH @ 2021-10-18 17:09:16
 # =============================================================================
 
 # gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_cit_generations.py
@@ -485,7 +485,7 @@ class cit_generation(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-07-16 16:51:06
+# GLVH @ 2021-10-18 17:09:16
 # =============================================================================
 
 # gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_cit_statuses.py
@@ -518,7 +518,7 @@ class cit_status(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-07-16 16:51:06
+# GLVH @ 2021-10-18 17:09:16
 # =============================================================================
 
 # gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_configuration_items.py
@@ -565,7 +565,7 @@ class configuration_item(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-07-16 16:51:06
+# GLVH @ 2021-10-18 17:09:16
 # =============================================================================
 
 # gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_cost_centers.py
@@ -616,7 +616,7 @@ class cost_center(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-07-16 16:51:06
+# GLVH @ 2021-10-18 17:09:16
 # =============================================================================
 
 # gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_countries_currencies.py
@@ -649,7 +649,7 @@ class country_currency(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-07-16 16:51:06
+# GLVH @ 2021-10-18 17:09:16
 # =============================================================================
 
 # gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_countries.py
@@ -686,7 +686,7 @@ class country(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-07-16 16:51:06
+# GLVH @ 2021-10-18 17:09:16
 # =============================================================================
 
 # gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_cu_operations.py
@@ -723,7 +723,7 @@ class cu_operation(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-07-16 16:51:06
+# GLVH @ 2021-10-18 17:09:16
 # =============================================================================
 
 # gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_currencies.py
@@ -766,7 +766,7 @@ class currency(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-07-16 16:51:06
+# GLVH @ 2021-10-18 17:09:16
 # =============================================================================
 
 # gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_customers.py
@@ -803,7 +803,7 @@ class customer(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-07-16 16:51:06
+# GLVH @ 2021-10-18 17:09:16
 # =============================================================================
 
 # gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_cu_types.py
@@ -838,7 +838,7 @@ class cu_type(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-07-16 16:51:06
+# GLVH @ 2021-10-18 17:09:16
 # =============================================================================
 
 # gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_exchange_rates.py
@@ -873,7 +873,7 @@ class exchange_rate(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-07-16 16:51:06
+# GLVH @ 2021-10-18 17:09:16
 # =============================================================================
 
 # gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_interface.py
@@ -916,7 +916,7 @@ class interface(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-07-16 16:51:06
+# GLVH @ 2021-10-18 17:09:16
 # =============================================================================
 
 # gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_measure_units.py
@@ -949,7 +949,7 @@ class measure_unit(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-07-16 16:51:06
+# GLVH @ 2021-10-18 17:09:16
 # =============================================================================
 
 # gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_platforms.py
@@ -992,7 +992,7 @@ class platform(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-07-16 16:51:06
+# GLVH @ 2021-10-18 17:09:16
 # =============================================================================
 
 # gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_rates.py
@@ -1047,7 +1047,7 @@ class rate(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-07-16 16:51:06
+# GLVH @ 2021-10-18 17:09:16
 # =============================================================================
 
 # gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_rat_periods.py
@@ -1080,7 +1080,7 @@ class rat_period(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-07-16 16:51:06
+# GLVH @ 2021-10-18 17:09:16
 # =============================================================================
 
 # gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_roles.py
@@ -1134,7 +1134,7 @@ class Role(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-07-16 16:51:06
+# GLVH @ 2021-10-18 17:09:16
 # =============================================================================
 
 # gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_st_use_per_cu.py
@@ -1207,7 +1207,7 @@ class st_use_per_cu(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-07-16 16:51:06
+# GLVH @ 2021-10-18 17:09:16
 # =============================================================================
 
 # gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_st_use_per_type.py
@@ -1390,7 +1390,7 @@ def get_trace_202101(table_name_suffix):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-07-16 16:51:06
+# GLVH @ 2021-10-18 17:09:16
 # =============================================================================
 
 # gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_trace.py
@@ -1421,7 +1421,7 @@ class trace(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-07-16 16:51:06
+# GLVH @ 2021-10-18 17:09:16
 # =============================================================================
 
 # gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_user_resumes.py
@@ -1524,7 +1524,7 @@ class user_resumes(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-07-16 16:51:06
+# GLVH @ 2021-10-18 17:09:16
 # =============================================================================
 
 # gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_users.py

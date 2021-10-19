@@ -27,6 +27,7 @@ from    service.collectors.Nutanix_ETL              import Nutanix_ETL_Collector
 from    service.collectors.Nutanix_CI_Check         import Nutanix_CI_Check_Collector
 from    service.collectors.Nutanix_Image_Load       import Nutanix_Image_Load_Collector
 from    service.collectors.Nutanix_Snapshot_Load    import Nutanix_Snapshot_Load_Collector
+from    service.collectors.Nutanix_VGroup_Load      import Nutanix_VGroup_Load_Collector
 from    service.collectord_exec                     import Execute_Collector_Daemon
 
 # ---------------------------------------------------------------------------------------
@@ -169,6 +170,8 @@ if (os.path.isfile(config_file)):
                         Execute_Collector_Daemon(C,config_ini,driver_group,Nutanix_Image_Load_Collector)
                     elif collector == 'Nutanix_Snapshot_Load':
                         Execute_Collector_Daemon(C,config_ini,driver_group,Nutanix_Snapshot_Load_Collector)
+                    elif collector == 'Nutanix_VGroup_Load':
+                        Execute_Collector_Daemon(C,config_ini,driver_group,Nutanix_VGroup_Load_Collector)
                     else:
                         C.logger.error(f"{COLLECTOR_DRIVER}: Invalid collector name '{collector}'.")
             except Exception as e:
