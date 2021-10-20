@@ -156,11 +156,17 @@ if (os.path.isfile(config_file)):
                 try:
                     # WAIT FOR PROCESS # child_pid
                     childProcExitInfo = os.wait()
-                    print(f"{name}: Child process %d exited with status %d %d"%(
+                    signal=childProcExitInfo[1]%256
+                    status=int(childProcExitInfo[1]/256)
+                    message = f"{name}: Child process %d exited with exit info = %d (signal %d status %d)"%(
                         childProcExitInfo[0],
                         childProcExitInfo[1],
-                        int(childProcExitInfo[1]/256)
-                        ))
+                        signal,
+                        status,
+                        )
+                    logger.info(message)
+                    logger.info(f"{name}: Waiting {pool_seconds} seconds ...")
+                    print(message)
                     print(f"{name}: Waiting {pool_seconds} seconds ...")
                     sleep(pool_seconds)
                 except Exception as e:

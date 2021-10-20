@@ -318,7 +318,7 @@ class Nutanix(ETL):
 
         pdURL = host_base_url + call[version]
         
-        self.logger.debug(f"{this()}: version={version} pdURL={snapshotsURL}")            
+        self.logger.debug(f"{this()}: version={version} pdURL={pdURL}")            
 
         parameters = None
         
@@ -408,83 +408,111 @@ class Nutanix(ETL):
                     ''
                 ]
         
+        # Since there's and API snapshots list limitation (max 5000 snapshots)
+        # then actual extraction will get a list of protection domains
+        # and get snapshots individually for each PD at a time
+        pd_status,pd_data = self.getProtectionDomainsInformation(version=version)
+        self.logger.debug(f"pd_status = {pd_status}")
+        self.logger.debug(f"pd_data   = {type(pd_data)}")
+        pd_exists = False
+        if type(pd_data) == list:
+            self.logger.debug(f"entities   = {len(pd_data)}")
+            if type(pd_data[0]) == dict:
+                if pd_data[0].get('entities'):
+                    self.logger.debug(f"entities   = {len(pd_data[0].get('entities',0))}")
+                    if len(pd_data[0].get('entities',0)):
+                        pd_exists = True
+                else:
+                    self.logger.error(f"NO PROTECTION DOMAINS FOUND!!!!")
+        
         data   = []
         status = 0
-        if version == 2:
-            self.session.headers.update( {'Accept': 'application/json' } )   
-            host_base_url =  f"https://{self.host}:{self.port}/PrismGateway/services/rest/v2.0/"
-
-        snapshotsURL = host_base_url + call[version]
-        
-        self.logger.debug(f"{this()}: version={version} snapshotsURL={snapshotsURL}")            
-
-        parameters = None
-        
-        call_type  = None
-        server_Response = None
-        try:
+        pd_drsnapshots_counter=0
+        # If any Protection Domains available then ...
+        if pd_exists:
             if version == 2:
-                call_type="GET"
-                h=strftime("%H:%M:%S")
-                
-                parameters = {
-                    "fulldetails":True,
-                    #"offset":self.processed_snapshots,
-                    #"count":self.chunk_size,
-                    "timeout":(
-                        self.connection_timeout,
-                        self.read_timeout
-                        )
-                    }
-                
-                self.logger.debug(f"{this()}:V{version}  snapshotsURL = {snapshotsURL}")
-                self.logger.debug(f"{this()}:V{version}  parameters   = {parameters}")
-                
-                serverResponse = self.session.get(
-                    snapshotsURL,
-                    data=parameters
-                    )
-            else:
-                call_type="GET"
-                logger.debug(f"{this()}:V{version}  snapshotsURL = {snapshotsURL}")
+                self.session.headers.update( {'Accept': 'application/json' } )   
+                host_base_url =  f"https://{self.host}:{self.port}/PrismGateway/services/rest/v2.0"
 
-                serverResponse = self.session.get(
-                    snapshotsURL,
-                    timeout=(
-                        self.connection_timeout,
-                        self.read_timeout)
-                    )
-        except ConnectionError:
-            if self.logger:
-                self.logger.error(f"{this()}: Connection Error trying version={version} call={call_type} URL={snapshotsURL}")            
-            return None,None
-        except ConnectTimeout:
-            if self.logger:
-                self.logger.error(f"{this()}: Connection Timeout trying version={version} call={call_type} URL={snapshotsURL}")            
-            return None,None
-        except Exception as e:
-            emtec_handle_general_exception(e,logger=self.logger,module=this(),function=this())
-            return None,None
-        if (self.logger):
-            self.logger.debug(f"{this()}: version        = {version}")
-            self.logger.debug(f"{this()}: snapshotsURL   = {snapshotsURL}")
-            self.logger.debug(f"{this()}: call_Type      = {call_type} {parameters}")
-            self.logger.debug(f"{this()}: serverResponse = {serverResponse}")
-            if serverResponse is not None:
-                self.logger.debug(f"{this()}:       Code     = {serverResponse.status_code}")
-                self.logger.debug(f"{this()}:       Text     = {serverResponse.text[:100]}")
+            # Will loop by Protection Domain if any ...
+            for pd in pd_data[0].get('entities'):
+                pd_name = pd.get('name')
+                snapshotsURL = f"{host_base_url}/protection_domains/{pd_name}/dr_snapshots"        
+                self.logger.debug(f"{this()}: version={version} snapshotsURL={snapshotsURL}")            
 
-        if serverResponse is not None:
-            status = max(status,serverResponse.status_code)
-            if is_json(serverResponse.text):
-                data.append(json.loads(serverResponse.text))
-                    
+                parameters = None
+                
+                call_type  = None
+                server_Response = None
+                try:
+                    if version == 2:
+                        call_type="GET"
+                        h=strftime("%H:%M:%S")
+                        
+                        parameters = {
+                            "fulldetails":True,
+                            #"offset":self.processed_snapshots,
+                            #"count":self.chunk_size,
+                            "timeout":(
+                                self.connection_timeout,
+                                self.read_timeout
+                                )
+                            }
+                        
+                        self.logger.debug(f"{this()}:V{version}  snapshotsURL = {snapshotsURL}")
+                        self.logger.debug(f"{this()}:V{version}  parameters   = {parameters}")
+                        
+                        serverResponse = self.session.get(
+                            snapshotsURL,
+                            data=parameters
+                            )
+                    else:
+                        call_type="GET"
+                        logger.debug(f"{this()}:V{version}  snapshotsURL = {snapshotsURL}")
+
+                        serverResponse = self.session.get(
+                            snapshotsURL,
+                            timeout=(
+                                self.connection_timeout,
+                                self.read_timeout)
+                            )
+                except ConnectionError:
+                    if self.logger:
+                        self.logger.error(f"{this()}: Connection Error trying version={version} call={call_type} URL={snapshotsURL}")            
+                    return None,None
+                except ConnectTimeout:
+                    if self.logger:
+                        self.logger.error(f"{this()}: Connection Timeout trying version={version} call={call_type} URL={snapshotsURL}")            
+                    return None,None
+                except Exception as e:
+                    emtec_handle_general_exception(e,logger=self.logger,module=this(),function=this())
+                    return None,None
+                if (self.logger):
+                    self.logger.debug(f"{this()}: version        = {version}")
+                    self.logger.debug(f"{this()}: snapshotsURL   = {snapshotsURL}")
+                    self.logger.debug(f"{this()}: call_Type      = {call_type} {parameters}")
+                    self.logger.debug(f"{this()}: serverResponse = {serverResponse}")
+                    if serverResponse is not None:
+                        self.logger.debug(f"{this()}:       Code     = {serverResponse.status_code}")
+                        self.logger.debug(f"{this()}:       Text     = {serverResponse.text[:100]}")
+
+                if serverResponse is not None:
+                    self.logger.debug(f"serverResponse={serverResponse}")
+                    status = max(status,serverResponse.status_code)
+                    if is_json(serverResponse.text):
+                        pd_drsnapshots=json.loads(serverResponse.text)
+                        data.append(pd_drsnapshots)
+                        if pd_drsnapshots.get('metadata'):
+                            pd_drsnapshots_counter+=pd_drsnapshots.get('metadata').get('grand_total_entities',0)
+                            
         # data here is a list of data members and need to be treated as so
         if self.logger:
             self.logger.debug(f"{this()}: status = {status}")
             self.logger.debug(f"{this()}: data   = START -----------------------------")
             self.logger.debug(f"{this()}: data.type   = {type(data)}")
             self.logger.debug(f"{this()}: data.len    = {len(data)}")
+            self.logger.info (f"{this()}: data = {len(data)} protection domains, {pd_drsnapshots_counter} snapshots")
+
             if data is not None and len(data):
                 self.logger.debug(f"data.0.type {type(data[0])}")
                 self.logger.debug(f"data.0.metadata {pformat(data[0].get('metadata'))}")
@@ -686,32 +714,51 @@ class Nutanix(ETL):
             API_version = self.API_version
         
         status, self.data = self.getSnapshotsInformation(API_version)
-        entities = self.data[0].get('metadata').get('grand_total_entities')
-        self.logger.info(f"{this()}: host:{self.host} status={status} entities={entities} snapshots")
+        self.logger.debug(f"status={status} self.data={len(self.data)}")
+        self.logger.debug(f"self.data.0 = {self.data[0]}")
+        entities=0
+        if len(self.data) and self.data[0]:
+            if self.data[0].get('metadata'):
+                if   API_version == 2:
+                    entities = self.data[0].get('metadata').get('grand_total_entities')
+                elif API_version == 3:
+                    entities = self.data[0].get('metadata').get('total_matches')
+            else:
+                self.logger.warning(f"Invalid metadata: {self.data[0].get('metadata')}")
+                
+        else:
+            self.logger.warning(f"Invalid data: status = {status} data={type.self.data}")
+        self.logger.info(f"{this()}: API {API_version}: host:{self.host} status={status}")
         try:
             self.total_matches = 0
             # need to calculate new totals for all list previously
             for data in self.data:
                 if status == 200:
                     if   API_version == 2:
-                        self.total_matches += int(data['metadata']['grand_total_entities'])
+                        self.total_matches += int(data['metadata'].get('grand_total_entities',0))
                     elif API_version == 3:
-                        self.total_matches += int(data['metadata']['total_matches'])
+                        self.total_matches += int(data['metadata'].get('total_matches',0))
             # actual loop
             for data in self.data:
                 if status == 200:
                     if   API_version == 2:
-                        self.processed_snapshots += int(data['metadata']['total_entities'])
+                        self.processed_snapshots += int(data['metadata'].get('grand_total_entities',0))
                     elif API_version == 3:
-                        self.processed_snapshots += int(data['metadata']['length'])
+                        self.processed_snapshots += int(data['metadata'].get('total_matches',0))
                     if self.processed_snapshots >= self.total_matches:
                         self.has_more_data = False
                 else:
                     if (self.logger):
                         self.logger.error(f"{this()}: status={status} data={data}")
+            #elf.logger.info(f"{this()}: total matches {self.total_matches} processed snapshots: {self.processed_snapshots}")
         except Exception as e:
             self.logger.error(f"{this()}: exception={str(e)}")
             
+        self.logger.debug(f"self.data                = {len(self.data)}")
+        self.logger.debug(f"self.total_matches       = {self.total_matches}")
+        self.logger.debug(f"self.processed_snapshots = {self.processed_snapshots}")
+        self.logger.debug(f"status                   = {status}")
+        self.logger.info   (f"{this()}: data={len(self.data)} protection domains,  snapshots processed ({self.processed_snapshots}/{self.total_matches}) status={status}. OUT")
         return status
         # -----------------------------------------------------------
 
@@ -1050,32 +1097,42 @@ class Nutanix(ETL):
 
         for e in range(entities):
             image = self.data['entities'][e]
-
-            if API_version == 2:
-                NAME   = image['name'] 
-                UUID   = image['uuid']
-                ACTIVE = image['image_state']
-                SIZE   = image['vm_disk_size']
-                SIZEGB = SIZE/1024/1024/1024
-                DATE   = strftime("%Y-%m-%d")
-                TIME   = strftime("%H:00:00")
-                REF1=REF2=REF3=None
-                if 'image_type' in image.keys():
-                    REF1   = image['image_type']
-                if 'vm_disk_path' in image.keys():
-                    REF2   = image['vm_disk_path']
-                if 'updated_time_in_usecs' in image.keys():
-                    REF3   = image['updated_time_in_usecs']
-            else:
-                if (self.logger): self.logger.error("%s:  API_version %d can't be processed"%(this(),API_version)) 
-                return 1
-            if ACTIVE == 'ACTIVE':
-                CU_UUID = image.get('storage_container_uuid')
-                # Creates/Updates CI Mother Record
-                self.tuples.append(("CI-CREATE",NAME,UUID))
-                # Creates/Updates CU Child Records (for IMAGE Entity)
-                self.tuples.append(("CU-CREATE","IMG",UUID,CU_UUID,SIZEGB,"NONE",1,REF1,REF2,REF3))
-                self.tuples.append(("CIT-CREATE","IMG",UUID,CU_UUID,SIZEGB,DATE,TIME,ACTIVE))
+            try:
+                if API_version == 2:
+                    if image['image_state'] == 'ACTIVE':
+                        NAME   = image['name'] 
+                        UUID   = image['uuid']
+                        ACTIVE = image['image_state']
+                        SIZE   = image['vm_disk_size']
+                        SIZEGB = SIZE/1024/1024/1024
+                        DATE   = strftime("%Y-%m-%d")
+                        TIME   = strftime("%H:00:00")
+                        REF1=REF2=REF3=None
+                        if 'image_type' in image.keys():
+                            REF1   = image['image_type']
+                        if 'vm_disk_path' in image.keys():
+                            REF2   = image['vm_disk_path']
+                        if 'updated_time_in_usecs' in image.keys():
+                            REF3   = image['updated_time_in_usecs']
+                    else:
+                        if (self.logger):
+                            self.logger.warning(
+                                f"{this()}: image {image.get('name')} is not ACTIVE ({image.get('image_state')})"
+                            ) 
+                        
+                else:
+                    if (self.logger): self.logger.error("%s:  API_version %d can't be processed"%(this(),API_version)) 
+                    return 1
+                if ACTIVE == 'ACTIVE':
+                    CU_UUID = image.get('storage_container_uuid')
+                    # Creates/Updates CI Mother Record
+                    self.tuples.append(("CI-CREATE",NAME,UUID))
+                    # Creates/Updates CU Child Records (for IMAGE Entity)
+                    self.tuples.append(("CU-CREATE","IMG",UUID,CU_UUID,SIZEGB,"NONE",1,REF1,REF2,REF3))
+                    self.tuples.append(("CIT-CREATE","IMG",UUID,CU_UUID,SIZEGB,DATE,TIME,ACTIVE))
+            except Exception as e:
+                self.logger.error(f"image = {image}")
+                emtec_handle_general_exception(e,logger=self.logger)
         if (self.logger):
             self.logger.debug("%s: Transform. OUT"%(this()))
         return 0
@@ -1102,7 +1159,7 @@ class Nutanix(ETL):
             if (self.logger): self.logger.error("%s:  API_version %d can't be processed"%(this(),API_version)) 
             return 1
             
-        if (self.logger): self.logger.debug("%s: ETL_data_to_tuples. IN. %d entities to process"%(this(),entities)) 
+        if (self.logger): self.logger.info("%s: ETL_data_to_tuples. IN. %d protection domains to process"%(this(),entities)) 
 
         self.tuples.clear()
 
@@ -1112,6 +1169,8 @@ class Nutanix(ETL):
         TIME   = strftime("%H:00:00")
         # data is actually a list oh host's snapshots, an item for
         # each host
+        snapshots_count=0
+        ignored_count=0
         for e in range(entities):
             # 20210605 GV snapshot = self.data['entities'][e]
             host = self.data[e]
@@ -1128,6 +1187,7 @@ class Nutanix(ETL):
                 control_vm        = []
                 local_tuples      = {}
                 for snapshot in host.get('entities',[]):
+                    snapshots_count+=1
                     try: 
                         if 'vms' in snapshot.keys():
                             vms_found+=1
@@ -1189,7 +1249,7 @@ class Nutanix(ETL):
                                         existent_ci+=1
                                         #### if first appereance of SNaPshot then creates Charge Unit
                                         #### CU_Id = self.db.Get_CU_Id_From_CI(CI_Id,snapshot_type_code)
-                                        #### if (self.logger): self.logger.debug(f"{this()}: CU_Id = {CU_Id} for CI:{CI_Id} Type:{snapshot_type_code}") 
+                                        #### if (self.logger): self.logger.warning(f"{this()}: CU_Id = {CU_Id} for CI:{CI_Id} Type:{snapshot_type_code}") 
                                         #### CU_UUID = ''
                                         # will populate temporaty tuple dict to acummulate
                                         # actual snapshots data
@@ -1216,18 +1276,27 @@ class Nutanix(ETL):
                                         # here accummulates sizes for all snapshots of each typep on VM
                                         if ACTIVE != "EXPIRED":
                                             local_tuples.get(UUID).get(snapshot_type_code).update({ 'size_gb' : SIZEGB+size_gb })
+                                            ignored_count+=1
                                         self.logger.debug(f"local_tuples.get({UUID}).get({snapshot_type_code})={local_tuples.get(UUID).get(snapshot_type_code)}")                                        
                                     else:
                                         non_existent_ci+=1
                                         non_existent.append((NAME,UUID,ACTIVE,SIZE))
                                         non_existent_dict.update({NAME:UUID})
                                         if (self.logger): self.logger.debug(f"{this()}:  Snapshot {snapshot.get('snapshot_id')} for an unknown VM {NAME}:{UUID}. ignored") 
+                                        ignored_count+=1
                                 else:
-                                    if (self.logger): self.logger.debug(f"{this()}:  Excluded snapshot {ID} for vm: {NAME} uuid: {UUID} size: {SIZE} bytes") 
+                                    if (self.logger):
+                                        self.logger.debug(f"{this()}:  Excluded snapshot {ID} for vm: {NAME} uuid: {UUID} size: {SIZE} bytes") 
+                                        if NAME is None: self.logger.debug(f"NAME is {NAME}")
+                                        if UUID is None: self.logger.debug(f"UUID is {UUID}")
+                                        if SIZE <=0    : self.logger.debug(f"Size is {SIZE}")
+                                    ignored_count+=1
                             else:
                                 if (self.logger): self.logger.debug(f"{this()}:  Snapshot {snapshot.get('snapshot_id')} have an empty VMs list. ignored") 
+                                ignored_count+=1
                         else:
                             if (self.logger): self.logger.debug(f"{this()}:  Snapshot {snapshot.get('snapshot_id')} does not have a valid VMs list. ignored") 
+                            ignored_count+=1
                     except Exception as e:
                             if (self.logger): self.logger.error(f"{this()}:  exception. {str(e)}") 
                             
@@ -1237,6 +1306,8 @@ class Nutanix(ETL):
                     self.logger.debug(f"{this()}: remote_found    = {remote_found}")
                     self.logger.debug(f"{this()}: existent_ci     = {existent_ci}")
                     self.logger.debug(f"{this()}: non_existent_ci = {non_existent_ci}")
+                    self.logger.debug(f"{this()}: snapshots count = {snapshots_count}")
+                    self.logger.debug(f"{this()}: ignored count   = {ignored_count}")
                     self.logger.debug(f"{this()}: NON EXISTENT VMs LIST")
                     self.logger.debug(f"\n{pformat(non_existent_dict)}")
                     '''
@@ -1253,6 +1324,7 @@ class Nutanix(ETL):
                 # Aqui local tuples tiene los requerimientos de actualizacion
                 # consolidados a partir de estos se crearan las tuplas
                 # de actualizacion necesarias
+                self.logger.debug(f"local_tuples={len(local_tuples)}")
                 for UUID in local_tuples:
                     for TYP_CODE in local_tuples.get(UUID):
 
@@ -1274,6 +1346,8 @@ class Nutanix(ETL):
             else:
                 if (self.logger): self.logger.error(f"{this()}: API_version {API_version} can't be processed") 
                 return 1
+        
+        
         if (self.logger):
             self.logger.debug(f"{this()}: **************************************")
             self.logger.debug(f"{this()}: OUTPUT TUPLES")
@@ -1282,6 +1356,7 @@ class Nutanix(ETL):
                 self.logger.debug(f"{this()}:{self.host}: {t}")
             self.logger.debug(f"{this()}: **************************************")
             self.logger.debug(f"{this()}: Transform. OUT")
+            self.logger.info (f"{this()}: tuples={len(self.tuples)}. Transform. OUT")
         return 0
 
     def Transform_VGroups(self,API_version=None,use_size_in_bytes=True):

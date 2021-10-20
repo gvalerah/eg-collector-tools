@@ -152,42 +152,68 @@ if (os.path.isfile(config_file)):
                 logger.info("*****************************************")
                 log_file_previous = log_file
             # -------------------------------------------------    
-            try:
-                # Check for invalid,unexpected db engine
-                if 'sqlite' in str(C.db):
-                    logger.error("DB engine not expected is      : '%s'"%(C.db))
-                    logger.error("os.environ['COLLECTOR_CONFIG'] : '%s'"%(os.environ['COLLECTOR_CONFIG']))
-                    logger.error("os.environ['DATABASE_URL']     : '%s'"%(os.environ['DATABASE_URL']))
-                    break
-                logger.info(f"{COLLECTOR_DRIVER}: collectors '{collectors}'")
-                for collector in collectors:                    
-                    logger.info(f"{COLLECTOR_DRIVER}: Executing collector mode '{collector}'")
-                    if collector == 'Nutanix_ETL':
-                        Execute_Collector_Daemon(C,config_ini,driver_group,Nutanix_ETL_Collector)
-                    elif collector == 'Nutanix_CI_Check':
-                        Execute_Collector_Daemon(C,config_ini,driver_group,Nutanix_CI_Check_Collector)
-                    elif collector == 'Nutanix_Image_Load':
-                        Execute_Collector_Daemon(C,config_ini,driver_group,Nutanix_Image_Load_Collector)
-                    elif collector == 'Nutanix_Snapshot_Load':
-                        Execute_Collector_Daemon(C,config_ini,driver_group,Nutanix_Snapshot_Load_Collector)
-                    elif collector == 'Nutanix_VGroup_Load':
-                        Execute_Collector_Daemon(C,config_ini,driver_group,Nutanix_VGroup_Load_Collector)
-                    else:
-                        C.logger.error(f"{COLLECTOR_DRIVER}: Invalid collector name '{collector}'.")
-            except Exception as e:
-                C.logger.error(f"{COLLECTOR_DRIVER}: Exception catched during ETL execution.'errno:{e.errno},strerror:{e.strerror},args:{e.args}'")
-                break
-            # --------------------------------------------------
-            C.logger.debug(f"{COLLECTOR_DRIVER}: Execution completed @ {strftime('%H:%M:%S')}. Waiting {pool_seconds} seconds ...")
-            if logger.level == logging.DEBUG:
-                print(f"{COLLECTOR_DRIVER}: Execution completed @ {strftime('%H:%M:%S')}. Waiting {pool_seconds} seconds ...")
-            try:
-                sleep(pool_seconds)
-            except Exception as e:
-                logger.error(f"{COLLECTOR_DRIVER}:Exception catched while pooling. 'errno:{e.errno},strerror:{e.strerror},args:{e.args}'")
-                break        
+            # Will create a new child process to isolate service
+            child_pid = os.fork()
+            if child_pid == 0:
+                try:
+                    # Child new process instantiated
+                    # -------------------------------------------------    
+                    # Check for invalid,unexpected db engine
+                    if 'sqlite' in str(C.db):
+                        logger.error("DB engine not expected is      : '%s'"%(C.db))
+                        logger.error("os.environ['COLLECTOR_CONFIG'] : '%s'"%(os.environ['COLLECTOR_CONFIG']))
+                        logger.error("os.environ['DATABASE_URL']     : '%s'"%(os.environ['DATABASE_URL']))
+                        break
+                    logger.info(f"{COLLECTOR_DRIVER}: collectors '{collectors}'")
+                    for collector in collectors:                    
+                        logger.info(f"{COLLECTOR_DRIVER}: Executing collector mode '{collector}'")
+                        if collector == 'Nutanix_ETL':
+                            Execute_Collector_Daemon(C,config_ini,driver_group,Nutanix_ETL_Collector)
+                        elif collector == 'Nutanix_CI_Check':
+                            Execute_Collector_Daemon(C,config_ini,driver_group,Nutanix_CI_Check_Collector)
+                        elif collector == 'Nutanix_Image_Load':
+                            Execute_Collector_Daemon(C,config_ini,driver_group,Nutanix_Image_Load_Collector)
+                        elif collector == 'Nutanix_Snapshot_Load':
+                            Execute_Collector_Daemon(C,config_ini,driver_group,Nutanix_Snapshot_Load_Collector)
+                        elif collector == 'Nutanix_VGroup_Load':
+                            Execute_Collector_Daemon(C,config_ini,driver_group,Nutanix_VGroup_Load_Collector)
+                        else:
+                            C.logger.error(f"{COLLECTOR_DRIVER}: Invalid collector name '{collector}'.")
+                except Exception as e:
+                    C.logger.error(f"{COLLECTOR_DRIVER}: Exception catched during ETL execution.'errno:{e.errno},strerror:{e.strerror},args:{e.args}'")
+                    #break
+                os._exit(0)
+            else:
+                # --------------------------------------------------
+                C.logger.debug(f"{COLLECTOR_DRIVER}: Execution completed @ {strftime('%H:%M:%S')}. Waiting {pool_seconds} seconds ...")
+                if logger.level == logging.DEBUG:
+                    print(f"{COLLECTOR_DRIVER}: Execution completed @ {strftime('%H:%M:%S')}. Waiting {pool_seconds} seconds ...")
+                # Parent main loop process continues
+                # WAIT FOR PROCESS # child_pid
+                logger.info(f"{COLLECTOR_DRIVER}: Child Process started as pid={child_pid} @ {strftime('%H:%M:%S')}.")
+                if logger.level < logging.INFO:
+                    print(f"{COLLECTOR_DRIVER}: Child Process started as pid={child_pid} @ {strftime('%H:%M:%S')}.")
+                try:
+                    # WAIT FOR PROCESS # child_pid
+                    childProcExitInfo = os.wait()
+                    signal=childProcExitInfo[1]%256
+                    status=int(childProcExitInfo[1]/256)
+                    message = f"{COLLECTOR_DRIVER}: Child process %d exited with exit info = %d (signal %d status %d)"%(
+                        childProcExitInfo[0],
+                        childProcExitInfo[1],
+                        signal,
+                        status,
+                        )
+                    logger.info(message)
+                    logger.info(f"{COLLECTOR_DRIVER}: Waiting {pool_seconds} seconds ...")
+                    print(message)
+                    print(f"{COLLECTOR_DRIVER}: Waiting {pool_seconds} seconds ...")
+                    sleep(pool_seconds)
+                except Exception as e:
+                    logger.error(f"{COLLECTOR_DRIVER}:Exception catched while pooling. 'errno:{e.errno},strerror:{e.strerror},args:{e.args}'")
+                    break        
         # Out of loop service should never get here unless system shutdown
-        logger.warning("*** Unexpected Deamon Interruption ***")
+        logger.warning(f"{COLLECTOR_DRIVER} *** Unexpected Deamon Interruption ***")
 else:
     # Configuration error
     print("ERROR: Configuration file '%s' does not exists. aborting."%config_file)
