@@ -46,6 +46,8 @@ class Config:
                     config_ini.get('DB','schema')
                     )
                 os.environ['DATABASE_URL']          = DATABASE_URL
+                #print(f"DATABASE_URL                        = {DATABASE_URL}")
+                #print(f"os.environ['DATABASE_URL']          = {os.environ['DATABASE_URL']}")
     else:
                 print("config.py.__init__app: no environment configuration file evaluated.")
 

@@ -4,6 +4,7 @@
 # GLVH 2018
 # GVLV 2021-04-03 Refactoring + Add snapshots
 # GVLV 2021-09-12 Add volume groups
+# GVLV 2021-10-24 Adjust CI get lists functions (get_..._list)
 # Gerardo L Valera
 # gvalera@emtecgroup.net
 # ----------------------------------------------------------------------
@@ -625,6 +626,45 @@ class Nutanix(ETL):
                 self.logger.error(f"{this()}EXCEPTION: {str(e)}")
         return status,data
 
+
+    def getConfigurationItemsList(self,version):
+        ci_list = []
+        try:
+            status,data = self.getVMsInformation(version)
+            if status == 200:
+                self.logger.warning(f"Found {len(data.get('entities'))} CIs of type VM")
+                for e in data.get('entities'):
+                    ci_list.append({'name': e['spec']['name'], 'uuid': e['metadata']['uuid'],'type':'VM'})
+            else:
+                self.logger.warning(f"VM. status = {status}. total cis={len(ci_list)}")                
+        except Exception as e:
+            self.logger.warning(f"VMs: No data from Nutanix. exception: ({str(e)})")
+        try:
+            status,data = self.getImagesInformation(version)
+            if status == 200:
+                self.logger.warning(f"Found {len(data.get('entities'))} CIs of type Image")
+                for e in data.get('entities'):
+                    ci_list.append({'name': e.get('name') , 'uuid': e.get('uuid'),'type':'IMG' })
+            else:
+                self.logger.warning(f"Images. status = {status}. total cis={len(ci_list)}")                
+        except Exception as e:
+            self.logger.warning(f"Images: No data from Nutanix. exception: ({str(e)})")
+        try:
+            status,data = self.getVGroupsInformation(version)
+            if status == 200:
+                self.logger.warning(f"Found {len(data.get('entities'))} CIs of type Volume Group")
+                for e in data.get('entities'):
+                    ci_list.append({'name': e.get('name') , 'uuid': e.get('uuid'),'type':'VG' })
+            else:
+                self.logger.warning(f"VGs. status = {status}. total cis={len(ci_list)}")                
+        except Exception as e:
+            self.logger.warning(f"VGs: No data from Nutanix. exception: ({str(e)})")
+        try:
+            self.logger.warning(f"return CI List len = {len(ci_list)}")
+        except Exception as e:
+            self.logger.error(f"EXCEPTION: {str(e)}")
+        return ci_list
+        
     def Read_Configuration(self,ini_file):
         self.ini_file = ini_file
         config = configparser.ConfigParser()
@@ -1116,7 +1156,7 @@ class Nutanix(ETL):
                             REF3   = image['updated_time_in_usecs']
                     else:
                         if (self.logger):
-                            self.logger.warning(
+                            self.logger.info(
                                 f"{this()}: image {image.get('name')} is not ACTIVE ({image.get('image_state')})"
                             ) 
                         

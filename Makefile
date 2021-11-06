@@ -151,6 +151,10 @@ collector:	${COLLECTOR_CODE_OUTPUT}/models.py ${COLLECTOR_CODE_OUTPUT}/orm_model
 	cp  ${COLLECTOR_CODE_SRC}/tools/*.py						${COLLECTOR_FOLDER}/tools/.
 	cp  ${COLLECTOR_CODE_SRC}/scripts/*.sh						${COLLECTOR_FOLDER}/scripts/.
 	@echo
+	@echo "updating sql tools menu ..."
+	@echo
+	cp  ${COLLECTOR_CODE_SRC}/sql/*					${COLLECTOR_FOLDER}/sql/.
+	@echo
 	@echo collector completed !!!
 	@echo
 

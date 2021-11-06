@@ -1,0 +1,58 @@
+!/bin/bash
+source colors.sh
+HOME=/home/gvalera
+GIT=${HOME}/GIT
+COLLECTOR=${GIT}/EG-Collector
+TOOLS=${COLLECTOR}-Tools
+SQL=${TOOLS}/code/src/sql
+HEIGHT=30
+WIDTH=100
+CHOICE_HEIGHT=25
+BACKTITLE="Emtec Group Collector"
+TITLE="SQL Menu - Collector (${SQL})"
+MENU="Choose one of the folowing options:"
+OPTIONS=(   
+            0 "Edit Configuration File" 
+            a "Get Virtual Machines List"
+            b "Get Volume Groups List"
+            c "Get Images List"
+            d "Get Active CIs count"
+            q "Quit"
+        )
+while true;
+do
+    CHOICE=$(   dialog --clear \
+                --backtitle "$BACKTITLE" \
+                --title "$TITLE" \
+                --menu "$MENU" \
+                $HEIGHT $WIDTH $CHOICE_HEIGHT \
+                "${OPTIONS[@]}" \
+                2>&1 > /dev/tty)
+    clear
+    case $CHOICE in
+        0)
+            nano ${COLLECTOR}/collector.ini
+            ;;
+        a)
+            cd ${SQL}
+            ./get_vm_list.sh
+            ;;
+        b)
+            cd ${SQL}
+            ./get_vg_list.sh
+            ;;
+        c)
+            cd ${SQL}
+            ./get_img_list.sh
+            ;;
+        d)
+            cd ${SQL}
+            ./get_ci_active_count.sh
+            ;;
+        q)
+            exit 0
+    esac
+    echo 
+    echo -e ${bold}${yellow}"Pulse una tecla para continuar ..."${normal}
+    read
+done
