@@ -1,0 +1,14 @@
+while true
+do
+	ls *.fifo
+	for FIFO in *.fifo
+	do
+		echo $FILE
+		while read -r LINE
+		do
+			echo ${FILE}: ${LINE}
+		done
+	done
+	sleep 1
+	echo "-------"
+done

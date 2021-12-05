@@ -1,0 +1,37 @@
+aaaa:
+192.168.136.12 v3:   1: categories           200 api:3.1      16 matches 
+192.168.136.12 v3:   2: projects             200 api:3.1      14 matches 
+192.168.136.12 v3:   3: images               200 api:3.1      18 matches 
+192.168.136.12 v3:   4: vms                  200 api:3.1     586 matches 
+192.168.136.12 v3:   5: blackouts            200 api:3.1       0 matches 
+192.168.136.12 v3:   6: subnets              200 api:3.1      53 matches 
+192.168.136.12 v3:   7: hosts                200 api:3.1      15 matches 
+192.168.136.12 v3:   8: clusters             200 api:3.1       3 matches 
+192.168.136.12 v3:   9: users                200 api:3.1      24 matches 
+192.168.136.10 v2:  10: cluster              200 api:None      1 matches Individual cluster data.
+192.168.137.10 v2:  11: cluster              200 api:None      1 matches Individual cluster data.
+192.168.136.10 v2:  12: clusters             200 api:None      1 matches List of clusters.
+192.168.137.10 v2:  13: clusters             200 api:None      1 matches List of clusters.
+192.168.136.10 v2:  14: disks                200 api:None    112 matches 
+192.168.137.10 v2:  15: disks                200 api:None     36 matches 
+192.168.136.10 v2:  16: hosts                200 api:None      8 matches 
+192.168.137.10 v2:  17: hosts                200 api:None      6 matches 
+192.168.136.10 v2:  18: images               200 api:None     13 matches 
+192.168.137.10 v2:  19: images               200 api:None     15 matches 
+192.168.136.10 v2:  20: networks             200 api:None     26 matches 
+192.168.137.10 v2:  21: networks             200 api:None     27 matches 
+192.168.136.10 v2:  22: protection_domains   200 api:None    493 matches 
+192.168.137.10 v2:  23: protection_domains   200 api:None    187 matches 
+192.168.136.10 v2:  24: remote sites         200 api:None      1 matches 
+192.168.137.10 v2:  25: remote sites         200 api:None      1 matches 
+192.168.136.10 v2:  26: snapshots            200 api:None     12 matches 
+192.168.137.10 v2:  27: snapshots            200 api:None      5 matches 
+192.168.136.10 v2:  28: dr_snapshots_list    500 GET https://192.168.136.10:9440/PrismGateway/services/rest/v2.0/protection_domains/dr_snapshots Cannot display snapshots as the total count exceeds the system limit (5000). Please select individual Protection Domain to view snapshots. 
+192.168.137.10 v2:  29: dr_snapshots_list    200 api:None   1936 matches Has a 5000 entities limit.
+192.168.136.10 v2:  30: dr_snapshots         200 api:None     10 matches List of snapshots for single PD.
+192.168.137.10 v2:  31: dr_snapshots         200 api:None      5 matches List of snapshots for single PD.
+192.168.136.10 v2:  32: vms                  200 api:None    462 matches 
+192.168.137.10 v2:  33: vms                  200 api:None    124 matches 
+192.168.136.10 v2:  34: volume groups        200 api:None      1 matches 
+192.168.137.10 v2:  35: volume groups        200 api:None      0 matches 
+35 tests completed. 34 OK = 97.14%

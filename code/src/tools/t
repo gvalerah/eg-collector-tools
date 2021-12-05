@@ -1,0 +1,12 @@
+python egc_tools_get_charge_resume.py \
+-m cost-center  -p collector \
+--month 10 \
+--customer 3 \
+--cost-center 2 \
+-v \
+--update \
+--feedback-step 0.01 \
+--fifo FIFO \
+--progress PROGRESS.dat
+
+

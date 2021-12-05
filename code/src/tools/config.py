@@ -17,6 +17,7 @@ class Config:
     COLLECTOR_MAIL_SUBJECT_PREFIX   = os.environ.get('COLLECTOR_MAIL_SUBJECT_PREFIX') or '[Collector]'
     COLLECTOR_MAIL_SENDER           = os.environ.get('COLLECTOR_MAIL_SUBJECT_PREFIX') or 'Collector Admin <gvalera@emtecgroup.net>'
     COLLECTOR_ADMIN                 = os.environ.get('COLLECTOR_ADMIN') or 'collector'
+    print(f"basedir = {basedir}")
     COLLECTOR_CONFIG_FILE           = os.environ.get('COLLECTOR_CONFIG_FILE') or '%s/collector.ini'%basedir
     if os.environ.get('LINES_PER_PAGE') is not None:
         LINES_PER_PAGE                  = int(os.environ.get('LINES_PER_PAGE')) or 5
@@ -25,6 +26,7 @@ class Config:
 
 
     if COLLECTOR_CONFIG_FILE is not None and os.path.isfile(COLLECTOR_CONFIG_FILE):
+                #print(f"COLLECTOR_CONFIG_FILE = {COLLECTOR_CONFIG_FILE}")
                 #print("config.py.__init__app: reading %s"%COLLECTOR_CONFIG_FILE)
                 config_ini = configparser.ConfigParser(interpolation=ExtendedInterpolation())
                 config_ini.read( COLLECTOR_CONFIG_FILE )
@@ -48,6 +50,7 @@ class Config:
                 os.environ['DATABASE_URL']          = DATABASE_URL
                 #print(f"DATABASE_URL                        = {DATABASE_URL}")
                 #print(f"os.environ['DATABASE_URL']          = {os.environ['DATABASE_URL']}")
+                #print(f"os.environ['TEST_DATABASE_URL']     = {os.environ.get('TEST_DATABASE_URL')}")
     else:
                 print("config.py.__init__app: no environment configuration file evaluated.")
 

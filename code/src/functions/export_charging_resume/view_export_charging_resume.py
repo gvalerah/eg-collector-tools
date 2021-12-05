@@ -555,7 +555,7 @@ def export_to_json(output_file,rows,Customer,From,To,Status,Currency,codes=False
                     'dateTo':                 row.CR_Date_To.strftime('%Y-%m-%d'),
                     'status':                 row.CIT_Status,
                     'currency':               row.Cur_Code,
-                    'items':                  row.CIT_Count, 
+                    'hours':                  row.CIT_Count, 
                     'quantity':               row.CIT_Quantity, 
                     'generation':             row.CIT_Generation, 
                     'cu':                     row.CU_Id,
@@ -591,7 +591,7 @@ def export_to_json(output_file,rows,Customer,From,To,Status,Currency,codes=False
         else:
             dict['detail'].append(
                 {   
-                    'items':                  row.CIT_Count, 
+                    'hours':                  row.CIT_Count, 
                     'quantity':               row.CIT_Quantity, 
                     'type':                   row.Typ_Code,
                     'price':                  row.Rat_Price,

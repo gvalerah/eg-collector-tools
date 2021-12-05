@@ -1,0 +1,24 @@
+laboratorio:
+10.26.1.250 v3:   1: categories           200 api:3.1      14 matches 
+10.26.1.250 v3:   2: projects             200 api:3.1       1 matches 
+10.26.1.250 v3:   3: images               200 api:3.1       0 matches 
+10.26.1.250 v3:   4: vms                  200 api:3.1      12 matches 
+10.26.1.250 v3:   5: blackouts            200 api:3.1       0 matches 
+10.26.1.250 v3:   6: subnets              200 api:3.1       2 matches 
+10.26.1.250 v3:   7: hosts                200 api:3.1       5 matches 
+10.26.1.250 v3:   8: clusters             200 api:3.1       2 matches 
+10.26.1.250 v3:   9: users                200 api:3.1       1 matches 
+10.26.1.223 v2:  10: cluster              200 api:None      1 matches Individual cluster data.
+10.26.1.223 v2:  11: clusters             200 api:None      1 matches List of clusters.
+10.26.1.223 v2:  12: disks                200 api:None     24 matches 
+10.26.1.223 v2:  13: hosts                200 api:None      4 matches 
+10.26.1.223 v2:  14: images               200 api:None     65 matches 
+10.26.1.223 v2:  15: networks             200 api:None      2 matches 
+10.26.1.223 v2:  16: protection_domains   200 api:None     77 matches 
+10.26.1.223 v2:  17: remote sites         200 api:None      2 matches 
+10.26.1.223 v2:  18: snapshots            200 api:None     38 matches 
+10.26.1.223 v2:  19: dr_snapshots_list    200 api:None    110 matches Has a 5000 entities limit.
+10.26.1.223 v2:  20: dr_snapshots         200 api:None      1 matches List of snapshots for single PD.
+10.26.1.223 v2:  21: vms                  200 api:None     12 matches 
+10.26.1.223 v2:  22: volume groups        200 api:None      0 matches 
+22 tests completed. 22 OK = 100.00%

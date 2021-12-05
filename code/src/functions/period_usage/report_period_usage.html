@@ -1,0 +1,422 @@
+{# ============================================================================= #}
+{# Period Usage Report Template                                                      #}
+{# For Customer on a defined period and status                                   #}
+{# (c) Sertechno 2021                                                            #}
+{# GLVH @ 2021-12-05                                                            #}
+{# ============================================================================= #}
+{% extends "base.html" %}
+
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% import "_macros.html" as macros %}
+
+{% block title %}Collector{% endblock %}
+
+{% block head %}
+   {{ super() }}
+{% endblock %}
+
+    
+{% block page_content %}
+
+    <!-- p style="color:red">Beta version. Query in development. Results are referential only.</p -->
+    <h1>Usage Resume for period: 
+        <p style="color:blue">{{data.period}}</p>
+    </h1>
+    <table class="table"> 
+        <thead class="thead-dark">   
+            <tr> <!-- headers -->
+                 <th>Components</th>
+                 <th>Power Status</th>
+                 <th>Hours</th>
+                 <th>Units/Hr</th>
+                 <th>Units Period</th>
+                 <th>Base Rate</th>
+                 <th>mu/period</th>
+                 <!-- th>rtmf</th -->
+                 <th>Monthly Rate</th>
+                 <th>Sub Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr> <!-- Virtual CPUs -->
+                 <td align=right>Virtual CPUs</td>
+                 <td align=right>Active</td>
+                 <td align=right>{{"%6d"|format(data.CPU.1.hours)}}</td>
+                 <td align=right>{{"%.6f"|format(data.CPU.1.Q_hours)}}</td>
+                 <td align=right>{{"%.6f"|format(data.CPU.1.Q_month)}}</td>
+                 <td align=right>{{"%.12f"|format(data.CPU.1.rate)}}</td>
+                 <td align=right>{{data.rates.cpu.measure_unit}}/{{data.rates.cpu.period}}</td>
+                 <!-- td align=right>{{data.CPU.1.rtmf}}</td -->
+                 <td align=right>{{"%.12f"|format(data.CPU.1.rate_month)}}</td>
+                 <td align=right>{{"%.12f"|format(data.CPU.1.bill)}}</td>
+            </tr>
+            <tr>
+                 <td align=right></td>
+                 <td align=right>Inactive</td>
+                 <td align=right>{{"%6d"|format(data.CPU.0.hours)}}</td>
+                 <td align=right>{{"%.6f"|format(data.CPU.0.Q_hours)}}</td>
+                 <td align=right>{{"%.6f"|format(data.CPU.0.Q_month)}}</td>
+                 <td align=right>{{"%.12f"|format(data.CPU.0.rate)}}</td>
+                 <td align=right>{{data.rates.cpu.measure_unit}}/{{data.rates.cpu.period}}</td>
+                 <!-- td align=right>{{data.CPU.1.rtmf}}</td -->
+                 <td align=right>{{"%.12f"|format(data.CPU.0.rate_month)}}</td>
+                 <td align=right>{{"%.12f"|format(data.CPU.0.bill)}}</td>
+            </tr>
+            <tr> <!-- Virtual RAMs -->
+                 <td align=right>Virtual RAMs</td>
+                 <td align=right>Active</td>
+                 <td align=right>{{"%6d"|format(data.RAM.1.hours)}}</td>
+                 <td align=right>{{"%.6f"|format(data.RAM.1.Q_hours)}}</td>
+                 <td align=right>{{"%.6f"|format(data.RAM.1.Q_month)}}</td>
+                 <td align=right>{{"%.12f"|format(data.RAM.1.rate)}}</td>
+                 <td align=right>{{data.rates.ram.measure_unit}}/{{data.rates.ram.period}}</td>
+                 <!-- td align=right>{{data.RAM.1.rtmf}}</td -->
+                 <td align=right>{{"%.12f"|format(data.RAM.1.rate_month)}}</td>
+                 <td align=right>{{"%.12f"|format(data.RAM.1.bill)}}</td>
+            </tr>
+            <tr>
+                 <td align=right></td>
+                 <td align=right>Inactive</td>
+                 <td align=right>{{"%6d"|format(data.RAM.0.hours)}}</td>
+                 <td align=right>{{"%.6f"|format(data.RAM.0.Q_hours)}}</td>
+                 <td align=right>{{"%.6f"|format(data.RAM.0.Q_month)}}</td>
+                 <td align=right>{{"%.12f"|format(data.RAM.0.rate)}}</td>
+                 <td align=right>{{data.rates.ram.measure_unit}}/{{data.rates.ram.period}}</td>
+                 <!-- td align=right>{{data.RAM.1.rtmf}}</td -->
+                 <td align=right>{{"%.12f"|format(data.RAM.0.rate_month)}}</td>
+                 <td align=right>{{"%.12f"|format(data.RAM.0.bill)}}</td>
+            </tr>
+            
+            <tr> <!-- Virtual DSKs Active -->
+                 <td align=right>Virtual DSKs</td>
+                 <td align=right>Active</td>
+                 <td align=right>{{"%6d"|format(data.DSK.1.hours)}}</td>
+                 <td align=right>{{"%.6f"|format(data.DSK.1.Q_hours)}}</td>
+                 <td align=right>{{"%.6f"|format(data.DSK.1.Q_month)}}</td>
+                 <td align=right>{{"%.12f"|format(data.DSK.1.rate)}}</td>
+                 <td align=right>{{data.rates.dsk.measure_unit}}/{{data.rates.dsk.period}}</td>
+                 <!-- td align=right>{{data.DSK.1.rtmf}}</td -->
+                 <td align=right>{{"%.12f"|format(data.DSK.1.rate_month)}}</td>
+                 <td align=right>{{"%.12f"|format(data.DSK.1.bill)}}</td>
+            </tr>
+            <tr> <!-- HDD -->
+                 <td align=right></td>
+                 <td align=right></td>
+                 <td align=right></td>
+                 <td align=right>HDD</td>
+                 <td align=right>{{"%.6f"|format(data.DSK.1.HDD.Q_month)}}</td>
+                 <td align=right>{{"%.12f"|format(data.DSK.1.HDD.rate)}}</td>
+                 <td align=right>{{data.rates.dsk.measure_unit}}/{{data.rates.dsk.period}}</td>
+                 <!-- td align=right>{{data.DSK.1.rtmf}}</td -->
+                 <td align=right>{{"%.12f"|format(data.DSK.1.HDD.rate_month)}}</td>
+                 <td align=right>{{"%.12f"|format(data.DSK.1.HDD.bill)}}</td>
+            </tr>
+            <tr> <!-- SSD -->
+                 <td align=right></td>
+                 <td align=right></td>
+                 <td align=right></td>
+                 <td align=right>SSD</td>
+                 <td align=right>{{"%6f"|format(data.DSK.1.SSD.Q_month)}}</td>
+                 <td align=right>{{"%.12f"|format(data.DSK.1.SSD.rate)}}</td>
+                 <td align=right>{{data.rates.dsk.measure_unit}}/{{data.rates.dsk.period}}</td>
+                 <!-- td align=right>{{data.DSK.1.rtmf}}</td -->
+                 <td align=right>{{"%.12f"|format(data.DSK.1.SSD.rate_month)}}</td>
+                 <td align=right>{{"%.12f"|format(data.DSK.1.SSD.bill)}}</td>
+            </tr>
+            <tr> <!-- Virtual DSKs Inactive -->
+                 <td align=right></td>
+                 <td align=right>Inactive</td>
+                 <td align=right>{{"%6d"|format(data.DSK.0.hours)}}</td>
+                 <td align=right>{{"%.6f"|format(data.DSK.0.Q_hours)}}</td>
+                 <td align=right>{{"%.6f"|format(data.DSK.0.Q_month)}}</td>
+                 <td align=right>{{"%.12f"|format(data.DSK.0.rate)}}</td>
+                 <td align=right>{{data.rates.dsk.measure_unit}}/{{data.rates.dsk.period}}</td>
+                 <!-- td align=right>{{data.DSK.1.rtmf}}</td -->
+                 <td align=right>{{"%.12f"|format(data.DSK.0.rate_month)}}</td>
+                 <td align=right>{{"%.12f"|format(data.DSK.0.bill)}}</td>
+            </tr>
+            <tr> <!-- HDD -->
+                 <td align=right></td>
+                 <td align=right></td>
+                 <td align=right></td>
+                 <td align=right>HDD</td>
+                 <td align=right>{{"%.6f"|format(data.DSK.0.HDD.Q_month)}}</td>
+                 <td align=right>{{"%.12f"|format(data.DSK.0.HDD.rate)}}</td>
+                 <td align=right>{{data.rates.dsk.measure_unit}}/{{data.rates.dsk.period}}</td>
+                 <!-- td align=right>{{data.DSK.0.rtmf}}</td -->
+                 <td align=right>{{"%.12f"|format(data.DSK.0.HDD.rate_month)}}</td>
+                 <td align=right>{{"%.12f"|format(data.DSK.0.HDD.bill)}}</td>
+            </tr>
+            <tr> <!-- SSD -->
+                 <td align=right></td>
+                 <td align=right></td>
+                 <td align=right></td>
+                 <td align=right>SSD</td>
+                 <td align=right>{{"%.6f"|format(data.DSK.0.SSD.Q_month)}}</td>
+                 <td align=right>{{"%.12f"|format(data.DSK.0.SSD.rate)}}</td>
+                 <td align=right>{{data.rates.dsk.measure_unit}}/{{data.rates.dsk.period}}</td>
+                 <!-- td align=right>{{data.DSK.0.rtmf}}</td -->
+                 <td align=right>{{"%.12f"|format(data.DSK.0.SSD.rate_month)}}</td>
+                 <td align=right>{{"%.12f"|format(data.DSK.0.SSD.bill)}}</td>
+            </tr>
+            
+            <tr> <!-- Virtual IMGs Active-->
+                 <td align=right>Virtual IMGs</td>
+                 <td align=right>Active</td>
+                 <td align=right>{{"%6d"|format(data.IMG.1.hours)}}</td>
+                 <td align=right>{{"%.6f"|format(data.IMG.1.Q_hours)}}</td>
+                 <td align=right>{{"%.6f"|format(data.IMG.1.Q_month)}}</td>
+                 <td align=right>{{"%.12f"|format(data.IMG.1.rate)}}</td>
+                 <td align=right>{{data.rates.dsk.measure_unit}}/{{data.rates.dsk.period}}</td>
+                 <!-- td align=right>{{data.IMG.1.rtmf}}</td -->
+                 <td align=right>{{"%.12f"|format(data.IMG.1.rate_month)}}</td>
+                 <td align=right>{{"%.12f"|format(data.IMG.1.bill)}}</td>
+            </tr>
+            <tr> <!-- HDD -->
+                 <td align=right></td><td align=right></td><td align=right></td>
+                 <td align=right>HDD</td>
+                 <td align=right>{{"%.6f"|format(data.IMG.1.HDD.Q_month)}}</td>
+                 <td align=right>{{"%.12f"|format(data.IMG.1.HDD.rate)}}</td>
+                 <td align=right>{{data.rates.dsk.measure_unit}}/{{data.rates.dsk.period}}</td>
+                 <!-- td align=right>{{data.IMG.1.rtmf}}</td -->
+                 <td align=right>{{"%.12f"|format(data.IMG.1.HDD.rate_month)}}</td>
+                 <td align=right>{{"%.12f"|format(data.IMG.1.HDD.bill)}}</td>
+            </tr>
+            <tr> <!-- SSD -->
+                 <td align=right></td><td align=right></td><td align=right></td>
+                 <td align=right>SSD</td>
+                 <td align=right>{{"%.6f"|format(data.IMG.1.SSD.Q_month)}}</td>
+                 <td align=right>{{"%.12f"|format(data.IMG.1.SSD.rate)}}</td>
+                 <td align=right>{{data.rates.dsk.measure_unit}}/{{data.rates.dsk.period}}</td>
+                 <!-- td align=right>{{data.IMG.1.rtmf}}</td -->
+                 <td align=right>{{"%.12f"|format(data.IMG.1.SSD.rate_month)}}</td>
+                 <td align=right>{{"%.12f"|format(data.IMG.1.SSD.bill)}}</td>
+            </tr>
+            <tr> <!-- Virtual IMGs Inactive -->
+                 <td align=right></td>
+                 <td align=right>Inactive</td>
+                 <td align=right>{{"%6d"|format(data.IMG.0.hours)}}</td>
+                 <td align=right>{{"%.6f"|format(data.IMG.0.Q_hours)}}</td>
+                 <td align=right>{{"%.6f"|format(data.IMG.0.Q_month)}}</td>
+                 <td align=right>{{"%.12f"|format(data.IMG.0.rate)}}</td>
+                 <td align=right>{{data.rates.dsk.measure_unit}}/{{data.rates.dsk.period}}</td>
+                 <!-- td align=right>{{data.IMG.1.rtmf}}</td -->
+                 <td align=right>{{"%.12f"|format(data.IMG.0.rate_month)}}</td>
+                 <td align=right>{{"%.12f"|format(data.IMG.0.bill)}}</td>
+            </tr>
+            <tr> <!-- HDD -->
+                 <td align=right></td><td align=right></td><td align=right></td>
+                 <td align=right>HDD</td>
+                 <td align=right>{{"%.6f"|format(data.IMG.0.HDD.Q_month)}}</td>
+                 <td align=right>{{"%.12f"|format(data.IMG.0.HDD.rate)}}</td>
+                 <td align=right>{{data.rates.dsk.measure_unit}}/{{data.rates.dsk.period}}</td>
+                 <!-- td align=right>{{data.IMG.0.rtmf}}</td -->
+                 <td align=right>{{"%.12f"|format(data.IMG.0.HDD.rate_month)}}</td>
+                 <td align=right>{{"%.12f"|format(data.IMG.0.HDD.bill)}}</td>
+            </tr>
+            <tr> <!-- SSD -->
+                 <td align=right></td><td align=right></td><td align=right></td>
+                 <td align=right>SSD</td>
+                 <td align=right>{{"%6f"|format(data.IMG.0.SSD.Q_month)}}</td>
+                 <td align=right>{{"%.12f"|format(data.IMG.0.SSD.rate)}}</td>
+                 <td align=right>{{data.rates.dsk.measure_unit}}/{{data.rates.dsk.period}}</td>
+                 <!-- td align=right>{{data.IMG.0.rtmf}}</td -->
+                 <td align=right>{{"%.12f"|format(data.IMG.0.SSD.rate_month)}}</td>
+                 <td align=right>{{"%.12f"|format(data.IMG.0.SSD.bill)}}</td>
+            </tr>
+            
+            <tr> <!-- Local Snapshots (SNP) Active -->
+                 <td align=right>Local Snapshots (SNP)</td>
+                 <td align=right>Active</td>
+                 <td align=right>{{"%6d"|format(data.SNP.1.hours)}}</td>
+                 <td align=right>{{"%.6f"|format(data.SNP.1.Q_hours)}}</td>
+                 <td align=right>{{"%.6f"|format(data.SNP.1.Q_month)}}</td>
+                 <td align=right>{{"%.12f"|format(data.SNP.1.rate)}}</td>
+                 <td align=right>{{data.rates.dsk.measure_unit}}/{{data.rates.dsk.period}}</td>
+                 <!-- td align=right>{{data.SNP.1.rtmf}}</td -->
+                 <td align=right>{{"%.12f"|format(data.SNP.1.rate_month)}}</td>
+                 <td align=right>{{"%.12f"|format(data.SNP.1.bill)}}</td>
+            </tr>
+            <tr> <!-- HDD -->
+                 <td align=right></td><td align=right></td><td align=right></td>
+                 <td align=right>HDD</td>
+                 <td align=right>{{"%.6f"|format(data.SNP.1.HDD.Q_month)}}</td>
+                 <td align=right>{{"%.12f"|format(data.SNP.1.HDD.rate)}}</td>
+                 <td align=right>{{data.rates.dsk.measure_unit}}/{{data.rates.dsk.period}}</td>
+                 <!-- td align=right>{{data.SNP.1.rtmf}}</td -->
+                 <td align=right>{{"%.12f"|format(data.SNP.1.HDD.rate_month)}}</td>
+                 <td align=right>{{"%.12f"|format(data.SNP.1.HDD.bill)}}</td>
+            </tr>
+            <tr> <!-- SSD -->
+                 <td align=right></td><td align=right></td><td align=right></td>
+                 <td align=right>SNP</td>
+                 <td align=right>{{"%.6f"|format(data.SNP.1.SSD.Q_month)}}</td>
+                 <td align=right>{{"%.12f"|format(data.SNP.1.SSD.rate)}}</td>
+                 <td align=right>{{data.rates.dsk.measure_unit}}/{{data.rates.dsk.period}}</td>
+                 <!-- td align=right>{{data.SNP.1.rtmf}}</td -->
+                 <td align=right>{{"%.12f"|format(data.SNP.1.SSD.rate_month)}}</td>
+                 <td align=right>{{"%.12f"|format(data.SNP.1.SSD.bill)}}</td>
+            </tr>
+            <tr> <!-- Local Snapshots (SNP) Inactive -->
+                 <td align=right></td>
+                 <td align=right>Inactive</td>
+                 <td align=right>{{"%6d"|format(data.SNP.0.hours)}}</td>
+                 <td align=right>{{"%.6f"|format(data.SNP.0.Q_hours)}}</td>
+                 <td align=right>{{"%.6f"|format(data.SNP.0.Q_month)}}</td>
+                 <td align=right>{{"%.12f"|format(data.SNP.0.rate)}}</td>
+                 <td align=right>{{data.rates.dsk.measure_unit}}/{{data.rates.dsk.period}}</td>
+                 <!-- td align=right>{{data.SNP.1.rtmf}}</td -->
+                 <td align=right>{{"%.12f"|format(data.SNP.0.rate_month)}}</td>
+                 <td align=right>{{"%.12f"|format(data.SNP.0.bill)}}</td>
+            </tr>
+            <tr> <!-- HDD -->
+                 <td align=right></td><td align=right></td><td align=right></td>
+                 <td align=right>HDD</td>
+                 <td align=right>{{"%.6f"|format(data.SNP.0.HDD.Q_month)}}</td>
+                 <td align=right>{{"%.12f"|format(data.SNP.0.HDD.rate)}}</td>
+                 <td align=right>{{data.rates.dsk.measure_unit}}/{{data.rates.dsk.period}}</td>
+                 <!-- td align=right>{{data.SNP.0.rtmf}}</td -->
+                 <td align=right>{{"%.12f"|format(data.SNP.0.HDD.rate_month)}}</td>
+                 <td align=right>{{"%.12f"|format(data.SNP.0.HDD.bill)}}</td>
+            </tr>
+            <tr> <!-- SSD -->
+                 <td align=right></td><td align=right></td><td align=right></td>
+                 <td align=right>SSD</td>
+                 <td align=right>{{"%.6f"|format(data.SNP.0.SSD.Q_month)}}</td>
+                 <td align=right>{{"%.12f"|format(data.SNP.0.SSD.rate)}}</td>
+                 <td align=right>{{data.rates.dsk.measure_unit}}/{{data.rates.dsk.period}}</td>
+                 <!-- td align=right>{{data.SNP.0.rtmf}}</td -->
+                 <td align=right>{{"%.12f"|format(data.SNP.0.SSD.rate_month)}}</td>
+                 <td align=right>{{"%.12f"|format(data.SNP.0.SSD.bill)}}</td>
+            </tr>
+            
+            <tr> <!-- Remote Snapshots (DRP) Active -->
+                 <td align=right>Remote Snapshots (DRP)</td>
+                 <td align=right>Active</td>
+                 <td align=right>{{"%6d"|format(data.DRP.1.hours)}}</td>
+                 <td align=right>{{"%.6f"|format(data.DRP.1.Q_hours)}}</td>
+                 <td align=right>{{"%.6f"|format(data.DRP.1.Q_month)}}</td>
+                 <td align=right>{{"%.12f"|format(data.DRP.1.rate)}}</td>
+                 <td align=right>{{data.rates.dsk.measure_unit}}/{{data.rates.dsk.period}}</td>
+                 <!-- td align=right>{{data.DRP.1.rtmf}}</td -->
+                 <td align=right>{{"%.12f"|format(data.DRP.1.rate_month)}}</td>
+                 <td align=right>{{"%.12f"|format(data.DRP.1.bill)}}</td>
+            </tr>
+            <tr> <!-- HDD -->
+                 <td align=right></td><td align=right></td><td align=right></td>
+                 <td align=right>HDD</td>
+                 <td align=right>{{"%.6f"|format(data.DRP.1.HDD.Q_month)}}</td>
+                 <td align=right>{{"%.12f"|format(data.DRP.1.HDD.rate)}}</td>
+                 <td align=right>{{data.rates.dsk.measure_unit}}/{{data.rates.dsk.period}}</td>
+                 <!-- td align=right>{{data.DRP.1.rtmf}}</td -->
+                 <td align=right>{{"%.12f"|format(data.DRP.1.HDD.rate_month)}}</td>
+                 <td align=right>{{"%.12f"|format(data.DRP.1.HDD.bill)}}</td>
+            </tr>
+            <tr> <!-- SSD -->
+                 <td align=right></td><td align=right></td><td align=right></td>
+                 <td align=right>SSD</td>
+                 <td align=right>{{"%.6f"|format(data.DRP.1.SSD.Q_month)}}</td>
+                 <td align=right>{{"%.12f"|format(data.DRP.1.SSD.rate)}}</td>
+                 <td align=right>{{data.rates.dsk.measure_unit}}/{{data.rates.dsk.period}}</td>
+                 <!-- td align=right>{{data.DRP.1.rtmf}}</td -->
+                 <td align=right>{{"%.12f"|format(data.DRP.1.SSD.rate_month)}}</td>
+                 <td align=right>{{"%.12f"|format(data.DRP.1.SSD.bill)}}</td>
+            </tr>
+            <tr> <!-- Remote Snapshots (DRP) Inactive -->
+                 <td align=right></td>
+                 <td align=right>Inactive</td>
+                 <td align=right>{{"%6d"|format(data.DRP.0.hours)}}</td>
+                 <td align=right>{{"%.6f"|format(data.DRP.0.Q_hours)}}</td>
+                 <td align=right>{{"%.6f"|format(data.DRP.0.Q_month)}}</td>
+                 <td align=right>{{"%.12f"|format(data.DRP.0.rate)}}</td>
+                 <td align=right>{{data.rates.dsk.measure_unit}}/{{data.rates.dsk.period}}</td>
+                 <!-- td align=right>{{data.DRP.1.rtmf}}</td -->
+                 <td align=right>{{"%.12f"|format(data.DRP.0.rate_month)}}</td>
+                 <td align=right>{{"%.12f"|format(data.DRP.0.bill)}}</td>
+            </tr>
+            <tr> <!-- HDD -->
+                 <td align=right></td><td align=right></td><td align=right></td>
+                 <td align=right>HDD</td>
+                 <td align=right>{{"%.6f"|format(data.DRP.0.HDD.Q_month)}}</td>
+                 <td align=right>{{"%.12f"|format(data.DRP.0.HDD.rate)}}</td>
+                 <td align=right>{{data.rates.dsk.measure_unit}}/{{data.rates.dsk.period}}</td>
+                 <!-- td align=right>{{data.DRP.0.rtmf}}</td -->
+                 <td align=right>{{"%.12f"|format(data.DRP.0.HDD.rate_month)}}</td>
+                 <td align=right>{{"%.12f"|format(data.DRP.0.HDD.bill)}}</td>
+            </tr>
+            <tr> <!-- SSD -->
+                 <td align=right></td><td align=right></td><td align=right></td>
+                 <td align=right>SSD</td>
+                 <td align=right>{{"%.6f"|format(data.DRP.0.SSD.Q_month)}}</td>
+                 <td align=right>{{"%.12f"|format(data.DRP.0.SSD.rate)}}</td>
+                 <td align=right>{{data.rates.dsk.measure_unit}}/{{data.rates.dsk.period}}</td>
+                 <!-- td align=right>{{data.DRP.0.rtmf}}</td -->
+                 <td align=right>{{"%.12f"|format(data.DRP.0.SSD.rate_month)}}</td>
+                 <td align=right>{{"%.12f"|format(data.DRP.0.SSD.bill)}}</td>
+            </tr>
+            
+            <tr> <!-- TOTAL LINE -->
+                 <td align=right></td><td align=right></td><td align=right></td>
+                 <td align=right></td>
+                 <td align=right></td>
+                 <td align=right></td>
+                 <td align=right></td>
+                 <td align=right><b>Total UF:</b></td>
+                 <td align=right><b>{{"%.12f"|format(data.total_bill_distributed)}}</b></td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <h2>Statistics:</h2>
+    <table border=0>
+        <tr><td align=center><b>EG Collector DB</b></td></tr>
+        <tr><td align=left>Hours:     </td><td align=right>{{"%5d"|format(data.count_total_db_cits )}}</td></tr>
+        <tr><td align=left>Components:</td><td align=right>{{"%5d"|format(data.count_total_db_cus )}}</td></tr>
+        <tr><td align=left>Configuration Items:</td><td align=right>{{"%5d"|format(data.count_cis )}}</td></tr>
+        
+        <!-- tr><td align=right>Customer Configuration Items:          </td><td align=right>{{"%5d"|format(data.count_cis )}}</td></tr -->
+        <tr><td align=center><b>Customer billeable data</b></td></tr>
+        <tr><td align=left>Configuration Items:   </td><td align=right>{{"%5d"|format(data.count_vms+data.count_imgs+data.count_vgs )}}</td></tr>
+        <tr><td align=right>  Virtual machines:   </td><td align=right>{{"%5d"|format(data.count_vms   )}}</td></tr>
+        <tr><td align=right>       Disk Images:   </td><td align=right>{{"%5d"|format(data.count_imgs  )}}</td></tr>
+        <tr><td align=right>     Volume Groups:   </td><td align=right>{{"%5d"|format(data.count_vgs   )}}</td></tr>
+        <tr><td align=right>         Snapshots:   </td><td align=right>{{"%5d"|format(data.count_snps  )}}</td></tr>
+        <tr><td align=right>             Other:   </td><td align=right>{{"%5d"|format(data.count_other )}}</td></tr>
+        <tr><td align=left>Components:            </td><td align=right>{{"%5d"|format(data.count_total_cus )}}</td></tr>
+        <tr><td align=left>Hours:                 </td><td align=right>{{"%5d"|format(data.count_total_cits )}}</td></tr>
+    </table>
+
+    <!--
+    <table border = 1>
+        <tr>
+            <td align=right>
+                DATA = {{data}}
+            </td>
+        </tr>    
+    </table>
+    -->
+
+<br>
+
+<hr>
+<table>
+    <tr><td>current: </td>
+        <td><b>{{collectordata.COLLECTOR_PERIOD.current}}</b></td>
+        <td></td>
+    </tr>
+    <tr><td>active:</td>
+        <td><b>{{collectordata.COLLECTOR_PERIOD.active}}</b></td> 
+        <td>start: {{collectordata.COLLECTOR_PERIOD.start}} 
+            end: {{collectordata.COLLECTOR_PERIOD.end}}
+        </td>
+    </tr>
+    <tr>
+        <td>available:</td>
+        <td></td>
+        <td><b>{{collectordata.COLLECTOR_PERIOD.available}}</b></td>
+    </tr>
+</table>
+{% endblock %}
+
+{# ============================================================================= #}

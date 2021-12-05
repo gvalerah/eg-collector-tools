@@ -1,0 +1,21 @@
+3:   1/ 20: categories           200 api:3.1      14 matches
+3:   2/ 20: projects             200 api:3.1       1 matches
+3:   3/ 20: images               200 api:3.1       0 matches
+3:   4/ 20: vms                  200 api:3.1      12 matches
+3:   5/ 20: subnets              200 api:3.1       2 matches
+3:   6/ 20: hosts                200 api:3.1       5 matches
+3:   7/ 20: clusters             200 api:3.1       2 matches
+3:   8/ 20: users                200 api:3.1       1 matches
+2:   9/ 20: clusters             200 api:None      1 matches
+2:  10/ 20: disks                200 api:None     24 matches
+2:  11/ 20: hosts                200 api:None      4 matches
+2:  12/ 20: images               200 api:None     65 matches
+2:  13/ 20: networks             200 api:None      2 matches
+2:  14/ 20: protection_domains   200 api:None     77 matches
+2:  15/ 20: remote sites         200 api:None      2 matches
+2:  16/ 20: snapshots            200 api:None     38 matches
+2:  17/ 20: dr_snapshots_list    200 api:None    110 matches
+2:  18/ 20: dr_snapshots         200 api:None      1 matches
+2:  19/ 20: vms                  200 api:None     12 matches
+2:  20/ 20: volume groups        200 api:None      0 matches
+20 tests completed. 20 OK = 100.00%

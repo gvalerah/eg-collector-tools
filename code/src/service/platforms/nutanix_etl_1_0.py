@@ -82,10 +82,10 @@ class Nutanix(ETL):
         
         # Hard Coded API URL Data, Possible to go to Configuration also, in case of changes
         # Can be overrided , see below
-        self.BASE_URL = [   'https://%s:%d/api/nutanix/v0.8/',
-                            'https://%s:%d/PrismGateway/services/rest/v1/',
-                            'https://%s:%d/PrismGateway/services/rest/v2.0/',
-                            'https://%s:%d/api/nutanix/v3/'
+        self.BASE_URL = [   'https://%s:%d/api/nutanix/v0.8/',                  # version 0
+                            'https://%s:%d/PrismGateway/services/rest/v1/',     # version 1
+                            'https://%s:%d/PrismGateway/services/rest/v2.0/',   # version 2
+                            'https://%s:%d/api/nutanix/v3/'                     # version 3 (actual 3.1)
                         ]
                         
         self.base_url = []
@@ -629,7 +629,7 @@ class Nutanix(ETL):
 
     def getConfigurationItemsList(self,version):
         ci_list = []
-        try:
+        try: # Get VMs List
             status,data = self.getVMsInformation(version)
             if status == 200:
                 self.logger.warning(f"Found {len(data.get('entities'))} CIs of type VM")
@@ -639,7 +639,7 @@ class Nutanix(ETL):
                 self.logger.warning(f"VM. status = {status}. total cis={len(ci_list)}")                
         except Exception as e:
             self.logger.warning(f"VMs: No data from Nutanix. exception: ({str(e)})")
-        try:
+        try: # Get Images List
             status,data = self.getImagesInformation(version)
             if status == 200:
                 self.logger.warning(f"Found {len(data.get('entities'))} CIs of type Image")
@@ -649,7 +649,7 @@ class Nutanix(ETL):
                 self.logger.warning(f"Images. status = {status}. total cis={len(ci_list)}")                
         except Exception as e:
             self.logger.warning(f"Images: No data from Nutanix. exception: ({str(e)})")
-        try:
+        try: # Get Volume Groups List
             status,data = self.getVGroupsInformation(version)
             if status == 200:
                 self.logger.warning(f"Found {len(data.get('entities'))} CIs of type Volume Group")
@@ -911,7 +911,7 @@ class Nutanix(ETL):
 # TRANSFORMATION FUNCTIONS ---------------------------------------------
 # Should Transfor input data into list of tuples ready lo load
 #
-    def Transform(self):
+    def Transform(self): # Virtual Machines
         if (self.logger): self.logger.debug("%s: Transform(). IN"%(this()))
 
         API_version = self.API_version
