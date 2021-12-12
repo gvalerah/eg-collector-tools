@@ -7,7 +7,7 @@
 # view required imports
 import os
 import json
-from pprint import pprint
+from pprint import pprint,pformat
 
 # view required functions
 
@@ -146,13 +146,121 @@ def render_children(DATA,f,level=1,
 def forms_User_Data_View():
     logger.debug('Enter: forms_User_Data_View()'%())
     collectordata=get_collectordata()
+        
+    config_ini = configparser.ConfigParser(interpolation=ExtendedInterpolation())
+    if current_app.config.get('COLLECTOR_CONFIG_FILE'):
+        config_ini.read( current_app.config.get('COLLECTOR_CONFIG_FILE') )        
+        limit_user_cost_centers = config_ini.getboolean('Interface','limit_user_cost_centers',fallback=False)
+    else:
+        limit_user_cost_centers = False
+        
+    query = db.session.query(
+            Configuration_Items.Cus_Id,
+            Configuration_Items.CC_Id,
+            Configuration_Items.CI_Id,
+            Charge_Units.CU_Id,
+            Charge_Units.Typ_Code,
+            Cost_Centers.CC_Description,
+            Configuration_Items.CI_Name,
+            Charge_Units.CU_Description,
+            Charge_Units.CU_Reference_1,
+            Charge_Units.CU_Reference_2,
+            Charge_Units.CU_Reference_3
+            ).select_from(Charge_Units
+            ).join( Configuration_Items,
+                    Configuration_Items.CI_Id   == Charge_Units.CI_Id
+            ).join( Cost_Centers,
+                    Cost_Centers.CC_Id          == Configuration_Items.CC_Id
+            ).filter(Charge_Units.Typ_Code.in_(('CPU','RAM','DSK','IMG')) # Este deberia ser la lista de permitidos OJO
+            ).filter(Configuration_Items.CI_Name.notlike('NBUBVG%')
+            ).filter(Configuration_Items.Cus_Id == current_user.cost_center.Cus_Id)
 
-    USER = current_user.id
+    # Limits CCs to user visible only, else all above users's cc id
+    if limit_user_cost_centers:
+        logger.info("limiting user cost centers ....")
+        USER_COST_CENTERS = db.get_user_cost_centers(current_user.id)
+        query = query.filter(Configuration_Items.CC_Id.in_(USER_COST_CENTERS))
+    else:
+        query = query.filter(Configuration_Items.CC_Id  >= current_user.cost_center.CC_Id) # Este deberia ser la lista de permitidos OJO
+    rows = query.order_by( Cost_Centers.CC_Description,
+                        Configuration_Items.CI_Name,
+                        Charge_Units.CU_Description
+            ).all()
+
+    return render_template("user_data_view_new.html",rows=rows)
+
+
+
+"""
+    # Data will be a map with structured Cost Centers details
+    DATA={}
+    DATA.update({
+        'user'          : {'user_id':USER},
+        'cc_id'         : list_cc[0].CC_Id,
+        'cc_code'       : list_cc[0].CC_Code,
+        'cc_description': list_cc[0].CC_Description,
+        'children'      : [],
+        'ci_count'      : 0,
+        })
+
+    # will populate DATA with detaisl from childrens list
+    # starts with top CC only
+    load_children(DATA,DATA['children'],list_cc)
+    '''
+    print("***********************************************************")
+    print("***********************************************************")
+    #pprint(DATA)
+    with open("/home/gvalera/COMPARTIDO/loco.json","w") as fp:
+        fp.write(json.dumps(DATA))
+    print("***********************************************************")
+    print("***********************************************************")
+    for x in DATA['children']:
+        if x['ci_count']>0 or x['parent']>0:
+            print(x)
+    '''
+    # Temporary tree file name, will be unique for user
+    filename="tmp/%s_user_data_tree.html"%(current_user.id)
+    try:
+        # if previos version exists, then its removed
+        if os.path.exists(f"/{filename}"):
+            os.remove(f"/{filename}")
+        f=open(f"/{filename}",'w')
+    except Exception as e:
+        message=("Couldn't open file: '%s'. Please inform administrator. EXCEPTION: %s"%(filename,e))
+        flash(message)
+        logger.error(message)
+        # renders exception if required
+        return render_template("exception.html",filename=filename,data=DATA)
+        
+#  generate HTML
+
+    render_children(DATA,f)
+   
+    f.close()
+    
+    print("forms_User_Data_View(): filename=",filename)
+    
+    # Actual output rendering
+    return render_template("user_data_view.html",filename=filename,data=DATA)
+"""
+# =============================================================================
+
+@main.route('/forms/User_Data_View_OLD', methods=['GET'])
+@login_required
+@permission_required(Permission.CUSTOMER)
+def forms_User_Data_View_OLD():
+    logger.debug('Enter: forms_User_Data_View()'%())
+    collectordata=get_collectordata()
+
+    USER              = current_user.id
+    
 
     # Get CC of current User (Top Level CC for all query effects)
     user_cc = db.session.query(User.CC_Id).filter(User.id==USER).scalar()
     # Populates list with actual User's Top Cost Center attributes (must be one only) 
     list_cc = db.session.query(cost_center).filter(cost_center.CC_Id==user_cc).all() 
+
+
 
     # Data will be a map with structured Cost Centers details
     DATA={}

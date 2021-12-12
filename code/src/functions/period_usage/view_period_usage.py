@@ -10,30 +10,23 @@ from babel.numbers                  import format_number
 from babel.numbers                  import format_decimal
 from babel.numbers                  import format_percent
 from emtec.collector.db.orm_model   import Configuration_Items
+import simplejson as json
 
 # ======================================================================
 
-import simplejson as json
 
 @main.route('/report/Period_Usage', methods=['GET','POST'])
 @login_required
 def report_Period_Usage():
     logger.debug(f'{this()}: Enter')    
     collectordata=get_collectordata()
-    #print(f"collectordata={collectordata}")
     
     db.session.flush()
     db.session.commit()
-    
-    Cus_Id          =  3
+        
+    Cus_Id          =  current_user.cost_center.Cus_Id
     Rates           = {}
-    """
-    cfg = config[os.getenv('COLLECTOR_CONFIG') or 'default']
-    logger.debug(f"cfg={cfg}")
-    logger.debug(f"cfg type={type(cfg)}")
-    logger.debug(f"cfg dir={dir(cfg)}")
-    logger.debug(f"COLLECTOR_CONFIG_FILE={cfg.COLLECTOR_CONFIG_FILE}")
-    """
+    
     parser = configparser.ConfigParser(
             allow_no_value=False,     # don't allow "key" without "="
             delimiters=('=',),        # inifile "=" between key and value
@@ -42,10 +35,8 @@ def report_Period_Usage():
             interpolation=configparser.ExtendedInterpolation(),
             empty_lines_in_values=False  # empty line means new key
             )
-    #arser.read(cfg.COLLECTOR_CONFIG_FILE)
     parser.read(current_app.config.get('COLLECTOR_CONFIG_FILE'))
     # Read Configuration
-    # Rates
     Rates = {}
     # Reads Rates from configuration file
     for option in parser.options('Rates'):
@@ -62,17 +53,21 @@ def report_Period_Usage():
                 'period'              : str(period).strip().upper(),
                 'is-allways_billeable': True if str(is_allways_billeable).upper() in ['TRUE','VERDADERO','SI','T','V','S'] else False
             }
-            })
+        })
     # set shardened Charge Items Table as per active period
     Charge_Items.set_shard(collectordata['COLLECTOR_PERIOD']['active'])  
     # BETA Message, to be removed --------------------------------------
     flash('Beta version. Query in development. Results are referential only','error')
     # BETA Message, to be removed --------------------------------------
     usage = db.Get_Period_Usage(customer_id=Cus_Id,rates=Rates)
-
+    pprint(usage)
     # Updated cached data for this specific query if requested 
     try:
-        return render_template('report_period_usage.html',data=usage,collectordata=collectordata)
+        temp_folder   = "/tmp"
+        temp_filename = f"{temp_folder}/{next(tempfile._get_candidate_names())}.json"
+        with open(temp_filename,"w") as fp:
+            fp.write(json.dumps(usage))
+        return render_template('report_period_usage.html',data=usage,collectordata=collectordata,temp_filename=temp_filename)
     except Exception as e:
         return f"{this()}: Exception:  {str(e)}"
         
@@ -85,96 +80,93 @@ def download_Period_Usage():
     db.session.flush()
     db.session.commit()
     
-    Cus_Id          =  request.args.get('Cus_Id',None,type=int)
-    Cus_Name        =  request.args.get('Cus_Name',None,type=str)
-    CIT_Date_From   =  request.args.get('CIT_Date_From',None,type=str)
-    CIT_Date_To     =  request.args.get('CIT_Date_To',None,type=str)
-    CIT_Status      =  request.args.get('CIT_Status',None,type=int)
-    CIT_Status_Value=  request.args.get('CIT_Status_Value',None,type=str)
-    Cur_Code        =  request.args.get('Cur_Code',None,type=str)
-    Cur_Name        =  request.args.get('Cur_Name',None,type=str)
-    Update          =  request.args.get('Update',0,type=int)
-    FILTER          =  request.args.get('filter_type',0,type=int)
-    CODE            =  request.args.get('filter_code',None)
-        
-    print(f"**********************************************************")
-    print(f"{this()}: FILTER={FILTER} CODE={CODE} {type(CODE)}")
-    print(f"**********************************************************")
-    CODE=int(CODE)
-    # Get Actual Remume Data from Database
-    # NOTE: Here needs some Sand-Clock Message or something in case it takes so long ...
-    # Gets Charge Resume from DB
-    logger.debug(f"**********************************************************")
-    logger.debug(f"{this()}: FILTER={FILTER} CODE={CODE} {type(CODE)}")
-    logger.debug(f"{this()}: FROM={CIT_Date_From} TO={CIT_Date_To} ST:{CIT_Status} CUR:{Cur_Code}")
-    logger.debug(f"{this()}: User={current_user}")
-    logger.debug(f"**********************************************************")
+    temp_filename   =  request.args.get('temp_filename',None,type=str)
+    if not temp_filename:
+        return "Invalid data"
+
+    with open(temp_filename,'r') as fp:
+        data = json.load(fp)
     
-    rows = db.Get_Charge_Resume_Filter(
-                FILTER,
-                CODE,
-                CIT_Date_From,
-                CIT_Date_To,
-                CIT_Status,
-                Cur_Code,
-                User_Id=current_user.id
-                )
-    if rows is not None:
-        logger.debug(f"{this()}: {len(rows)} rows found to export ...")
-    else:
-        logger.error(f"{this()}: None rows found to export ...")
+    if data is None:
+        return "Invalid data"
         
-    temp_name   = next(tempfile._get_candidate_names())
-    output_file = f"CR_{FILTER}_{CODE}_{CIT_Date_From}_{CIT_Date_To}_{CIT_Status}_{current_user.id}_{temp_name}.xlsx"
     
     d = {
         'detail':[],
-        'Cus-Id':Cus_Id,
-        'CIT_Date_From':CIT_Date_From,
-        'CIT_Date_To':CIT_Date_To,
-        'CIT_Status':CIT_Status,
-        'Cur_Code':Cur_Code,
-        'file':output_file,
-        'rows':len(rows)
+        'rows':0
     }
     # Build list of records to export from query
-    for row in rows:
-        d['detail'].append({
-                'ccCode':row.CC_Code,
-                'ccDescription':row.CC_Description,
-                'ciName':row.CI_Name,
-                'cuDescription':row.CU_Description,
-                'items':row.CIT_Count,
-                'mu':row.Rat_MU_Code,
-                'price':float(row.Rat_Price),
-                'rateCurrency':row.Cur_Code,
-                'ratePeriodDescription':row.Rat_Period_Description,
-                'resumeQuantityAtRate':float(row.CR_Quantity_at_Rate),
-                'totalAtCurrency':float(row.CR_ST_at_Rate_Cur),
-                'from':row.CR_Date_From,
-                'to':row.CR_Date_To,
-        })
+    for Component_Type in ['CPU','RAM']:
+        for Power_Status in ['0','1']:
+            try:
+                row = data[Component_Type][Power_Status]
+                d['detail'].append({
+                        'type'      :Component_Type,
+                        'power'     :'ON' if Power_Status=='1' else 'OFF',
+                        'hours'     :row.get('hours',0),
+                        'Q_hours'   :row.get('Q_hours',0),
+                        'Q_month'   :row.get('Q_month',0),
+                        'rate'      :row.get('rate',0),
+                        'rtmf'      :row.get('rtmf',0),
+                        'rate_month':row.get('rate_month',0),
+                        'bill'      :row.get('bill',0),
+                })
+            except Exception as e:
+                print(f"Exception: str({e})")
+    for Component_Type in ['DSK','SNP','DRP','IMG']:
+        for Power_Status in ['0','1']:
+            try:
+                row = data[Component_Type][Power_Status]
+                d['detail'].append({
+                        'type'      :Component_Type,
+                        'power'     :'ON' if Power_Status=='1' else 'OFF',
+                        'hours'     :row.get('hours',0),
+                        'Q_hours'   :row.get('Q_hours',0),
+                        'Q_month'   :row.get('Q_month',0),
+                        'rate'      :0,
+                        'rtmf'      :0,
+                        'rate_month':0,
+                        'bill'      :0,
+                })
+                for Disk_Type in ['HDD','SSD']:
+                    rox = row[Disk_Type]
+                    d['detail'].append({
+                            'type'      :f"{Component_Type}-{Disk_Type}",
+                            'power'     :'ON' if Power_Status=='1' else 'OFF',
+                            'hours'     :0,
+                            'Q_hours'   :0,
+                            'Q_month'   :rox.get('Q_month',0),
+                            'rate'      :rox.get('rate',0),
+                            'rtmf'      :row.get('rtmf',0),
+                            'rate_month':rox.get('rate_month',0),
+                            'bill'      :rox.get('bill',0),
+                    })
+            except Exception as e:
+                print(f"Exception: str({e})")
+                    
     # List of fields in desired order 
     headers=[
-                'ccCode',
-                'ccDescription',
-                'ciName',
-                'cuDescription',
-                'items',
-                'mu',
-                'price',
-                'rateCurrency',
-                'ratePeriodDescription',
-                'resumeQuantityAtRate',
-                'totalAtCurrency',
-                'from',
-                'to',
+                'type',
+                'power',
+                'hours',
+                'Q_hours',
+                'Q_month',
+                'rate',
+                'rtmf',
+                'rate_month',
+                'bill',
     ]
     # Normalize data into a Pandas Dataframe
     df1 = json_normalize(d, 'detail')
     # Reorder columns
     df1 = df1.reindex(columns=headers)
     # create temporary filename       
-    xlsx_file="%s/%s"%(current_app.root_path,url_for('static',filename='tmp/%s'%(output_file)))
-    df1.to_excel(xlsx_file,'Sheet 1')
-    return send_file(xlsx_file,as_attachment=True,attachment_filename=output_file)
+    temp_name   = f"{ next(tempfile._get_candidate_names()) }.xlsx"
+    #print(f"temp_name={temp_name}")
+    
+    xlsx_file="%s/%s"%(current_app.root_path,url_for('static',filename='tmp/%s'%(temp_name)))
+    #print(f"df1={df1}")
+    #print(f"xlsx_file={xlsx_file}")
+    df1.to_excel(xlsx_file,f"Usage {data.get('period')}")
+    
+    return send_file(xlsx_file,as_attachment=True,attachment_filename=temp_name)

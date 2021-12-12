@@ -65,7 +65,7 @@ if __name__ == '__main__':
             
     logger = logging.getLogger('egc_tools_test_api')
     logger.setLevel(logger_level)
-    formatter = logging.Formatter('%(levelname)8s (%(lineno)3d): %(message)s')
+    formatter = logging.Formatter('%(asctime)s %(levelname)8s (%(lineno)3d): %(message)s')
     ch = logging.StreamHandler()
     try:
         ch.setFormatter(formatter)
@@ -158,9 +158,12 @@ if __name__ == '__main__':
                     message = f"{host} v{server.get('api_version')}: {counter:3}: {name:20} {status:3} {method} {url} {comment}"
                     logger.error(f"{message}")
                     queries.write(f"{message}\n")
-        except:
+        except Exception as e:
             message = f"test: {host} {server} {server.get('api_version')}: {name:20}"
-            logger.exception(f"{message}")
+            #ogger.exception(f"{message}")
+            #ogger.exception(f"{e}")
+            logger.error(f"{message}")
+            logger.error(f"{e}")
             queries.write(f"{message}\n")
     
     message = f"{counter} tests completed. {ok} OK = {ok*100/counter:.2f}%"

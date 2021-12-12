@@ -1,10 +1,10 @@
 import os
 import  configparser
 from    configparser        import ConfigParser, ExtendedInterpolation
+
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 class Config:
-    #print("OS COLLECTOR_CONFIG_FILE=%s" % os.environ.get('COLLECTOR_CONFIG_FILE'))
     SECRET_KEY                      = os.environ.get('SECRET_KEY') or 'Hard to guess string'
     SQLALCHEMY_COMMIT_ON_TEARDOWN   = os.environ.get('SQLALCHEMY_COMMIT_ON_TEARDOWN') or True
     SQLALCHEMY_TRACK_MODIFICATIONS  = os.environ.get('SQLALCHEMY_TRACK_MODIFICATIONS') or False
@@ -17,14 +17,13 @@ class Config:
     COLLECTOR_MAIL_SUBJECT_PREFIX   = os.environ.get('COLLECTOR_MAIL_SUBJECT_PREFIX') or '[Collector]'
     COLLECTOR_MAIL_SENDER           = os.environ.get('COLLECTOR_MAIL_SUBJECT_PREFIX') or 'Collector Admin <gvalera@emtecgroup.net>'
     COLLECTOR_ADMIN                 = os.environ.get('COLLECTOR_ADMIN') or 'collector'
-    print(f"basedir = {basedir}")
     COLLECTOR_CONFIG_FILE           = os.environ.get('COLLECTOR_CONFIG_FILE') or '%s/collector.ini'%basedir
     if os.environ.get('LINES_PER_PAGE') is not None:
         LINES_PER_PAGE                  = int(os.environ.get('LINES_PER_PAGE')) or 5
     else:
         LINES_PER_PAGE                  = 5
 
-
+    DATABASE_URL = None
     if COLLECTOR_CONFIG_FILE is not None and os.path.isfile(COLLECTOR_CONFIG_FILE):
                 #print(f"COLLECTOR_CONFIG_FILE = {COLLECTOR_CONFIG_FILE}")
                 #print("config.py.__init__app: reading %s"%COLLECTOR_CONFIG_FILE)
@@ -48,9 +47,6 @@ class Config:
                     config_ini.get('DB','schema')
                     )
                 os.environ['DATABASE_URL']          = DATABASE_URL
-                #print(f"DATABASE_URL                        = {DATABASE_URL}")
-                #print(f"os.environ['DATABASE_URL']          = {os.environ['DATABASE_URL']}")
-                #print(f"os.environ['TEST_DATABASE_URL']     = {os.environ.get('TEST_DATABASE_URL')}")
     else:
                 print("config.py.__init__app: no environment configuration file evaluated.")
 
@@ -78,24 +74,39 @@ class Config:
         #print("*******************************************************")
         pass
 
-
 class DevelopmentConfig(Config):
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL') or \
+    COLLECTOR_CONFIG_FILE = os.environ.get('COLLECTOR_CONFIG_FILE') or '%s/collector.ini'%basedir
+    if COLLECTOR_CONFIG_FILE is not None and os.path.isfile(COLLECTOR_CONFIG_FILE):        
+        SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
+    else:
+        SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL') or \
         'sqlite:///' + os.path.join(basedir, 'data-dev.sqlite')
+
 
 class TestingConfig(Config):
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = os.environ.get('TEST_DATABASE_URL') or \
-        'sqlite:///' + os.path.join(basedir, 'data-test.sqlite')
-
+    COLLECTOR_CONFIG_FILE = os.environ.get('COLLECTOR_CONFIG_FILE') or '%s/collector.ini'%basedir
+    if COLLECTOR_CONFIG_FILE is not None and os.path.isfile(COLLECTOR_CONFIG_FILE):        
+        SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
+    else:
+        SQLALCHEMY_DATABASE_URI = os.environ.get('TEST_DATABASE_URL') or \
+            'sqlite:///' + os.path.join(basedir, 'data-test.sqlite')
 
 class ProductionConfig(Config):
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
+    COLLECTOR_CONFIG_FILE = os.environ.get('COLLECTOR_CONFIG_FILE') or '%s/collector.ini'%basedir
+    if COLLECTOR_CONFIG_FILE is not None and os.path.isfile(COLLECTOR_CONFIG_FILE):        
+        SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
+    else:
+        SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
         'sqlite:///' + os.path.join(basedir, 'data.sqlite')
 
 class ToolsConfig(Config):
-    SQLALCHEMY_DATABASE_URI = os.environ.get('TOOLS_DATABASE_URL') or \
+    COLLECTOR_CONFIG_FILE = os.environ.get('COLLECTOR_CONFIG_FILE') or '%s/collector.ini'%basedir
+    if COLLECTOR_CONFIG_FILE is not None and os.path.isfile(COLLECTOR_CONFIG_FILE):        
+        SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
+    else:
+        SQLALCHEMY_DATABASE_URI = os.environ.get('TOOLS_DATABASE_URL') or \
         'sqlite:///' + os.path.join(basedir, 'data-tools.sqlite')
 
 config = {
@@ -103,6 +114,5 @@ config = {
     'testing'       : TestingConfig,
     'production'    : ProductionConfig,
     'tools'         : ToolsConfig,
-
     'default'       : DevelopmentConfig
 }

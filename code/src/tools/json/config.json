@@ -1,0 +1,103 @@
+{
+    "laboratorio":{
+        "Prism_Central":[{
+            "protocol":"https",
+            "host":"10.26.1.250",
+            "port":9440,
+            "base_url":"api/nutanix/v3",
+            "username":"admin",
+            "password":"Pass1010.,",
+            "version":"pc.2021.9.0.1",
+            "api_version":"3"
+        }],
+        "Prism_Element":[{
+            "protocol":"https",
+            "host":"10.26.1.223",
+            "port":9440,
+            "base_url":"PrismGateway/services/rest/v2.0",
+            "username":"admin",
+            "password":"Pass1010.,",
+            "version":"5.20.1.1 (AOS)",
+            "api_version":"2"
+        }]
+    },
+    "emtec":{
+        "Prism_Central":[{
+            "protocol":"https",
+            "host":"10.26.1.227",
+            "port":9440,
+            "base_url":"api/nutanix/v3",
+            "username":"gvalera",
+            "password":"Pass1010.,",
+            "version":"pc.2020.9.0.1",
+            "api_version":"3"
+        }],
+        "Prism_Element":[{
+            "protocol":"https",
+            "host":"10.26.1.180",
+            "port":9440,
+            "base_url":"PrismGateway/services/rest/v2.0",
+            "username":"gvalera",
+            "password":"Pass1010.,",
+            "version":"5.15.3",
+            "api_version":"2"
+        }]
+    },
+    "aaaa":{
+        "Prism_Central":[{
+            "protocol":"https",            
+            "host":"192.168.136.12",
+            "port":9440,
+            "base_url":"api/nutanix/v3",
+            "username":"monitoreo",
+            "password":"M0n2325.",
+            "version":"pc.2021.3",
+            "api_version":"3"
+        }],
+        "Prism_Element":[{
+            "protocol":"https",
+            "host":"192.168.136.10",
+            "port":9440,
+            "base_url":"PrismGateway/services/rest/v2.0",
+            "username":"monitoreo",
+            "password":"M0n2325.",
+            "version":"5.15.5.1",
+            "api_version":"2"
+        },{
+            "protocol":"https",
+            "host":"192.168.137.10",
+            "port":9440,
+            "base_url":"PrismGateway/services/rest/v2.0",
+            "username":"monitoreo",
+            "password":"M0n2325.",
+            "version":"5.15.5.1",
+            "api_version":"2"
+
+        }]
+    },
+    "tests":[
+    {"server":"Prism_Central","version":3,"name":"categories","endpoint":"categories/list","method":"POST","data":{"kind":"category"}},
+    {"server":"Prism_Central","version":3,"name":"projects","endpoint":"projects/list","method":"POST","data":{"kind":"project"}},
+    {"server":"Prism_Central","version":3,"name":"images","endpoint":"images/list","method":"POST","data":{"kind":"image"}},
+    {"server":"Prism_Central","version":3,"name":"vms","endpoint":"vms/list","method":"POST","data":{"kind":"vm"}},
+    {"server":"Prism_Central","version":3,"name":"blackouts","endpoint":"blackouts/list","method":"POST","data":{"kind":"blackout"}},
+    {"server":"Prism_Central","version":3,"name":"subnets","endpoint":"subnets/list","method":"POST","data":{"kind":"subnet"}},
+    {"server":"Prism_Central","version":3,"name":"hosts","endpoint":"hosts/list","method":"POST","data":{"kind":"host"}},
+    {"server":"Prism_Central","version":3,"name":"clusters","endpoint":"clusters/list","method":"POST","data":{"kind":"cluster"}},
+    {"server":"Prism_Central","version":3,"name":"users","endpoint":"users/list","method":"POST","data":{"kind":"user"}},
+    
+    {"server":"Prism_Element","version":2,"name":"cluster","endpoint":"cluster","method":"GET","data":{},"comment":"Individual cluster data."},
+    {"server":"Prism_Element","version":2,"name":"clusters","endpoint":"clusters","method":"GET","data":{},"comment":"List of clusters."},
+    {"server":"Prism_Element","version":2,"name":"disks","endpoint":"disks","method":"GET","data":{}},
+    {"server":"Prism_Element","version":2,"name":"hosts","endpoint":"hosts","method":"GET","data":{}},
+    {"server":"Prism_Element","version":2,"name":"images","endpoint":"images","method":"GET","data":{}},
+    {"server":"Prism_Element","version":2,"name":"networks","endpoint":"networks","method":"GET","data":{}},
+    {"server":"Prism_Element","version":2,"name":"protection_domains","endpoint":"protection_domains","method":"GET","data":{}},
+    {"server":"Prism_Element","version":2,"name":"remote sites","endpoint":"remote_sites","method":"GET","data":{}},
+    {"server":"Prism_Element","version":2,"name":"snapshots","endpoint":"snapshots","method":"GET","data":{}},
+    {"server":"Prism_Element","version":2,"name":"dr_snapshots_list","endpoint":"protection_domains/dr_snapshots","method":"GET","data":{},"comment":"Has a 5000 entities limit."},
+    {"server":"Prism_Element","version":2,"name":"dr_snapshots","endpoint":"protection_domains/{{entities.protection_domains.name}}/dr_snapshots","method":"GET","data":{},"comment":"List of snapshots for single PD."},
+    {"server":"Prism_Element","version":2,"name":"vms","endpoint":"vms","method":"GET","data":{}},
+    {"server":"Prism_Element","version":2,"name":"volume groups","endpoint":"volume_groups","method":"GET","data":{}}
+    ]
+}

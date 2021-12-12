@@ -1,0 +1,68 @@
+{# ============================================================================= #}
+{# Show User Data in Tree View                                                   #}
+{# (c) Sertechno 2018                                                            #}
+{# GLVH @ 2018-11-26                                                             #}
+{# ============================================================================= #}
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block title %}Collector{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block page_content %}
+<div class="page-header">
+    <h2>Customer <font color="blue">{{current_user.username}}</font> Data structure: </h2>
+    <a href="#" onclick="history.go(-1)"><img src="/static/img/back.png"  color=yellow width="32" height="32" title="" alt="Add"></a>
+</div>
+<hr>
+{%- set img='<img src="/static/img/search.png" width="32" height="32" title="" alt="Details">' %}
+
+{%- set prev = { 'cc' : -1 , 'ci' : -1  , 'cu' : -1}  %}
+{%- set href = { 'cc' : '*', 'ci' : '*' , 'cu' : '*'} %}
+{%- set link = {             'ci' : '*' , 'cu' : '*'} %}
+{%- set first= { 'cc' : -1 , 'ci' : -1  , 'cu' : -1}  %}
+
+{%- for row in rows %}
+    {%- if row.CC_Id != prev.cc %}
+        {%- if loop.index > 1 %}
+            </div> <!-- RENDER CC closes div link cu = {{link.cu|safe}} -->
+        </div>     <!--           closes div link ci = {{link.ci|safe}} -->
+        {%- else %}
+            {%- set _ = first.update({'cc':row.CC_Id,'ci':row.CI_Id,'cu':row.CU_Id}) %}
+            <!-- first cc = {{first.cc}} {{first.ci}} {{first.cu}} -->
+        {%- endif %}
+        {%- set _ = link.update({'ci':'cil_' + row.CC_Id|string()}) %}
+        {%- set _ = link.update({'cu':'*'}) %}
+    <!-- RENDER CC {{row.CC_Id}} {{row.CI_Id}} {{row.CU_Id}} ------- -->
+    <button type="button" class="btn btn-link" data-toggle="collapse" data-target="#{{link.ci|safe}}" style="margin-left:30px">Cost Center: {{row.CC_Description}} <!-- (xx Configuration Items) --></button>
+    {%- set _ = href.update({'cc':'/forms/Cost_Centers?CC_Id=' + row.CC_Id|string()}) %}
+    <a href="{{href.cc|safe}}" target="_blank">{{img|safe}}</a><br>
+    <div id="{{link.ci|safe}}" class="collapse"> <!-- RENDER CC opens div {{link.ci|safe}} -->
+    {%- set _ = prev.update({'cc':row.CC_Id}) %}
+    {%- endif %}
+    {%- if row.CI_Id != prev.ci %}
+            {%- if link.cu != '*' %}
+            </div> <!-- RENDER CI closes CU div link.cu = {{link.cu|safe}} -->
+            {%- endif %}
+            {%- set _ = link.update({'cu':'cul_' + row.CI_Id|string()}) %}
+            <button type="button" class="btn btn-link" data-toggle="collapse" data-target="#{{link.cu|safe}}" style="margin-left:60px">Configuration Item: {{row.CI_Name}} <!-- (xx Charge Units) --></button>
+            {%- set _ = href.update({'ci':'/forms/Configuration_Items?CI_Id=' + row.CI_Id|string()}) %}
+            <a href="{{href.ci|safe}}"  target="_blank">{{img|safe}}</a><br>
+            {%- set _ = prev.update({'ci':row.CI_Id}) %}
+            <div id="{{link.cu|safe}}" class="collapse"> <!-- RENDER CI opens {{link.cu|safe}} -->
+    {%- endif %}
+                {%- set _ = href.update({'cu':'/forms/Charge_Units?CU_Id=' + row.CU_Id|string()}) %}
+                {%- set ref=[] %}
+                {%- if row.CU_Reference_1 is not none %}{%- set _ = ref.append(row.CU_Reference_1) %}{%- endif %}
+                {%- if row.CU_Reference_2 is not none %}{%- set _ = ref.append(row.CU_Reference_2) %}{%- endif %}
+                {%- if row.CU_Reference_3 is not none %}{%- set _ = ref.append(row.CU_Reference_3) %}{%- endif %}
+                <a  href="{{href.cu|safe}}" target="_blank" style="margin-left:90px">Charge Unit: {{row.CU_Description}} {{ref|join('/')}}</a><br>
+                {%- set _ = prev.update({'cu':row.CU_Id}) %}
+    {%- if loop.last %}
+            </div> <!-- {{link.cu}} cierre final de division del ultimo CU {{row.CU_Id}} -->
+        </div>     <!-- {{link.ci}} cierre final de division del ultimo CI {{row.CI_Id}} -->
+    {%- endif %}
+{%- endfor %}
+<hr>
+{% endblock %}
+{# ============================================================================= #}

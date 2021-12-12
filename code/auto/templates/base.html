@@ -18,6 +18,39 @@
   body {
     margin-top: 160px;
   }
+
+.alert {
+  padding: 12px;
+  border-radius: 3px;
+  font-size: 1.2rem;
+  margin-bottom: 16px;
+  border-width: 2px;
+  border-style: solid;
+}
+
+.alert-message {
+  border-color: green;       
+  background-color: lightgreen;
+  color: blue;              
+}
+
+.alert-warning {
+  border-color: orange;
+  background-color: lightyellow;
+  color: black;
+}
+
+.alert-error {
+  border-color: darkred;
+  background-color: lightcoral;
+  color: yellow;
+}
+
+.alert-info {
+  border-color: blue;
+  background-color: cyan;
+  color: black;
+}
   </style>
   <!-- --------- -->
   
@@ -29,7 +62,7 @@ Collector
 {% endblock title %}
 <!-- div class="row"> <!-- gen_menu: * block content_navbar * -->
 {% block navbar %}
-<!-- gen_menu:block content_navbar 2021-12-05 20:33:35.933428 -->
+<!-- gen_menu:block content_navbar 2021-12-12 17:23:55.917354 -->
 <!-- gen_menu:block content_navbar /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/templates/navbar_template.html -->
 <!-- gen_menu:block content_navbar /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/templates/base.html -->
 {% include "navbar_template.html" %}
@@ -41,18 +74,19 @@ Collector
    <div class="row"><!-- gen_menu: * block messages * -->
 {% block messages %}
     <!-- gen_menu:messages loop start -->
-{%- with messages = get_flashed_messages() -%}
-{%- if messages -%}
-         <ul class=flashes>
-{%- for message in messages -%}
-           <div class="alert alert-warning">
-             <button type="button" class="close" data-dismiss="alert">&times;</button>
+{%- set ml = [] -%}
+{%- for category,message in get_flashed_messages(with_categories=True) -%}
+         <!-- cat:{{category}} msg:{{message}} -->
+         {%- if message not in ml -%}
+             {%- set _ = ml.append(message) -%}
+             <ul class=flashes>
+               <div class="alert alert-{{category}}">
+                 <button type="button" class="close" data-dismiss="alert">&times;</button>
 {{ message }}
-           </div>
+               </div>
+             </ul>
+         {%- endif -%}
 {%- endfor -%}
-         </ul>
-{%- endif -%}
-{%- endwith -%}
     <!-- gen_menu:messages loop end -->
 {% endblock messages %}
    </div>  <!-- gen_menu: * endblock messages * -->
@@ -66,6 +100,6 @@ Collector
        <script src="/static/js/jquery-3.3.1.js"      crossorigin="anonymous"></script>
        <script src="/static/js/popper.min.js"      crossorigin="anonymous"></script>
        <script src="/static/js/bootstrap.min.js"   crossorigin="anonymous"></script>
-       <!-- gen_menu: Collector:__main__ AUTOGEN Signature @ 2021-12-05 20:33:35.933465 -->
+       <!-- gen_menu: Collector:__main__ AUTOGEN Signature @ 2021-12-12 17:23:55.917449 -->
        <!-- gen_menu:block content footer end -->
 {% endblock scripts %}

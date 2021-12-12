@@ -77,7 +77,8 @@ def login():
                     if user is not None:
                         logger.error(f"login: user.verify_password() = {user.verify_password}")
                 print('Invalid username or password.')
-                flash('Invalid username or password.')
+                flash('Invalid username or password.','error')
+                #lash('Invalid username or password.')
             except Exception as e:
                 print       ( f"login: form validated exception: {str(e)}")
                 logger.error( f"login: form validated exception: {str(e)}")
@@ -102,7 +103,8 @@ def logout():
         logger.debug( f"logout: loging out user {current_user} ...")
         logout_user()
         #rint('You have been logged out.')
-        flash('You have been logged out.')
+        flash('You have been logged out.','info')
+        #lash('You have been logged out.')
     except Exception as e:
         print       ( f"logout: exception: {str(e)}")
         logger.error( f"logout: exception: {str(e)}")
@@ -127,13 +129,16 @@ def register():
             db.session.add(user)
             db.session.commit()
             db.session.flush() #20210630 GV 
-            flash('New user "%s" can login now.'%form.username.data)
+            flash('New user "%s" can login now.'%form.username.data,'info')
+            #lash('New user "%s" can login now.'%form.username.data)
             return redirect(url_for('main.index'))
         except Exception as e:
             db.session.rollback()
             db.session.flush() #20210630 GV 
-            flash('Form Data is: [name=%s,role_id=%s,email=%s,password=%s]'%( form.username.data, form.role_id.data, form.email.data, form.password.data))
-            flash('Error creating new user. %s'%(e))
+            flash('Form Data is: [name=%s,role_id=%s,email=%s,password=%s]'%( form.username.data, form.role_id.data, form.email.data, form.password.data),'warning')
+            flash('Error creating new user. %s'%(e),'error')
+            #lash('Form Data is: [name=%s,role_id=%s,email=%s,password=%s]'%( form.username.data, form.role_id.data, form.email.data, form.password.data))
+            #lash('Error creating new user. %s'%(e))
             return redirect(url_for('auth.register'))
             
     return render_template('auth/register.html', form=form)
@@ -165,6 +170,7 @@ def change_password():
         form = ChangePasswordForm()
         username = current_user.username
     if form.validate_on_submit():
+        #lash('Change Password','message')
         flash('Change Password')
         if current_user.verify_password(form.old_password.data):
             if hasattr(form,'username'):
@@ -178,12 +184,15 @@ def change_password():
             db.session.flush()
             db.session.commit()
             if user.username == current_user.username:
-                flash('Your password has been updated.')
+                flash('Your password has been updated.','info')
+                #lash('Your password has been updated.')
             else:
-                flash(f"'{user.username}' password has been updated.")
+                flash(f"'{user.username}' password has been updated.",'info')
+                #lash(f"'{user.username}' password has been updated.")
             return redirect(url_for('main.index'))
         else:
-            flash('Invalid password.')
+            flash('Invalid password.','error')
+            #lash('Invalid password.')
     return render_template("auth/change_password.html", form=form,user=current_user)
 
 @auth.route('/change-email', methods=['GET', 'POST'])
@@ -199,10 +208,13 @@ def change_email_request():
                        'auth/email/change_email',
                        user=current_user, token=token)
             flash('An email with instructions to confirm your new email '
-                  'address has been sent to you.')
+                  'address has been sent to you.','info')
+            #lash('An email with instructions to confirm your new email '
+            #     'address has been sent to you.')
             return redirect(url_for('main.index'))
         else:
-            flash('Invalid email or password.')
+            flash('Invalid email or password.','error')
+            #lash('Invalid email or password.')
     return render_template("auth/change_email.html", form=form)
 
 """    

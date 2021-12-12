@@ -3,14 +3,26 @@ Command Line Get Charge Resume
 """
 import logging
 import os
+import argparse
 from pprint import pprint,pformat
 from    emtec                               import *
 from    emtec.feedback                      import *
 from    emtec.collector.db.orm              import *
+from    sqlalchemy                          import create_engine
+
 import  simplejson              as json
 from sqlalchemy import tuple_
 import jinja2
 import configparser
+
+# Minimum requirement to use db object ---------------------------------
+from    flask                               import Flask
+from    flask_sqlalchemy                    import SQLAlchemy
+from    config                              import *
+from    emtec                               import *
+from    emtec.collector.db.orm              import *
+db                                          = Collector_ORM_DB()
+
 
 # Logging logics
 # create logger
@@ -30,33 +42,27 @@ ch.setFormatter(formatter)
 # add ch to logger
 logger.addHandler(ch)
 
-# Minimum requirement to use db object ---------------------------------
-from    flask                               import Flask
-from    flask_sqlalchemy                    import SQLAlchemy
-from    config                              import config
-from    emtec                               import *
-from    emtec.collector.db.orm              import *
-db                                          = Collector_ORM_DB()
-
 def create_app(config_name):
     app = Flask(__name__)
+    logger.debug(f"{this()}: config_name         = {config_name}")
+    logger.debug(f"{this()}: config[config_name] = {config[config_name]}")
     app.config.from_object(config[config_name])
     config[config_name].init_app(app)
-
     # Inititializes applications (incomplete by now)
+    logger.debug(f"{this()}: app                 = {app}")
     db.init_app             (app)
-    print(f"create_app: db = {db}")
-    # Collector's modules
+    logger.debug(f"{this()}: db                  = {db}")
     return app 
 # ----------------------------------------------------------------------
 
 # Here I can setup multiple Collector Tool Services
+'''
 valid_modes =   {   'customer':'Arbitrary query to DB',
                     'cost-center':'Dumps a Configuration Item',
                     'usage':'gets period usage',
                 }
 mode_help = "Any of: [%s]"%'|'.join(valid_modes.keys())
-
+'''
 
 """
 QUERY="
@@ -237,9 +243,12 @@ usage_template = """
 </html>
 """
 
-"""
-def Get_Period_Usage(customer_id=0,rates={}):
-    logger.debug(f'{this()}: Enter')    
+def Get_Charging_Resume(**kwargs):
+    logger.debug(f'{this()}: Enter')
+    logger.debug(f'{this()}: kwargs = {kwargs}')
+    args = kwargs.get('args',None)   
+    logger.debug(f"{this()}: args = {args}")
+    
     #collectordata=get_collectordata()
     db.session.flush()
     db.session.commit()
@@ -247,316 +256,7 @@ def Get_Period_Usage(customer_id=0,rates={}):
     
     charge_item  = None
     current_user = 1
-    
-    rate_cpu   = rates.get('cpu').get('rate',0.000072571429)     
-    rate_ram   = rates.get('ram').get('rate',0.000076142857)      
-    rate_dsk   = rates.get('dsk').get('rate',0.001186000000)      
-    rate_hdd   = rates.get('hdd').get('rate',0.001186000000)      
-    rate_ssd   = rates.get('ssd').get('rate',0.00363857142857143)  
-    factor_hdd = rates.get('factor_hdd').get('rate',0.8)
-    factor_ssd = 1 - factor_hdd
-    
-    period = Charge_Items.__tablename__.split('_')[2]
-    
-    usage = {
-        'period'                 : period,
-        'billeable_records'      : 0,
-        'contributing_records'   : 0,
-        'total_q_hours'          : 0,
-        'total_q_month'          : 0,
-        'total_cpus'             : 0,
-        'total_rams'             : 0,
-        'total_dsks'             : 0,
-        'total_bill'             : 0,
-        'total_bill_distributed' : 0,
-        'rate_cpu'               : rate_cpu,
-        'rate_ram'               : rate_ram,
-        'rate_dsk'               : rate_dsk,
-        'rate_hdd'               : rate_hdd,
-        'rate_ssd'               : rate_ssd,
-        'factor_hhd'             : factor_hdd,
-        'factor_ssd'             : factor_ssd,
-        'rates'                  : rates
-    }
-    
-
-    logger.debug(f"usage mode: counting records in {Charge_Items.__tablename__} ...")
-    total_db_cits = db.session.query(Charge_Items.CU_Id).count()
-    logger.debug(f"Charge Items in DB = {total_db_cits}")
-    total_db_cus = db.session.query(Charge_Items.CU_Id).distinct().count()
-    logger.debug(f"Charge Units in DB = {total_db_cus}")
-
-    total_cits = db.session.query(Charge_Items.CU_Id
-                    ).select_from(Charge_Items
-                    ).join(Charge_Units,Charge_Units.CU_Id==Charge_Items.CU_Id
-                    ).join(Configuration_Items,Configuration_Items.CI_Id==Charge_Units.CI_Id
-                    ).filter(Configuration_Items.Cus_Id==customer_id
-                    ).count()
-    logger.debug(f"Customer Components = {total_cits}")
-
-    cus = db.session.query(
-                    Charge_Items.CU_Id
-                    ).select_from(Charge_Items
-                    ).join(Charge_Units,Charge_Units.CU_Id==Charge_Items.CU_Id
-                    ).join(Configuration_Items,Configuration_Items.CI_Id==Charge_Units.CI_Id
-                    ).filter(Configuration_Items.Cus_Id==customer_id
-                    ).distinct(
-                    ).all()
-    total_cus = len(cus)
-    logger.debug(f"Components = {total_cus}")
-
-    logger.debug(f"usage mode: counting CIs in {Charge_Items.__tablename__} ...")
-    cis = db.session.query(
-                    Configuration_Items.CI_Id,
-                    Configuration_Items.CI_Name,
-                    Configuration_Items.CI_UUID
-                    ).select_from(Charge_Items
-                    ).join(Charge_Units,Charge_Units.CU_Id==Charge_Items.CU_Id
-                    ).join(Configuration_Items,Configuration_Items.CI_Id==Charge_Units.CI_Id
-                    ).filter(Configuration_Items.Cus_Id==customer_id
-                    ).distinct(tuple_(Configuration_Items.CI_Id)
-                    ).order_by(tuple_(Configuration_Items.CI_Id)
-                    ).all()
-    total_cis = len(cis)
-    logger.debug(f"Configuration Items = {total_cis}")
-    ci_vms  = 0
-    ci_imgs = 0
-    ci_vgs  = 0
-    query = db.session.query(
-                Configuration_Items.CI_Id,
-                Charge_Units.Typ_Code,
-                Configuration_Items.CI_Name,
-                Configuration_Items.CI_UUID
-                ).select_from(Charge_Items
-                ).join(Charge_Units,Charge_Units.CU_Id==Charge_Items.CU_Id
-                ).join(Configuration_Items,Configuration_Items.CI_Id==Charge_Units.CI_Id
-                ).filter(Configuration_Items.Cus_Id==customer_id
-                ).distinct(tuple_(Configuration_Items.CI_Id,Charge_Units.Typ_Code)
-                ).order_by(Configuration_Items.CI_Id,Charge_Units.Typ_Code
-                )
-    logger.debug(f"query = {query}")
-    cis=query.all()
-    inventory = {}
-    for ci in cis:
-        if ci.CI_Id not in inventory:
-            inventory.update({
-                ci.CI_Id:{'CPU':0,'RAM':0,'IMG':0,'DSK':0,'SNP':0,'DRP':0}
-                })
-        inventory[ci.CI_Id][ci.Typ_Code] += 1
-    for ci in inventory:
-        if inventory[ci]['CPU'] >= 1:
-            ci_vms += 1
-        elif inventory[ci]['IMG'] >= 1:
-            ci_imgs += 1
-        elif inventory[ci]['DSK'] >= 1:
-            ci_vgs += 1
-    
-    logger.debug(f"{this()}: ci vms   = {ci_vms}")
-    logger.debug(f"{this()}: ci img   = {ci_imgs}")
-    logger.debug(f"{this()}: ci vgs   = {ci_vgs}")
-    logger.debug(f"{this()}: total ci = {ci_vms+ci_imgs+ci_vgs}")
-    usage.update({
-        'count_cis' :total_cis,
-        'count_vms' :ci_vms,
-        'count_imgs':ci_imgs,
-        'count_vgs' :ci_vgs,
-        # DB
-        'count_total_db_cits':total_db_cits,
-        'count_total_db_cus':total_db_cus,
-        # Customers
-        'count_total_cits':total_cits,
-        'count_total_cus':total_cus,
-        'count_total_cis':total_cis,
-    })
-            
-    
-    # Updated cached data for this specific query if requested 
-    logger.debug(f"{this()}: usage mode: looking for matching CIs ...")
-    logger.debug(f"{this()}: Customer Id         = {customer_id}")
-    query = db.session.query(
-            func.count(Charge_Items.CU_Id).label('Hours'),
-            Charge_Items.CIT_Is_Active.label('Active'),
-            Charge_Units.Typ_Code.label('Type'),
-            func.sum(Charge_Items.CIT_Quantity).label('Q_Hours')
-            ).join(Charge_Units,Charge_Units.CU_Id==Charge_Items.CU_Id
-            ).join(Configuration_Items,Configuration_Items.CI_Id==Charge_Units.CI_Id
-            ).filter(Configuration_Items.Cus_Id==customer_id
-            ).group_by( Charge_Units.Typ_Code,
-                        Charge_Items.CIT_Is_Active
-            ).order_by( Charge_Units.Typ_Code,
-                        Charge_Items.CIT_Is_Active
-            )
-    logger.debug(f"{this()}: Charge_Items        = {Charge_Items.__tablename__}")
-    logger.debug(f"{this()}: Charge_Units        = {Charge_Units.__tablename__}")
-    logger.debug(f"{this()}: Configuration_Items = {Configuration_Items.__tablename__}")
-    logger.debug(f"{this()}: query={query}")
-    result = query.all()
-    
-    billeable_records = 0
-    contributing_records = 0
-    total_q_hours          = 0
-    total_q_month          = 0
-    total_cpus             = 0
-    total_rams             = 0
-    total_dsks             = 0
-    total_bill             = 0
-    total_bill_distributed = 0
-    for row in result:
-        # Aqui billeable debe depender del tipo de componente y de si el
-        # flag is allways billeable esta encendido, por ahora forzado 
-        # para CPU y RAM
-        if row.Type not in usage:
-            usage.update({
-                row.Type:{
-                    0:{
-                        'hours': 0,
-                        'Q_hours': 0,
-                        'Q_month': 0,
-                        'rate': 0,
-                        'rtmf':0,
-                        'rate_month':0,
-                        'bill':0
-                    },
-                    1:{
-                        'hours': 0,
-                        'Q_hours': 0,
-                        'Q_month': 0,
-                        'rate': 0,
-                        'rtmf':0,
-                        'rate_month':0,
-                        'bill':0
-                    }
-                }
-            })
-            if row.Type in ['DSK','IMG','SNP','DRP']:
-                usage[row.Type][0].update({
-                    'HDD':{
-                        'Q_month'    : 0,
-                        'rate'       : 0,
-                        'rate_month' : 0,
-                        'bill'       : 0,
-                    },
-                    'SSD':{
-                        'Q_month'    : 0,
-                        'rate'       : 0,
-                        'rate_month' : 0,
-                        'bill'       : 0,
-                    }
-                })
-                usage[row.Type][1].update({
-                    'HDD':{
-                        'Q_month'    : 0,
-                        'rate'       : 0,
-                        'rate_month' : 0,
-                        'bill'       : 0,
-                    },
-                    'SSD':{
-                        'Q_month'    : 0,
-                        'rate'       : 0,
-                        'rate_month' : 0,
-                        'bill'       : 0,
-                    }
-                })
-                
-        #pprint(usage)
-        Active = 1 if row.Active else 0
-        #if Active not in usage[row.Type]:
-        #    usage[row.Type].update({Active:{}})
-        
-        billeable = row.Active if row.Type in ('CPU','RAM') else True
-        if billeable: billeable_records += 1 
-        total_q_hours += row.Q_Hours
-        q_month   = float(row.Q_Hours/720)
-        total_q_month += q_month
-        rate_to_month_factor = 720 if row.Type in ('CPU','RAM') else 1
-        if   row.Type == 'CPU': 
-            rate = rate_cpu
-            total_cpus += 1
-        elif row.Type == 'RAM': 
-            rate = rate_ram
-            total_rams += 1
-        else:                   
-            rate = rate_dsk
-            total_dsks += 1
-        logger.debug(f"{this()}: billeable  = {billeable}")
-        logger.debug(f"{this()}: q month    = {q_month} {type(q_month)}")
-        logger.debug(f"{this()}: rtm factor = {rate_to_month_factor}")
-        logger.debug(f"{this()}: rate       = {rate}")
-        rate_month = rate * rate_to_month_factor
-        logger.debug(f"{this()}: rate month = {rate_month} {type(rate_month)}")
-        bill = q_month * rate_month if billeable else 0
-        if bill > 0:
-            contributing_records += 1        
-            total_bill += bill
-        logger.debug(f"{this()}: row = h:{row.Hours:6d} a:{row.Active:5} t:{row.Type:3s} qhr={row.Q_Hours:20.12f} qmo={q_month:20.12f} r:{rate:20.12f} rtmf:{rate_to_month_factor:3d} rmo={rate_month:.12f} bill:{bill:8.2f}")
-        
-        usage[row.Type][Active].update({
-            'hours': row.Hours,
-            'Q_hours': row.Q_Hours,
-            'Q_month': q_month,
-            'rate': rate,
-            'rtmf':rate_to_month_factor,
-            'rate_month':rate_month,
-            'bill':bill
-        })
-        if row.Type in ['DSK','SNP','DRP','IMG']:
-            Q_month_hdd = usage[row.Type][Active]['Q_month'] * factor_hdd
-            Q_month_ssd = usage[row.Type][Active]['Q_month'] * factor_ssd
-            rate_month_hdd = rate_hdd * rate_to_month_factor
-            rate_month_ssd = rate_ssd * rate_to_month_factor
-            bill_hdd = Q_month_hdd * rate_month_hdd if billeable else 0
-            bill_ssd = Q_month_ssd * rate_month_ssd if billeable else 0
-            usage[row.Type][Active].update({
-                'HDD':{
-                    'Q_month'    : Q_month_hdd,
-                    'rate'       : rate_hdd,
-                    'rate_month' : rate_month_hdd,
-                    'bill'       : bill_hdd,
-                },
-                'SSD':{
-                    'Q_month'    : Q_month_ssd,
-                    'rate'       : rate_ssd,
-                    'rate_month' : rate_month_ssd,
-                    'bill'       : bill_ssd,
-                }
-            })
-            bill_distributed = bill_hdd + bill_ssd
-            total_bill_distributed += bill_distributed
-        else:
-            total_bill_distributed += bill
-
-    usage.update({
-        'billeable_records'      : billeable_records,
-        'contributing_records'   : contributing_records,
-        'total_q_hours'          : float(total_q_hours),
-        'total_q_month'          : total_q_month,
-        'total_cpus'             : total_cpus,
-        'total_rams'             : total_rams,
-        'total_dsks'             : total_dsks,
-        'total_bill'             : total_bill,
-        'total_bill_distributed' : total_bill_distributed,
-    })
-
-    logger.debug(f"{this()}: billeable   recs = {billeable_records}")
-    logger.debug(f"{this()}: contibuting recs = {contributing_records}")
-    logger.debug(f"{this()}: total_q_hours    = {total_q_hours}")
-    logger.debug(f"{this()}: total_q_month    = {total_q_month}")
-    logger.debug(f"{this()}: total_cpus       = {total_cpus}")
-    logger.debug(f"{this()}: total_rams       = {total_rams}")
-    logger.debug(f"{this()}: total_dsks       = {total_dsks}")
-    logger.debug(f"{this()}: total_bill       = {total_bill}")
-    return usage
-"""
-
-def Get_Charging_Resume(args=None):
-    logger.debug(f'{this()}: Enter')    
-    #collectordata=get_collectordata()
-    db.session.flush()
-    db.session.commit()
-    logger.debug(f'{this()}: DB Flushed and commited ...')    
-    
-    charge_item  = None
-    current_user = 1
+    ci_list      = []
     
     # Updated cached data for this specific query if requested 
     if args.update:
@@ -564,26 +264,26 @@ def Get_Charging_Resume(args=None):
         # BE SURE all CU records has proper description ----------------
         updated_cus = db.Update_CU_Names()
         if updated_cus:
-            logger.info(f"Updated Name CUs = {updated_cus}")
+            logger.info(f"{this()}: Updated Name CUs = {updated_cus}")
         # BE SURE all CU records has proper rate id
         updated_cus = db.Update_CU_Rates()
         if updated_cus:
-            logger.info(f"Updated Rate CUs = {updated_cus}")
+            logger.info(f"{this()}: Updated Rate CUs = {updated_cus}")
         # --------------------------------------------------------------
         
-        logger.debug(f"args.customer_id={args.customer_id} args.cost_center={args.cost_center}")
+        logger.debug(f"args.customer id={args.customer} args.cost_center={args.cost_center}")
         #f args.customer_id is not None and args.cost_center is None:
-        if args.mode == 'customer':
-            logger.info(f"custome mode: looking for matching CIs ...")
+        if args.filter == 'customer':
+            logger.info(f"{this()}: filter customer mode: looking for matching CIs ...")
             query = db.session.query(
                     Configuration_Items.CI_Id
-                    ).filter(Configuration_Items.Cus_Id==args.customer_id
+                    ).filter(Configuration_Items.Cus_Id==args.customer
                     ).order_by( Configuration_Items.CC_Id,
                                 Configuration_Items.CI_Id
                     )
-            logger.debug (f"{this()}: Cus_Id= {args.customer_id} query: {query}")
+            logger.debug (f"{this()}: Cus_Id= {args.customer} query: {query}")
             CI = query.all()
-            logger.info (f"{this()}: {len(CI)} CI's found for customer {args.customer_id}")
+            logger.info (f"{this()}: {len(CI)} CI's found for customer {args.customer}")
             resume_records=0
         
             logger.info(f"{this()}: Updating Charge Resume Update ...")
@@ -593,17 +293,17 @@ def Get_Charging_Resume(args=None):
             logger.info(f"{this()}: CI List updated ({len(ci_list)}) ...")
             charge_item  = None
             current_user = 1
-            logger.debug(f"customer    = {args.customer_id}")
-            logger.debug(f"period      = {args.start}-{args.end}")
-            logger.debug(f"cit status  = {args.cit_status}")
-            logger.debug(f"currency    = {args.currency}")
-            logger.debug(f"ci_list     = {ci_list}")
-            logger.debug(f"charge item = {charge_item}")
-            logger.debug(f"current_user= {current_user}")
+            logger.debug(f"{this()}: customer    = {args.customer}")
+            logger.debug(f"{this()}: period      = {args.start}-{args.end}")
+            logger.debug(f"{this()}: cit status  = {args.cit_status}")
+            logger.debug(f"{this()}: currency    = {args.currency}")
+            logger.debug(f"{this()}: ci_list     = {ci_list}")
+            logger.debug(f"{this()}: charge item = {charge_item}")
+            logger.debug(f"{this()}: current_user= {current_user}")
         
         #f args.customer_id is None and args.cost_center is None:
-        if args.mode == 'cost-center':
-            logger.info(f"cost center mode: looking for matching CIs ...")
+        if args.filter == 'cost-center':
+            logger.info(f"{this()}: filter cost center mode: looking for matching CIs ...")
             query = db.session.query(
                     Configuration_Items.CI_Id
                     ).filter(Configuration_Items.CC_Id==args.cost_center
@@ -622,14 +322,13 @@ def Get_Charging_Resume(args=None):
             logger.info(f"{this()}: CI List updated ({len(ci_list)}) ...")
             charge_item  = None
             current_user = 1
-            logger.debug(f"customer    = {args.customer_id}")
+            logger.debug(f"customer    = {args.customer}")
             logger.debug(f"period      = {args.start}-{args.end}")
             logger.debug(f"cit status  = {args.cit_status}")
             logger.debug(f"currency    = {args.currency}")
             logger.debug(f"ci_list     = {ci_list}")
             logger.debug(f"charge item = {charge_item}")
             logger.debug(f"current_user= {current_user}")
-        
         
         if args.filename:
             fp=open(filename,'a')
@@ -650,43 +349,49 @@ def Get_Charging_Resume(args=None):
         fifo_reader = os.open(fifo_filename,os.O_RDONLY|os.O_NONBLOCK)
         console  = True
         logger.warning(f"FIFO feedback filename = {fifo_filename} fp={fifo_reader}")
-        if args.fast:
-            records=0
-            logger.info(f"Update resume using fast algorithm ...")
+        records=0
+        logger.info(f"Update resume using '{args.function}' algorithm ...")
+        if args.queue:
+            queue_id = queue.Queue(maxsize=0)
         else:
-            logger.info(f"Update resume using standard algorithm ...")
-
-            records = db.Update_Charge_Resume_CIS(
-                args.customer_id,
-                args.start.strftime('%Y-%m-%d'),
-                args.end.strftime('%Y-%m-%d'),
-                args.cit_status,
-                args.currency,
-                ci_list,             # <-- Lista de CIs Requeridos          
-                Charge_Items,        # <-- Sharded CITs table
-                current_user,
-                callback=display_advance,
-                step=args.feedback_step,
-                fp=fp,
-                fifo=fifo_filename,
-                progress=args.progress
-                
-                )
+            queue_id = None
+        logger.into(f"queue_id = {queue_id}")
+        records = db.Update_Charge_Resume_CIS(
+            args.customer,
+            args.start.strftime('%Y-%m-%d'),
+            args.end.strftime('%Y-%m-%d'),
+            args.cit_status,
+            args.currency,
+            ci_list,             # <-- Lista de CIs Requeridos          
+            Charge_Items,        # <-- Sharded CITs table
+            current_user,
+            fast=args.fast,
+            callback = display_advance,    # Callback function if any, arguments follows
+            step     = args.feedback_step, # Expected step, decimal representing a percentage
+            fp       = fp,                 # file handler to display/write output to
+            fifo     = fifo_filename,      # fifo handler to write output to
+            progress = args.progress,      # progress filename (records actual advance)
+            queue    = queue_id
+            verbose  = args.verbose
+            
+            )
         end = datetime.datetime.now().timestamp()
         logger.info(f"Update completed {records} records modified in {end-start:.3f} seconds...")
     # Get Actual Remume Data from Database
-    if args.mode == 'customer':
+    if args.filter == 'customer':
         FILTER=FILTER_CUSTOMER
-    elif args.mode == 'cost-center':
+    elif args.filter == 'cost-center':
         FILTER=FILTER_COST_CENTER
     else:
         FILTER == FILTER_ALL
     
     #Get_Charge_Resume_Filter(self,FILTER,CODE,DFROM,DTO,STATUS,CUR,CC_Id=None,Pla_Id=None,User_Id=None):
 
+    start = datetime.datetime.now().timestamp()
+    logger.info(f"getting data start: {datetime.datetime.now()}")
     rows = db.Get_Charge_Resume_Filter(
                 FILTER,
-                args.customer_id,
+                args.customer,
                 args.start.strftime('%Y-%m-%d'),
                 args.end.strftime('%Y-%m-%d'),
                 args.cit_status,
@@ -694,6 +399,9 @@ def Get_Charging_Resume(args=None):
                 CC_Id=args.cost_center,
                 User_Id=current_user
                 )
+    end = datetime.datetime.now().timestamp()
+    logger.info(f"getting data end: {datetime.datetime.now()}")
+    logger.info(f"got data in {end-start:.3f} seconds")
     if type(rows) == list:
         if len(rows):
             logger.debug(f"{this()}: PRE RENDER")
@@ -703,7 +411,7 @@ def Get_Charging_Resume(args=None):
                 logger.debug(f"{this()}: len rows         = {len(rows)}")
             except:
                 logger.warning(f"{this()}: len rows         = ERROR")        
-            logger.debug(f"{this()}: Cus_Id           = {args.customer_id}")
+            logger.debug(f"{this()}: Cus_Id           = {args.customer}")
             #print(f"{this()}: Cus_Name         = {Cus_Name}")
             logger.debug(f"{this()}: CIT_Date_From    = {args.start}")
             logger.debug(f"{this()}: CIT_Date_To      = {args.end}")
@@ -765,7 +473,7 @@ def Get_Charging_Resume(args=None):
                         fp.write('\n')
                 """
                 output_file=f"CR_{period}"
-                export_to_xls(output_file,rows,args.customer_id,args.start,args.end,args.cit_status,args.currency)
+                export_to_xls(output_file,rows,args.customer,args.start,args.end,args.cit_status,args.currency)
             except Exception as e:
                 logger.error( f"{this()}: Exception:  {str(e)}")
         else:
@@ -967,48 +675,70 @@ def export_to_fix(output_file,rows,Customer,From,To,Status,Currency):
 def Report_Charging_Resume(args=None):
     logger.debug('Report_Charging_Resume')
     return
-
-def Get_Arguments():
-    # Argument's parser definitions
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-m' ,'--mode'         ,help=mode_help,   required=True,default=None)
-    parser.add_argument('-R' ,'--rdbms'        ,help='ORM RDBMS',     required=False,default='mysql')
-    parser.add_argument('-D' ,'--dialect'      ,help='ORM Dialect',   required=False,default='pymysql')
-    parser.add_argument('-H' ,'--host'         ,help='DB Host name or IP',      required=False,default='localhost')
-    parser.add_argument('-P' ,'--port'         ,help='DB Port',      required=False,default=3306)
-    parser.add_argument('-u' ,'--user'         ,help='DB User',      required=False,default='collector')
-    parser.add_argument('-p' ,'--password'     ,help='DB Password',  required=False,default='collector')
-    parser.add_argument('-s' ,'--schema'       ,help='DB Schema',    required=False,default='collector')
-    parser.add_argument('-U' ,'--user-id'      ,help='Collector User Id',    required=False,default=1)
-    parser.add_argument('-C' ,'--customer-id'  ,help='Collector Customer Id',    required=False,default=None)
-    parser.add_argument('-CC','--cost-center'  ,help='Collector Top Cost Center',    required=False,default=None)
-    parser.add_argument('-F' ,'--start'        ,help='Period Start Date',    required=False,default=None)
-    parser.add_argument('-T' ,'--end'          ,help='Period End   Date',    required=False,default=None)
-    parser.add_argument('-CU','--currency'     ,help='Currency Code',    required=False,default='UF')
-    parser.add_argument('-S' ,'--cit-status'   ,help='CIT-Status',    required=False,default=1)
-    parser.add_argument('-M' ,'--month'        ,help='Report Month (1-12)',    required=False,default=None)
-    parser.add_argument("-v" ,'--verbose'      ,help='Increase output verbosity',action='count',required=False,default=0)
-    parser.add_argument(      '--progress'     ,help='Feedback progress filename',required=False,default=None)
-    parser.add_argument(      '--filename'     ,help='Feedback output filename',required=False,default=None)
-    parser.add_argument(      '--fifo'         ,help='Feedback FIFO filename',required=False,default=None)
-    parser.add_argument(      '--feedback-step',help='Feedback step % (0.00 - 1.00)',required=False,type=float,default=0.01) # 1.00 %
-    parser.add_argument(      '--update'       ,help='Update DB prior report (default=False)',action='store_true',required=False,default=False)
-    parser.add_argument(      '--fast'         ,help='Use fast population algorithm  (default=False)',action='store_true',required=False,default=False)
-
-    args = parser.parse_args()
-    return args
     
-args = Get_Arguments()
-logger.debug(f"args={args}")
- 
-dt = datetime.datetime.now()
-if args.month is not None:
-    year=datetime.datetime.now().year
-    date=f'01-{str(args.month)}-{year}'
-    logger.debug(f"year={year} default date={date}")
-    dt=datetime.datetime.now() if args.month is None else datetime.datetime.strptime(date,'%d-%m-%Y') 
-args.start,args.end = Get_Period(dt)
-logger.debug(f"args={args}")
+
+def get_args():
+    
+    valid_modes =   [   
+                        'charge',
+                        'usage',
+                    ]
+    mode_help         = "Any of: [%s]"%'|'.join(valid_modes)
+    mode_help        += " 'test': Charge Resume detail mode."
+    mode_help        += " 'usage': Fast Usage resume mode."
+    
+    # Models help
+    charge_help       = 'Charge mode detailed help. Intented to calculate period charges at detail.'
+    usage_help        = 'Period Usage detailed help Intented to calculate fast period usage for non complex accounts.'
+    # Common modes arguments
+    config_help       = "JSON configuration file. Content overrides arguments if any."
+    log_filename_help = "Log filename. If defined a filesystem file that captures process behavior"
+    verbose_help      = "Increase output and log verbosity (default 0=No output, 1=Information, 2=Debug)."
+    function_help     = "charge: Calculation function"
+    
+    # Argument's common_parser definitions -----------------------------
+    common_parser     = argparse.ArgumentParser(description="EG Collector - Get Pre-Billing Resumes")
+    # common arguments
+    common_parser.add_argument('-M' ,'--month'         ,help='Report Month (1-12)',required=False,default=None,type=int)
+    common_parser.add_argument('-Y' ,'--year'          ,help='Report Year (YYYY)' ,required=False,default=None,type=int)
+    common_parser.add_argument('-c', '--config'        ,help=config_help,          required=False,default=None)
+    common_parser.add_argument("-l", '--log-filename'  ,help=log_filename_help,    required=False,default=None)
+    common_parser.add_argument("-v", '--verbose'       ,help=verbose_help,         required=False,default=0,action='count')
+    # ------------------------------------------------------------------
+    # Define main parser
+    main_parser = argparse.ArgumentParser()
+    # Create mode subparsers
+    subparsers = main_parser.add_subparsers(title="Execution modes dest='mode'",dest='mode',help=mode_help)
+    charge = subparsers.add_parser('charge', parents=[common_parser], add_help=False, description='Charge Detail Mode',help=charge_help)
+    usage  = subparsers.add_parser('usage' , parents=[common_parser], add_help=False, description='Period Usage Mode' ,help=usage_help)
+    # sub arguments per mode
+    # charge ----------------------------------------------------------
+    charge.add_argument('-f', '--function'          ,help=function_help,required=True,default=None)
+    charge.add_argument(      '--filter'            ,help='charge filter',required=False,default='customer')
+    charge.add_argument(      '--customer'          ,help='customer id',required=False,default=1)
+    charge.add_argument(      '--cit-status'        ,help='cit status',required=False,default=1)
+    charge.add_argument(      '--currency'          ,help='currency',required=False,default=1)
+    charge.add_argument(      '--cost-center'       ,help='customer id',required=False,default=1)
+    charge.add_argument(      '--start'             ,help='Period Start',required=False,default=None)
+    charge.add_argument(      '--end'               ,help='Period End',required=False,default=None)
+    charge.add_argument(      '--today'             ,help='Today Only',required=False,default=False,action='store_true')
+    charge.add_argument(      '--yesterday'         ,help='Up to Yesterday',required=False,default=False,action='store_true')
+    charge.add_argument(      '--feedback_function' ,help='feedback_function help',required=False,default=None)
+    charge.add_argument(      '--progress'          ,help='Feedback progress filename',required=False,default=None)
+    charge.add_argument(      '--filename'          ,help='Feedback output filename',required=False,default=None)
+    charge.add_argument(      '--fifo'              ,help='Feedback FIFO filename',required=False,default=None)
+    charge.add_argument(      '--queue'             ,help='Uses Queue for IPC',required=False,default=False,action='store_true')
+    charge.add_argument(      '--feedback-function' ,help='Calculation Function Name',required=False,type=float,default=0.01) # 1.00 %
+    charge.add_argument(      '--feedback-step'     ,help='Feedback step %% (0.00 - 1.00)',required=False,type=float,default=0.01) # 1.00 %
+    charge.add_argument(      '--update'            ,help='Update DB prior report (default=False)',action='store_true',required=False,default=False)
+    charge.add_argument(      '--fast'              ,help='Use fast population algorithm  (default=False)',action='store_true',required=False,default=False)
+    # usage ----------------------------------------------------------
+
+    args = main_parser.parse_args()
+    
+    return args
+
+args = get_args()
 
 if args.verbose==0:
     logger.setLevel(logging.NOTSET)
@@ -1023,17 +753,67 @@ if args.verbose>1:
     for handler in logger.handlers:
         handler.setLevel(logging.DEBUG)
 
+logger.debug(f"logger = {logger}")
+for handler in logger.handlers:
+    logger.debug(f"  handler = {handler}")
+for arg in args.__dict__:
+    logger.debug(f"args.{arg}={getattr(args,arg)}")
+logger.debug(f"db = {db}")
+
+logger.info(f"args.year      = {args.year}")
+logger.info(f"args.month     = {args.month}")
+logger.info(f"args.today     = {args.today}")
+logger.info(f"args.yesterday = {args.yesterday}")
+logger.info(f"args.start     = {args.start}")
+logger.info(f"args.end       = {args.end}")
+if args.month is not None:   # Check for specific month required
+    year=datetime.datetime.now().year if args.year is None else args.year
+    date=f'01-{str(args.month)}-{year}'
+    logger.debug(f"year={year} default date={date}")
+    dt=datetime.datetime.now() if args.month is None else datetime.datetime.strptime(date,'%d-%m-%Y') 
+    args.start,args.end = Get_Period(dt,PERIOD_MONTH)
+elif args.yesterday:         # Check for from start of month up to yesterday report required
+    args.start,args.end = Get_Period(datetime.datetime.now(),PERIOD_YESTERDAY)
+elif args.today:             # Check for today only just up to now report required
+    args.start,args.end = Get_Period(datetime.datetime.now(),PERIOD_DAY)
+elif args.start or args.end: # Check for specific period report required
+    if args.start is None:
+        args.start,end = Get_Period(datetime.datetime.now())
+    else:
+        args.start = datetime.datetime.strptime(args.start,"%Y-%m-%d")
+    if args.end is None:
+        start,args.end = Get_Period(datetime.datetime.now())
+    else:
+        args.end = datetime.datetime.strptime(args.end,"%Y-%m-%d")
+else:                       # Check for from start of month to up to now report required
+    args.start,args.end = Get_Period(datetime.datetime.now(),PERIOD_MONTH)
+    
+logger.debug(f"args={args}")
+logger.info(f"args.start     = {args.start}")
+logger.info(f"args.end       = {args.end}")
+
 if __name__ == "__main__":
+    logger.debug("Enter main ...")
     # Required: Push context to use the global "db" variable
     logger.debug(f"COLLECTOR_CONFIG={os.getenv('COLLECTOR_CONFIG')}")
+    logger.debug(f"config = {config}")
     app     = create_app(os.getenv('COLLECTOR_CONFIG') or 'default')
+    logger.debug(f"app        = {app}")
+    logger.debug(f"app.config = {app.config}")
+    logger.debug(f"db         = {db}")
+
     app_ctx = app.app_context()
+    logger.debug(f"app_ctx    = {app_ctx}")
     app_ctx.push()
+    db.init_app(app)
+    logger.debug(f"app        = {app}")
+    logger.debug(f"db         = {db}")
+    
     cfg = config[os.getenv('COLLECTOR_CONFIG') or 'default']
-    logger.debug(f"cfg={cfg}")
-    logger.debug(f"cfg type={type(cfg)}")
-    logger.debug(f"cfg dir={dir(cfg)}")
-    logger.debug(f"COLLECTOR_CONFIG_FILE={cfg.COLLECTOR_CONFIG_FILE}")
+    logger.debug(f"cfg        = {cfg}")
+    logger.debug(f"cfg type   = {type(cfg)}")
+    logger.debug(f"COLLECTOR_CONFIG_FILE   = {cfg.COLLECTOR_CONFIG_FILE}")
+    logger.debug(f"SQLALCHEMY_DATABASE_URI = {cfg.SQLALCHEMY_DATABASE_URI}")
     parser = configparser.ConfigParser(
             allow_no_value=False,     # don't allow "key" without "="
             delimiters=('=',),        # inifile "=" between key and value
@@ -1043,6 +823,29 @@ if __name__ == "__main__":
             empty_lines_in_values=False  # empty line means new key
             )
     parser.read(cfg.COLLECTOR_CONFIG_FILE)
+    
+    # Time context
+    today = datetime.datetime.now()
+    yesterday = datetime.datetime.now() - datetime.timedelta(1)
+    logger.info(f"yesterday        = {yesterday}")
+    logger.info(f"today            = {today}")
+
+    if today.month == yesterday.month:
+        logger.info(f"estoy en el mismo mes hoy es el dia {today.day} period={PERIOD_DAY}")
+        today_start    ,today_end     = Get_Period(today,PERIOD_DAY)
+        yesterday_start,yesterday_end = Get_Period(today,PERIOD_YESTERDAY)
+        #esterday_end = yesterday.replace(yesterday.year, yesterday.month, yesterday.day, 23, 0, 0, 0)
+        yesterday_suffix = f"{yesterday.year}{yesterday.month}{yesterday.day}"
+        today_suffix     = f"{today.year}{today.month}{today.day}"
+    else:
+        logger.info(f"cambio de mes debo estar en el dia 1={today.day}")
+        today_start    ,today_end     = Get_Period(today,PERIOD_DAY)
+        yesterday_start,yesterday_end = Get_Period(today,PERIOD_YESTERDAY)
+        yesterday_suffix = None
+        today_suffix     = f"{today.year}{today.day}"
+    logger.info(f"yesterday suffix = {yesterday_suffix} {yesterday_start} {yesterday_end}")
+    logger.info(f"today suffix     = {today_suffix} {today_start} {today_end}")
+    
     # Read Configuration
     # Rates
     Rates = {}
@@ -1060,60 +863,60 @@ if __name__ == "__main__":
                 'period'              : str(period).strip().upper(),
                 'is-allways_billeable': True if str(is_allways_billeable).upper() in ['TRUE','VERDADERO','SI','T','V','S'] else False
             }
-            })
+        })
     
-    logger.debug(f"logger={logger}")
+    logger.debug(f"logger     = {logger}")
     db.logger=logger
-    logger.debug(f"db={db} db.logger={db.logger}")
-    try:                  
+    logger.debug(f"db         = {db} db.logger = {db.logger}")
+    try:    
+        db_connection_is_successfull = False              
         try:
             if args.verbose > 0: logger.debug(f"connecting to {db}' ...")
+            cis = db.session.query(Configuration_Items).count()
+            logger.debug(f"cis        = {cis}")
             if args.verbose > 0: logger.info("DB connection successful.")
-            logger.debug(f'args={args}')            
+            db_connection_is_successfull = True              
+            logger.debug(f'args       = {args}')            
+            if db is not None and db_connection_is_successfull:
+                logger.info(f"Getting resume from {args.start} to {args.end}")
+                period = f"{args.start.year}{args.start.month:02d}"
+                cits_table = f"Charge_Items_{period}"
+                logger.debug(f"Period     =  {period}")
+                Charge_Items.set_shard(period)
+                logger.debug(f"CIT        =  {Charge_Items}")
+                logger.debug(f"CIT        =  {Charge_Items.__table__.name}")
+                logger.debug(f"CIT        =  {Charge_Items.__tablename__}")
+                test = db.session.query(Charge_Items).count()
+                logger.info(f"{test} rows in {Charge_Items.__tablename__}")
+                if   args.mode == 'charge':
+                    logger.info(f"Enter 'charge' mode ...")
+                    if   args.function == 'standard':
+                        args.fast = False
+                    elif args.function == 'fast':
+                        args.fast = True
+                    logger.info(f"Setting '{args.mode}-{args.function}' mode ...")
+                    
+                    Get_Charging_Resume(args=args)
+                    Report_Charging_Resume(args)
+                elif args.mode == 'usage':
+                    logger.info(f"Enter 'usage' mode ...")
+                    usage = db.Get_Period_Usage(customer_id=args.customer,rates=Rates)
+                    templateLoader = jinja2.FileSystemLoader(searchpath="./")
+                    templateEnv = jinja2.Environment(loader=templateLoader)
+                    TEMPLATE_FILE = "get_period_usage.html"
+                    template = templateEnv.get_template(TEMPLATE_FILE)
+                    html = template.render(data=usage)  
+                    with open('usage.html','w') as fp:
+                        fp.write(html)
+                else:
+                    logger.error("Unimplemented mode: %s"%args.mode)
+            else:
+                logger.error("DB session couldn't be open. Connection unsuccessful.")
         except Exception as e:
             logger.error(str(e))
-            logger.warning("WARNING: DB connection unsuccessful.")
-        if db is not None:
-            logger.info(f"Getting resume from {args.start} to {args.end}")
-            period = f"{args.start.year}{args.start.month:02d}"
-            cits_table = f"Charge_Items_{period}"
-            logger.debug(f"Period =  {period}")
-            Charge_Items.set_shard(period)
-            logger.debug(f"CIT  =  {Charge_Items}")
-            logger.debug(f"CIT  =  {Charge_Items.__table__.name}")
-            logger.debug(f"CIT  =  {Charge_Items.__tablename__}")
-            test = db.session.query(Charge_Items).count()
-            logger.info(f"{test} rows in {Charge_Items.__tablename__}")
-            if   args.mode == 'customer':
-                logger.info(f"Enter 'customer' mode ...")
-                Get_Charging_Resume(args)
-                Report_Charging_Resume(args)
-            elif args.mode == 'cost-center':
-                logger.info(f"Enter 'cost-center' mode ...")
-                Get_Charging_Resume(args)
-                Report_Charging_Resume(args)
-            elif args.mode == 'usage':
-                logger.info(f"Enter 'usage' mode ...")
-                usage = db.Get_Period_Usage(customer_id=args.customer_id,rates=Rates)
-                # render template from memory
-                #tm = jinja2.Environment().from_string(usage_template)
-                #html = tm.render(data=usage)
-                # rendering Template from File System
-                templateLoader = jinja2.FileSystemLoader(searchpath="./")
-                templateEnv = jinja2.Environment(loader=templateLoader)
-                TEMPLATE_FILE = "get_period_usage.html"
-                template = templateEnv.get_template(TEMPLATE_FILE)
-                html = template.render(data=usage)  
 
-                with open('usage.html','w') as fp:
-                    fp.write(html)
-            else:
-                logger.error("Unimplemented mode: %s"%args.mode)
-        else:
-            logger.error("DB session couldn't be open.")
     except Exception as e:
         logger.error("EXCEPTION: ",str(e))
         raise e
     logger.info("Execution completed.")
     
-
