@@ -321,11 +321,167 @@ def report_Charging_Resume():
         return f"{this()}: Exception:  {str(e)}"
 
 
+# ======================================================================
+# Progress bar Beta implementation
+# Support routines
+# Calculates progress data 
+# and returns progress data as a JSON formated string
+@main.route('/get-progress')
+def get_progress(value,maximum,start=None,message=None,precision=3,expected_format=None,filename=None,previous=0,step=1,logger=None,level=logging.WARNING):
+    try:
+        if logger is None:
+            logger = logging('get_process')
+        logger_level = logger.getEffectiveLevel()
+        logger.setLevel(level)
+        #print(f"pget-progress: logger={logger} {id(logger)} pre={logger_level}")
+        logger.debug(f"get progress IN value:{value} maximum:{maximum} start:{start} message:{message} precision:{precision} expected_format:{expected_format} filename:{filename} previous:{previous} step:{step}")
+        nowts      = datetime.datetime.now().timestamp()                      # actual time timestamp
+        progress   = value/maximum if maximum != 0 else 0                     # % of progress
+        elapsed    = nowts - start                                            # seconds elapsed since start
+        remaining  = (elapsed * (1-progress))/progress if progress !=0 else 0 # seconds remining for completion
+        remaining  = remaining
+        eta        = nowts + remaining
+        if expected_format is None:
+            expected = datetime.datetime.fromtimestamp(
+                            eta).strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]
+        else:
+            expected = datetime.datetime.fromtimestamp(
+                            eta).strftime(expected_format)
+        data={
+            'value'    : value,                                             # Actual progress discrete value
+            'max'      : maximum,                                           # Actual maximum discrete value (100%)
+            'start'    : start,                                             # Process init time (loop time)
+            'elapsed'  : round(elapsed,precision),                          # Seconds elapsed since loop init
+            'remaining': round(remaining,precision),                        # Remaining seconds to loop complete (estimate)
+            'message'  : message,                                           # Actual message to be returned
+            'progress' : progress,                                          # Progress in % (0.0-1.0)
+            'percent'  : round(progress*100,2),                             # Progress in % (0.00%-100.00%)
+            'eta'      : eta,                                               # ETA for loop completion (estimate)
+            'expected' : expected,                                          # ETA human readable
+            'previous' : previous,                                          # Previous displayed value
+            'step'     : step,                                              # Display % step
+        }
+        if message is None:
+            message = f"progress={progress*100:.3f}%"
+        else:
+            message = message.format(**data)
+        data.update({'message':message})
+        output = json.dumps(data)
+        delta = data.get('percent') - previous
+        logger.debug(f"percent={data.get('percent')} previous={previous} delta={delta} step={step} {delta>step}")
+        
+        if previous == 0 or delta > step or data.get('percent')==100:
+            if filename is not None:
+                data['previous'] = data.get("percent")       # Reported % will become previous 
+                output = json.dumps(data)
+                with open(filename,"w") as fp:
+                    logger.info(f"{os.getppid()}->{os.getpid()} writing: {data.get('message')}")
+                    #print         (f"   pwriting: {data.get('message')}")
+                    fp.write(output)
+    except Exception as e:
+        if logger:            
+            logger.error(f"get_progress: {str(e)}")
+        else:
+            sys.stderr.write(f"get_progress: {str(e)}\n")
+        output="{}"
+    if logger:
+        logger.setLevel(logger_level)
+    return output
+    
+@main.route('/read-progress',methods=['GET'])
+def read_progress():
+    ''' Reads progress data from cache file in file system 
+        and returns it as a JSON string
+    '''
+    progress_filename = request.args.get('filename',None)
+    progress_fifo     = request.args.get('fifo',None)
+    progress_queue    = request.args.get('queue',0,type=int)
+    data={}
+    if progress_filename:
+        try:
+            logger.debug(f"will read file: '{progress_filename}' ...")
+            with open(progress_filename,'r') as fp:
+                read_bytes = fp.read(1024*1024)
+                logger.debug(f"{this()}: read bytes = {len(read_bytes)} bytes")
+                data = json.loads(read_bytes.encode())
+        except Exception as e:
+            emtec_handle_general_exception(e,logger=logger)
+            data={}
+    elif progress_fifo:
+        try:
+            logger.warning(f"will read fifo: '{progress_fifo}' ...")
+            ffh = os.open(progress_fifo,os.O_RDONLY|os.O_NONBLOCK)
+            if ffh:
+                read_bytes = os.read(ffh,1024*1024)
+                logger.warning(f"{this()}: read bytes = {len(read_bytes)} bytes")
+                if len(read_bytes) == 0:
+                    data={} # data will be empty 
+                else:
+                    lines=read_bytes.encode().split('\n')
+                    logger.warning(f"{this()}: lines = {len(lines)}")
+                    for line in lines:
+                        data = json.loads(line) # data will have last line read only
+                os.close(ffh)
+                logger.warning(f"{this()}: fifo fh {ffh} closed.")
+            '''
+            with open(progress_filename,'r') as fifo:
+                lines = fifo.read()
+                if len(lines) == 0:
+                    data={} # data will be empty 
+                else:
+                    lines=lines.split('\n')
+                    for line in lines:
+                        data = json.loads(line) # data will have last line read only
+            '''
+        except Exception as e:
+            emtec_handle_general_exception(e,logger=logger)
+            data={}        
+    elif progress_queue:
+        logger.warning(f"{this()}: Queue code not implemented queue={queue}... skipping ...")
+        if False:
+            try:
+                item = q.get(block=False)
+                status = f"{this()}: OK queue is empty"
+            #except queue.exc.Empty:
+            #    status = f"{this()}: OK queue is empty"
+            except Exception as e:
+                status = f"{this()}: ERROR exception: {str(e)}"
+                emtec_handle_general_exception(e,logger=logger)
+                data={}
+    return json.dumps(data)
+        
+@main.route('/clean-progress',methods=['GET'])
+def clean_progress():
+    ''' Deletes/cleans up progress data from server
+    '''
+    status = f"{this()}: UNKNOWN"
+    progress_filename = request.args.get('filename',None)
+    progress_queue_id = request.args.get('queue',0,type=int)
+    if progress_filename:
+        try:
+            os.remove(filename)
+            status = f"{this()}: OK"
+        except Exception as e:
+            status = f"{this()}: exception: {str(e)}"
+    if progress_queue:
+        try:
+            progress_queue = object(progress_queue_id)
+            while not progress_queue.empty():
+                item = q.get(block=False)
+            status = f"{this()}: OK queue is empty"
+        except queue.exc.Empty:
+            status = f"{this()}: OK queue is empty"
+        except Exception as e:
+            status = f"{this()}: ERROR exception: {str(e)}"
+            emtec_handle_general_exception(e,logger=logger)
+    return status
+
+
 #main.route('/internal/Charging_Resume_Update', methods=['GET','POST'])
 def report_Charging_Resume_Update(kwargs):
-    logger.warning(f".................................................")
-    logger.warning(f"{this()}: kwargs = {kwargs}")
-    logger.warning(f".................................................")
+    logger.debug(f".................................................")
+    logger.debug(f"{this()}: kwargs = {kwargs}")
+    logger.debug(f".................................................")
     try:
         app_ctx          = kwargs.get('app_ctx')
         db               = kwargs.get('db')
@@ -344,6 +500,7 @@ def report_Charging_Resume_Update(kwargs):
         filename         = kwargs.get('filename')
         mode             = kwargs.get('mode')
         progress         = kwargs.get('progress')
+        fifo             = kwargs.get('fifo')
         verbose          = kwargs.get('verbose')
         logger.debug(f"{this()}: current_user = {current_user}")
         logger.debug(f"{this()}: db           = {db}")
@@ -388,10 +545,12 @@ def report_Charging_Resume_Update(kwargs):
             ci_list,             # <-- Lista de CIs Requeridos          
             charge_item,
             User_Id,              # 20211212 GV was current_user.id
-            fast=False,
+            fast=True,
             callback=display_advance,
             filename=filename,
             progress=progress,
+            fifo=fifo,
+            fmt='json',
             verbose=verbose
             )
         logger.info(f"{this()}: Updated {records:,.0f} records")
@@ -476,6 +635,13 @@ def report_Charging_Resume_Progress():
     filename         =  os.path.join(temp_dir,f'{this()}.out')
     mode             =  'a'
     progress         =  os.path.join(temp_dir,f'{this()}.advance')
+    fifo             =  os.path.join(temp_dir,f'{this()}.fifo')
+    try:
+        os.mkfifo(fifo)
+        logger.info(f"named pipe '{fifo}' created ...")
+    except FileExistsError:
+        # the file already exists
+        logger.info(f"named pipe '{fifo}' already exists while starting ...")
     verbose          =  1
     multimode        =  'fork'   # or thread
     multimode        =  'thread' # or fork
@@ -504,6 +670,8 @@ def report_Charging_Resume_Progress():
         'filename'         :  filename, # callback arguments
         'mode'             :  mode, # callback arguments
         'progress'         :  progress, # callback arguments
+        'fifo'             :  fifo, # callback arguments
+        'queue'            :  None, # callback arguments should be Queue id if any
         'verbose'          :  verbose,  # callback arguments
     }
     logger.warning(f"{this()}: kwargs={kwargs}")
@@ -514,6 +682,15 @@ def report_Charging_Resume_Progress():
         except Exception as e:
             msg = f"{this()}: DB Flush exception: {str(e)}"
             logger.warning(msg)
+
+        data = {
+            'host'    : 'localhost',
+            'maximum' : 100,
+            'filename': progress,
+            'fifo'    : fifo,
+            'percent' : 0,
+            'value'   : 0,
+        }
         if multimode == 'fork':
             # Aqui el fork no esta funcionando muy bien probar threads ....
             pid = os.fork()
@@ -550,6 +727,7 @@ def report_Charging_Resume_Progress():
                                 filter_code      = Cus_Id,
                                 filename         = filename,
                                 progress         = progress,
+                                data             = data         # Temporary for progress bar functions/views
                                 )
                 except Exception as e:
                     msg = f"{this()}: Exception:  {str(e)}"
@@ -557,7 +735,7 @@ def report_Charging_Resume_Progress():
                     return msg
         elif multimode == 'thread':            
                 try:
-                    logger.warning(f"{this()}: Initiating Thread Update={Update} filename={filename} progress={progress}")
+                    logger.warning(f"{this()}: Initiating Thread Update={Update} filename={filename} progress={progress} fifo={fifo}")
                     threading.Thread(
                         target=report_Charging_Resume_Update,
                         args=(kwargs,)
@@ -577,6 +755,7 @@ def report_Charging_Resume_Progress():
                                 filter_code      = Cus_Id,
                                 filename         = filename,
                                 progress         = progress,
+                                data             = data
                                 )
                 except Exception as e:
                     emtec_handle_general_exception(e,logger=logger)

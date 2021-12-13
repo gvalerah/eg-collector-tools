@@ -199,7 +199,7 @@ Configuration Items : <b>{{"{:,d}".format(count_CI.0)}}</b>
 Resume Records : <b>{{"{:,d}".format(count_REC.0)}}</b>
 Charge Pool Records: <b>{{"{:,d}".format(count_CIT.0)}}</b>
 <hr>
-<b>{{collectordata.COLLECTOR_PERIOD.current}}|{{collectordata.COLLECTOR_PERIOD.active}}|{{collectordata.COLLECTOR_PERIOD.available}}|{{collectordata.COLLECTOR_PERIOD.start}}|{{collectordata.COLLECTOR_PERIOD.end}}</b><br>
+<b>{{collectordata.COLLECTOR_PERIOD.current}}|{{collectordata.COLLECTOR_PERIOD.active}}|{{collectordata.COLLECTOR_PERIOD.available|replace(',',' ')}}|{{collectordata.COLLECTOR_PERIOD.start}}|{{collectordata.COLLECTOR_PERIOD.end}}</b><br>
 {% endblock %}
 
 {# ============================================================================= #}
