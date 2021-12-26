@@ -1,0 +1,54 @@
+#!/bin/bash
+source colors.sh
+HOME=/home/gvalera
+GIT=${HOME}/GIT
+COLLECTOR=${GIT}/EG-Collector
+TOOLS=${COLLECTOR}-Tools
+HEIGHT=30
+WIDTH=70
+CHOICE_HEIGHT=25
+BACKTITLE="Emtec Group Collector"
+TITLE="Developer's Menu - Collector (${TOOLS})"
+MENU="Choose one of the folowing options:"
+OPTIONS=(   
+            2 "Generate Source Code" 
+            1 "GITLab Pull"
+            a "GitLab Push"
+            s "SQL Tools Menu"
+            q "Quit"
+        )
+while true;
+do
+    CHOICE=$(   dialog --clear \
+                --backtitle "$BACKTITLE" \
+                --title "$TITLE" \
+                --menu "$MENU" \
+                $HEIGHT $WIDTH $CHOICE_HEIGHT \
+                "${OPTIONS[@]}" \
+                2>&1 > /dev/tty)
+    clear
+    case $CHOICE in
+        1)
+            git pull origin master
+            ;;
+        2)
+            cd ${TOOLS}
+            make
+            ;;
+        a)
+            timestamp=$(date +%Y%m%d-%H%M)
+            git add .
+            git commit -m "Update ${timestamp}"
+            git push origin master
+            ;;
+        s)
+            cd ${COLLECTOR}/sql
+            ./menu
+            ;;
+        q)
+            exit 0
+    esac
+    echo 
+    echo -e ${bold}${yellow}"Pulse una tecla para continuar ..."${normal}
+    read
+done

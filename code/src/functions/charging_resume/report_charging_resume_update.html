@@ -19,24 +19,16 @@
     {#
     <script type="text/javascript">    
       $(document).ready(function(){    
-           var progressBarVal=80;    
-           var html="<div class='progress-bar progress-bar-striped active' role='progressbar' aria-valuenow="+progressBarVal+" aria-valuemin='0' aria-valuemax='100' style='width:"+progressBarVal+"%'>"
-           +progressBarVal+
-           "%</div>";    
-           $(".progress").append(html);    
-          });    
-    </script>
-    #}    
-    <script type="text/javascript">    
-      $(document).ready(function(){    
            var html="<div class='progress-bar progress-bar-striped active' role='progressbar' aria-valuenow=0 aria-valuemin='0' aria-valuemax='100' style='width:0%'>0%</div>";    
            $(".progress").append(html);    
           });    
     </script>
+    #}
 {% endblock %}
 
     
 {% block page_content %}
+
     {% set prev_CC = ['***'] -%}
     {% set prev_CC_ID = [-1] -%}
     {% set prev_CI = ['***'] -%}
@@ -58,6 +50,9 @@
                 {%- if CC_Description is defined and CC_Description is not none %}
                 <tr><td>Cost Center</td><td> : </td><td>{{CC_Description}}</td></tr>
                 {%- endif %} 
+                {%- if Pla_Name is defined and Pla_Name is not none %}
+                <tr><td>Platform</td><td> : </td><td>{{Pla_Name}}</td></tr>
+                {%- endif %} 
                 <tr><td>Report From</td><td> : </td><td>{{CIT_Date_From}}</td></tr>
                 <tr><td>Report To  </td><td> : </td><td>{{CIT_Date_To}}</td></tr>
                 <tr><td>Status     </td><td> : </td><td>{{CIT_Status_Value}}</td></tr>
@@ -65,198 +60,139 @@
             </table>
         
             <a href="#" onclick="history.go(-1)"><img src="/static/img/back.png"  color=yellow width="32" height="32" title="" alt="Add"></a>
-            <a href="/download/Charging_Resume?Cus_Id={{Cus_Id}}&CIT_Date_From={{CIT_Date_From}}&CIT_Date_To={{CIT_Date_To}}&CIT_Status={{CIT_Status}}&Cur_Code={{Cur_Code}}&filter_type={{filter_type}}&filter_code={{filter_code}}"> 
-                <img src="/static/img/download.png"
-                color=yellow width="32" height="32" title="" alt="Download">
-            </a>
 
         </div>
         <hr>
-<hr>
-<p>Progress bar goes here and this will wait until update process completes</p>
-<p>When that happens bar code need to render report without update as usual</p>
-<p>data = {{data}}</p>
-<hr>
-
-<!-- BASIC PROGRESS BAR SAMPLE ------------------------------------- -->
-<table border=1 width=50% align=center>
-    <tr><td>Progress bar code goes here, within html template, on completion needs to trigger proper report (render final output)</td></tr>
-    <tr><td><input type="text" id="input1" name="input1" value="reading from: {{data.filename}}" width=100%></td></tr>
-    <tr><td><input type="text" id="input2" name="input2" value="input 2" width=100%></td></tr>
-    <tr><td><h2>Basic Progress Bar</h2></td></tr>
-    <!--tr><td>
-        <div class="container" width=50%>
-          <div class="progress">
-            <div    class="progress-bar progress-bar-striped active" 
-                    role="progressbar" 
-                    aria-valuenow="0" 
-                    aria-valuemin="0" 
-                    aria-valuemax="100" 
-                    style="width: 90%; height: 128px;">
-              0%
+    <!-- BASIC PROGRESS BAR SAMPLE ------------------------------------- -->
+    <table border=0 width=100% align=center>
+        <tr><td><h2><b><input class="form-control-plaintext" id="barTitle" name="barTitle" type="text" value="Calculo de uso a la fecha" style="color:red" align="center"></b></h2></td></tr>
+        <!-- STRIPPED PROGRESS BAR SAMPLE ---------------------------------- -->
+        <tr><td>
+        <div class="m-4" width=100%>
+            <!-- Progress bar HTML -->
+            <div class="progress" style="height: 32px">
+                <div class="progress-bar progress-bar-striped progress-bar-animated" style="min-width: 50px;"></div>
             </div>
-          </div>
-        </div>
-    
-    </td></tr -->
 
+            <!-- jQuery Script -->
+            <script>
+                var minimum = 0;
+                var maximum = 0;
+                var counter = 0;
+                var percent = 0;
+                var previo  = -1;
+                var value   = 0;
+                var elapsed = 0;
+                var message = "";
+                var remaining = 0;
+                var timeout = 1000;
+                var URL =   window.location.protocol + "//" + 
+                            window.location.hostname + ":"  + 
+                            window.location.port;
+                // builds progress advance get URL
+                var url =   URL + "/read-progress?ipc_mode={{data.mode}}&ipc_id={{data.id}}";
+                // builds progress advance clean URL
+                var urlclean =   URL + "/clean-progress?ipc_mode={{data.mode}}&ipc_id={{data.id}}";
+                // set a one second sleep prior execution ....
+                var query = window.location.search;
+                
+                arguments = query.split("&");
+                
+                new_arguments = [];
+                
+                for (let argument of arguments){
+                    arg = argument.split("=");
+                    if (arg[0] == "Update"){ arg[1] = 0 }
+                    new_arguments.push(arg[0]+"="+arg[1])
+                };
+                
+                new_arguments = new_arguments.join("&")
+                // aqui probablemente se deba hacer condicional el puerto
+                newurl =    URL + window.location.pathname + new_arguments;
+                
+                timeout = 1000
+                setTimeout(function(){ console.log('waiting'); }, timeout);
 
-<!--  Get any piece of the url you're interested in
-url.hostname;  //  'example.com'
-url.port;      //  12345
-url.search;    //  '?startIndex=1&pageSize=10'
-url.pathname;  //  '/blog/foo/bar'
-url.protocol;  //  'http:'
-Bonus: Search params
-Chances are you'll probably want to break apart the search url params as
-well, since '?startIndex=1&pageSize=10' isn't too useable on its own.
-If you used Method 1 (URL API) above, you simply use the searchParams getters:
-
-url.searchParams.get('startIndex');  // '1'
-Or to get all parameters:
-
-function searchParamsToObj(searchParams) {
-  const paramsMap = Array
-    .from(url.searchParams)
-    .reduce((params, [key, val]) => params.set(key, val), new Map());
-  return Object.fromEntries(paramsMap);
-}
-searchParamsToObj(url.searchParams);
-// -> { startIndex: '1', pageSize: '10' }
--->
-
-<!-- STRIPPED PROGRESS BAR SAMPLE ---------------------------------- -->
-<tr><td>
-<div class="m-4" width=50%>
-    <!-- Progress bar HTML -->
-    <div class="progress">
-        <div class="progress-bar progress-bar-striped" style="min-width: 50px;"></div>
-    </div>
-
-    <!-- jQuery Script -->
-    <script>
-        var minimum = 0;
-        var maximum = 0;
-        var counter = 0;
-        var percent = 0;
-        var previo  = -1;
-        var value   = 0;
-        var elapsed = 0;
-        var message = "";
-        //var url = window.location.protocol + "//" + window.location.hostname + ":" + window.location.port + "/read-progress?filename={{data.filename}}";
-        var url =   window.location.protocol + "//" + 
-                    window.location.hostname + ":"  + 
-                    window.location.port            + 
-                    "/read-progress?filename={{data.filename}}";
-        //           "/read-progress?fifo={{data.fifo}}";
-        // set a one second sleep prior execution ....
-        var query = window.location.search;
-        //alert('query = ' + query);
-        
-        arguments = query.split("&");
-        //alert('arguments = ' + arguments);
-        
-        //alert('arguments.length = ' + arguments.length);
-        
-        new_arguments = [];
-        //alert('new arguments = ' + new_arguments);
-        
-        for (let argument of arguments){
-            //alert('argument = ' + argument);
-            arg = argument.split("=");
-            //alert('arg = ' + arg + " len= " + arg.length)
-            if (arg[0] == "Update"){ arg[1] = 0 }
-            new_arguments.push(arg[0]+"="+arg[1])
-        };
-        
-        new_arguments = new_arguments.join("&")
-        // aqui probablemente se deba hacer condicional el puerto
-        newurl =    window.location.protocol + "//" + 
-                    window.location.hostname + ":"  + 
-                    window.location.port     + 
-                    window.location.pathname + 
-                    new_arguments;
-        //alert('new url = ' + newurl)
-        
-        setTimeout(function(){ console.log('waiting'); }, 1000);
-        //alert('url = ' + url + 'max = ' + max);
-
-        console.log('url = ' + url)
-        console.log('new url = ' + newurl)
-
-        function makeProgress(){
-            console.log('1 in makeProgress percent = ' + percent + ' url = ' + url)
-            if(percent <= 100){
-                // get remote progress data here
-                try {
-                    $.getJSON( url, function( progress ) {
-                        //console.log('progress from fifo JSON =' + JSON.stringify(progress))
-                        //console.log('progress from fifo = value=' + progress.value +  " message=" + progress.message)
-                        if (progress.advance != null) {
-                            /*
-                            console.log('progress.advance = ' + progress.percent)
-                            console.log('progress from fifo = value=' + progress.value +  " message=" + progress.message)
-                            console.log('progress.advance = ' + progress.advance)
-                            console.log('progress.value   = ' + progress.value)
-                            console.log('progress.maximum = ' + progress.maximum)
-                            console.log('progress.message = ' + progress.message)
-                            */
-                            //percent = progress.advance*100;
-                            percent = progress.percent;
-                            value   = progress.value;
-                            maximum = progress.maximum;
-                            message = progress.message;
-                            /*
-                            var items = [];
-                            $.each( progress, function( key, val ) {
-                            items.push( "<li id='" + key + "'>" + key + ' = '+ val + "</li>" );
+                console.log('url = ' + url);
+                console.log('url clean = ' + urlclean);
+                console.log('new url = ' + newurl);
+                var calls = 0
+                var fulls = 0
+                var empty = 0
+                function makeProgress(){
+                    console.log('makeProgress({{data.mode}}:{{data.id}}) percent = ' + percent + '%');
+                    calls = calls + 1;
+                    if(percent <= 100){
+                        // get remote progress data here
+                        try {
+                            $.getJSON( url, function( progress ) {
+                                if (progress.advance != null) {
+                                    percent = progress.percent;
+                                    value   = progress.value;
+                                    maximum = progress.maximum;
+                                    message = progress.message;
+                                    remaining = progress.remaining_seconds;
+                                    fulls = fulls + 1;
+                                    //console.log('read from {{data.mode}}:{{data.id}} <= ' + percent + '%');
+                                }
+                                
+                                else {
+                                    empty = empty + 1;
+                                    //console.log('No data from remote server available');
+                                    //console.log('No data from remote server available');
+                                }
+                                
                             });
-                            $( "<ul/>", {
-                            "class": "my-new-list",
-                            html: items.join( "" )
-                            }).appendTo( "body" );
-                            */
+                        }
+                        catch (error) {
+                            console.log('se capturo un error ...');
+                            console.error(error);
+                        }
+                        if (percent != previo){
+                            console.log('Change !!! read from {{data.mode}}:{{data.id}} <= ' + percent + '%');
+                            timeout = 100;
+                            previo = percent;
+                            $("#barTitle").val(message+' ('+remaining.toFixed(0)+' secs to complete) ...');
+                            $(".progress-bar").css("width", percent + "%").text(percent.toFixed(2) + "%");
+                            $(".progress-bar").attr("arie-valuenow", value );
+                            $(".progress-bar").attr("arie-valuemax", maximum );
+                            if (percent >= 100){
+                                try {
+                                    console.log('eliminando server data ...');
+                                    $.getJSON( urlclean, function( data ) {
+                                        if (data.status != null) {
+                                            console.log(data.status);
+                                        }
+                                        else {
+                                            console.log('No data from remote server clean fuunction');
+                                        }
+                                    });
+                                }
+                                catch (error) {
+                                    console.log('se capturo un error mientras se eliminaba data remota...');
+                                    console.error(error);
+                                }
+
+                                console.log('stats: fulls + empty = ' + fulls + ' + ' + empty + ' = ' + calls +' calls');
+                                console.log(percent + '% procesado. El proceso continuará ...');
+                                // Aqui se redirecciona a la consulta sin update
+                                console.log('will redirect to newurl = ' + newurl);
+                                window.location.replace(newurl);
+                            };
                         }
                         else {
-                            console.log('No data from remote server available')
+                            timeout = 1000;
                         }
-                    });
-                }
-                catch (error) {
-                    console.log('se capturo un error ...')
-                    console.error(error);
-                }
-                //percent = percent.toFixed(2);
-                //lert('2 in makeProgress percent = ' + percent)
-                //$(".progress-bar").aria-valuenow(value);
-                //$(".progress-bar").aria-valuemax(maximum);
-                if (percent != previo){
-                    $(".progress-bar").css("width", percent + "%").text( elapsed + "  " + percent + "% completado (" + value + "/" + maximum + ") " + message);
-                    if (percent >= 100){
-                        console.log(percent + '% procesado. El proceso continuará ...')
-                        // Aqui se redirecciona a la consulta sin update
-                        // para mostrar datos finales
-                        // debe construir el URL a partir del URL inicial excepto que sin Update !!!!
-                        console.log('will redirect to newurl = ' + newurl)
-                        window.location.replace(newurl);
                     };
-                    previo = percent;
+                    setTimeout("makeProgress()", timeout);
                 };
-            };
-            elapsed = elapsed + 1;
-            setTimeout("makeProgress()", 1000);
-        };
-        
-        //alert('will call makeProgress()')
-        makeProgress();
-    </script>
-</div>
-</td></tr>
-</table>
-
-
-<hr>
-<b>{{collectordata.COLLECTOR_PERIOD.current}}|{{collectordata.COLLECTOR_PERIOD.active}}|{{collectordata.COLLECTOR_PERIOD.available|replace(',',' ')}}|{{collectordata.COLLECTOR_PERIOD.start}}|{{collectordata.COLLECTOR_PERIOD.end}}</b><br>
+                
+                makeProgress();
+            </script>
+        </div>
+        </td></tr>
+    </table>
+    <hr>
+    <b>{{collectordata.COLLECTOR_PERIOD.current}}|{{collectordata.COLLECTOR_PERIOD.active}}|{{collectordata.COLLECTOR_PERIOD.available|replace(',',' ')}}|{{collectordata.COLLECTOR_PERIOD.start}}|{{collectordata.COLLECTOR_PERIOD.end}}</b><br>
 {% endblock %}
 
-{# ============================================================================= #}

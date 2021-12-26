@@ -114,21 +114,28 @@ def forms_Export_Charging_Resume():
         platform_choices.append((platform.Pla_Id,platform.Pla_Name))
 
     form.Export.choices   = export_choices
-    form.CC.choices       = cc_choices
-    form.Platform.choices = platform_choices
-    
+    # Este codigo es temporal rebe reinstalarse al arrglar los filtros 
+    try:
+        form.CC.choices       = cc_choices
+        form.Platform.choices = platform_choices
+    except:
+        pass
+    # hasta aqui el omitido 
     if form.validate_on_submit():
 
         data=form.Export.data.split("_")
 
         if     form.submit_PDF.data:
             CC_Name=Pla_Name=''
-            for cc,name in form.CC.choices:
-                if cc == form.CC.data:
-                    CC_Name=name
-            for pla,name in form.Platform.choices:
-                if platform == form.Platform.data:
-                    Pla_Name=name
+            try: # codigo de ignorar ...................................
+                for cc,name in form.CC.choices:
+                    if cc == form.CC.data:
+                        CC_Name=name
+                for pla,name in form.Platform.choices:
+                    if platform == form.Platform.data:
+                        Pla_Name=name
+            except:
+                pass # hata aqui .......................................
             return redirect(url_for('.export_Charging_Resume',
                                 User_Id         = current_user.id,
                                 Cus_Id          = data[1],

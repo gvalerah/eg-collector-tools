@@ -6,6 +6,8 @@ from sqlalchemy     import func
 from flask          import render_template, session, redirect, url_for, current_app, flash
 from flask          import request
 from flask          import Markup
+from flask          import current_app
+#rom flask          import current_process
 from flask_login    import login_required
 from flask_login    import current_user
 #from ..email import send_email
@@ -111,7 +113,7 @@ def collector_about():
 def add_header(r):
     """
     Add headers to both force latest IE rendering engine or Chrome Frame,
-    and also to cache the rendered page for 10 minuyes.
+    and also to cache the rendered page for 10 minutes.
     """
     r.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
     r.headers["Pragma"] = "no-cache"
@@ -130,18 +132,30 @@ def get_collectordata():
     # Here we'll include al important Collector context data 
     collectordata.update({"COLLECTOR_PERIOD":get_period_data(current_user.id,db.engine,Interface)})
     collectordata.update({"CONFIG":current_app.config})
-    suffix = collectordata['COLLECTOR_PERIOD']['active']
-    dt = datetime.strptime(suffix,"%Y%m")
+    active_period = collectordata['COLLECTOR_PERIOD']['active']
+    dt = datetime.strptime(active_period,"%Y%m")
     start,end = Get_Period(dt,PERIOD_MONTH)
     collectordata['COLLECTOR_PERIOD'].update({'start':start,'end':end})
-    logger.debug(f"{this()}: dt: {dt} suffix={suffix}") 
+    logger.debug(f"{this()}: dt: {dt} active_period={active_period}") 
     logger.debug(f"{this()}: COLLECTOR_PERIOD={collectordata['COLLECTOR_PERIOD']}") 
     
     sharding = False
-    # Here we'll include sharding required code
+    # GV Here we'll include sharding required code
     if 'COLLECTOR_CIT_SHARDING' in current_app.config: 
         sharding = current_app.config['COLLECTOR_CIT_SHARDING']
     if sharding:
+        # GV Get customer id, just in case is needed
+        customer = current_user.cost_center.Cus_Id
+        cus_sharding = current_app.config.get('COLLECTOR_CUS_SHARDING') if current_app.config.get('COLLECTOR_CUS_SHARDING') else None
+        # GV If required customer sharding then affect suffix
+        if cus_sharding:
+            cus_sharding = True if cus_sharding.upper() in ['TRUE','T','YES','Y','VERDADERO','V'] else False
+        if cus_sharding:
+            suffix = f"{customer}{active_period}"
+        else:
+            # Use default non tenant suffix 
+            suffix = active_period  
+        # GV Nedd to check if sharded table exists, if not should be created
         charge_item.set_shard(suffix)
         flash(                 f"Using shardened table: {charge_item.__table__.name}") 
         logger.debug(f"{this()}: Using shardened table: {charge_item.__table__.name}") 

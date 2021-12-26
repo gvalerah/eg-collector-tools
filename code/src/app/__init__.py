@@ -18,6 +18,7 @@ from flask_login                        import login_user
 from flask_login                        import logout_user
 from flask_login                        import login_required
 from flask_login                        import current_user
+from flask                              import current_app
 
 from    emtec.common.functions              import *
 #from    emtec.collector.common.functions    import *

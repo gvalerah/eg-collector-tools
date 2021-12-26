@@ -7,8 +7,8 @@
 # =============================================================================
 class frm_export_Charging_Resume(Form):
     Export          = SelectField ("Export?", validators=[Required()])
-    CC              = SelectField ("CC Filter?",coerce=str)
-    Platform        = SelectField ("Platform Filter?",coerce=int)
+    #CC              = SelectField ("CC Filter?",coerce=str)
+    #Platform        = SelectField ("Platform Filter?",coerce=int)
 
     submit_PDF      = SubmitField ('PDF')
     submit_XLS      = SubmitField ('XLS')

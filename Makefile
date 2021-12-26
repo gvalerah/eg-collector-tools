@@ -21,14 +21,12 @@ SUITE_TOOLS_FOLDER=/home/gvalera/GIT/EG-Suite-Tools
 SUITE_AUTO_TEMPLATES=${SUITE_AUTO_FOLDER}/templates
  SUITE_AUTO_INCLUDES=${SUITE_AUTO_FOLDER}/includes
 
-       COLLECTOR_TOOLS_FOLDER=/home/gvalera/GIT/EG-Collector-Tools
-        COLLECTOR_CODE_FOLDER=${COLLECTOR_TOOLS_FOLDER}/code
-           COLLECTOR_CODE_SRC=${COLLECTOR_CODE_FOLDER}/src
-        COLLECTOR_CODE_COMMON=${COLLECTOR_CODE_SRC}/common
-        COLLECTOR_CODE_OUTPUT=${COLLECTOR_CODE_FOLDER}/output
-          COLLECTOR_CODE_AUTO=${COLLECTOR_CODE_FOLDER}/auto
-#COLLECTOR_CODE_AUTO_TEMPLATES=${COLLECTOR_CODE_AUTO}/templates
-#COLLECTOR_CODE_AUTO_TEMPLATES=${SUITE_AUTO_TEMPLATES}
+COLLECTOR_TOOLS_FOLDER=/home/gvalera/GIT/EG-Collector-Tools
+ COLLECTOR_CODE_FOLDER=${COLLECTOR_TOOLS_FOLDER}/code
+    COLLECTOR_CODE_SRC=${COLLECTOR_CODE_FOLDER}/src
+ COLLECTOR_CODE_COMMON=${COLLECTOR_CODE_SRC}/common
+ COLLECTOR_CODE_OUTPUT=${COLLECTOR_CODE_FOLDER}/output
+   COLLECTOR_CODE_AUTO=${COLLECTOR_CODE_FOLDER}/auto
 
 # Emtec Library updates for Collector App
            LIB_EMTEC=/home/gvalera/GIT/eg-libraries/emtec/src/emtec
@@ -37,7 +35,6 @@ SUITE_AUTO_TEMPLATES=${SUITE_AUTO_FOLDER}/templates
     LIB_COLLECTOR_DB=${LIB_COLLECTOR}/db
 LIB_COLLECTOR_COMMON=${LIB_COLLECTOR}/common
 
-#all:	${SUITE_AUTO_TEMPLATES}/base.html classes collector 
 all:	base.html classes collector 
 
 collector:	${COLLECTOR_CODE_OUTPUT}/models.py ${COLLECTOR_CODE_OUTPUT}/orm_model.py ${COLLECTOR_CODE_OUTPUT}/forms.py ${COLLECTOR_CODE_OUTPUT}/views.py ${COLLECTOR_CODE_SRC}/*.py ${SUITE_AUTO_TEMPLATES}/base.html
@@ -68,7 +65,6 @@ collector:	${COLLECTOR_CODE_OUTPUT}/models.py ${COLLECTOR_CODE_OUTPUT}/orm_model
 	@echo "COLLECTOR_CODE_COMMON         =" ${COLLECTOR_CODE_COMMON}
 	@echo "COLLECTOR_CODE_OUTPUT         =" ${COLLECTOR_CODE_OUTPUT}
 	@echo "COLLECTOR_CODE_AUTO           =" ${COLLECTOR_CODE_AUTO}
-#	@echo "COLLECTOR_CODE_AUTO_TEMPLATES =" ${COLLECTOR_CODE_AUTO_TEMPLATES}
 	@echo "LIB_EMTEC                     =" ${LIB_EMTEC}
 	@echo "LIB_EMTEC_COMMON              =" ${LIB_EMTEC_COMMON}
 	@echo "LIB_COLLECTOR                 =" ${LIB_COLLECTOR}
@@ -139,7 +135,6 @@ collector:	${COLLECTOR_CODE_OUTPUT}/models.py ${COLLECTOR_CODE_OUTPUT}/orm_model
 	cp  ${COLLECTOR_CODE_SRC}/app/static/js/*.map				${COLLECTOR_FOLDER}/app/static/js/.
 	cp  ${COLLECTOR_CODE_SRC}/app/templates/*.html				${COLLECTOR_FOLDER}/app/templates/.
 	cp  ${COLLECTOR_CODE_SRC}/app/templates/auth/*.html			${COLLECTOR_FOLDER}/app/templates/auth/.
-#	cp  ${COLLECTOR_CODE_SRC}/app/templates/auth/email/*		${COLLECTOR_FOLDER}/app/templates/auth/email/.
 	cp  ${COLLECTOR_CODE_SRC}/app/templates/bootstrap/*.html	${COLLECTOR_FOLDER}/app/templates/bootstrap/.
 	cp  ${COLLECTOR_CODE_SRC}/app/templates/plugins/*.html		${COLLECTOR_FOLDER}/app/templates/plugins/.
 	cp  ${COLLECTOR_CODE_SRC}/service/*.py						${COLLECTOR_FOLDER}/service/.
@@ -158,15 +153,16 @@ collector:	${COLLECTOR_CODE_OUTPUT}/models.py ${COLLECTOR_CODE_OUTPUT}/orm_model
 	@echo collector completed !!!
 	@echo
 
-classes:
+classes: base.html
 	@echo
 	@echo "***********************************"
 	@echo "* Generating DB Clasess AUTOCODE  *"
 	@echo "***********************************"
 	@echo
 	@echo "***********************************"
-	@echo python ${SUITE_TOOLS_FOLDER}/gen_menu.py ${APP_NAME} ${SUITE_TOOLS_FOLDER} 
-	@python ${SUITE_TOOLS_FOLDER}/gen_menu.py ${APP_NAME} ${SUITE_TOOLS_FOLDER}
+# 	GV Doble ejecucion eliminada por redundancia, esta en pre-requisito 
+#	echo python ${SUITE_TOOLS_FOLDER}/gen_menu.py ${APP_NAME} ${SUITE_TOOLS_FOLDER} 
+#	python ${SUITE_TOOLS_FOLDER}/gen_menu.py ${APP_NAME} ${SUITE_TOOLS_FOLDER}
 	@echo "***********************************"
 	@touch ${COLLECTOR_CODE_SRC}/*.py 
 	@touch ${COLLECTOR_CODE_SRC}/models/*.py
@@ -186,7 +182,7 @@ ${COLLECTOR_CODE_OUTPUT}/models.py:	${COLLECTOR_CODE_SRC}/*.py ${COLLECTOR_CODE_
 	@echo
 	@cat ${COLLECTOR_CODE_SRC}/models_py_header.py  		>  ${COLLECTOR_CODE_OUTPUT}/models.py
 	@cat ${COLLECTOR_CODE_SRC}/models_py_header_auth.py  	>> ${COLLECTOR_CODE_OUTPUT}/models.py
-	@cat ${SUITE_AUTO_MODELS}/flask_*.py  				>> ${COLLECTOR_CODE_OUTPUT}/models.py
+	@cat ${SUITE_AUTO_MODELS}/flask_*.py  					>> ${COLLECTOR_CODE_OUTPUT}/models.py
 	@cat ${COLLECTOR_CODE_SRC}/models/*.py            		>> ${COLLECTOR_CODE_OUTPUT}/models.py
 	@cat ${COLLECTOR_CODE_SRC}/models_py_User_footer.py  	>> ${COLLECTOR_CODE_OUTPUT}/models.py
 	@ls -l ${COLLECTOR_CODE_OUTPUT}/models.py
@@ -246,8 +242,8 @@ base.html:
 	@echo "***********************************"
 	@echo
 	@echo "***********************************"
-	@echo python ${SUITE_TOOLS_FOLDER}/gen_menu.py ${APP_NAME} ${SUITE_TOOLS_FOLDER} 
-	@python ${SUITE_TOOLS_FOLDER}/gen_menu.py ${APP_NAME} ${SUITE_TOOLS_FOLDER}
+	@echo python ${SUITE_TOOLS_FOLDER}/gen_menu_j2.py ${APP_NAME} ${SUITE_TOOLS_FOLDER} 
+	@python ${SUITE_TOOLS_FOLDER}/gen_menu_j2.py ${APP_NAME} ${SUITE_TOOLS_FOLDER}
 	@echo "***********************************"
 	@echo
 	ls -l ${SUITE_AUTO_TEMPLATES}/base.html

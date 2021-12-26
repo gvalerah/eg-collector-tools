@@ -6,6 +6,7 @@ import  os
 import  sys
 import  getpass
 from    pprint              import pprint
+from    flask               import current_app
 from    flask_script        import Manager, Shell
 from    flask_migrate       import Migrate, MigrateCommand
 import  configparser
@@ -85,7 +86,9 @@ C.Set()
 
 #pp     = create_app(config_file,os.getenv('COLLECTOR_CONFIG') or 'production', C)
 app     = create_flask_app('Collector',config_file)
-
+# GV Defines templates globals !!!!
+app.add_template_global(name='current_app', f=current_app)
+#current_app = app
 # CONFIGURATION PATCH !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 logger.name="Collector Web Server"
@@ -174,7 +177,7 @@ if __name__ == '__main__':
         print("**** WARNING **** No logger defined ****")
         print("****************************************")
 
-    print(" * Will execute app here")   
+    print(f" * Will execute app {app} here")   
     # 20200217 LOCATION OPORTINITY CHANGE DUE TO CONFIG ISSUES ---------
     from    emtec.collector.db.flask_models    import User, Role
     # ------------------------------------------------------------------
