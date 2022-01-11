@@ -1,43 +1,43 @@
-# System modules
+# GV System modules
 import  sys
 import  os
 import  getpass
-# Import logging functions
+# GV Import logging functions
 import  logging
 #import  importlib.util
 import  configparser
-# Library modules
+# GV Library modules
 from    time                                import strftime
 from    time                                import sleep
 from    configparser                        import ConfigParser, ExtendedInterpolation
 from    pprint                              import pprint
-# Setting up Application Context
+# GV Setting up Application Context
 from    flask_sqlalchemy                    import SQLAlchemy
 from    sqlalchemy                          import create_engine
-# Emtec group collector code
-# Import Emtec Group's modules
+# GV Emtec group collector code
+# GV Import Emtec Group's modules
 from    emtec                               import *
 from    emtec.collector.db.orm              import *
-# GV 20210408 from    emtec.collector.common.functions    import *
+# GV GV 20210408 from    emtec.collector.common.functions    import *
 from    emtec.common.functions              import *
 from    emtec.collector.common.context      import Context
-# Import actual collectors codes
+# GV Import actual collectors codes
 from    service.collectors.Monthly_Auto     import Monthly_Auto_Collector
 from    service.collectors.Auto_CC          import Auto_CC_Collector
 from    service.collectors.Fill_CU_Rates    import Fill_CU_Rates_Collector
 from    service.collectord_exec             import Execute_Collector_Daemon
 
-# ---------------------------------------------------------------------------------------
-# Daemon functions here
+# GV ---------------------------------------------------------------------------------------
+# GV Daemon functions here
 
-# Command line parameters are mandatory
+# GV Command line parameters are mandatory
 
 config_file = sys.argv[1]
 driver_group = sys.argv[2]
 
 add_Logging_Levels()
 
-# create logger
+# GV create logger
 logger           = logging.getLogger('Collector Services')
 logger.propagate = False
 handler          = None
@@ -47,14 +47,14 @@ db = Collector_ORM_DB()
 if (os.path.isfile(config_file)):
     config_ini = configparser.ConfigParser(interpolation=ExtendedInterpolation())
     config_ini.read( config_file )
-    # Forced production environment configuration
-    # from config_ini file
+    # GV Forced production environment configuration
+    # GV from config_ini file
     handlerType=config_ini.get(driver_group,'handler_type',fallback='TIME_ROTATING')
     when=config_ini.get(driver_group,'when',fallback='d')
     interval=config_ini.getint(driver_group,'interval',fallback=7)
     backupCount=config_ini.getint(driver_group,'backupCount',fallback=53)
             
-    # Will work with configuration file
+    # GV Will work with configuration file
     C = Context(app_name="Collector Services",app_ini_file=config_file,logger=logger)    
     C.Set()
     C.db=db
@@ -89,8 +89,8 @@ if (os.path.isfile(config_file)):
         logger.info(f"{name}: ****** Daemon Start *********************")
         logger.info(f"{name}: as '{getpass.getuser()}' Using configuration: '{config_file}'")
         logger.info(f"{name}: *****************************************")
-        # --------------------------------------------------------------
-        # Overrides default log level for this driver group only
+        # GV --------------------------------------------------------------
+        # GV Overrides default log level for this driver group only
         log_level       = config_ini.get(driver_group,'log_level',fallback=C.log_level)        
         logger.info(f"{name}: log level from config is  = {log_level}")
         if type(log_level) == str:
@@ -106,25 +106,25 @@ if (os.path.isfile(config_file)):
         logger.info(f"{name}: driver {name} log level set to           = {logger.level}")
         logger.info(f"{name}: driver {name} log effective level set to = {logger.getEffectiveLevel()}")
         logger.info(f"{name}: driver {name} logger                     = {logger}")
-        # --------------------------------------------------------------
+        # GV --------------------------------------------------------------
         logger.debug(f"{name}: name         = {name}")
         logger.debug(f"{name}: collector    = {collector}")
         logger.debug(f"{name}: pool_seconds = {pool_seconds}")
 
-        # Required to handle multiple collector services in one daemon
-        # services are serialized 
+        # GV Required to handle multiple collector services in one daemon
+        # GV services are serialized 
         collectors=collector.split(',')
         while True:
-            # Check for propper log file for this iteration
+            # GV Check for propper log file for this iteration
             if (log_file_previous != log_file):
                 logger.info(f"{name}: Logging to '{log_file}'")
                 logger.info(f"{name}: *****************************************")
                 log_file_previous = log_file
-            # Will create a new child process to isolate service
+            # GV Will create a new child process to isolate service
             child_pid = os.fork()
             if child_pid == 0:
-                # Child new process instantiated
-                # -------------------------------------------------    
+                # GV Child new process instantiated
+                # GV -------------------------------------------------    
                 try:
                     if 'sqlite' in str(C.db):
                         logger.error(f"{name}: DB engine not expected is      : '{C.db}'")
@@ -145,16 +145,16 @@ if (os.path.isfile(config_file)):
                     C.logger.error(f"{name}: Exception catched during ETL execution.'errno:{e.errno},strerror:{e.strerror},args:{e.args}'")
                     #break
                 os._exit(0)
-                # --------------------------------------------------
+                # GV --------------------------------------------------
                 C.logger.debug(f"{name}: Execution completed @ {strftime('%H:%M:%S')}. Waiting {pool_seconds} seconds ...")
             else:
-                # Parent main loop process continues
-                # WAIT FOR PROCESS # child_pid
+                # GV Parent main loop process continues
+                # GV WAIT FOR PROCESS # GV child_pid
                 logger.info(f"{name}: Child Process started as pid={child_pid} @ {strftime('%H:%M:%S')}.")
                 if logger.level < logging.INFO:
                     print(f"{name}: Child Process started as pid={child_pid} @ {strftime('%H:%M:%S')}.")
                 try:
-                    # WAIT FOR PROCESS # child_pid
+                    # GV WAIT FOR PROCESS # GV child_pid
                     childProcExitInfo = os.wait()
                     signal=childProcExitInfo[1]%256
                     status=int(childProcExitInfo[1]/256)
@@ -172,10 +172,10 @@ if (os.path.isfile(config_file)):
                 except Exception as e:
                     logger.error(f"{name}: Exception catched while pooling. 'errno:{e.errno},strerror:{e.strerror},args:{e.args}'")
                     break        
-        # Out of loop service should never get here unless system shutdown
+        # GV Out of loop service should never get here unless system shutdown
         logger.warning(f"{name}: *** Unexpected Deamon Interruption ***")
 else:
-    # Configuration error
+    # GV Configuration error
     print(f"{sys.argv[0]}: ERROR: Configuration file '{config_file}' does not exists. aborting.")
     print(f"{sys.argv[0]}: ERROR: Number of arguments: {len(sys.argv)} arguments.")
     print(f"{sys.argv[0]}: ERROR: Argument List: {str(sys.argv)}")

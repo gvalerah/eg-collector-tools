@@ -11,14 +11,16 @@ BACKTITLE="Emtec Group Collector"
 TITLE="Developer's Menu - Collector (${TOOLS})"
 MENU="Choose one of the folowing options:"
 OPTIONS=(   
-            2 "Generate Source Code" 
+            2 "Generate and Compile Source Code" 
             1 "GITLab Pull"
             a "GitLab Push"
+            b "Collector Source Up (Flask)"
             s "SQL Tools Menu"
             q "Quit"
         )
 while true;
 do
+
     CHOICE=$(   dialog --clear \
                 --backtitle "$BACKTITLE" \
                 --title "$TITLE" \
@@ -34,12 +36,19 @@ do
         2)
             cd ${TOOLS}
             make
+            cd ${COLLECTOR}
+            ls -lh *.py
+            python -m compileall collector*.py
             ;;
         a)
             timestamp=$(date +%Y%m%d-%H%M)
             git add .
             git commit -m "Update ${timestamp}"
             git push origin master
+            ;;
+        b)
+            cd ${COLLECTOR}
+            python ${COLLECTOR}/collector.py ${COLLECTOR}/collector.ini FLASK
             ;;
         s)
             cd ${COLLECTOR}/sql

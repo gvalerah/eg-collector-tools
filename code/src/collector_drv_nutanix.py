@@ -1,28 +1,27 @@
-# System modules
+# GV System modules
 import  sys
 import  os
 import  getpass
-# Import logging functions
+# GV Import logging functions
 import  logging
 #import  importlib.util
 import  configparser
-# Library modules
+# GV Library modules
 from    time                                import strftime
 from    time                                import sleep
 from    configparser                        import ConfigParser, ExtendedInterpolation
 from    pprint                              import pprint
-# Setting up Application Context
+# GV Setting up Application Context
 from    flask_sqlalchemy                    import SQLAlchemy
 from    sqlalchemy                          import create_engine
-# Emtec group collector code
-# Import Emtec Group's modules
+# GV Emtec group collector code
+# GV Import Emtec Group's modules
 from    emtec                               import *
 from    emtec.collector.db.orm              import *
-#rom    emtec.collector.common.functions    import *
 from    emtec.common.functions              import *
 from    emtec.collector.common.chk_c000001  import *
 from    emtec.collector.common.context      import Context
-# Import actual collectors codes
+# GV Import actual collectors codes
 from    service.collectors.Nutanix_ETL              import Nutanix_ETL_Collector
 from    service.collectors.Nutanix_CI_Check         import Nutanix_CI_Check_Collector
 from    service.collectors.Nutanix_Image_Load       import Nutanix_Image_Load_Collector
@@ -30,10 +29,10 @@ from    service.collectors.Nutanix_Snapshot_Load    import Nutanix_Snapshot_Load
 from    service.collectors.Nutanix_VGroup_Load      import Nutanix_VGroup_Load_Collector
 from    service.collectord_exec                     import Execute_Collector_Daemon
 
-# ---------------------------------------------------------------------------------------
-# Daemon functions here
+# GV ---------------------------------------------------------------------------------------
+# GV Daemon functions here
 
-# Command line parameters are mandatory
+# GV Command line parameters are mandatory
 
 config_file = sys.argv[1]
 driver_group = sys.argv[2]
@@ -44,7 +43,7 @@ COLLECTOR_DRIVER_NAME='Collector for Nutanix'
 COLLECTOR_DRIVER=__file__.replace('.pyc','')
 COLLECTOR_DRIVER=__file__.replace('.py','')
 
-# create logger
+# GV create logger
 logger  = logging.getLogger(COLLECTOR_DRIVER_NAME)
 logger.propagate=False
 handler=None
@@ -60,7 +59,7 @@ if (os.path.isfile(config_file)):
     backupCount     = config_ini.getint(driver_group,'backupCount',fallback=53)
     c000001_seconds = config_ini.getint('General','c000001_seconds',fallback=86400)
 
-    # Will work with configuration file
+    # GV Will work with configuration file
     C = Context(app_name="Collector for Nutanix",app_ini_file=config_file,logger=logger)    
     C.Set()
     C.db=db
@@ -95,8 +94,8 @@ if (os.path.isfile(config_file)):
         name            = config_ini.get(driver_group,'name',fallback=None)
         collector       = config_ini.get(driver_group,'collector',fallback=None)
         pool_seconds    = config_ini.getint(driver_group,'pool_seconds',fallback=C.pool_seconds)
-        # --------------------------------------------------------------
-        # Overrides default log level for this driver group only
+        # GV --------------------------------------------------------------
+        # GV Overrides default log level for this driver group only
         log_level       = config_ini.get(driver_group,'log_level',fallback=C.log_level)        
         logger.info("%s: log level from config is  =%s"%(COLLECTOR_DRIVER,log_level))
         if type(log_level) == str:
@@ -112,13 +111,13 @@ if (os.path.isfile(config_file)):
         logger.info("%s: driver %s log level set to =%s"%(COLLECTOR_DRIVER,name,logger.level))
         logger.info("%s: driver %s log level set to =%s"%(COLLECTOR_DRIVER,name,logger.getEffectiveLevel()))
         logger.info("%s: driver %s logger           =%s"%(COLLECTOR_DRIVER,name,logger))
-        # --------------------------------------------------------------
+        # GV --------------------------------------------------------------
         logger.debug("%s: name        =%s"%(COLLECTOR_DRIVER,name))
         logger.debug("%s: collector   =%s"%(COLLECTOR_DRIVER,collector))
         logger.debug("%s: pool_seconds=%s"%(COLLECTOR_DRIVER,pool_seconds))
 
-        # Required to handle multiple collector services in one daemon
-        # services are serialized 
+        # GV Required to handle multiple collector services in one daemon
+        # GV services are serialized 
         if collector is not None:
             collectors=collector.split(',')
         else:
@@ -126,9 +125,9 @@ if (os.path.isfile(config_file)):
         CHEQUEOS = 0
 
         while True:
-            # ----------------------------------------------------------
-            # LICENSE HANDLING MAY BE REMOVED IF CENTRALLY HANDLED
-            # AT THE COLLECTOR SERVICE MODULE, OR NOT ....
+            # GV ----------------------------------------------------------
+            # GV LICENSE HANDLING MAY BE REMOVED IF CENTRALLY HANDLED
+            # GV AT THE COLLECTOR SERVICE MODULE, OR NOT ....
             logger.debug("{COLLECTOR_DRIVER}: checking licence")
             logger.debug("****************************************************")
             CHEQUEOS += 1
@@ -146,19 +145,19 @@ if (os.path.isfile(config_file)):
             logger.debug(f"{COLLECTOR_DRIVER}: checking licence rc={rc}")
             logger.debug(f"YA CHEQUEE LICENCIA CHEQUEO={CHEQUEOS} rc={rc}")
             logger.debug( "****************************************************")
-            # ----------------------------------------------------------
+            # GV ----------------------------------------------------------
             if (log_file_previous != log_file):
                 logger.info("%s: Logging to '%s'"%(COLLECTOR_DRIVER,log_file))
                 logger.info("*****************************************")
                 log_file_previous = log_file
-            # -------------------------------------------------    
-            # Will create a new child process to isolate service
+            # GV -------------------------------------------------    
+            # GV Will create a new child process to isolate service
             child_pid = os.fork()
             if child_pid == 0:
                 try:
-                    # Child new process instantiated
-                    # -------------------------------------------------    
-                    # Check for invalid,unexpected db engine
+                    # GV Child new process instantiated
+                    # GV -------------------------------------------------    
+                    # GV Check for invalid,unexpected db engine
                     if 'sqlite' in str(C.db):
                         logger.error("DB engine not expected is      : '%s'"%(C.db))
                         logger.error("os.environ['COLLECTOR_CONFIG'] : '%s'"%(os.environ['COLLECTOR_CONFIG']))
@@ -184,17 +183,17 @@ if (os.path.isfile(config_file)):
                     #break
                 os._exit(0)
             else:
-                # --------------------------------------------------
+                # GV --------------------------------------------------
                 C.logger.debug(f"{COLLECTOR_DRIVER}: Execution completed @ {strftime('%H:%M:%S')}. Waiting {pool_seconds} seconds ...")
                 if logger.level == logging.DEBUG:
                     print(f"{COLLECTOR_DRIVER}: Execution completed @ {strftime('%H:%M:%S')}. Waiting {pool_seconds} seconds ...")
-                # Parent main loop process continues
-                # WAIT FOR PROCESS # child_pid
+                # GV Parent main loop process continues
+                # GV WAIT FOR PROCESS # GV child_pid
                 logger.info(f"{COLLECTOR_DRIVER}: Child Process started as pid={child_pid} @ {strftime('%H:%M:%S')}.")
                 if logger.level < logging.INFO:
                     print(f"{COLLECTOR_DRIVER}: Child Process started as pid={child_pid} @ {strftime('%H:%M:%S')}.")
                 try:
-                    # WAIT FOR PROCESS # child_pid
+                    # GV WAIT FOR PROCESS # GV child_pid
                     childProcExitInfo = os.wait()
                     signal=childProcExitInfo[1]%256
                     status=int(childProcExitInfo[1]/256)
@@ -212,10 +211,10 @@ if (os.path.isfile(config_file)):
                 except Exception as e:
                     logger.error(f"{COLLECTOR_DRIVER}:Exception catched while pooling. 'errno:{e.errno},strerror:{e.strerror},args:{e.args}'")
                     break        
-        # Out of loop service should never get here unless system shutdown
+        # GV Out of loop service should never get here unless system shutdown
         logger.warning(f"{COLLECTOR_DRIVER} *** Unexpected Deamon Interruption ***")
 else:
-    # Configuration error
+    # GV Configuration error
     print("ERROR: Configuration file '%s' does not exists. aborting."%config_file)
     print('ERROR: Number of arguments:', len(sys.argv), 'arguments.')
     print('ERROR: Argument List:', str(sys.argv))

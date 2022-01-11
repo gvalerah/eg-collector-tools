@@ -44,7 +44,6 @@ db = Collector_ORM_DB(
 
 db.init_app(app)
 db.sharding=True
-#db.set_sharding_cit('202107')
 db.session=db.Session()
 
 #cs=f"mysql+pymysql://{args.username}:{args.password}@{args.host}:{args.port}/collector"
@@ -66,13 +65,13 @@ if __name__ == "__main__":
         
         month  = period%100
         year   = int(period/100)
-        suffix = f"{year:04d}{month:02d}"
+        # GV need to populate customer variable
+        suffix = f"{customer}_{year:04d}{month:02d}"
         logger.debug(f"suffix = {suffix}")
-        #db.set_sharding_cit(suffix)
         dt = datetime.datetime(year=year,month=month,day=1)
         start,end = Get_Period(dt)
         
-        Charge_Items.set_shard(suffix)
+        Charge_Items.set_shard(suffix,db.engine)
         #Charge_Items.__table__.name= f"Charge_Items_{args.period}"
         #Charge_Items.__tablename__ = f"Charge_Items_{args.period}"
         logger.debug(f"Charge_Items                = {Charge_Items}")

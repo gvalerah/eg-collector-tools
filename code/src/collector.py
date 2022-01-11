@@ -1,7 +1,7 @@
 #!/usr/bin/env python
-# ----------------------------------------------------------------------
-# Top level required definitions
-# ----------------------------------------------------------------------
+# GV -------------------------------------------------------------------
+# GV Top level required definitions
+# GV -------------------------------------------------------------------
 import  os
 import  sys
 import  getpass
@@ -12,11 +12,11 @@ from    flask_migrate       import Migrate, MigrateCommand
 import  configparser
 from    configparser        import ConfigParser, ExtendedInterpolation
 from    sqlalchemy          import create_engine
-# ----------------------------------------------------------------------
+# GV -------------------------------------------------------------------
 
-# ----------------------------------------------------------------------
-# G Unicorn required definitions
-# ----------------------------------------------------------------------
+# GV -------------------------------------------------------------------
+# GV G Unicorn required definitions
+# GV -------------------------------------------------------------------
 import  multiprocessing
 import  gunicorn
 from    gunicorn.app.base   import Application, Config
@@ -36,21 +36,20 @@ class GUnicornFlaskApplication(Application):
         return Application.run(self)
 
     load = lambda self:self.app
-# ----------------------------------------------------------------------
+# GV -------------------------------------------------------------------
 
-# ----------------------------------------------------------------------
-# Emtec group required definitions
-# ----------------------------------------------------------------------
+# GV -------------------------------------------------------------------
+# GV Emtec group required definitions
+# GV -------------------------------------------------------------------
 
 from    emtec.common.functions             import *
 from    emtec.collector.common.context     import Context
 from    emtec.collector.db.orm_model       import *
-#from    emtec.collector.common.functions   import *
-# ----------------------------------------------------------------------
+# GV -------------------------------------------------------------------
 
-# Setup context data depending on configuration file
+# GV Setup context data depending on configuration file
 
-# Macro level default values
+# GV Macro level default values
 config_file = "collector.ini"
 run_mode    = 'GUNICORN'
 
@@ -76,7 +75,6 @@ if (os.path.isfile(config_file)):
 else:
     sys.exit(1)
 
-#from    app                 import create_app
 from    app                 import db
 from    app                 import logger
 from    app                 import create_flask_app
@@ -84,16 +82,14 @@ from    app                 import create_flask_app
 C = Context("Collector Web Server",config_file,logger)
 C.Set()
 
-#pp     = create_app(config_file,os.getenv('COLLECTOR_CONFIG') or 'production', C)
 app     = create_flask_app('Collector',config_file)
-# GV Defines templates globals !!!!
+# GV GV Defines templates globals !!!!
 app.add_template_global(name='current_app', f=current_app)
-#current_app = app
-# CONFIGURATION PATCH !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# GV CONFIGURATION PATCH !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 logger.name="Collector Web Server"
-# Setup logger handlers
-# Actual File system all logger ----------------------------------------
+# GV Setup logger handlers
+# GV Actual File system all logger -------------------------------------
 file_handler=add_Logging_Handler(
     logger=logger,
     level=C.log_level,
@@ -101,12 +97,12 @@ file_handler=add_Logging_Handler(
     nameFormat="%s.log"%logger.name.replace(' ','_'),
     handlerType='TIME_ROTATING'
     )
-# Default File logger filters (omits) AUDIT records, then an audit
-# logger needs to be defined
+# GV Default File logger filters (omits) AUDIT records, then an audit
+# GV logger needs to be defined
 file_handler.addFilter(LevelFilter(logging.AUDIT))
-# ----------------------------------------------------------------------
+# GV -------------------------------------------------------------------
 
-# Specialized AUDIT LOG logger -----------------------------------------
+# GV Specialized AUDIT LOG logger --------------------------------------
 audit_handler=add_Logging_Handler(
     logger=logger,
     level=logging.AUDIT,
@@ -114,7 +110,7 @@ audit_handler=add_Logging_Handler(
     nameFormat="%s.aud"%logger.name.replace(' ','_'),
     handlerType='TIME_ROTATING'
     )
-# ----------------------------------------------------------------------
+# GV -------------------------------------------------------------------
 
 if __name__ == '__main__':
     app_ctx = app.app_context()
@@ -178,15 +174,15 @@ if __name__ == '__main__':
         print("****************************************")
 
     print(f" * Will execute app {app} here")   
-    # 20200217 LOCATION OPORTINITY CHANGE DUE TO CONFIG ISSUES ---------
+    # GV 20200217 LOCATION OPORTINITY CHANGE DUE TO CONFIG ISSUES ------
     from    emtec.collector.db.flask_models    import User, Role
-    # ------------------------------------------------------------------
-    # Will be replaced by embedded Green Unicorn HTTP Server
+    # GV ---------------------------------------------------------------
+    # GV Will be replaced by embedded Green Unicorn HTTP Server
     if run_mode == 'FLASK':
         print(f" * Running in Flask app mode ({flask_host}:{flask_port})")
         app.run(host=flask_host,port=flask_port)
     else:
-        # Calculates maximum number of workers or by config
+        # GV Calculates maximum number of workers or by config
         max_workers = int(app.config.get('COLLECTOR_MAX_WORKERS',65))
         options = {
             'bind': '%s:%s' % (gunicorn_host, gunicorn_port),

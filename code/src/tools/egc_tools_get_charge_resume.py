@@ -879,10 +879,11 @@ if __name__ == "__main__":
             logger.debug(f'args       = {args}')            
             if db is not None and db_connection_is_successfull:
                 logger.info(f"Getting resume from {args.start} to {args.end}")
-                period = f"{args.start.year}{args.start.month:02d}"
+                # Need to populate 'customer' variable
+                period = f"{customer}_{args.start.year}{args.start.month:02d}"
                 cits_table = f"Charge_Items_{period}"
                 logger.debug(f"Period     =  {period}")
-                Charge_Items.set_shard(period)
+                Charge_Items.set_shard(period,db.engine)
                 logger.debug(f"CIT        =  {Charge_Items}")
                 logger.debug(f"CIT        =  {Charge_Items.__table__.name}")
                 logger.debug(f"CIT        =  {Charge_Items.__tablename__}")

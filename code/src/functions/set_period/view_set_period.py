@@ -18,7 +18,7 @@ def forms_Set_Period():
     set_periods_available(
         db.engine,
         Interface,
-        current_user.id
+        current_user
         )
 
     session['data'] =  { 'Period': get_period_data(

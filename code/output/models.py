@@ -1,10 +1,10 @@
-# =============================================================================
-# Models File
-# Static Header File. 
-# source: models_py_header.py
-# GLVH 2019-08-16
-# GLVH 2020-01-30 JSON Serializing code added
-# =============================================================================
+# GV =============================================================================
+# GV Models File
+# GV Static Header File. 
+# GV source: models_py_header.py
+# GV GLVH 2019-08-16
+# GV GLVH 2020-01-30 JSON Serializing code added
+# GV =============================================================================
 from app                    import db
 from app                    import login_manager
 
@@ -16,13 +16,13 @@ from sqlalchemy             import ForeignKey
 from flask_sqlalchemy       import SQLAlchemy
 from copy                   import copy, deepcopy
 
-# Required form Authorization subsystem
+# GV Required form Authorization subsystem
 from werkzeug.security      import generate_password_hash, check_password_hash
 from itsdangerous           import TimedJSONWebSignatureSerializer as Serializer
 from flask                  import current_app
 from flask_login            import UserMixin, AnonymousUserMixin
 
-# JSON Serializing enabling code
+# GV JSON Serializing enabling code
 from sqlalchemy.inspection import inspect
 
 
@@ -35,16 +35,16 @@ class Serializer(object):
     def serialize_list(l):
         return [m.serialize() for m in l]
 
-# 20200224 GV force import of the whole emtec db library ---------------
+# GV 20200224 GV force import of the whole emtec db library ---------------
 from emtec.collector.db.orm_model       import *
 from emtec.collector.db.flask_models    import *
-# ----------------------------------------------------------------------
-# =============================================================================
-# Models File
-# Authorization subsystem. 
-# Static File. 
-# GLVH 2018-12-17
-# =============================================================================
+# GV ----------------------------------------------------------------------
+# GV =============================================================================
+# GV Models File
+# GV Authorization subsystem. 
+# GV Static File. 
+# GV GLVH 2018-12-17
+# GV =============================================================================
 
 class Permission:
     CUSTOMER            = 0x001
@@ -78,18 +78,37 @@ def load_user(user_id):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-12-26 16:09:20
+# GLVH @ 2022-01-04 10:12:30
 # =============================================================================
 
 # gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_charge_items.py
 class charge_item(db.Model,Serializer):
     __tablename__ = 'Charge_Items'
 
-    def set_shard(suffix=None):
+    def check_shard(suffix=None,engine=None):
+       if engine is not None:
+           try:
+               if not engine.dialect.has_table(engine, __class__.__tablename__):
+                   print(f'131 Table {__class__.__tablename__} does not exist')
+                   metadata=MetaData()
+                   metadata.bind=engine
+                   __class__.__table__.metadata=metadata
+                   __class__.__table__.create(checkfirst=True)
+                   if not engine.dialect.has_table(engine, __class__.__tablename__):
+                       print('137 Table %s does not exist. creation error?'% __class__.__tablename__)
+                   else:
+                       print('139 Table %s exist !!!'% __class__.__tablename__)
+               else:
+                   pass # GV print('141 Table %s exist !!!'% __class__.__tablename__)
+           except Exception as e:
+              print(f'143 exception: {str(e)}')
+           return
+    def set_shard(suffix=None,engine=None):
        if suffix is not None:
            name='Charge_Items_{suffix}'.format(suffix=suffix)
            __class__.__tablename__  = name
            __class__.__table__.name = name
+       __class__.check_shard(suffix,engine)
        return __class__.__tablename__
 
     CU_Id         = db.Column( db.Integer, db.ForeignKey('Charge_Units.CU_Id'), primary_key=True, default=0 )
@@ -119,7 +138,7 @@ class charge_item(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-12-26 16:09:20
+# GLVH @ 2022-01-04 10:12:30
 # =============================================================================
 
 # gen_model_flask.py:670 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_charge_items.py
@@ -128,11 +147,12 @@ def get_charge_item(table_name_suffix):
   class charge_item_Class(db.Model,Serializer):
     __tablename__ = 'Charge_Items_%s'%(table_name_suffix)
 
-    def set_shard(suffix=None):
+    def set_shard(suffix=None,engine=None):
         if suffix is not None:
            name='Charge_Items_{suffix}'.format(suffix=suffix)
            __class__.__tablename__  = name
            __class__.__table__.name = name
+           __class__.check_shard(suffix,engine)
         return __class__.__tablename__
 
     CU_Id         = db.Column( db.Integer, db.ForeignKey('Charge_Units.CU_Id'), primary_key=True, default=0 )
@@ -196,18 +216,37 @@ def get_charge_item(table_name_sufix):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-12-26 16:09:20
+# GLVH @ 2022-01-04 10:12:30
 # =============================================================================
 
 # gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_charge_resumes.py
 class charge_resume(db.Model,Serializer):
     __tablename__ = 'Charge_Resumes'
 
-    def set_shard(suffix=None):
+    def check_shard(suffix=None,engine=None):
+       if engine is not None:
+           try:
+               if not engine.dialect.has_table(engine, __class__.__tablename__):
+                   print(f'131 Table {__class__.__tablename__} does not exist')
+                   metadata=MetaData()
+                   metadata.bind=engine
+                   __class__.__table__.metadata=metadata
+                   __class__.__table__.create(checkfirst=True)
+                   if not engine.dialect.has_table(engine, __class__.__tablename__):
+                       print('137 Table %s does not exist. creation error?'% __class__.__tablename__)
+                   else:
+                       print('139 Table %s exist !!!'% __class__.__tablename__)
+               else:
+                   pass # GV print('141 Table %s exist !!!'% __class__.__tablename__)
+           except Exception as e:
+              print(f'143 exception: {str(e)}')
+           return
+    def set_shard(suffix=None,engine=None):
        if suffix is not None:
            name='Charge_Resumes_{suffix}'.format(suffix=suffix)
            __class__.__tablename__  = name
            __class__.__table__.name = name
+       __class__.check_shard(suffix,engine)
        return __class__.__tablename__
 
     User_Id                = db.Column( db.Integer, primary_key=True )
@@ -299,18 +338,37 @@ class charge_resume(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-12-26 16:09:20
+# GLVH @ 2022-01-04 10:12:30
 # =============================================================================
 
 # gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_charge_unit_egm.py
 class charge_unit_egm(db.Model,Serializer):
     __tablename__ = 'Charge_Unit_EGM'
 
-    def set_shard(suffix=None):
+    def check_shard(suffix=None,engine=None):
+       if engine is not None:
+           try:
+               if not engine.dialect.has_table(engine, __class__.__tablename__):
+                   print(f'131 Table {__class__.__tablename__} does not exist')
+                   metadata=MetaData()
+                   metadata.bind=engine
+                   __class__.__table__.metadata=metadata
+                   __class__.__table__.create(checkfirst=True)
+                   if not engine.dialect.has_table(engine, __class__.__tablename__):
+                       print('137 Table %s does not exist. creation error?'% __class__.__tablename__)
+                   else:
+                       print('139 Table %s exist !!!'% __class__.__tablename__)
+               else:
+                   pass # GV print('141 Table %s exist !!!'% __class__.__tablename__)
+           except Exception as e:
+              print(f'143 exception: {str(e)}')
+           return
+    def set_shard(suffix=None,engine=None):
        if suffix is not None:
            name='Charge_Unit_EGM_{suffix}'.format(suffix=suffix)
            __class__.__tablename__  = name
            __class__.__table__.name = name
+       __class__.check_shard(suffix,engine)
        return __class__.__tablename__
 
     CU_Id           = db.Column( db.Integer, db.ForeignKey('Charge_Units.CU_Id'), primary_key=True )
@@ -346,18 +404,37 @@ class charge_unit_egm(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-12-26 16:09:20
+# GLVH @ 2022-01-04 10:12:30
 # =============================================================================
 
 # gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_charge_units.py
 class charge_unit(db.Model,Serializer):
     __tablename__ = 'Charge_Units'
 
-    def set_shard(suffix=None):
+    def check_shard(suffix=None,engine=None):
+       if engine is not None:
+           try:
+               if not engine.dialect.has_table(engine, __class__.__tablename__):
+                   print(f'131 Table {__class__.__tablename__} does not exist')
+                   metadata=MetaData()
+                   metadata.bind=engine
+                   __class__.__table__.metadata=metadata
+                   __class__.__table__.create(checkfirst=True)
+                   if not engine.dialect.has_table(engine, __class__.__tablename__):
+                       print('137 Table %s does not exist. creation error?'% __class__.__tablename__)
+                   else:
+                       print('139 Table %s exist !!!'% __class__.__tablename__)
+               else:
+                   pass # GV print('141 Table %s exist !!!'% __class__.__tablename__)
+           except Exception as e:
+              print(f'143 exception: {str(e)}')
+           return
+    def set_shard(suffix=None,engine=None):
        if suffix is not None:
            name='Charge_Units_{suffix}'.format(suffix=suffix)
            __class__.__tablename__  = name
            __class__.__table__.name = name
+       __class__.check_shard(suffix,engine)
        return __class__.__tablename__
 
     CU_Id                  = db.Column( db.Integer, primary_key=True, autoincrement=True )
@@ -452,18 +529,37 @@ def get_charge_unit(table_name_sufix):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-12-26 16:09:20
+# GLVH @ 2022-01-04 10:12:30
 # =============================================================================
 
 # gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_cit_generations.py
 class cit_generation(db.Model,Serializer):
     __tablename__ = 'CIT_Generations'
 
-    def set_shard(suffix=None):
+    def check_shard(suffix=None,engine=None):
+       if engine is not None:
+           try:
+               if not engine.dialect.has_table(engine, __class__.__tablename__):
+                   print(f'131 Table {__class__.__tablename__} does not exist')
+                   metadata=MetaData()
+                   metadata.bind=engine
+                   __class__.__table__.metadata=metadata
+                   __class__.__table__.create(checkfirst=True)
+                   if not engine.dialect.has_table(engine, __class__.__tablename__):
+                       print('137 Table %s does not exist. creation error?'% __class__.__tablename__)
+                   else:
+                       print('139 Table %s exist !!!'% __class__.__tablename__)
+               else:
+                   pass # GV print('141 Table %s exist !!!'% __class__.__tablename__)
+           except Exception as e:
+              print(f'143 exception: {str(e)}')
+           return
+    def set_shard(suffix=None,engine=None):
        if suffix is not None:
            name='CIT_Generations_{suffix}'.format(suffix=suffix)
            __class__.__tablename__  = name
            __class__.__table__.name = name
+       __class__.check_shard(suffix,engine)
        return __class__.__tablename__
 
     CIT_Generation = db.Column( db.Integer, primary_key=True )
@@ -485,18 +581,37 @@ class cit_generation(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-12-26 16:09:20
+# GLVH @ 2022-01-04 10:12:30
 # =============================================================================
 
 # gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_cit_statuses.py
 class cit_status(db.Model,Serializer):
     __tablename__ = 'CIT_Statuses'
 
-    def set_shard(suffix=None):
+    def check_shard(suffix=None,engine=None):
+       if engine is not None:
+           try:
+               if not engine.dialect.has_table(engine, __class__.__tablename__):
+                   print(f'131 Table {__class__.__tablename__} does not exist')
+                   metadata=MetaData()
+                   metadata.bind=engine
+                   __class__.__table__.metadata=metadata
+                   __class__.__table__.create(checkfirst=True)
+                   if not engine.dialect.has_table(engine, __class__.__tablename__):
+                       print('137 Table %s does not exist. creation error?'% __class__.__tablename__)
+                   else:
+                       print('139 Table %s exist !!!'% __class__.__tablename__)
+               else:
+                   pass # GV print('141 Table %s exist !!!'% __class__.__tablename__)
+           except Exception as e:
+              print(f'143 exception: {str(e)}')
+           return
+    def set_shard(suffix=None,engine=None):
        if suffix is not None:
            name='CIT_Statuses_{suffix}'.format(suffix=suffix)
            __class__.__tablename__  = name
            __class__.__table__.name = name
+       __class__.check_shard(suffix,engine)
        return __class__.__tablename__
 
     CIT_Status = db.Column( db.Integer, primary_key=True )
@@ -518,18 +633,37 @@ class cit_status(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-12-26 16:09:20
+# GLVH @ 2022-01-04 10:12:30
 # =============================================================================
 
 # gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_configuration_items.py
 class configuration_item(db.Model,Serializer):
     __tablename__ = 'Configuration_Items'
 
-    def set_shard(suffix=None):
+    def check_shard(suffix=None,engine=None):
+       if engine is not None:
+           try:
+               if not engine.dialect.has_table(engine, __class__.__tablename__):
+                   print(f'131 Table {__class__.__tablename__} does not exist')
+                   metadata=MetaData()
+                   metadata.bind=engine
+                   __class__.__table__.metadata=metadata
+                   __class__.__table__.create(checkfirst=True)
+                   if not engine.dialect.has_table(engine, __class__.__tablename__):
+                       print('137 Table %s does not exist. creation error?'% __class__.__tablename__)
+                   else:
+                       print('139 Table %s exist !!!'% __class__.__tablename__)
+               else:
+                   pass # GV print('141 Table %s exist !!!'% __class__.__tablename__)
+           except Exception as e:
+              print(f'143 exception: {str(e)}')
+           return
+    def set_shard(suffix=None,engine=None):
        if suffix is not None:
            name='Configuration_Items_{suffix}'.format(suffix=suffix)
            __class__.__tablename__  = name
            __class__.__table__.name = name
+       __class__.check_shard(suffix,engine)
        return __class__.__tablename__
 
     CI_Id                       = db.Column( db.Integer, primary_key=True, autoincrement=True )
@@ -565,18 +699,37 @@ class configuration_item(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-12-26 16:09:20
+# GLVH @ 2022-01-04 10:12:30
 # =============================================================================
 
 # gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_cost_centers.py
 class cost_center(db.Model,Serializer):
     __tablename__ = 'Cost_Centers'
 
-    def set_shard(suffix=None):
+    def check_shard(suffix=None,engine=None):
+       if engine is not None:
+           try:
+               if not engine.dialect.has_table(engine, __class__.__tablename__):
+                   print(f'131 Table {__class__.__tablename__} does not exist')
+                   metadata=MetaData()
+                   metadata.bind=engine
+                   __class__.__table__.metadata=metadata
+                   __class__.__table__.create(checkfirst=True)
+                   if not engine.dialect.has_table(engine, __class__.__tablename__):
+                       print('137 Table %s does not exist. creation error?'% __class__.__tablename__)
+                   else:
+                       print('139 Table %s exist !!!'% __class__.__tablename__)
+               else:
+                   pass # GV print('141 Table %s exist !!!'% __class__.__tablename__)
+           except Exception as e:
+              print(f'143 exception: {str(e)}')
+           return
+    def set_shard(suffix=None,engine=None):
        if suffix is not None:
            name='Cost_Centers_{suffix}'.format(suffix=suffix)
            __class__.__tablename__  = name
            __class__.__table__.name = name
+       __class__.check_shard(suffix,engine)
        return __class__.__tablename__
 
     CC_Id          = db.Column( db.Integer, primary_key=True, autoincrement=True )
@@ -616,18 +769,37 @@ class cost_center(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-12-26 16:09:20
+# GLVH @ 2022-01-04 10:12:30
 # =============================================================================
 
 # gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_countries_currencies.py
 class country_currency(db.Model,Serializer):
     __tablename__ = 'Countries_Currencies'
 
-    def set_shard(suffix=None):
+    def check_shard(suffix=None,engine=None):
+       if engine is not None:
+           try:
+               if not engine.dialect.has_table(engine, __class__.__tablename__):
+                   print(f'131 Table {__class__.__tablename__} does not exist')
+                   metadata=MetaData()
+                   metadata.bind=engine
+                   __class__.__table__.metadata=metadata
+                   __class__.__table__.create(checkfirst=True)
+                   if not engine.dialect.has_table(engine, __class__.__tablename__):
+                       print('137 Table %s does not exist. creation error?'% __class__.__tablename__)
+                   else:
+                       print('139 Table %s exist !!!'% __class__.__tablename__)
+               else:
+                   pass # GV print('141 Table %s exist !!!'% __class__.__tablename__)
+           except Exception as e:
+              print(f'143 exception: {str(e)}')
+           return
+    def set_shard(suffix=None,engine=None):
        if suffix is not None:
            name='Countries_Currencies_{suffix}'.format(suffix=suffix)
            __class__.__tablename__  = name
            __class__.__table__.name = name
+       __class__.check_shard(suffix,engine)
        return __class__.__tablename__
 
     Cou_Code        = db.Column( db.String(2), db.ForeignKey('Countries.Cou_Code'), primary_key=True )
@@ -649,18 +821,37 @@ class country_currency(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-12-26 16:09:20
+# GLVH @ 2022-01-04 10:12:30
 # =============================================================================
 
 # gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_countries.py
 class country(db.Model,Serializer):
     __tablename__ = 'Countries'
 
-    def set_shard(suffix=None):
+    def check_shard(suffix=None,engine=None):
+       if engine is not None:
+           try:
+               if not engine.dialect.has_table(engine, __class__.__tablename__):
+                   print(f'131 Table {__class__.__tablename__} does not exist')
+                   metadata=MetaData()
+                   metadata.bind=engine
+                   __class__.__table__.metadata=metadata
+                   __class__.__table__.create(checkfirst=True)
+                   if not engine.dialect.has_table(engine, __class__.__tablename__):
+                       print('137 Table %s does not exist. creation error?'% __class__.__tablename__)
+                   else:
+                       print('139 Table %s exist !!!'% __class__.__tablename__)
+               else:
+                   pass # GV print('141 Table %s exist !!!'% __class__.__tablename__)
+           except Exception as e:
+              print(f'143 exception: {str(e)}')
+           return
+    def set_shard(suffix=None,engine=None):
        if suffix is not None:
            name='Countries_{suffix}'.format(suffix=suffix)
            __class__.__tablename__  = name
            __class__.__table__.name = name
+       __class__.check_shard(suffix,engine)
        return __class__.__tablename__
 
     Cou_Code = db.Column( db.String(2), primary_key=True )
@@ -686,18 +877,37 @@ class country(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-12-26 16:09:20
+# GLVH @ 2022-01-04 10:12:30
 # =============================================================================
 
 # gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_cu_operations.py
 class cu_operation(db.Model,Serializer):
     __tablename__ = 'CU_Operations'
 
-    def set_shard(suffix=None):
+    def check_shard(suffix=None,engine=None):
+       if engine is not None:
+           try:
+               if not engine.dialect.has_table(engine, __class__.__tablename__):
+                   print(f'131 Table {__class__.__tablename__} does not exist')
+                   metadata=MetaData()
+                   metadata.bind=engine
+                   __class__.__table__.metadata=metadata
+                   __class__.__table__.create(checkfirst=True)
+                   if not engine.dialect.has_table(engine, __class__.__tablename__):
+                       print('137 Table %s does not exist. creation error?'% __class__.__tablename__)
+                   else:
+                       print('139 Table %s exist !!!'% __class__.__tablename__)
+               else:
+                   pass # GV print('141 Table %s exist !!!'% __class__.__tablename__)
+           except Exception as e:
+              print(f'143 exception: {str(e)}')
+           return
+    def set_shard(suffix=None,engine=None):
        if suffix is not None:
            name='CU_Operations_{suffix}'.format(suffix=suffix)
            __class__.__tablename__  = name
            __class__.__table__.name = name
+       __class__.check_shard(suffix,engine)
        return __class__.__tablename__
 
     CU_Operation = db.Column( db.String(10), primary_key=True )
@@ -723,18 +933,37 @@ class cu_operation(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-12-26 16:09:20
+# GLVH @ 2022-01-04 10:12:30
 # =============================================================================
 
 # gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_currencies.py
 class currency(db.Model,Serializer):
     __tablename__ = 'Currencies'
 
-    def set_shard(suffix=None):
+    def check_shard(suffix=None,engine=None):
+       if engine is not None:
+           try:
+               if not engine.dialect.has_table(engine, __class__.__tablename__):
+                   print(f'131 Table {__class__.__tablename__} does not exist')
+                   metadata=MetaData()
+                   metadata.bind=engine
+                   __class__.__table__.metadata=metadata
+                   __class__.__table__.create(checkfirst=True)
+                   if not engine.dialect.has_table(engine, __class__.__tablename__):
+                       print('137 Table %s does not exist. creation error?'% __class__.__tablename__)
+                   else:
+                       print('139 Table %s exist !!!'% __class__.__tablename__)
+               else:
+                   pass # GV print('141 Table %s exist !!!'% __class__.__tablename__)
+           except Exception as e:
+              print(f'143 exception: {str(e)}')
+           return
+    def set_shard(suffix=None,engine=None):
        if suffix is not None:
            name='Currencies_{suffix}'.format(suffix=suffix)
            __class__.__tablename__  = name
            __class__.__table__.name = name
+       __class__.check_shard(suffix,engine)
        return __class__.__tablename__
 
     Cur_Code    = db.Column( db.String(3), primary_key=True )
@@ -766,18 +995,37 @@ class currency(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-12-26 16:09:20
+# GLVH @ 2022-01-04 10:12:30
 # =============================================================================
 
 # gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_customers.py
 class customer(db.Model,Serializer):
     __tablename__ = 'Customers'
 
-    def set_shard(suffix=None):
+    def check_shard(suffix=None,engine=None):
+       if engine is not None:
+           try:
+               if not engine.dialect.has_table(engine, __class__.__tablename__):
+                   print(f'131 Table {__class__.__tablename__} does not exist')
+                   metadata=MetaData()
+                   metadata.bind=engine
+                   __class__.__table__.metadata=metadata
+                   __class__.__table__.create(checkfirst=True)
+                   if not engine.dialect.has_table(engine, __class__.__tablename__):
+                       print('137 Table %s does not exist. creation error?'% __class__.__tablename__)
+                   else:
+                       print('139 Table %s exist !!!'% __class__.__tablename__)
+               else:
+                   pass # GV print('141 Table %s exist !!!'% __class__.__tablename__)
+           except Exception as e:
+              print(f'143 exception: {str(e)}')
+           return
+    def set_shard(suffix=None,engine=None):
        if suffix is not None:
            name='Customers_{suffix}'.format(suffix=suffix)
            __class__.__tablename__  = name
            __class__.__table__.name = name
+       __class__.check_shard(suffix,engine)
        return __class__.__tablename__
 
     Cus_Id   = db.Column( db.Integer, primary_key=True, autoincrement=True )
@@ -803,18 +1051,37 @@ class customer(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-12-26 16:09:20
+# GLVH @ 2022-01-04 10:12:30
 # =============================================================================
 
 # gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_cu_types.py
 class cu_type(db.Model,Serializer):
     __tablename__ = 'CU_Types'
 
-    def set_shard(suffix=None):
+    def check_shard(suffix=None,engine=None):
+       if engine is not None:
+           try:
+               if not engine.dialect.has_table(engine, __class__.__tablename__):
+                   print(f'131 Table {__class__.__tablename__} does not exist')
+                   metadata=MetaData()
+                   metadata.bind=engine
+                   __class__.__table__.metadata=metadata
+                   __class__.__table__.create(checkfirst=True)
+                   if not engine.dialect.has_table(engine, __class__.__tablename__):
+                       print('137 Table %s does not exist. creation error?'% __class__.__tablename__)
+                   else:
+                       print('139 Table %s exist !!!'% __class__.__tablename__)
+               else:
+                   pass # GV print('141 Table %s exist !!!'% __class__.__tablename__)
+           except Exception as e:
+              print(f'143 exception: {str(e)}')
+           return
+    def set_shard(suffix=None,engine=None):
        if suffix is not None:
            name='CU_Types_{suffix}'.format(suffix=suffix)
            __class__.__tablename__  = name
            __class__.__table__.name = name
+       __class__.check_shard(suffix,engine)
        return __class__.__tablename__
 
     Typ_Code        = db.Column( db.String(10), primary_key=True )
@@ -838,18 +1105,37 @@ class cu_type(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-12-26 16:09:20
+# GLVH @ 2022-01-04 10:12:30
 # =============================================================================
 
 # gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_exchange_rates.py
 class exchange_rate(db.Model,Serializer):
     __tablename__ = 'Exchange_Rates'
 
-    def set_shard(suffix=None):
+    def check_shard(suffix=None,engine=None):
+       if engine is not None:
+           try:
+               if not engine.dialect.has_table(engine, __class__.__tablename__):
+                   print(f'131 Table {__class__.__tablename__} does not exist')
+                   metadata=MetaData()
+                   metadata.bind=engine
+                   __class__.__table__.metadata=metadata
+                   __class__.__table__.create(checkfirst=True)
+                   if not engine.dialect.has_table(engine, __class__.__tablename__):
+                       print('137 Table %s does not exist. creation error?'% __class__.__tablename__)
+                   else:
+                       print('139 Table %s exist !!!'% __class__.__tablename__)
+               else:
+                   pass # GV print('141 Table %s exist !!!'% __class__.__tablename__)
+           except Exception as e:
+              print(f'143 exception: {str(e)}')
+           return
+    def set_shard(suffix=None,engine=None):
        if suffix is not None:
            name='Exchange_Rates_{suffix}'.format(suffix=suffix)
            __class__.__tablename__  = name
            __class__.__table__.name = name
+       __class__.check_shard(suffix,engine)
        return __class__.__tablename__
 
     ER_Id     = db.Column( db.Integer, primary_key=True, autoincrement=True )
@@ -873,18 +1159,37 @@ class exchange_rate(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-12-26 16:09:20
+# GLVH @ 2022-01-04 10:12:30
 # =============================================================================
 
 # gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_interface.py
 class interface(db.Model,Serializer):
     __tablename__ = 'Interface'
 
-    def set_shard(suffix=None):
+    def check_shard(suffix=None,engine=None):
+       if engine is not None:
+           try:
+               if not engine.dialect.has_table(engine, __class__.__tablename__):
+                   print(f'131 Table {__class__.__tablename__} does not exist')
+                   metadata=MetaData()
+                   metadata.bind=engine
+                   __class__.__table__.metadata=metadata
+                   __class__.__table__.create(checkfirst=True)
+                   if not engine.dialect.has_table(engine, __class__.__tablename__):
+                       print('137 Table %s does not exist. creation error?'% __class__.__tablename__)
+                   else:
+                       print('139 Table %s exist !!!'% __class__.__tablename__)
+               else:
+                   pass # GV print('141 Table %s exist !!!'% __class__.__tablename__)
+           except Exception as e:
+              print(f'143 exception: {str(e)}')
+           return
+    def set_shard(suffix=None,engine=None):
        if suffix is not None:
            name='Interface_{suffix}'.format(suffix=suffix)
            __class__.__tablename__  = name
            __class__.__table__.name = name
+       __class__.check_shard(suffix,engine)
        return __class__.__tablename__
 
     Id          = db.Column( db.Integer, primary_key=True, autoincrement=True )
@@ -916,18 +1221,37 @@ class interface(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-12-26 16:09:20
+# GLVH @ 2022-01-04 10:12:30
 # =============================================================================
 
 # gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_measure_units.py
 class measure_unit(db.Model,Serializer):
     __tablename__ = 'Measure_Units'
 
-    def set_shard(suffix=None):
+    def check_shard(suffix=None,engine=None):
+       if engine is not None:
+           try:
+               if not engine.dialect.has_table(engine, __class__.__tablename__):
+                   print(f'131 Table {__class__.__tablename__} does not exist')
+                   metadata=MetaData()
+                   metadata.bind=engine
+                   __class__.__table__.metadata=metadata
+                   __class__.__table__.create(checkfirst=True)
+                   if not engine.dialect.has_table(engine, __class__.__tablename__):
+                       print('137 Table %s does not exist. creation error?'% __class__.__tablename__)
+                   else:
+                       print('139 Table %s exist !!!'% __class__.__tablename__)
+               else:
+                   pass # GV print('141 Table %s exist !!!'% __class__.__tablename__)
+           except Exception as e:
+              print(f'143 exception: {str(e)}')
+           return
+    def set_shard(suffix=None,engine=None):
        if suffix is not None:
            name='Measure_Units_{suffix}'.format(suffix=suffix)
            __class__.__tablename__  = name
            __class__.__table__.name = name
+       __class__.check_shard(suffix,engine)
        return __class__.__tablename__
 
     MU_Code        = db.Column( db.String(3), primary_key=True )
@@ -949,18 +1273,37 @@ class measure_unit(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-12-26 16:09:20
+# GLVH @ 2022-01-04 10:12:30
 # =============================================================================
 
 # gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_platforms.py
 class platform(db.Model,Serializer):
     __tablename__ = 'Platforms'
 
-    def set_shard(suffix=None):
+    def check_shard(suffix=None,engine=None):
+       if engine is not None:
+           try:
+               if not engine.dialect.has_table(engine, __class__.__tablename__):
+                   print(f'131 Table {__class__.__tablename__} does not exist')
+                   metadata=MetaData()
+                   metadata.bind=engine
+                   __class__.__table__.metadata=metadata
+                   __class__.__table__.create(checkfirst=True)
+                   if not engine.dialect.has_table(engine, __class__.__tablename__):
+                       print('137 Table %s does not exist. creation error?'% __class__.__tablename__)
+                   else:
+                       print('139 Table %s exist !!!'% __class__.__tablename__)
+               else:
+                   pass # GV print('141 Table %s exist !!!'% __class__.__tablename__)
+           except Exception as e:
+              print(f'143 exception: {str(e)}')
+           return
+    def set_shard(suffix=None,engine=None):
        if suffix is not None:
            name='Platforms_{suffix}'.format(suffix=suffix)
            __class__.__tablename__  = name
            __class__.__table__.name = name
+       __class__.check_shard(suffix,engine)
        return __class__.__tablename__
 
     Pla_Id       = db.Column( db.Integer, primary_key=True, autoincrement=True )
@@ -992,18 +1335,37 @@ class platform(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-12-26 16:09:20
+# GLVH @ 2022-01-04 10:12:30
 # =============================================================================
 
 # gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_rates.py
 class rate(db.Model,Serializer):
     __tablename__ = 'Rates'
 
-    def set_shard(suffix=None):
+    def check_shard(suffix=None,engine=None):
+       if engine is not None:
+           try:
+               if not engine.dialect.has_table(engine, __class__.__tablename__):
+                   print(f'131 Table {__class__.__tablename__} does not exist')
+                   metadata=MetaData()
+                   metadata.bind=engine
+                   __class__.__table__.metadata=metadata
+                   __class__.__table__.create(checkfirst=True)
+                   if not engine.dialect.has_table(engine, __class__.__tablename__):
+                       print('137 Table %s does not exist. creation error?'% __class__.__tablename__)
+                   else:
+                       print('139 Table %s exist !!!'% __class__.__tablename__)
+               else:
+                   pass # GV print('141 Table %s exist !!!'% __class__.__tablename__)
+           except Exception as e:
+              print(f'143 exception: {str(e)}')
+           return
+    def set_shard(suffix=None,engine=None):
        if suffix is not None:
            name='Rates_{suffix}'.format(suffix=suffix)
            __class__.__tablename__  = name
            __class__.__table__.name = name
+       __class__.check_shard(suffix,engine)
        return __class__.__tablename__
 
     Rat_Id     = db.Column( db.Integer, primary_key=True, autoincrement=True )
@@ -1047,18 +1409,37 @@ class rate(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-12-26 16:09:20
+# GLVH @ 2022-01-04 10:12:30
 # =============================================================================
 
 # gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_rat_periods.py
 class rat_period(db.Model,Serializer):
     __tablename__ = 'Rat_Periods'
 
-    def set_shard(suffix=None):
+    def check_shard(suffix=None,engine=None):
+       if engine is not None:
+           try:
+               if not engine.dialect.has_table(engine, __class__.__tablename__):
+                   print(f'131 Table {__class__.__tablename__} does not exist')
+                   metadata=MetaData()
+                   metadata.bind=engine
+                   __class__.__table__.metadata=metadata
+                   __class__.__table__.create(checkfirst=True)
+                   if not engine.dialect.has_table(engine, __class__.__tablename__):
+                       print('137 Table %s does not exist. creation error?'% __class__.__tablename__)
+                   else:
+                       print('139 Table %s exist !!!'% __class__.__tablename__)
+               else:
+                   pass # GV print('141 Table %s exist !!!'% __class__.__tablename__)
+           except Exception as e:
+              print(f'143 exception: {str(e)}')
+           return
+    def set_shard(suffix=None,engine=None):
        if suffix is not None:
            name='Rat_Periods_{suffix}'.format(suffix=suffix)
            __class__.__tablename__  = name
            __class__.__table__.name = name
+       __class__.check_shard(suffix,engine)
        return __class__.__tablename__
 
     Rat_Period = db.Column( db.Integer, primary_key=True )
@@ -1080,18 +1461,37 @@ class rat_period(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-12-26 16:09:20
+# GLVH @ 2022-01-04 10:12:30
 # =============================================================================
 
 # gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_roles.py
 class Role(db.Model,Serializer):
     __tablename__ = 'Roles'
 
-    def set_shard(suffix=None):
+    def check_shard(suffix=None,engine=None):
+       if engine is not None:
+           try:
+               if not engine.dialect.has_table(engine, __class__.__tablename__):
+                   print(f'131 Table {__class__.__tablename__} does not exist')
+                   metadata=MetaData()
+                   metadata.bind=engine
+                   __class__.__table__.metadata=metadata
+                   __class__.__table__.create(checkfirst=True)
+                   if not engine.dialect.has_table(engine, __class__.__tablename__):
+                       print('137 Table %s does not exist. creation error?'% __class__.__tablename__)
+                   else:
+                       print('139 Table %s exist !!!'% __class__.__tablename__)
+               else:
+                   pass # GV print('141 Table %s exist !!!'% __class__.__tablename__)
+           except Exception as e:
+              print(f'143 exception: {str(e)}')
+           return
+    def set_shard(suffix=None,engine=None):
        if suffix is not None:
            name='Roles_{suffix}'.format(suffix=suffix)
            __class__.__tablename__  = name
            __class__.__table__.name = name
+       __class__.check_shard(suffix,engine)
        return __class__.__tablename__
 
     id          = db.Column( db.Integer, primary_key=True )
@@ -1134,18 +1534,37 @@ class Role(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-12-26 16:09:20
+# GLVH @ 2022-01-04 10:12:30
 # =============================================================================
 
 # gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_st_use_per_cu.py
 class st_use_per_cu(db.Model,Serializer):
     __tablename__ = 'ST_Use_Per_CU'
 
-    def set_shard(suffix=None):
+    def check_shard(suffix=None,engine=None):
+       if engine is not None:
+           try:
+               if not engine.dialect.has_table(engine, __class__.__tablename__):
+                   print(f'131 Table {__class__.__tablename__} does not exist')
+                   metadata=MetaData()
+                   metadata.bind=engine
+                   __class__.__table__.metadata=metadata
+                   __class__.__table__.create(checkfirst=True)
+                   if not engine.dialect.has_table(engine, __class__.__tablename__):
+                       print('137 Table %s does not exist. creation error?'% __class__.__tablename__)
+                   else:
+                       print('139 Table %s exist !!!'% __class__.__tablename__)
+               else:
+                   pass # GV print('141 Table %s exist !!!'% __class__.__tablename__)
+           except Exception as e:
+              print(f'143 exception: {str(e)}')
+           return
+    def set_shard(suffix=None,engine=None):
        if suffix is not None:
            name='ST_Use_Per_CU_{suffix}'.format(suffix=suffix)
            __class__.__tablename__  = name
            __class__.__table__.name = name
+       __class__.check_shard(suffix,engine)
        return __class__.__tablename__
 
     CU_Id                  = db.Column( db.Integer, primary_key=True )
@@ -1207,18 +1626,37 @@ class st_use_per_cu(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-12-26 16:09:20
+# GLVH @ 2022-01-04 10:12:30
 # =============================================================================
 
 # gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_st_use_per_type.py
 class st_use_per_type(db.Model,Serializer):
     __tablename__ = 'ST_Use_Per_Type'
 
-    def set_shard(suffix=None):
+    def check_shard(suffix=None,engine=None):
+       if engine is not None:
+           try:
+               if not engine.dialect.has_table(engine, __class__.__tablename__):
+                   print(f'131 Table {__class__.__tablename__} does not exist')
+                   metadata=MetaData()
+                   metadata.bind=engine
+                   __class__.__table__.metadata=metadata
+                   __class__.__table__.create(checkfirst=True)
+                   if not engine.dialect.has_table(engine, __class__.__tablename__):
+                       print('137 Table %s does not exist. creation error?'% __class__.__tablename__)
+                   else:
+                       print('139 Table %s exist !!!'% __class__.__tablename__)
+               else:
+                   pass # GV print('141 Table %s exist !!!'% __class__.__tablename__)
+           except Exception as e:
+              print(f'143 exception: {str(e)}')
+           return
+    def set_shard(suffix=None,engine=None):
        if suffix is not None:
            name='ST_Use_Per_Type_{suffix}'.format(suffix=suffix)
            __class__.__tablename__  = name
            __class__.__table__.name = name
+       __class__.check_shard(suffix,engine)
        return __class__.__tablename__
 
     Typ_Code = db.Column( db.String(10), primary_key=True )
@@ -1390,18 +1828,37 @@ def get_trace_202101(table_name_suffix):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-12-26 16:09:20
+# GLVH @ 2022-01-04 10:12:30
 # =============================================================================
 
 # gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_trace.py
 class trace(db.Model,Serializer):
     __tablename__ = 'Trace'
 
-    def set_shard(suffix=None):
+    def check_shard(suffix=None,engine=None):
+       if engine is not None:
+           try:
+               if not engine.dialect.has_table(engine, __class__.__tablename__):
+                   print(f'131 Table {__class__.__tablename__} does not exist')
+                   metadata=MetaData()
+                   metadata.bind=engine
+                   __class__.__table__.metadata=metadata
+                   __class__.__table__.create(checkfirst=True)
+                   if not engine.dialect.has_table(engine, __class__.__tablename__):
+                       print('137 Table %s does not exist. creation error?'% __class__.__tablename__)
+                   else:
+                       print('139 Table %s exist !!!'% __class__.__tablename__)
+               else:
+                   pass # GV print('141 Table %s exist !!!'% __class__.__tablename__)
+           except Exception as e:
+              print(f'143 exception: {str(e)}')
+           return
+    def set_shard(suffix=None,engine=None):
        if suffix is not None:
            name='Trace_{suffix}'.format(suffix=suffix)
            __class__.__tablename__  = name
            __class__.__table__.name = name
+       __class__.check_shard(suffix,engine)
        return __class__.__tablename__
 
     ID   = db.Column( db.Integer, primary_key=True, autoincrement=True )
@@ -1421,18 +1878,37 @@ class trace(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-12-26 16:09:20
+# GLVH @ 2022-01-04 10:12:30
 # =============================================================================
 
 # gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_user_resumes.py
 class user_resumes(db.Model,Serializer):
     __tablename__ = 'User_Resumes'
 
-    def set_shard(suffix=None):
+    def check_shard(suffix=None,engine=None):
+       if engine is not None:
+           try:
+               if not engine.dialect.has_table(engine, __class__.__tablename__):
+                   print(f'131 Table {__class__.__tablename__} does not exist')
+                   metadata=MetaData()
+                   metadata.bind=engine
+                   __class__.__table__.metadata=metadata
+                   __class__.__table__.create(checkfirst=True)
+                   if not engine.dialect.has_table(engine, __class__.__tablename__):
+                       print('137 Table %s does not exist. creation error?'% __class__.__tablename__)
+                   else:
+                       print('139 Table %s exist !!!'% __class__.__tablename__)
+               else:
+                   pass # GV print('141 Table %s exist !!!'% __class__.__tablename__)
+           except Exception as e:
+              print(f'143 exception: {str(e)}')
+           return
+    def set_shard(suffix=None,engine=None):
        if suffix is not None:
            name='User_Resumes_{suffix}'.format(suffix=suffix)
            __class__.__tablename__  = name
            __class__.__table__.name = name
+       __class__.check_shard(suffix,engine)
        return __class__.__tablename__
 
     User_Id                = db.Column( db.Integer, primary_key=True )
@@ -1524,18 +2000,37 @@ class user_resumes(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2021-12-26 16:09:20
+# GLVH @ 2022-01-04 10:12:30
 # =============================================================================
 
 # gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_users.py
 class User(UserMixin, db.Model,Serializer):
     __tablename__ = 'Users'
 
-    def set_shard(suffix=None):
+    def check_shard(suffix=None,engine=None):
+       if engine is not None:
+           try:
+               if not engine.dialect.has_table(engine, __class__.__tablename__):
+                   print(f'131 Table {__class__.__tablename__} does not exist')
+                   metadata=MetaData()
+                   metadata.bind=engine
+                   __class__.__table__.metadata=metadata
+                   __class__.__table__.create(checkfirst=True)
+                   if not engine.dialect.has_table(engine, __class__.__tablename__):
+                       print('137 Table %s does not exist. creation error?'% __class__.__tablename__)
+                   else:
+                       print('139 Table %s exist !!!'% __class__.__tablename__)
+               else:
+                   pass # GV print('141 Table %s exist !!!'% __class__.__tablename__)
+           except Exception as e:
+              print(f'143 exception: {str(e)}')
+           return
+    def set_shard(suffix=None,engine=None):
        if suffix is not None:
            name='Users_{suffix}'.format(suffix=suffix)
            __class__.__tablename__  = name
            __class__.__table__.name = name
+       __class__.check_shard(suffix,engine)
        return __class__.__tablename__
 
     id            = db.Column( db.Integer, primary_key=True, autoincrement=True )

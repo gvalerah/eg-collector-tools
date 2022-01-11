@@ -4,7 +4,7 @@
 """
 @main.route('/', methods=['GET', 'POST'])
 def index():
-    # Espera a capitulo 3 para mejorar procedimiento de respuesta, hard coding mucho aqui
+    # GV Espera a capitulo 3 para mejorar procedimiento de respuesta, hard coding mucho aqui
     logger.debug("index() IN")
 
     data =  {   "name":current_app.name,
@@ -35,7 +35,7 @@ def reports(report,customer,fromx,tox,currency):
 
     r = page_header()
     r+= '<h1>Get \'%s\' for customer %s in period %s to %s cur=%s</h1>' % (report,customer,fromx,tox,currency)
-    # SQL Query call here
+    # GV SQL Query call here
     #query = text("C*ALL Get_Billing_Resume(%s,'%s','%s',1,'%s')"%(customer,fromx,tox,currency))
     try:
         #result = C.db.execute(query).fetchall()
@@ -64,13 +64,13 @@ def table(name):
     r = page_header()
     r+= '<h1>Get \'%s\' data</h1>' % (name)
 
-    # SQL Query call here
+    # GV SQL Query call here
     
     try:
-        # Build Query
+        # GV Build Query
         query = text("SELECT * FROM %s"%(name))
 
-        # Get keys (column names) from Query        
+        # GV Get keys (column names) from Query        
         keys=C.db.execute(query).keys()
         
         r+="<p>Query=%s</p>"%str(query)
@@ -109,12 +109,12 @@ def table(name):
 def query(name):
     logger.debug("query() IN %s"% (name))
 
-    # SQL Query call here    
+    # GV SQL Query call here    
     try:
-        # Build Query
+        # GV Build Query
         query = text("SELECT * FROM %s"%(name))
 
-        # Get keys (column names) from Query        
+        # GV Get keys (column names) from Query        
         keys=C.db.execute(query).keys()
 
         rows = C.db.execute(query).fetchall()
@@ -129,7 +129,7 @@ def query(name):
 @main.route('/query_orm/<table_name>')
 def query_orm(table_name):
     logger.debug("query() IN %s"% (table_name))
-    # SQL Query call here    
+    # GV SQL Query call here    
     try:
         Session = sessionmaker(bind=C.db)  
         session=Session()

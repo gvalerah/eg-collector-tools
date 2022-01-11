@@ -24,10 +24,19 @@ from emtec                                 import *
 from emtec.common.functions                import *
 from emtec.collector.db.flask_models       import User
 from emtec.collector.db.flask_models       import Permission
-# 20200224 GV from emtec.collector.db.orm_model          import Interface
+# GV 20200224 GV from emtec.collector.db.orm_model          import Interface
 from emtec.collector.db.flask_models       import *
 from emtec.collector.db.orm_model          import *
 from emtec.api                             import *
+
+# GV EG Collector Global required role constants
+ROLE_CUSTOMER=1
+ROLE_REPORTER=2
+ROLE_CHARGER=3
+ROLE_ADMINISTRATOR=4
+ROLE_AUDITOR=5
+ROLE_GOD=6
+ROLE_RESERVED=7
 
 """ Application decorators for routes """
 """ Decorators specify main routes to be handled by Collector Solution """
@@ -35,15 +44,15 @@ from emtec.api                             import *
 @main.route('/', methods=['GET', 'POST'])
 def index():
     
-    # Espera a capitulo 3 para mejorar procedimiento de respuesta, hard coding mucho aqui
+    # GV Espera a capitulo 3 para mejorar procedimiento de respuesta, hard coding mucho aqui
     
-    # Aqui debo setear el ambiente de variables de periodo -------------
+    # GV Aqui debo setear el ambiente de variables de periodo -------------
     try:
         Period = get_period_data(current_user.id,db.engine,Interface)
     except:
         Period = get_period_data()
-    # ------------------------------------------------------------------
-    # Setup all data to render in template
+    # GV ------------------------------------------------------------------
+    # GV Setup all data to render in template
     data =  {   "name":current_app.name,
                 "app_name":current_app.name,
                 "date_time":strftime('%Y-%m-%d %H:%M:%S'),
@@ -54,14 +63,17 @@ def index():
                 "VERSION_MINOR":VERSION_MINOR,
                 "VERSION_PATCH":VERSION_PATCH,
             }
-    collectordata={
-                "COLLECTOR_PERIOD":Period,
-    }
+    if current_user.is_authenticated:
+        collectordata=get_collectordata()
+    else:
+        collectordata={"COLLECTOR_PERIOD":Period}
+        
     return render_template('collector.html',data=data,collectordata=collectordata)
 
 @main.route('/under_construction', methods=['GET','POST'])
 def under_construction():   
-    return render_template('under_construction.html')
+    collectordata = get_collectordata()
+    return render_template('under_construction.html',collectordata=collectordata)
 
 @main.route('/demo', methods=['GET','POST'])
 def demo():   
@@ -70,7 +82,7 @@ def demo():
 @main.route('/test_index', methods=['GET', 'POST'])
 def test_index():
     
-    # Espera a capitulo 3 para mejorar procedimiento de respuesta, hard coding mucho aqui
+    # GV Espera a capitulo 3 para mejorar procedimiento de respuesta, hard coding mucho aqui
 
     if logger is not None:
         logger.debug("index() IN")
@@ -108,7 +120,7 @@ def collector_about():
     return render_template('collector_about.html')
 '''
 
-# Flask Caching avoider
+# GV Flask Caching avoider
 @main.after_request
 def add_header(r):
     """
@@ -121,15 +133,15 @@ def add_header(r):
     r.headers["Cache-Control"] = "public, max-age=0"
     return r
 
-# Application specific functions
-# ----------------------------------------------------------------------
-# This function is intented to define dinamic context data
-# Collector Charge Items sharding period and table setup
-# A context 'collectordata' object is returned
-# ----------------------------------------------------------------------
+# GV Application specific functions
+# GV -------------------------------------------------------------------
+# GV This function is intented to define dynamic context data
+# GV Collector Charge Items sharding period and table setup
+# GV A context 'collectordata' object is returned
+# GV -------------------------------------------------------------------
 def get_collectordata():
     collectordata = {}
-    # Here we'll include al important Collector context data 
+    # GV Here we'll include al important Collector context data 
     collectordata.update({"COLLECTOR_PERIOD":get_period_data(current_user.id,db.engine,Interface)})
     collectordata.update({"CONFIG":current_app.config})
     active_period = collectordata['COLLECTOR_PERIOD']['active']
@@ -140,25 +152,55 @@ def get_collectordata():
     logger.debug(f"{this()}: COLLECTOR_PERIOD={collectordata['COLLECTOR_PERIOD']}") 
     
     sharding = False
-    # GV Here we'll include sharding required code
+    # GV GV Here we'll include sharding required code
     if 'COLLECTOR_CIT_SHARDING' in current_app.config: 
         sharding = current_app.config['COLLECTOR_CIT_SHARDING']
+        logger.debug(f"{this()}: sharding={sharding}") 
     if sharding:
-        # GV Get customer id, just in case is needed
+        # GV GV Get customer id, just in case is needed
         customer = current_user.cost_center.Cus_Id
         cus_sharding = current_app.config.get('COLLECTOR_CUS_SHARDING') if current_app.config.get('COLLECTOR_CUS_SHARDING') else None
-        # GV If required customer sharding then affect suffix
+        # GV GV If required customer sharding then affect suffix
         if cus_sharding:
             cus_sharding = True if cus_sharding.upper() in ['TRUE','T','YES','Y','VERDADERO','V'] else False
-        if cus_sharding:
-            suffix = f"{customer}{active_period}"
-        else:
-            # Use default non tenant suffix 
-            suffix = active_period  
-        # GV Nedd to check if sharded table exists, if not should be created
-        charge_item.set_shard(suffix)
+        logger.debug(f"{this()}: cus_sharding={cus_sharding}") 
+        # GV if cus_sharding:
+        # Default suffix will be multitenant
+        suffix = f"{customer}_{active_period}"
+        # GV else:
+        # GV Use default non tenant suffix 
+        # GV   suffix = active_period  
+        logger.debug(f"{this()}: suffix={suffix}") 
+        # GV GV Need to check if sharded table exists, if not should be created
+        charge_item.set_shard(suffix,db.engine)
         flash(                 f"Using shardened table: {charge_item.__table__.name}") 
         logger.debug(f"{this()}: Using shardened table: {charge_item.__table__.name}") 
+    
+    # Aqui debe leer configuracion
+    config = configparser.ConfigParser()
+    config.read(current_app.config.get('COLLECTOR_CONFIG_FILE'))
+    if current_user.role.id in [ROLE_CUSTOMER,ROLE_ADMINISTRATOR,ROLE_GOD]:
+        if 'Customer_Options' in config.sections():
+            collectordata.update({
+                'customer_options':{
+                    "Adds":{
+                        #"roles":config.get('Customer_Options','roles').split(','),
+                        "options":json.loads(config.get('Customer_Options','options')),
+                        },
+                    }
+                })
+    if current_user.role.id in [ROLE_ADMINISTRATOR,ROLE_GOD]:
+        if 'Administrator_Options' in config.sections():
+            collectordata.update({
+                'administrator_options':{
+                    "Admin adds":{
+                        #"roles":config.get('Administrator_Options','roles').split(','),
+                        "options":json.loads(config.get('Administrator_Options','options')),
+                        },
+                    }
+                })
+        
+    # GV print(f"views_py_header: get_collectordata(): collectordata = {collectordata}")
     
     return collectordata
 

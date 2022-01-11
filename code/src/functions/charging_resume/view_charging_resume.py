@@ -1,10 +1,11 @@
-# ======================================================================
-# View for Get Charging Resume from DB
-# (c) Sertechno 2018
-# GLVH @ 2019-08-16
-# GLVH @ 2019-08-18 Refactoring to ORM DB Only
-# GLVH @ 2020-10-25 Proper sharding and initialization handling
-# ======================================================================
+# GV ===================================================================
+# GV View for Get Charging Resume from DB
+# GV (c) Sertechno 2018
+# GV GLVH @ 2019-08-16
+# GV GLVH @ 2019-08-18 Refactoring to ORM DB Only
+# GV GLVH @ 2020-10-25 Proper sharding and initialization handling
+# GV GLVH @ 2021-12-26 Progress bar in queries and other improvements
+# GV ===================================================================
 
 from pprint                         import pformat
 from emtec.collector.forms          import frm_charging_resume
@@ -24,10 +25,10 @@ import queue
 import configparser
 import uuid
 
-# A map to hold queues or othr items ammong threads
+# GV A map to hold queues or othr items ammong threads
 FEEDBACK={}
 
-# ======================================================================
+# GV ======================================================================
 
 @main.route('/forms/Get_Charging_Resume', methods=['GET', 'POST'])
 @login_required
@@ -46,14 +47,14 @@ def forms_Get_Charging_Resume():
 
     form = frm_charging_resume()
 
-    # ------------------------------------------------------------------------------
-    # Will setup filter to consider only Currencies with actual Exchange Rates in DB
-    # Commit all pending DB states in order to refresh data
+    # GV ------------------------------------------------------------------------------
+    # GV Will setup filter to consider only Currencies with actual Exchange Rates in DB
+    # GV Commit all pending DB states in order to refresh data
     db.session.commit()
     db.session.flush()
-    # Prepare query
+    # GV Prepare query
     query = db.session.query(exchange_rate.Cur_Code.distinct().label('Cur_Code'))
-    # Execute query and convert in list for further use in choices selection
+    # GV Execute query and convert in list for further use in choices selection
     cur_choices = [row.Cur_Code for row in query.all()]
 
     form.Cus_Id.choices     = db.session.query(customer.Cus_Id,customer.Cus_Name).all()
@@ -70,7 +71,7 @@ def forms_Get_Charging_Resume():
         print(f"session[data]={session.get('data')}")
         print(f"current_user={current_user}")
         if     form.submit_Report.data:
-            # Get the Selected options index for string lists
+            # GV Get the Selected options index for string lists
             for i in range(len(form.Cus_Id.choices)):
                 if form.Cus_Id.choices[i][0]==form.Cus_Id.data:
                     cus_index=i
@@ -90,7 +91,7 @@ def forms_Get_Charging_Resume():
                                 Update          = 0
                                 ))
         if     form.submit_Update.data:
-            # Get the Selected options index for string lists
+            # GV Get the Selected options index for string lists
             for i in range(len(form.Cus_Id.choices)):
                 if form.Cus_Id.choices[i][0]==form.Cus_Id.data:
                     cus_index=i
@@ -134,10 +135,10 @@ def forms_Get_Charging_Resume_Progress():
     try:
         logger.debug(f'{this()}: Enter')
         Filter =  request.args.get('filter','customer',type=str)
-        print(f"{this}: current_app = {current_app}")
-        print(f"{this}: current_user = {current_user}")
+        # GV print(f"{this()}: current_app = {current_app}")
+        # GV print(f"{this()}: current_user = {current_user}")
         collectordata=get_collectordata()
-        print(f"{this}: collectordata = {collectordata}")
+        # GV print(f"{this()}: collectordata = {collectordata}")
         logger.debug(f"{this()}: getting configuration information")
         config_parser = configparser.ConfigParser()
         logger.debug(f"{this()}: current_app.config.get('COLLECTOR_CONFIG_FILE') = {current_app.config.get('COLLECTOR_CONFIG_FILE')}")
@@ -187,14 +188,14 @@ def forms_Get_Charging_Resume_Progress():
             
         logger.debug(f"{this()}: Filter={Filter} form={form} template={template}")
 
-        # ------------------------------------------------------------------------------
-        # Will setup filter to consider only Currencies with actual Exchange Rates in DB
-        # Commit all pending DB states in order to refresh data
+        # GV ------------------------------------------------------------------------------
+        # GV Will setup filter to consider only Currencies with actual Exchange Rates in DB
+        # GV Commit all pending DB states in order to refresh data
         logger.debug(f"{this()} commit session and flushing DB ...")
         db.session.commit()
         db.session.flush()
-        # Prepare query
-        # Execute query and convert in list for further use in choices selection
+        # GV Prepare query
+        # GV Execute query and convert in list for further use in choices selection
 
         logger.debug(f"{this()} Initializing form choices ...")
         if hasattr(form,'CC_Id'):
@@ -237,7 +238,7 @@ def forms_Get_Charging_Resume_Progress():
             Cur_Name = None
             Pla_Id   = None
             Pla_Name = None
-            # Get the Selected options index for string lists
+            # GV Get the Selected options index for string lists
             if hasattr(form,'Cus_Id'):
                 for i in range(len(form.Cus_Id.choices)):
                     if form.Cus_Id.choices[i][0]==form.Cus_Id.data:
@@ -323,7 +324,7 @@ def forms_Get_Charging_Resume_Progress():
                 flash('{this()}: form validated but not submited. Report to Support ...','error')
             return redirect(url_for('.forms_Get_Charging_Resume_Progress'))
         
-        # Setting defaults from config/DB/environment
+        # GV Setting defaults from config/DB/environment
         logger.debug(f"{this()} loading session data defaults ...")
         if session['data']['CC_Id']   is None:
             session['data']['CC_Id']     = current_user.cost_center.CC_Id    
@@ -374,10 +375,10 @@ def forms_Get_Charging_Resume_Progress():
                     )
     except Exception as e:
         emtec_handle_general_exception(e,logger=logger)
-        # idea es: return render_template(50x,exception=emtec_handle_general_exception(e))
+        # GV idea es: return render_template(50x,exception=emtec_handle_general_exception(e))
         return emtec_handle_general_exception(e)
 
-# ======================================================================
+# GV ======================================================================
 
 import simplejson as json
 
@@ -401,17 +402,17 @@ def report_Charging_Resume():
     Cur_Name        =  request.args.get('Cur_Name',None,type=str)
     Update          =  request.args.get('Update',0,type=int)
         
-    # Updated cached data for this specific query if requested 
+    # GV Updated cached data for this specific query if requested 
     if Update == 1:
-        # BE SURE all CU records has proper description ----------------
+        # GV BE SURE all CU records has proper description ----------------
         updated_cus = db.Update_CU_Names()
         if updated_cus:
             logger.warning(f"{this()}: Updated Name CUs = {updated_cus}")
-        # BE SURE all CU records has proper rate id
+        # GV BE SURE all CU records has proper rate id
         updated_cus = db.Update_CU_Rates()
         if updated_cus:
             logger.warning(f"{this()}: Updated Rate CUs = {updated_cus}")
-        # --------------------------------------------------------------
+        # GV --------------------------------------------------------------
         
         query = db.session.query(
                 Configuration_Items.CI_Id
@@ -435,12 +436,12 @@ def report_Charging_Resume():
             CIT_Date_To,
             CIT_Status,
             Cur_Code,
-            ci_list,             # <-- Lista de CIs Requeridos          
+            ci_list,             # GV <-- Lista de CIs Requeridos          
             charge_item,
             current_user.id
             )
     
-    # Get Actual Remume Data from Database
+    # GV Get Actual Remume Data from Database
     rows = db.Get_Charge_Resume_Filter(
                 FILTER_CUSTOMER,
                 Cus_Id,
@@ -480,11 +481,11 @@ def report_Charging_Resume():
         return f"{this()}: Exception:  {str(e)}"
 
 
-# ======================================================================
-# Progress bar Beta implementation
-# Support routines
-# Calculates progress data 
-# and returns progress data as a JSON formated string
+# GV ======================================================================
+# GV Progress bar Beta implementation
+# GV Support routines
+# GV Calculates progress data 
+# GV and returns progress data as a JSON formated string
 
 @main.route('/read-progress',methods=['GET'])
 def read_progress():
@@ -527,7 +528,7 @@ def read_progress():
                 emtec_handle_general_exception(e,logger=logger)
                 data={}
             finally:
-                # anyway remove temporary file
+                # GV anyway remove temporary file
                 if os.path.exists(progress_filename):
                     os.remove(progress_filename)
         elif ipc_mode == 'fifo':
@@ -538,12 +539,12 @@ def read_progress():
                     read_bytes = os.read(ffh,1024*1024)
                     logger.warning(f"{this()}: read bytes = {len(read_bytes)} bytes")
                     if len(read_bytes) == 0:
-                        data={} # data will be empty 
+                        data={} # GV data will be empty 
                     else:
                         lines=read_bytes.encode().split('\n')
                         logger.warning(f"{this()}: lines = {len(lines)}")
                         for line in lines:
-                            data = json.loads(line) # data will have last line read only
+                            data = json.loads(line) # GV data will have last line read only
                     os.close(ffh)
                     logger.warning(f"{this()}: fifo fh {ffh} closed.")
             except Exception as e:
@@ -652,7 +653,7 @@ def report_Charging_Resume_Update(kwargs):
         ipc_fmt          = kwargs.get('ipc_fmt')
         verbose          = kwargs.get('verbose')
         fast             = kwargs.get('fast',1)
-        step             = kwargs.get('step',0.1) # Callback step default = 10%
+        step             = kwargs.get('step',0.1) # GV Callback step default = 10%
 
         fast = True if str(fast).upper() in ['1','TRUE','T','VERDADERO','V','YES','Y'] else False
         logger.debug(f"{this()}: current_user = {current_user}")
@@ -664,15 +665,15 @@ def report_Charging_Resume_Update(kwargs):
         logger.debug(f"{this()}: current_user = {current_user}")
         logger.debug(f"{this()}: db           = {db}")
 
-        # BE SURE all CU records has proper description ----------------
+        # GV BE SURE all CU records has proper description ----------------
         updated_cus = db.Update_CU_Names()
         if updated_cus:
             logger.debug(f"{this()}: Updated Name CUs = {updated_cus:,.0f}")
-        # BE SURE all CU records has proper rate id
+        # GV BE SURE all CU records has proper rate id
         updated_cus = db.Update_CU_Rates()
         if updated_cus:
             logger.debug(f"{this()}: Updated Rate CUs = {updated_cus:,.0f}")
-        # --------------------------------------------------------------
+        # GV --------------------------------------------------------------
         
         query = db.session.query(
                 Configuration_Items.CI_Id
@@ -704,9 +705,9 @@ def report_Charging_Resume_Update(kwargs):
             CIT_Date_To,
             CIT_Status,
             Cur_Code,
-            ci_list,             # <-- Lista de CIs Requeridos          
+            ci_list,             # GV <-- Lista de CIs Requeridos          
             charge_item,
-            User_Id,              # 20211212 GV was current_user.id
+            User_Id,              # GV 20211212 GV was current_user.id
             XCC_ID=CC_Id,
             fast=fast,
             callback=display_advance,
@@ -871,7 +872,7 @@ def report_Charging_Resume_Progress():
         if Level:
             Level_Name = [None,'Cost Center','Device','Component'][Level]
             
-        # IPC details
+        # GV IPC details
         logger.debug(f"{this()}: getting IPC details from configuration file {current_app.config.get('COLLECTOR_CONFIG_FILE')}...")
         parser = configparser.ConfigParser()
         parser.read(current_app.config.get("COLLECTOR_CONFIG_FILE"))
@@ -898,7 +899,7 @@ def report_Charging_Resume_Progress():
                 os.mkfifo(progress_fifo)
                 logger.info(f"{this()}: named pipe '{progress_fifo}' created ...")
             except FileExistsError:
-                # the file already exists
+                # GV the file already exists
                 logger.warning(f"{this()}: named pipe '{progress_fifo}' already exists while starting ...")
             except Exception as e:
                 emtec_handle_general_exception(e,logger=logger)
@@ -947,11 +948,11 @@ def report_Charging_Resume_Progress():
             'ipc_mode'         :  ipc_mode,
             'ipc_id'           :  ipc_id,
             'ipc_fmt'          :  ipc_fmt,
-            'verbose'          :  verbose,  # callback arguments
-            'FEEDBACK'         :  FEEDBACK,  # callback arguments
+            'verbose'          :  verbose,  # GV callback arguments
+            'FEEDBACK'         :  FEEDBACK,  # GV callback arguments
         }
         logger.debug(f"{this()}: kwargs={kwargs}")
-        # Updated cached data for this specific query if requested 
+        # GV Updated cached data for this specific query if requested 
         logger.info(f"{this()}: Update = {Update}")
         if Update == 1:
             logger.info(f"{this()}: Enter Update ...")
@@ -1004,7 +1005,7 @@ def report_Charging_Resume_Progress():
                             filter_code      = Cus_Id,
                             ipc_mode         = ipc_mode,
                             ipc_id           = ipc_id,
-                            data             = data # 821
+                            data             = data # GV 821
                             )
             except Exception as e:
                 emtec_handle_general_exception(e,logger=logger)
@@ -1015,7 +1016,7 @@ def report_Charging_Resume_Progress():
             logger.debug(f"{this()}: kwargs = {kwargs}")
             return report_Charging_Resume_Report(**kwargs)
     except Exception as e:
-        # idea es: return render_template(50x,exception=emtec_handle_general_exception(e))
+        # GV idea es: return render_template(50x,exception=emtec_handle_general_exception(e))
         return emtec_handle_general_exception(e,logger=logger)
         
         
@@ -1044,9 +1045,9 @@ def download_Charging_Resume():
     print(f"{this()}: FILTER={FILTER} CODE={CODE} {type(CODE)}")
     print(f"**********************************************************")
     CODE=int(CODE)
-    # Get Actual Remume Data from Database
-    # NOTE: Here needs some Sand-Clock Message or something in case it takes so long ...
-    # Gets Charge Resume from DB
+    # GV Get Actual Remume Data from Database
+    # GV NOTE: Here needs some Sand-Clock Message or something in case it takes so long ...
+    # GV Gets Charge Resume from DB
     logger.debug(f"**********************************************************")
     logger.debug(f"{this()}: FILTER={FILTER} CODE={CODE} {type(CODE)}")
     logger.debug(f"{this()}: FROM={CIT_Date_From} TO={CIT_Date_To} ST:{CIT_Status} CUR:{Cur_Code}")
@@ -1080,7 +1081,7 @@ def download_Charging_Resume():
         'file':output_file,
         'rows':len(rows)
     }
-    # Build list of records to export from query
+    # GV Build list of records to export from query
     for row in rows:
         d['detail'].append({
                 'ccCode':row.CC_Code,
@@ -1097,7 +1098,7 @@ def download_Charging_Resume():
                 'from':row.CR_Date_From,
                 'to':row.CR_Date_To,
         })
-    # List of fields in desired order 
+    # GV List of fields in desired order 
     headers=[
                 'ccCode',
                 'ccDescription',
@@ -1113,11 +1114,11 @@ def download_Charging_Resume():
                 'from',
                 'to',
     ]
-    # Normalize data into a Pandas Dataframe
+    # GV Normalize data into a Pandas Dataframe
     df1 = json_normalize(d, 'detail')
-    # Reorder columns
+    # GV Reorder columns
     df1 = df1.reindex(columns=headers)
-    # create temporary filename       
+    # GV create temporary filename       
     xlsx_file="%s/%s"%(current_app.root_path,url_for('static',filename='tmp/%s'%(output_file)))
     df1.to_excel(xlsx_file,'Sheet 1')
     return send_file(xlsx_file,as_attachment=True,attachment_filename=output_file)
@@ -1132,10 +1133,10 @@ def get_progress(value,maximum,start=None,message=None,precision=3,expected_form
         logger.setLevel(level)
         #print(f"pget-progress: logger={logger} {id(logger)} pre={logger_level}")
         logger.debug(f"get progress IN value:{value} maximum:{maximum} start:{start} message:{message} precision:{precision} expected_format:{expected_format} filename:{filename} previous:{previous} step:{step}")
-        nowts      = datetime.datetime.now().timestamp()                      # actual time timestamp
-        progress   = value/maximum if maximum != 0 else 0                     # % of progress
-        elapsed    = nowts - start                                            # seconds elapsed since start
-        remaining  = (elapsed * (1-progress))/progress if progress !=0 else 0 # seconds remining for completion
+        nowts      = datetime.datetime.now().timestamp()                      # GV actual time timestamp
+        progress   = value/maximum if maximum != 0 else 0                     # GV % of progress
+        elapsed    = nowts - start                                            # GV seconds elapsed since start
+        remaining  = (elapsed * (1-progress))/progress if progress !=0 else 0 # GV seconds remining for completion
         remaining  = remaining
         eta        = nowts + remaining
         if expected_format is None:
@@ -1145,18 +1146,18 @@ def get_progress(value,maximum,start=None,message=None,precision=3,expected_form
             expected = datetime.datetime.fromtimestamp(
                             eta).strftime(expected_format)
         data={
-            'value'    : value,                                             # Actual progress discrete value
-            'max'      : maximum,                                           # Actual maximum discrete value (100%)
-            'start'    : start,                                             # Process init time (loop time)
-            'elapsed'  : round(elapsed,precision),                          # Seconds elapsed since loop init
-            'remaining': round(remaining,precision),                        # Remaining seconds to loop complete (estimate)
-            'message'  : message,                                           # Actual message to be returned
-            'progress' : progress,                                          # Progress in % (0.0-1.0)
-            'percent'  : round(progress*100,2),                             # Progress in % (0.00%-100.00%)
-            'eta'      : eta,                                               # ETA for loop completion (estimate)
-            'expected' : expected,                                          # ETA human readable
-            'previous' : previous,                                          # Previous displayed value
-            'step'     : step,                                              # Display % step
+            'value'    : value,                                             # GV Actual progress discrete value
+            'max'      : maximum,                                           # GV Actual maximum discrete value (100%)
+            'start'    : start,                                             # GV Process init time (loop time)
+            'elapsed'  : round(elapsed,precision),                          # GV Seconds elapsed since loop init
+            'remaining': round(remaining,precision),                        # GV Remaining seconds to loop complete (estimate)
+            'message'  : message,                                           # GV Actual message to be returned
+            'progress' : progress,                                          # GV Progress in % (0.0-1.0)
+            'percent'  : round(progress*100,2),                             # GV Progress in % (0.00%-100.00%)
+            'eta'      : eta,                                               # GV ETA for loop completion (estimate)
+            'expected' : expected,                                          # GV ETA human readable
+            'previous' : previous,                                          # GV Previous displayed value
+            'step'     : step,                                              # GV Display % step
         }
         if message is None:
             message = f"progress={progress*100:.3f}%"
@@ -1169,7 +1170,7 @@ def get_progress(value,maximum,start=None,message=None,precision=3,expected_form
         
         if previous == 0 or delta > step or data.get('percent')==100:
             if filename is not None:
-                data['previous'] = data.get("percent")       # Reported % will become previous 
+                data['previous'] = data.get("percent")       # GV Reported % will become previous 
                 output = json.dumps(data)
                 with open(filename,"w") as fp:
                     logger.info(f"{os.getppid()}->{os.getpid()} writing: {data.get('message')}")

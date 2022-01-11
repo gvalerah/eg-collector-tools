@@ -71,14 +71,14 @@ if __name__ == '__main__':
         save_key=os.environ['DATABASE_URL']
         os.environ['DATABASE_URL'] = f'{rdbms}{dialect}://{user}:{password}@{host}:{port}/{schema}'
         os.environ['DATABASE_URL'] = save_key
-        
-        suffix=datetime.datetime.strftime(datetime.datetime.now(),"%Y%m")
+        # Need to populate customer !!!!!
+        suffix=f"{customer}_{datetime.datetime.strftime(datetime.datetime.now(),'%Y%m')}"
         print()
         print(f"current period = {suffix}")
         print()
         print(f"EG COLLECTOR resume @ {datetime.datetime.now()}")
         print(f"------------------------------------------------------")
-        Charge_Items.set_shard(suffix)
+        Charge_Items.set_shard(suffix,db.engine)
 
         ci = db.session.query(Configuration_Items
                 ).filter(Configuration_Items.CI_Name==VMNAME).one_or_none()

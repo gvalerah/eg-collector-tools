@@ -1,40 +1,40 @@
-# System modules
+# GV System modules
 import  sys
 import  os
 import  getpass
-# Import logging functions
+# GV Import logging functions
 import  logging
 #import  importlib.util
 import  configparser
-# Library modules
+# GV Library modules
 from    time                                import strftime
 from    time                                import sleep
 from    configparser                        import ConfigParser, ExtendedInterpolation
 from    pprint                              import pprint
-# Setting up Application Context
+# GV Setting up Application Context
 from    flask_sqlalchemy                    import SQLAlchemy
 from    sqlalchemy                          import create_engine
-# Emtec group collector code
-# Import Emtec Group's modules
+# GV Emtec group collector code
+# GV Import Emtec Group's modules
 from    emtec                               import *
 from    emtec.collector.db.orm              import *
 from    emtec.collector.common.functions    import *
 from    emtec.collector.common.context      import Context
-# Import actual collectors codes
+# GV Import actual collectors codes
 from    service.collectors.Monthly_Auto     import Monthly_Auto_Collector
 from    service.collectord_exec             import Execute_Collector_Daemon
 
-# ---------------------------------------------------------------------------------------
-# Daemon functions here
+# GV ---------------------------------------------------------------------------------------
+# GV Daemon functions here
 
-# Command line parameters are mandatory
+# GV Command line parameters are mandatory
 
 config_file = sys.argv[1]
 driver_group = sys.argv[2]
 
 add_Logging_Levels()
 
-# create logger
+# GV create logger
 logger  = logging.getLogger('Collector for Nutanix')
 logger.propagate=False
 handler=None
@@ -44,20 +44,20 @@ db = Collector_ORM_DB()
 if (os.path.isfile(config_file)):
     config_ini = configparser.ConfigParser(interpolation=ExtendedInterpolation())
     config_ini.read( config_file )
-    # Forced production environment configuration
-    # from config_ini file
+    # GV Forced production environment configuration
+    # GV from config_ini file
     handlerType=config_ini.get(driver_group,'handler_type',fallback='TIME_ROTATING')
     when=config_ini.get(driver_group,'when',fallback='d')
     interval=config_ini.getint(driver_group,'interval',fallback=7)
     backupCount=config_ini.getint(driver_group,'backupCount',fallback=53)
             
-    # ------------------------------------------------------------------
-    # Late config import to be sure environment is created 
-    # this order is needed to service based execution
+    # GV ------------------------------------------------------------------
+    # GV Late config import to be sure environment is created 
+    # GV this order is needed to service based execution
     #from    config                              import config
-    # ------------------------------------------------------------------
+    # GV ------------------------------------------------------------------
 
-    # Will work with configuration file
+    # GV Will work with configuration file
     C = Context(app_name="Monthly Auto CIT Generator",app_ini_file=config_file,logger=logger)    
     C.Set()
     C.db=db
@@ -92,8 +92,8 @@ if (os.path.isfile(config_file)):
         name            = config_ini.get(driver_group,'name',fallback=driver_group)
         collector       = config_ini.get(driver_group,'collector',fallback=None)
         pool_seconds    = config_ini.getint(driver_group,'pool_seconds',fallback=C.pool_seconds)
-        # --------------------------------------------------------------
-        # Overrides default log level for this driver group only
+        # GV --------------------------------------------------------------
+        # GV Overrides default log level for this driver group only
         log_level       = config_ini.get(driver_group,'log_level',fallback=C.log_level)        
         logger.info("%s: log level from config is  =%s"%(__name__,log_level))
         if type(log_level) == str:
@@ -109,7 +109,7 @@ if (os.path.isfile(config_file)):
         logger.info("%s: driver %s log level set to =%s"%(__name__,name,logger.level))
         logger.info("%s: driver %s log level set to =%s"%(__name__,name,logger.getEffectiveLevel()))
         logger.info("%s: driver %s logger           =%s"%(__name__,name,logger))
-        # --------------------------------------------------------------
+        # GV --------------------------------------------------------------
         logger.debug("%s: name        =%s"%(__name__,name))
         logger.debug("%s: collector   =%s"%(__name__,collector))
         logger.debug("%s: pool_seconds=%s"%(__name__,pool_seconds))
@@ -119,7 +119,7 @@ if (os.path.isfile(config_file)):
                 logger.info("%s: Logging to '%s'"%(sys.argv[0],log_file))
                 logger.info("*****************************************")
                 log_file_previous = log_file
-            # -------------------------------------------------    
+            # GV -------------------------------------------------    
             try:
                 if 'sqlite' in str(C.db):
                     logger.error("DB engine not expected is      : '%s'"%(C.db))
@@ -134,7 +134,7 @@ if (os.path.isfile(config_file)):
             except Exception as e:
                 C.logger.error("%s: Exception catched during ETL execution.'errno:%s,strerror:%s,args:%s'"%(sys.argv[0],e.errno,e.strerror,e.args))
                 break
-            # --------------------------------------------------
+            # GV --------------------------------------------------
             C.logger.debug("%s: Execution completed @ %s. Waiting %d seconds ..."%(sys.argv[0],strftime("%H:%M:%S"),pool_seconds))
             if logger.level < logging.INFO:
                 print("%s: Execution completed @ %s. Waiting %d seconds ..."%(sys.argv[0],strftime("%H:%M:%S"),pool_seconds))
@@ -143,10 +143,10 @@ if (os.path.isfile(config_file)):
             except Exception as e:
                 logger.error("Exception catched while pooling. 'errno:%s,strerror:%s,args:%s'"%(sys.argv[0],e.errno,e.strerror,e.args))
                 break        
-        # Out of loop service should never get here unless system shutdown
+        # GV Out of loop service should never get here unless system shutdown
         logger.warning("*** Unexpected Deamon Interruption ***")
 else:
-    # Configuration error
+    # GV Configuration error
     print("ERROR: Configuration file '%s' does not exists. aborting."%config_file)
     print('ERROR: Number of arguments:', len(sys.argv), 'arguments.')
     print('ERROR: Argument List:', str(sys.argv))

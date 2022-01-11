@@ -55,13 +55,24 @@ def report_Period_Usage():
             }
         })
     # set shardened Charge Items Table as per active period
-    Charge_Items.set_shard(collectordata['COLLECTOR_PERIOD']['active'])  
-    # BETA Message, to be removed --------------------------------------
+    suffix = f"{current_user.cost_center.Cus_Id}_{collectordata['COLLECTOR_PERIOD']['active']}"
+    Charge_Items.set_shard(suffix,db.engine)  
+    # GV BETA Message, to be removed --------------------------------------
     flash('Beta version. Query in development. Results are referential only','error')
-    # BETA Message, to be removed --------------------------------------
+    # GV BETA Message, to be removed --------------------------------------
     usage = db.Get_Period_Usage(customer_id=Cus_Id,rates=Rates)
-    pprint(usage)
+    # GV pprint(usage)
     # Updated cached data for this specific query if requested 
+    dt = datetime.strptime(usage.get('period'),'%Y%m')
+    usage.update({'period_text':dt.strftime('%B %Y')})
+    customer = db.session.query(Customers.Cus_Name
+                ).filter(Customers.Cus_Id==current_user.cost_center.Cus_Id
+                ).one_or_none()
+    if customer is not None and len(customer):
+        customer = customer[0]
+    else:
+        customer = ''
+    usage.update({'customer':customer})
     try:
         temp_folder   = "/tmp"
         temp_filename = f"{temp_folder}/{next(tempfile._get_candidate_names())}.json"

@@ -45,8 +45,8 @@ logger.debug(f"__table__.name    : {Charge_Items.__table__.name}")
 rows=session.query(Charge_Items).all()
 logger.debug(f"rows              = {len(rows)}") 
 #result=session.query(Charge_Items,Charge_Units).join(Charge_Units,Charge_Items.CU_Id==Charge_Units.CU_Id).limit(5)
-suffix='202107'
-new_Table=Charge_Items.set_shard(suffix)
+suffix=f'{args.customer}_{args.period}'
+new_Table=Charge_Items.set_shard(suffix,engine)
 logger.debug(f"New table name    = {new_Table}")
 logger.debug(f"__tablename__     = {Charge_Items.__tablename__}")    
 logger.debug(f"__table__.name    = {Charge_Items.__table__.name}")    
@@ -64,12 +64,12 @@ if __name__ == "__main__":
         month  = period%100
         year   = int(period/100)
         logger.debug(f"65 month={month} year={year}")
-        suffix = f"{year:04d}{month:02d}"
+        suffix = f"{args.customer}_{year:04d}{month:02d}"
         logger.debug(f"suffix = {suffix}")
         dt = datetime.datetime(year=year,month=month,day=1)
         start,end = Get_Period(dt)
         logger.debug(f"70 start={start} end={end}")
-        Charge_Items.set_shard(suffix)
+        Charge_Items.set_shard(suffix,engine)
         logger.debug(f"Charge_Items                = {Charge_Items}")
         logger.debug(f"Charge_Items.__table__.name = {Charge_Items.__table__.name}")
         logger.debug(f"Charge_Items.__tablename__  = {Charge_Items.__tablename__ }")

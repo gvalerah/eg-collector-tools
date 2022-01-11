@@ -11,15 +11,6 @@ def Nutanix_ETL_Collector(C,config,group):
     C.logger.info("%s: NUTANIX Platform Collector: Execution start"%(__name__))
     C.logger.info("%s: Using Group         : %s"%(__name__,group))
 
-    # 20201101 Includes sharging management here -----------------------   
-    #sharding=config['General']['collector_cit_sharding']
-    # Here we'll include sharding required code
-    #if sharding:
-    #    suffix = strftime('%Y%m')
-    #    charge_item.set_shard(suffix)
-    #    C.logger.debug(f"{this()}: Using shardened table: {charge_item.__table__.name}") 
-    # ------------------------------------------------------------------
-
     good_bye_message=''
     
     try:    

@@ -1,8 +1,8 @@
-# =============================================================================
-# Auto-Generated code. do not modify
-# (c) Sertechno 2018
-# GLVH @ 2018-11-01 18:15:21
-# =============================================================================
+# GV =============================================================================
+# GV Auto-Generated code. do not modify
+# GV (c) Sertechno 2018
+# GV GLVH @ 2018-11-01 18:15:21
+# GV =============================================================================
 from db.charge_items import Charge_Items,frm_Charge_Items
 
 @app.route('/forms/Charge_Items/<CU_Id>&<CIT_Date>&<CIT_Time>', methods=['GET', 'POST'])
@@ -52,12 +52,12 @@ def select_Charge_Items():
 	    row = object_as_dict(r)
 	    rows.append(row)
     return render_template('Charge_Items_All.html',C=C,rows=rows)
-# =============================================================================
-# =============================================================================
-# Auto-Generated code. do not modify
-# (c) Sertechno 2018
-# GLVH @ 2018-11-01 18:15:21
-# =============================================================================
+# GV =============================================================================
+# GV =============================================================================
+# GV Auto-Generated code. do not modify
+# GV (c) Sertechno 2018
+# GV GLVH @ 2018-11-01 18:15:21
+# GV =============================================================================
 from db.charge_units import Charge_Units,frm_Charge_Units
 
 @app.route('/forms/Charge_Units/<CU_Id>', methods=['GET', 'POST'])
@@ -117,12 +117,12 @@ def select_Charge_Units():
 	    row = object_as_dict(r)
 	    rows.append(row)
     return render_template('Charge_Units_All.html',C=C,rows=rows)
-# =============================================================================
-# =============================================================================
-# Auto-Generated code. do not modify
-# (c) Sertechno 2018
-# GLVH @ 2018-11-01 18:15:21
-# =============================================================================
+# GV =============================================================================
+# GV =============================================================================
+# GV Auto-Generated code. do not modify
+# GV (c) Sertechno 2018
+# GV GLVH @ 2018-11-01 18:15:21
+# GV =============================================================================
 from db.configuration_items import Configuration_Items,frm_Configuration_Items
 
 @app.route('/forms/Configuration_Items/<CI_Id>', methods=['GET', 'POST'])
@@ -176,12 +176,12 @@ def select_Configuration_Items():
 	    row = object_as_dict(r)
 	    rows.append(row)
     return render_template('Configuration_Items_All.html',C=C,rows=rows)
-# =============================================================================
-# =============================================================================
-# Auto-Generated code. do not modify
-# (c) Sertechno 2018
-# GLVH @ 2018-11-01 18:15:21
-# =============================================================================
+# GV =============================================================================
+# GV =============================================================================
+# GV Auto-Generated code. do not modify
+# GV (c) Sertechno 2018
+# GV GLVH @ 2018-11-01 18:15:21
+# GV =============================================================================
 from db.cost_centers import Cost_Centers,frm_Cost_Centers
 
 @app.route('/forms/Cost_Centers/<CC_Id>', methods=['GET', 'POST'])
@@ -226,12 +226,12 @@ def select_Cost_Centers():
 	    row = object_as_dict(r)
 	    rows.append(row)
     return render_template('Cost_Centers_All.html',C=C,rows=rows)
-# =============================================================================
-# =============================================================================
-# Auto-Generated code. do not modify
-# (c) Sertechno 2018
-# GLVH @ 2018-11-01 18:15:21
-# =============================================================================
+# GV =============================================================================
+# GV =============================================================================
+# GV Auto-Generated code. do not modify
+# GV (c) Sertechno 2018
+# GV GLVH @ 2018-11-01 18:15:21
+# GV =============================================================================
 from db.countries_currencies import Countries_Currencies,frm_Countries_Currencies
 
 @app.route('/forms/Countries_Currencies/<Cou_Code>&<Cur_Code>', methods=['GET', 'POST'])
@@ -275,12 +275,12 @@ def select_Countries_Currencies():
 	    row = object_as_dict(r)
 	    rows.append(row)
     return render_template('Countries_Currencies_All.html',C=C,rows=rows)
-# =============================================================================
-# =============================================================================
-# Auto-Generated code. do not modify
-# (c) Sertechno 2018
-# GLVH @ 2018-11-01 18:15:21
-# =============================================================================
+# GV =============================================================================
+# GV =============================================================================
+# GV Auto-Generated code. do not modify
+# GV (c) Sertechno 2018
+# GV GLVH @ 2018-11-01 18:15:21
+# GV =============================================================================
 from db.countries import Countries,frm_Countries
 
 @app.route('/forms/Countries/<Cou_Code>', methods=['GET', 'POST'])
@@ -324,12 +324,12 @@ def select_Countries():
 	    row = object_as_dict(r)
 	    rows.append(row)
     return render_template('Countries_All.html',C=C,rows=rows)
-# =============================================================================
-# =============================================================================
-# Auto-Generated code. do not modify
-# (c) Sertechno 2018
-# GLVH @ 2018-11-01 18:15:21
-# =============================================================================
+# GV =============================================================================
+# GV =============================================================================
+# GV Auto-Generated code. do not modify
+# GV (c) Sertechno 2018
+# GV GLVH @ 2018-11-01 18:15:21
+# GV =============================================================================
 from db.currencies import Currencies,frm_Currencies
 
 @app.route('/forms/Currencies/<Cur_Code>', methods=['GET', 'POST'])
@@ -373,12 +373,12 @@ def select_Currencies():
 	    row = object_as_dict(r)
 	    rows.append(row)
     return render_template('Currencies_All.html',C=C,rows=rows)
-# =============================================================================
-# =============================================================================
-# Auto-Generated code. do not modify
-# (c) Sertechno 2018
-# GLVH @ 2018-11-01 18:15:21
-# =============================================================================
+# GV =============================================================================
+# GV =============================================================================
+# GV Auto-Generated code. do not modify
+# GV (c) Sertechno 2018
+# GV GLVH @ 2018-11-01 18:15:21
+# GV =============================================================================
 from db.customers import Customers,frm_Customers
 
 @app.route('/forms/Customers/<Cus_Id>', methods=['GET', 'POST'])
@@ -421,12 +421,12 @@ def select_Customers():
 	    row = object_as_dict(r)
 	    rows.append(row)
     return render_template('Customers_All.html',C=C,rows=rows)
-# =============================================================================
-# =============================================================================
-# Auto-Generated code. do not modify
-# (c) Sertechno 2018
-# GLVH @ 2018-11-01 18:15:21
-# =============================================================================
+# GV =============================================================================
+# GV =============================================================================
+# GV Auto-Generated code. do not modify
+# GV (c) Sertechno 2018
+# GV GLVH @ 2018-11-01 18:15:21
+# GV =============================================================================
 from db.cu_types import CU_Types,frm_CU_Types
 
 @app.route('/forms/CU_Types/<Typ_Code>', methods=['GET', 'POST'])
@@ -466,12 +466,12 @@ def select_CU_Types():
 	    row = object_as_dict(r)
 	    rows.append(row)
     return render_template('CU_Types_All.html',C=C,rows=rows)
-# =============================================================================
-# =============================================================================
-# Auto-Generated code. do not modify
-# (c) Sertechno 2018
-# GLVH @ 2018-11-01 18:15:21
-# =============================================================================
+# GV =============================================================================
+# GV =============================================================================
+# GV Auto-Generated code. do not modify
+# GV (c) Sertechno 2018
+# GV GLVH @ 2018-11-01 18:15:21
+# GV =============================================================================
 from db.exchange_rates import Exchange_Rates,frm_Exchange_Rates
 
 @app.route('/forms/Exchange_Rates/<ER_Id>', methods=['GET', 'POST'])
@@ -516,12 +516,12 @@ def select_Exchange_Rates():
 	    row = object_as_dict(r)
 	    rows.append(row)
     return render_template('Exchange_Rates_All.html',C=C,rows=rows)
-# =============================================================================
-# =============================================================================
-# Auto-Generated code. do not modify
-# (c) Sertechno 2018
-# GLVH @ 2018-11-01 18:15:21
-# =============================================================================
+# GV =============================================================================
+# GV =============================================================================
+# GV Auto-Generated code. do not modify
+# GV (c) Sertechno 2018
+# GV GLVH @ 2018-11-01 18:15:21
+# GV =============================================================================
 from db.lists import Lists,frm_Lists
 
 @app.route('/forms/Lists/<Type>&<Value>&<Caption>', methods=['GET', 'POST'])
@@ -563,12 +563,12 @@ def select_Lists():
 	    row = object_as_dict(r)
 	    rows.append(row)
     return render_template('Lists_All.html',C=C,rows=rows)
-# =============================================================================
-# =============================================================================
-# Auto-Generated code. do not modify
-# (c) Sertechno 2018
-# GLVH @ 2018-11-01 18:15:21
-# =============================================================================
+# GV =============================================================================
+# GV =============================================================================
+# GV Auto-Generated code. do not modify
+# GV (c) Sertechno 2018
+# GV GLVH @ 2018-11-01 18:15:21
+# GV =============================================================================
 from db.measure_units import Measure_Units,frm_Measure_Units
 
 @app.route('/forms/Measure_Units/<MU_Code>', methods=['GET', 'POST'])
@@ -608,12 +608,12 @@ def select_Measure_Units():
 	    row = object_as_dict(r)
 	    rows.append(row)
     return render_template('Measure_Units_All.html',C=C,rows=rows)
-# =============================================================================
-# =============================================================================
-# Auto-Generated code. do not modify
-# (c) Sertechno 2018
-# GLVH @ 2018-11-01 18:15:21
-# =============================================================================
+# GV =============================================================================
+# GV =============================================================================
+# GV Auto-Generated code. do not modify
+# GV (c) Sertechno 2018
+# GV GLVH @ 2018-11-01 18:15:21
+# GV =============================================================================
 from db.platforms import Platforms,frm_Platforms
 
 @app.route('/forms/Platforms/<Pla_Id>', methods=['GET', 'POST'])
@@ -661,12 +661,12 @@ def select_Platforms():
 	    row = object_as_dict(r)
 	    rows.append(row)
     return render_template('Platforms_All.html',C=C,rows=rows)
-# =============================================================================
-# =============================================================================
-# Auto-Generated code. do not modify
-# (c) Sertechno 2018
-# GLVH @ 2018-11-01 18:15:21
-# =============================================================================
+# GV =============================================================================
+# GV =============================================================================
+# GV Auto-Generated code. do not modify
+# GV (c) Sertechno 2018
+# GV GLVH @ 2018-11-01 18:15:21
+# GV =============================================================================
 from db.rates import Rates,frm_Rates
 
 @app.route('/forms/Rates/<Rat_Id>', methods=['GET', 'POST'])
@@ -729,12 +729,12 @@ def select_Rates():
 	    row = object_as_dict(r)
 	    rows.append(row)
     return render_template('Rates_All.html',C=C,rows=rows)
-# =============================================================================
-# =============================================================================
-# Auto-Generated code. do not modify
-# (c) Sertechno 2018
-# GLVH @ 2018-11-01 18:15:21
-# =============================================================================
+# GV =============================================================================
+# GV =============================================================================
+# GV Auto-Generated code. do not modify
+# GV (c) Sertechno 2018
+# GV GLVH @ 2018-11-01 18:15:21
+# GV =============================================================================
 from db.trace import Trace,frm_Trace
 
 @app.route('/forms/Trace/<ID>', methods=['GET', 'POST'])
@@ -774,4 +774,4 @@ def select_Trace():
 	    row = object_as_dict(r)
 	    rows.append(row)
     return render_template('Trace_All.html',C=C,rows=rows)
-# =============================================================================
+# GV =============================================================================
