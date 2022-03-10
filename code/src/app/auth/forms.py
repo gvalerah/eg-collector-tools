@@ -4,6 +4,7 @@ from wtforms                            import StringField, PasswordField, Boole
 from wtforms.validators                 import Required, Length, Email, Regexp, EqualTo
 from wtforms                            import ValidationError
 from emtec.collector.db.flask_models    import User
+from flask_babel                        import lazy_gettext
 
 class LoginForm(FlaskForm):
     # GV 20181123 email = StringField('Email', validators=[Required(), Length(1, 64),    Email()])

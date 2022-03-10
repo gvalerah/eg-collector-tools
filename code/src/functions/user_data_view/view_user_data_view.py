@@ -187,7 +187,7 @@ def forms_User_Data_View():
                         Charge_Units.CU_Description
             ).all()
 
-    return render_template("user_data_view_new.html",rows=rows)
+    return render_template("user_data_view_new.html",rows=rows,collectordata=collectordata)
 
 
 

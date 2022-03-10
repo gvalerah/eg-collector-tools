@@ -90,6 +90,8 @@ collector:	${COLLECTOR_CODE_OUTPUT}/models.py ${COLLECTOR_CODE_OUTPUT}/orm_model
 	cp ${COLLECTOR_CODE_OUTPUT}/views.py       		${MAIN_FOLDER}/views.py
 	@md5sum ${COLLECTOR_CODE_OUTPUT}/views.py
 	@md5sum ${MAIN_FOLDER}/views.py
+	srcclean -i ${MAIN_FOLDER}/views.py -o ${MAIN_FOLDER}/views.py -v
+	@md5sum ${MAIN_FOLDER}/views.py
 	@echo
 	@echo "updating ${TEMPLATES_FOLDER}/base.html ..."
 	@echo
@@ -131,12 +133,15 @@ collector:	${COLLECTOR_CODE_OUTPUT}/models.py ${COLLECTOR_CODE_OUTPUT}/orm_model
 	cp  ${COLLECTOR_CODE_SRC}/app/static/css/*.css				${COLLECTOR_FOLDER}/app/static/css/.
 	cp  ${COLLECTOR_CODE_SRC}/app/static/css/*.map				${COLLECTOR_FOLDER}/app/static/css/.
 	cp  ${COLLECTOR_CODE_SRC}/app/static/img/*.*				${COLLECTOR_FOLDER}/app/static/img/.
-	cp  ${COLLECTOR_CODE_SRC}/app/static/js/*.js				${COLLECTOR_FOLDER}/app/static/js/.
-	cp  ${COLLECTOR_CODE_SRC}/app/static/js/*.map				${COLLECTOR_FOLDER}/app/static/js/.
-	cp  ${COLLECTOR_CODE_SRC}/app/templates/*.html				${COLLECTOR_FOLDER}/app/templates/.
+#   following commented lines due to refactoring and system wide links to Global folders
+#	all them need to be linked somewhere
+#	cp  ${COLLECTOR_CODE_SRC}/app/static/js/*.js				${COLLECTOR_FOLDER}/app/static/js/.
+#	cp  ${COLLECTOR_CODE_SRC}/app/static/js/*.map				${COLLECTOR_FOLDER}/app/static/js/.
+#	cp  ${COLLECTOR_CODE_SRC}/app/templates/bootstrap/*.html	${COLLECTOR_FOLDER}/app/templates/bootstrap/.
 	cp  ${COLLECTOR_CODE_SRC}/app/templates/auth/*.html			${COLLECTOR_FOLDER}/app/templates/auth/.
-	cp  ${COLLECTOR_CODE_SRC}/app/templates/bootstrap/*.html	${COLLECTOR_FOLDER}/app/templates/bootstrap/.
 	cp  ${COLLECTOR_CODE_SRC}/app/templates/plugins/*.html		${COLLECTOR_FOLDER}/app/templates/plugins/.
+	cp  ${COLLECTOR_CODE_SRC}/app/templates/plugins.html		${COLLECTOR_FOLDER}/app/templates/.
+	cp  ${COLLECTOR_CODE_SRC}/app/templates/*.html				${COLLECTOR_FOLDER}/app/templates/.
 	cp  ${COLLECTOR_CODE_SRC}/service/*.py						${COLLECTOR_FOLDER}/service/.
 	cp  ${COLLECTOR_CODE_SRC}/service/*.service					${COLLECTOR_FOLDER}/service/.
 	cp  ${COLLECTOR_CODE_SRC}/service/README.*					${COLLECTOR_FOLDER}/service/.

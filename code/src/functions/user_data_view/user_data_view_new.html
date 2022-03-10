@@ -3,19 +3,19 @@
 {# (c) Sertechno 2018                                                            #}
 {# GLVH @ 2018-11-26                                                             #}
 {# ============================================================================= #}
-{% extends "base.html" %}
+{% extends "collector_app.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
-{% block title %}Collector{% endblock %}
-{% block head %}
-{{ super() }}
-{% endblock %}
-{% block page_content %}
+{% block title %}{{gettext('User Data')}}{% endblock title %}
+{% block content %}
 <div class="page-header">
-    <h2>Customer <font color="blue">{{current_user.username}}</font> Data structure: </h2>
-    <a href="#" onclick="history.go(-1)"><img src="/static/img/back.png"  color=yellow width="32" height="32" title="" alt="Add"></a>
+    <h2>{{gettext('customer')|capitalize}} <font color="blue">{{current_user.username}}</font> {{gettext('data structure')}}: </h2>
+    <!-- GV 2022005 a href="#" onclick="history.go(-1)"><img src="/static/img/back.png"  color=yellow width="32" height="32" title="" alt="Add"></a -->
+    <a href="#" onclick="history.go(-1)" class="btn btn-outline-primary"><i class="bi bi-arrow-left text-primary" width=32></i></a>
+    <a href="/"                          class="btn btn-outline-primary"><i class="bi bi-house-door text-primary" width=32></i></a> 
 </div>
 <hr>
-{%- set img='<img src="/static/img/search.png" width="32" height="32" title="" alt="Details">' %}
+{# GV 20220305 %- set img='<img src="/static/img/search.png" width="32" height="32" title="" alt="Details">' %#}
+{%- set img='<img src="/static/bootstrap/icons/search.svg" width="32" height="32" title="" alt="Details">' %}
 
 {%- set prev = { 'cc' : -1 , 'ci' : -1  , 'cu' : -1}  %}
 {%- set href = { 'cc' : '*', 'ci' : '*' , 'cu' : '*'} %}
@@ -34,7 +34,7 @@
         {%- set _ = link.update({'ci':'cil_' + row.CC_Id|string()}) %}
         {%- set _ = link.update({'cu':'*'}) %}
     <!-- RENDER CC {{row.CC_Id}} {{row.CI_Id}} {{row.CU_Id}} ------- -->
-    <button type="button" class="btn btn-link" data-toggle="collapse" data-target="#{{link.ci|safe}}" style="margin-left:30px">Cost Center: {{row.CC_Description}} <!-- (xx Configuration Items) --></button>
+    <button type="button" class="btn btn-link" data-bs-toggle="collapse" data-bs-target="#{{link.ci|safe}}" style="margin-left:30px">Cost Center: {{row.CC_Description}} <!-- (xx Configuration Items) --></button>
     {%- set _ = href.update({'cc':'/forms/Cost_Centers?CC_Id=' + row.CC_Id|string()}) %}
     <a href="{{href.cc|safe}}" target="_blank">{{img|safe}}</a><br>
     <div id="{{link.ci|safe}}" class="collapse"> <!-- RENDER CC opens div {{link.ci|safe}} -->
@@ -45,7 +45,7 @@
             </div> <!-- RENDER CI closes CU div link.cu = {{link.cu|safe}} -->
             {%- endif %}
             {%- set _ = link.update({'cu':'cul_' + row.CI_Id|string()}) %}
-            <button type="button" class="btn btn-link" data-toggle="collapse" data-target="#{{link.cu|safe}}" style="margin-left:60px">Configuration Item: {{row.CI_Name}} <!-- (xx Charge Units) --></button>
+            <button type="button" class="btn btn-link" data-bs-toggle="collapse" data-bs-target="#{{link.cu|safe}}" style="margin-left:60px">Configuration Item: {{row.CI_Name}} <!-- (xx Charge Units) --></button>
             {%- set _ = href.update({'ci':'/forms/Configuration_Items?CI_Id=' + row.CI_Id|string()}) %}
             <a href="{{href.ci|safe}}"  target="_blank">{{img|safe}}</a><br>
             {%- set _ = prev.update({'ci':row.CI_Id}) %}
@@ -64,5 +64,5 @@
     {%- endif %}
 {%- endfor %}
 <hr>
-{% endblock %}
+{% endblock content %}
 {# ============================================================================= #}

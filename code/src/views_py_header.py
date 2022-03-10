@@ -3,24 +3,71 @@ from datetime       import datetime
 from pprint         import pprint,pformat                    
 from sqlalchemy     import exc
 from sqlalchemy     import func
-from flask          import render_template, session, redirect, url_for, current_app, flash
+from flask          import render_template
+from flask          import session
+from flask          import redirect 
+from flask          import url_for 
+from flask          import current_app 
+from flask          import flash
 from flask          import request
 from flask          import Markup
 from flask          import current_app
-#rom flask          import current_process
+# GV from flask          import current_process
 from flask_login    import login_required
 from flask_login    import current_user
-#from ..email import send_email
+from flask_babel    import gettext
+from flask_babel    import lazy_gettext
+# GV from ..email import send_email
 
 from .              import main
 
 from ..             import db
 from ..             import logger
+from ..             import babel
+
+# add to you main app code
+@babel.localeselector
+def get_locale():
+    try:
+        if current_app.config.CURRENT_LANGUAGE is not None:
+            language =  current_app.config.CURRENT_LANGUAGE
+        else:
+            language =  request.accept_languages.best_match(
+                            current_app.config.LANGUAGES.keys()
+                        )
+    except Exception as e:
+        print(f"get_locale: exception: {str(e)}")
+        language = 'en'
+    return language
+
+MONTHS={
+    'january':      gettext('january'),
+    'february':     gettext('february'),
+    'march':        gettext('march'),
+    'april':        gettext('april'),
+    'may':          gettext('may'),
+    'june':         gettext('june'),
+    'july':         gettext('july'),
+    'august':       gettext('august'),
+    'september':    gettext('september'),
+    'october':      gettext('october'),
+    'november':     gettext('november'),
+    'december':     gettext('december'),
+}
+DAYS={
+    'sunday':       gettext('sunday'),
+    'monday':       gettext('monday'),
+    'tuesday':      gettext('tuesday'),
+    'wednesday':    gettext('wednesday'),
+    'thursday':     gettext('thursday'),
+    'friday':       gettext('friday'),
+    'saturday':     gettext('saturday'),
+}
 
 from ..decorators   import admin_required, permission_required
 
 from emtec                                 import *
-#rom emtec.collector.common.functions      import *
+# GV from emtec.collector.common.functions      import *
 from emtec.common.functions                import *
 from emtec.collector.db.flask_models       import User
 from emtec.collector.db.flask_models       import Permission
@@ -69,6 +116,11 @@ def index():
         collectordata={"COLLECTOR_PERIOD":Period}
         
     return render_template('collector.html',data=data,collectordata=collectordata)
+
+@main.route('/language/<string:langcode>', methods=['GET', 'POST'])
+def language(langcode):
+    current_app.config.CURRENT_LANGUAGE = langcode
+    return redirect('/')
 
 @main.route('/under_construction', methods=['GET','POST'])
 def under_construction():   
@@ -173,7 +225,7 @@ def get_collectordata():
         logger.debug(f"{this()}: suffix={suffix}") 
         # GV GV Need to check if sharded table exists, if not should be created
         charge_item.set_shard(suffix,db.engine)
-        flash(                 f"Using shardened table: {charge_item.__table__.name}") 
+        flash(gettext('Using shardened table: %s')%(charge_item.__table__.name)) 
         logger.debug(f"{this()}: Using shardened table: {charge_item.__table__.name}") 
     
     # Aqui debe leer configuracion

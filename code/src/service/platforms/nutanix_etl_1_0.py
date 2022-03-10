@@ -1,10 +1,11 @@
 # ----------------------------------------------------------------------
 # Nutanix Storage API ETL exploit Class
 # code/src/service/platforms/nutanix_etl_1_0.py
-# GLVH 2018
-# GVLV 2021-04-03 Refactoring + Add snapshots
-# GVLV 2021-09-12 Add volume groups
-# GVLV 2021-10-24 Adjust CI get lists functions (get_..._list)
+# GLVH 2018-2022
+# GLVH 2021-04-03 Refactoring + Add snapshots
+# GLVH 2021-09-12 Add volume groups
+# GLVH 2021-10-24 Adjust CI get lists functions (get_..._list)
+# GLVH 2022-02-08 Add exception handlers 
 # Gerardo L Valera
 # gvalera@emtecgroup.net
 # ----------------------------------------------------------------------
@@ -623,7 +624,7 @@ class Nutanix(ETL):
                 
                 self.logger.debug(f"{this()}: data   = ------------------------------- END")
             except Exception as e:
-                self.logger.error(f"{this()}EXCEPTION: {str(e)}")
+                self.logger.error(f"{this()}: EXCEPTION: {str(e)}")
         return status,data
 
 
@@ -638,7 +639,7 @@ class Nutanix(ETL):
             else:
                 self.logger.warning(f"VM. status = {status}. total cis={len(ci_list)}")                
         except Exception as e:
-            self.logger.warning(f"VMs: No data from Nutanix. exception: ({str(e)})")
+            self.logger.warning(f"{this()}: VMs: No data from Nutanix. exception: ({str(e)})")
         try: # Get Images List
             status,data = self.getImagesInformation(version)
             if status == 200:
@@ -648,7 +649,7 @@ class Nutanix(ETL):
             else:
                 self.logger.warning(f"Images. status = {status}. total cis={len(ci_list)}")                
         except Exception as e:
-            self.logger.warning(f"Images: No data from Nutanix. exception: ({str(e)})")
+            self.logger.warning(f"{this()}: Images: No data from Nutanix. exception: ({str(e)})")
         try: # Get Volume Groups List
             status,data = self.getVGroupsInformation(version)
             if status == 200:
@@ -658,11 +659,11 @@ class Nutanix(ETL):
             else:
                 self.logger.warning(f"VGs. status = {status}. total cis={len(ci_list)}")                
         except Exception as e:
-            self.logger.warning(f"VGs: No data from Nutanix. exception: ({str(e)})")
+            self.logger.warning(f"{this()}: VGs: No data from Nutanix. exception: ({str(e)})")
         try:
             self.logger.warning(f"return CI List len = {len(ci_list)}")
         except Exception as e:
-            self.logger.error(f"EXCEPTION: {str(e)}")
+            self.logger.error(f"{this()}: EXCEPTION: {str(e)}")
         return ci_list
         
     def Read_Configuration(self,ini_file):
@@ -688,26 +689,32 @@ class Nutanix(ETL):
         
         self.data = []      # Cleanup Data for next "Chunk"
         status, self.data = self.getVMsInformation(API_version)
-        if status == 200:
-            if API_version == 2:
-                self.total_matches =    int(self.data['metadata']['grand_total_entities'])
-                self.processed_vms +=   int(self.data['metadata']['count'])
-            elif API_version == 3:
-                self.total_matches =    int(self.data['metadata']['total_matches'])
-                self.processed_vms +=   int(self.data['metadata']['length'])
-            if self.processed_vms >= self.total_matches:
-                self.has_more_data = False
-        else:
-            if (self.logger):
-                self.logger.error("%s: status=%s data=%s"%(this(),status,self.data))
+        try:
+            if status == 200:
+                if API_version == 2:
+                    self.total_matches =    int(self.data['metadata']['grand_total_entities'])
+                    self.processed_vms +=   int(self.data['metadata']['count'])
+                elif API_version == 3:
+                    self.total_matches =    int(self.data['metadata']['total_matches'])
+                    self.processed_vms +=   int(self.data['metadata']['length'])
+                if self.processed_vms >= self.total_matches:
+                    self.has_more_data = False
+            else:
+                if (self.logger):
+                    self.logger.error("%s: status=%s data=%s"%(this(),status,self.data))
+        except Exception as e:
+            emtec_handle_general_exception(e,logger=self.logger)
             
         return status
         # -----------------------------------------------------------
         
     def get_vm_list(self):
         vm_list=[]
-        for vm in self.data['entities']:
-            vm_list.append({'name': vm['spec']['name'], 'uuid': vm['metadata']['uuid']})
+        try:
+            for vm in self.data['entities']:
+                vm_list.append({'name': vm['spec']['name'], 'uuid': vm['metadata']['uuid']})
+        except Exception as e:
+            emtec_handle_general_exception(e,logger=logger)
         return vm_list
 
     def Extract_Images(self,file=None,API_version=None):
@@ -845,16 +852,19 @@ class Nutanix(ETL):
         
     def get_image_list(self):
         image_list=[]
-        for image in self.data['entities']:
-            image_type = None
-            if 'image_type' in image.keys(): image_type=image['image_type']
-            image_list.append({
-                'name' : image['name'], 
-                'uuid' : image['uuid'],
-                'type' : image_type,
-                'state': image['image_state'],
-                'size' : image['vm_disk_size'],
-                })
+        try:
+            for image in self.data['entities']:
+                image_type = None
+                if 'image_type' in image.keys(): image_type=image['image_type']
+                image_list.append({
+                    'name' : image['name'], 
+                    'uuid' : image['uuid'],
+                    'type' : image_type,
+                    'state': image['image_state'],
+                    'size' : image['vm_disk_size'],
+                    })
+        except Exception as e:
+            emtec_handle_general_exception(e,logger=logger)
         return image_list
 
     def print_data(self):
@@ -914,6 +924,8 @@ class Nutanix(ETL):
     def Transform(self): # Virtual Machines
         if (self.logger): self.logger.debug("%s: Transform(). IN"%(this()))
 
+        status = 0
+        
         API_version = self.API_version
 
         if API_version is None:
@@ -948,163 +960,160 @@ class Nutanix(ETL):
         disks  = 0
         nics   = 0
 
-        for e in range(entities):
-            vm    = self.data['entities'][e]
-
-            if API_version == 0:
-                pass
-                
-            if API_version == 1:
-                pass
-                
-            if API_version == 2:
-                NAME  = vm['name'] 
-                UUID  = vm['uuid']
-                CCPU  = vm['num_cores_per_vcpu']
-                CPU   = vm['num_vcpus']
-                CORES = CCPU * CPU
-                RAM   = vm['memory_mb']
-                ACTIVE= vm['power_state']
-                RAMGB = RAM/1024
-                DATE  = strftime("%Y-%m-%d")
-                TIME  = strftime("%H:00:00")
-                if any ('vm_disk_info' in x for x in vm):
-                    disks = len(vm['vm_disk_info'])
-                else:
-                    disks = 0
-                if any ('vm_nics' in x for x in vm):
-                    nics  = len(vm['vm_nics'])
-                else:
-                    nics = 0
-                
-            elif API_version == 3:
-
-                NAME  = vm['spec']['name'] 
-                UUID  = vm['metadata']['uuid']
-                CCPU  = 1
-                #vsock = vm ['spec']['resources']['num_sockets']
-
-                vcpux = vm ['spec']['resources']['num_vcpus_per_socket']
-                vsock = vm ['spec']['resources']['num_sockets']
-                CPU   = vcpux * vsock
-                CORES = CCPU * CPU
-                RAM   = vm ['spec']['resources']['memory_size_mib']
-                ACTIVE= vm ['spec']['resources']['power_state']
-                RAMGB = RAM/1024
-                DATE  = strftime("%Y-%m-%d")
-                TIME  = strftime("%H:00:00")
-
-                disks = len(vm['spec']['resources']['disk_list'])
-                nics  = len(vm['spec']['resources']['nic_list'])
-                
-            else:
-                if (self.logger): self.logger.error("%s:  API_version %d can't be processed"%(this(),API_version)) 
-                return 1
-
-    
-            CU_UUID = ''
-            # Creates/Updates CI Mother Record
-            self.tuples.append(("CI-CREATE",NAME,UUID))
-            
-            # Creates/Updates CU Child Records (for VM Entity)
-            if self.create_VM:
-                self.tuples.append(("CU-CREATE","VM" ,UUID,CU_UUID,1,"NONE",1,None,None,None))
-                self.tuples.append(("CIT-CREATE","VM" ,UUID,CU_UUID,1    ,DATE,TIME,ACTIVE))
-            if self.create_CPU:
-                self.tuples.append(("CU-CREATE","CPU",UUID,CU_UUID,CPU,"NONE",1,None,None,None))
-                self.tuples.append(("CIT-CREATE","CPU",UUID,CU_UUID,CPU  ,DATE,TIME,ACTIVE))
-            if self.create_RAM:
-                self.tuples.append(("CU-CREATE","RAM",UUID,CU_UUID,RAMGB,"NONE",1,None,None,None))
-                self.tuples.append(("CIT-CREATE","RAM",UUID,CU_UUID,RAMGB,DATE,TIME,ACTIVE))
-            if self.create_COR:
-                self.tuples.append(("CU-CREATE","COR",UUID,CU_UUID,CORES,"NONE",1,None,None,None))
-                self.tuples.append(("CIT-CREATE","COR",UUID,CU_UUID,CORES,DATE,TIME,ACTIVE))
-            if self.create_DSK:
-                for d in range(disks):
-                
-                    # Check if CDROM
-                    is_CDROM = False
-                    if API_version == 0:
+        try:
+            for e in range(entities):
+                try:
+                    vm    = self.data['entities'][e]
+                    if   API_version == 0:
                         pass
-                    if API_version == 1:
+                    elif API_version == 1:
                         pass
-                    if API_version == 2:
-                        disk = vm['vm_disk_info'][d]
-                        is_CDROM = disk['is_cdrom']
-                    if API_version == 3:
-                        disk = vm['spec']['resources']['disk_list'][d]
-                        if disk['device_properties']['device_type'] == 'CDROM':
-                            is_CDROM = True
-               
-                    if is_CDROM:
-                        pass
+                    elif API_version == 2:
+                        NAME  = vm['name'] 
+                        UUID  = vm['uuid']
+                        CCPU  = vm['num_cores_per_vcpu']
+                        CPU   = vm['num_vcpus']
+                        CORES = CCPU * CPU
+                        RAM   = vm['memory_mb']
+                        ACTIVE= vm['power_state']
+                        RAMGB = RAM/1024
+                        DATE  = strftime("%Y-%m-%d")
+                        TIME  = strftime("%H:00:00")
+                        if any ('vm_disk_info' in x for x in vm):
+                            disks = len(vm['vm_disk_info'])
+                        else:
+                            disks = 0
+                        if any ('vm_nics' in x for x in vm):
+                            nics  = len(vm['vm_nics'])
+                        else:
+                            nics = 0
+                    elif API_version == 3:
+                        NAME  = vm['spec']['name'] 
+                        UUID  = vm['metadata']['uuid']
+                        CCPU  = 1
+                        #vsock = vm ['spec']['resources']['num_sockets']
+
+                        vcpux = vm ['spec']['resources']['num_vcpus_per_socket']
+                        vsock = vm ['spec']['resources']['num_sockets']
+                        CPU   = vcpux * vsock
+                        CORES = CCPU * CPU
+                        RAM   = vm ['spec']['resources']['memory_size_mib']
+                        ACTIVE= vm ['spec']['resources']['power_state']
+                        RAMGB = RAM/1024
+                        DATE  = strftime("%Y-%m-%d")
+                        TIME  = strftime("%H:00:00")
+
+                        disks = len(vm['spec']['resources']['disk_list'])
+                        nics  = len(vm['spec']['resources']['nic_list'])
                     else:
-                        bytes       = 0
-                        kilobytes   = 0
-                        megabytes   = 0
-                        gigabytes   = 0
-                        disk_UUID   = "UNKNOWN"
-                    
-                    
-                        if      API_version == 0:
-                                pass
-                        elif    API_version == 1:
-                                pass
-                        elif    API_version == 2:
-                            if 'size' in disk:
-                                bytes = disk['size']
-                            if 'vmdisk_uuid' in disk['disk_address']:
-                                disk_UUID = disk['disk_address']['vmdisk_uuid']
-                            elif 'volume_group_uuid' in disk['disk_address']:
-                                disk_UUID = disk['disk_address']['volume_group_uuid']
-                        elif    API_version == 3:
-                                bytes = disk['disk_size_bytes']
-                                disk_UUID = disk['uuid']
+                        if (self.logger): self.logger.error("%s:  API_version %d can't be processed"%(this(),API_version)) 
+                        return 1
+                    CU_UUID = ''
+                    # Creates/Updates CI Mother Record
+                    self.tuples.append(("CI-CREATE",NAME,UUID))
+                    # Creates/Updates CU Child Records (for VM Entity)
+                    if self.create_VM:
+                        self.tuples.append(("CU-CREATE","VM" ,UUID,CU_UUID,1,"NONE",1,None,None,None))
+                        self.tuples.append(("CIT-CREATE","VM" ,UUID,CU_UUID,1    ,DATE,TIME,ACTIVE))
+                    if self.create_CPU:
+                        self.tuples.append(("CU-CREATE","CPU",UUID,CU_UUID,CPU,"NONE",1,None,None,None))
+                        self.tuples.append(("CIT-CREATE","CPU",UUID,CU_UUID,CPU  ,DATE,TIME,ACTIVE))
+                    if self.create_RAM:
+                        self.tuples.append(("CU-CREATE","RAM",UUID,CU_UUID,RAMGB,"NONE",1,None,None,None))
+                        self.tuples.append(("CIT-CREATE","RAM",UUID,CU_UUID,RAMGB,DATE,TIME,ACTIVE))
+                    if self.create_COR:
+                        self.tuples.append(("CU-CREATE","COR",UUID,CU_UUID,CORES,"NONE",1,None,None,None))
+                        self.tuples.append(("CIT-CREATE","COR",UUID,CU_UUID,CORES,DATE,TIME,ACTIVE))
+                    if self.create_DSK:
+                        for d in range(disks):
                         
-                        kilobytes = bytes/1024
-                        megabytes = kilobytes/1024
-                        gigabytes = megabytes/1024
+                            # Check if CDROM
+                            is_CDROM = False
+                            if API_version == 0:
+                                pass
+                            if API_version == 1:
+                                pass
+                            if API_version == 2:
+                                disk = vm['vm_disk_info'][d]
+                                is_CDROM = disk['is_cdrom']
+                            if API_version == 3:
+                                disk = vm['spec']['resources']['disk_list'][d]
+                                if disk['device_properties']['device_type'] == 'CDROM':
+                                    is_CDROM = True
+                       
+                            if is_CDROM:
+                                pass
+                            else:
+                                bytes       = 0
+                                kilobytes   = 0
+                                megabytes   = 0
+                                gigabytes   = 0
+                                disk_UUID   = "UNKNOWN"
+                            
+                            
+                                if      API_version == 0:
+                                        pass
+                                elif    API_version == 1:
+                                        pass
+                                elif    API_version == 2:
+                                    if 'size' in disk:
+                                        bytes = disk['size']
+                                    if 'vmdisk_uuid' in disk['disk_address']:
+                                        disk_UUID = disk['disk_address']['vmdisk_uuid']
+                                    elif 'volume_group_uuid' in disk['disk_address']:
+                                        disk_UUID = disk['disk_address']['volume_group_uuid']
+                                elif    API_version == 3:
+                                        bytes = disk['disk_size_bytes']
+                                        disk_UUID = disk['uuid']
+                                
+                                kilobytes = bytes/1024
+                                megabytes = kilobytes/1024
+                                gigabytes = megabytes/1024
 
-                        # Creates/Updates CU Child Records for Virtual Disk Drives (for VM Entity)
-                        self.tuples.append(("CU-CREATE","DSK",UUID,disk_UUID,gigabytes,"NONE",1,None,None,None))
-                        self.tuples.append(("CIT-CREATE","DSK",UUID,disk_UUID,gigabytes,DATE,TIME,ACTIVE))
-            if self.create_NIC:
-                for n in range(nics):
-                    
-                    mac_address = None
-                    subnet_name = None
-                    subnet_UUID = None
-                    
-                    if API_version == 0:
-                        pass
-                    if API_version == 1:
-                        pass
-                    if API_version == 2:
-                        nic = vm['vm_nics'][n]
-                    if API_version == 3:
-                        nic = vm['spec']['resources']['nic_list'][n]
-                        nic_UUID="UNKNOWN"
-                        
-                        if      API_version == 0:
+                                # Creates/Updates CU Child Records for Virtual Disk Drives (for VM Entity)
+                                self.tuples.append(("CU-CREATE","DSK",UUID,disk_UUID,gigabytes,"NONE",1,None,None,None))
+                                self.tuples.append(("CIT-CREATE","DSK",UUID,disk_UUID,gigabytes,DATE,TIME,ACTIVE))
+                    if self.create_NIC:
+                        for n in range(nics):
+                            
+                            mac_address = None
+                            subnet_name = None
+                            subnet_UUID = None
+                            
+                            if API_version == 0:
                                 pass
-                        elif    API_version == 1:
+                            if API_version == 1:
                                 pass
-                        elif    API_version == 2:
-                                nic_UUID    = nic['network_uuid']
-                                mac_address = nic['mac_address']
-                                subnet_name = nic['model']
-                        elif    API_version == 3:
-                                nic_UUID    = nic['uuid']
-                                mac_address = nic['mac_address']
-                                subnet_name = nic['subnet_reference']['name']
-                                subnet_UUID = nic['subnet_reference']['uuid']
-                        
-                        # Creates/Updates CU Child Records for not Virtual Disk Drives (for VM Entity)
-                        self.tuples.append(("CU-CREATE","NIC",UUID,nic_UUID,1,"NONE",1,mac_address,subnet_name,subnet_UUID))
-                        self.tuples.append(("CIT-CREATE","NIC",UUID,nic_UUID,1,DATE,TIME,ACTIVE))
-    
-        if (self.logger): self.logger.debug("%s: Transform. OUT"%(this()))
-        return 0 
+                            if API_version == 2:
+                                nic = vm['vm_nics'][n]
+                            if API_version == 3:
+                                nic = vm['spec']['resources']['nic_list'][n]
+                                nic_UUID="UNKNOWN"
+                                
+                                if      API_version == 0:
+                                        pass
+                                elif    API_version == 1:
+                                        pass
+                                elif    API_version == 2:
+                                        nic_UUID    = nic['network_uuid']
+                                        mac_address = nic['mac_address']
+                                        subnet_name = nic['model']
+                                elif    API_version == 3:
+                                        nic_UUID    = nic['uuid']
+                                        mac_address = nic['mac_address']
+                                        subnet_name = nic['subnet_reference']['name']
+                                        subnet_UUID = nic['subnet_reference']['uuid']
+                                
+                                # Creates/Updates CU Child Records for not Virtual Disk Drives (for VM Entity)
+                                self.tuples.append(("CU-CREATE","NIC",UUID,nic_UUID,1,"NONE",1,mac_address,subnet_name,subnet_UUID))
+                                self.tuples.append(("CIT-CREATE","NIC",UUID,nic_UUID,1,DATE,TIME,ACTIVE))
+                except Exception as exc:
+                    emtec_handle_general_exception(exc,logger=self.logger)
+        except Exception as exc:
+            emtec_handle_general_exception(exc,logger=self.logger)
+            status = 1
+        if (self.logger): self.logger.debug("%s: Transform. OUT status=%s"%(this(),1))
+        return status 
 
     def Transform_Images(self):
         if (self.logger): self.logger.debug("%s: Transform_Images(). IN"%(this()))

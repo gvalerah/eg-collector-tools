@@ -3,31 +3,25 @@
 {# (c) Sertechno 2018                                                            #}
 {# GLVH @ 2018-11-11                                                             #}
 {# ============================================================================= #}
-{% extends "base.html" %}
+{% extends "collector_app.html" %}
 
 {% import "bootstrap/wtf.html" as wtf %}
 
 {% import "_macros.html" as macros %}
 
-
-{% block title %}Collector{% endblock %}
-
-{% block head %}
-   {{ super() }}
-{% endblock %}
-
+{% block title %}Collector FAQ{% endblock title %}
     
-{% block page_content %}
-{% if current_user.role.id == 1 %} {% include 'collector_faq_customer.html' %} {% endif %}
-{% if current_user.role.id == 2 %} {% include 'collector_faq_reporter.html' %} {% endif %}
-{% if current_user.role.id == 3 %} {% include 'collector_faq_charger.html' %} {% endif %}
-{% if current_user.role.id == 4 %}
-    {% include 'collector_faq_administrator.html' %}
-    {% include 'collector_faq_customer.html' %}
-    {% include 'collector_faq_reporter.html' %}
-    {% include 'collector_faq_charger.html' %}
-{% endif %}
-{% endblock %}
+{% block content %}
+    {% if current_user.role.id == 1 %} {% include 'collector_faq_customer.html' %} {% endif %}
+    {% if current_user.role.id == 2 %} {% include 'collector_faq_reporter.html' %} {% endif %}
+    {% if current_user.role.id == 3 %} {% include 'collector_faq_charger.html' %} {% endif %}
+    {% if current_user.role.id == 4 %}
+        {% include 'collector_faq_administrator.html' %}
+        {% include 'collector_faq_customer.html' %}
+        {% include 'collector_faq_reporter.html' %}
+        {% include 'collector_faq_charger.html' %}
+    {% endif %}
+{% endblock content %}
 
 {# ============================================================================= #}
 

@@ -90,15 +90,17 @@
     <!-- gen_menu:messages loop start -->
     {%- set ml = [] -%}
     {%- for category,message in get_flashed_messages(with_categories=True) %}
-         <!-- cat:{{category}} msg:{{message}} -->
+         
          {%- if message not in ml %}
              {%- set _ = ml.append(message) %}
+             <p>
              <ul class=flashes>
                <div class="alert alert-{{category}}">
                  <button type="button" class="close" data-dismiss="alert">&times;</button>
                   {{ message }}
                </div>
              </ul>
+             </p>
          {%- endif %}
     {%- endfor %}
     <!-- gen_menu:messages loop end -->
@@ -123,7 +125,7 @@
        <!-- GV 20211231 script src="/static/js/jquery-3.3.1.js"    crossorigin="anonymous"></script -->
        <script src="/static/js/popper.min.js"      crossorigin="anonymous"></script>
        <script src="/static/js/bootstrap.min.js"   crossorigin="anonymous"></script>
-       <!-- gen_menu: Collector: AUTOGEN Signature @ 2022-01-04 10:12:28.382109 -->
+       <!-- gen_menu: Collector: AUTOGEN Signature @ 2022-02-11 09:31:18.876385 -->
        <!-- gen_menu:block content footer end -->
 {% endblock scripts %}
 <!-- END BLOCK - scripts ------------------------------------------- -->

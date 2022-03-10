@@ -2,26 +2,25 @@
 {# Import Cost Centers Template                                                  #}
 {# (c) Sertechno 2019                                                            #}
 {# GLVH @ 2019-01-08                                                             #}
+{# GLVH @ 2022-03-07 Refactor to bootstrap 5                                     #}
 {# ============================================================================= #}
-{% extends "base.html" %}
+{% extends "collector_faq.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
-{% block title %}Collector{% endblock %}
-{% block head %}
-{{ super() }}
-{% endblock %}
-{% block page_content %}
+{% block title %}{{gettext('Import CC')}}{% endblock %}
+{% block content %}
 <div class="page-header">
-    <h2>Inject Cost Centers: </h2>
-    <a href="#" onclick="history.go(-1)"><img src="/static/img/back.png"  color=yellow width="32" height="32" title="" alt="Add"></a>
+    <h2>{{gettext('Inject Cost Centers')}}: </h2>
+    <a href="#" onclick="history.go(-1)" class="btn btn-outline-primary"><i class="bi bi-arrow-left text-primary" width=32></i></a>
+    <a href="/"                          class="btn btn-outline-primary"><i class="bi bi-house-door text-primary" width=32></i></a>  
 </div>
-<H1>{{ filename }} </H1><h3>uploaded, DB updated</h3>
+<H1>{{ filename }} </H1><h3>{{gettext('uploaded'), {{gettext('DB updated')}}</h3>
 <table>
-<tr><td>Cost Centers</td><td><b>{{ "{:6,.0f}".format(result.0) }}</b></td></tr>
-<tr><td>New         </td><td><b>{{ "{:6,.0f}".format(result.1) }}</b></td></tr>
-<tr><td>Updated     </td><td><b>{{ "{:6,.0f}".format(result.2) }}</b></td></tr>
-<tr><td>Errors      </td><td><b>{{ "{:6,.0f}".format(result.3) }}</b></td></tr>
+<tr><td>{{gettext('Cost Centers')}}</td><td><b>{{ "{:6,.0f}".format(result.0) }}</b></td></tr>
+<tr><td>{{gettext('New')}}         </td><td><b>{{ "{:6,.0f}".format(result.1) }}</b></td></tr>
+<tr><td>{{gettext('Updated')}}     </td><td><b>{{ "{:6,.0f}".format(result.2) }}</b></td></tr>
+<tr><td>{{gettext('Errors')}}      </td><td><b>{{ "{:6,.0f}".format(result.3) }}</b></td></tr>
 </table>
-Execution completed
+{{gettext('Execution completed')}}
 <hr>
-{% endblock %}
+{% endblock content %}
 {# ============================================================================= #}

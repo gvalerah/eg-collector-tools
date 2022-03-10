@@ -44,6 +44,6 @@ def Nutanix_ETL_Collector(C,config,group):
         else:
             C.logger.info("%s: Collector Inactive.",(__name__))                    
     except Exception as e:
-        emtec_handle_general_exception    (e,detail=None,module=None,function='Nutanix_ETL_Collector',logger=None,fp=None)
+        emtec_handle_general_exception    (e,detail=None,module=None,function='Nutanix_ETL_Collector',logger=C.logger,fp=None)
         good_bye_message="%s: EXCEPTION: '%s'."%(__name__,str(e))
-    C.logger.info("%s: Completed.%s"%(__name__,good_bye_message))
+    C.logger.info("%s: Completed. %s"%(__name__,good_bye_message))

@@ -1,21 +1,19 @@
 {# ============================================================================= #}
 {# Get Filter details report Statistics per Type for                             #}
 {# (c) Sertechno 2019                                                            #}
-{# GLVH @ 2019-01-21                                                            #}
+{# GLVH @ 2019-01-21                                                             #}
+{# GLVH @ 2022-03-06                                                             #}
 {# ============================================================================= #}
-{% extends "base.html" %}
+{% extends "collector_app.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
-{% block title %}Collector{% endblock %}
-{% block head %}
-{{ super() }}
-{% endblock %}
-{% block page_content %}
+{% block title %}{{gettext('statistics')}}{% endblock title %}
+{% block content %}
 <div class="page-header">
-    <h2>Statistics: </h2>
-    <h2>Use Report, actual and proyection, filtered version</h2>
+    <h2>{{gettext('Statistics')}}: </h2>
+    <h2>{{gettext('Use Report, actual and proyection, filtered version')}}</h2>
     <a href="#" onclick="history.go(-1)"><img src="/static/img/back.png"  color=yellow width="32" height="32" title="" alt="Add"></a>
 </div>
 {{ wtf.quick_form(form) }}
 <hr>
-{% endblock %}
+{% endblock content %}
 {# ============================================================================= #}

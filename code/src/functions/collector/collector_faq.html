@@ -3,7 +3,7 @@
 {# (c) Sertechno 2018                                                            #}
 {# GLVH @ 2018-11-11                                                             #}
 {# ============================================================================= #}
-{% extends "base.html" %}
+{% extends "collector_app.html" %}
 
 {% import "bootstrap/wtf.html" as wtf %}
 
@@ -12,12 +12,8 @@
 
 {% block title %}Collector{% endblock %}
 
-{% block head %}
-   {{ super() }}
-{% endblock %}
-
     
-{% block page_content %}
+{% block content %}
 {% if current_user.role.id == 1 %} {% include 'collector_faq_customer.html' %} {% endif %}
 {% if current_user.role.id == 2 %} {% include 'collector_faq_reporter.html' %} {% endif %}
 {% if current_user.role.id == 3 %} {% include 'collector_faq_charger.html' %} {% endif %}
@@ -27,7 +23,7 @@
     {% include 'collector_faq_reporter.html' %}
     {% include 'collector_faq_charger.html' %}
 {% endif %}
-{% endblock %}
+{% endblock content %}
 
 {# ============================================================================= #}
 

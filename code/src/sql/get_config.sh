@@ -16,13 +16,13 @@ fi
          PORT=$(ReadIni DB port 3306 ${INIFILE})
        SCHEMA=$(ReadIni DB schema collector ${INIFILE})
 
-#echo USER   = "${USER}"
-#echo PASS   = "${PASS}"
-#printf "%q\n" $PASS
-#printf "%s\n" $PASS
-#echo HOST   = "${HOST}"
-#echo PORT   = "${PORT}"
-#echo SCHEMA = "${SCHEMA}"
+echo USER   = "${USER}"
+echo PASS   = "${PASS}"
+printf "%q\n" $PASS
+printf "%s\n" $PASS
+echo HOST   = "${HOST}"
+echo PORT   = "${PORT}"
+echo SCHEMA = "${SCHEMA}"
        
        
  PRISMCENTRAL=Nutanix_1_PC_3

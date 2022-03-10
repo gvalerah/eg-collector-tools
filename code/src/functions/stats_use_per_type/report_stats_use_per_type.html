@@ -4,37 +4,32 @@
 {# (c) Sertechno 2018                                                            #}
 {# GLVH @ 2018-11-11                                                             #}
 {# ============================================================================= #}
-{% extends "base.html" %}
+{% extends "collector_app.html" %}
 
 {% import "bootstrap/wtf.html" as wtf %}
 
 {% import "_macros.html" as macros %}
 
-{% block title %}Collector{% endblock %}
-
-{% block head %}
-   {{ super() }}
-{% endblock %}
-
+{% block title %}{{gettext('Statistics report')}}{% endblock title %}
     
-{% block page_content %}
+{% block content %}
 
         <div class="page-header">
-            <h2>Statistic Report:<h2><br>
-            <h3>Use per Charge Unit Type for year : {{Year}}<h3>        
+            <h2>{{gettext('Statistics report')}}:<h2><br>
+            <h3>{{gettext('Use per Charge Unit Type for year')}} : {{Year}}<h3>        
             <a href="#" onclick="history.go(-1)"><img src="/static/img/back.png"  color=yellow width="32" height="32" title="" alt="Add"></a>
         </div>
         <hr>
         <table class="table">
             <thead class="thead-dark">
                 <tr>
-                    <th align="center" valign="top">CHARGE UNIT<br>TYPE</th>
-                    <th align="center">MONTH</th>
-                    <th align="center">COUNT</th>
-                    <th align="center">AVERAGE</th>
-                    <th align="center">STANDARD<br>DEVIATION</th>            
-                    <th align="center">MIN</th>
-                    <th align="center">MAX</th> 
+                    <th align="center" valign="top">{{gettext('charge unit<br>type')|upper}}</th>
+                    <th align="center">{{gettext('month')|upper}}</th>
+                    <th align="center">{{gettext('count')|upper}}</th>
+                    <th align="center">{{gettext('average')|upper}}</th>
+                    <th align="center">{{gettext('standard<br>deviation')|upper}}</th>            
+                    <th align="center">{{gettext('min')|upper}}</th>
+                    <th align="center">{{gettext('max')|upper}}</th> 
                 </tr>
             </thead>
             <tbody>
@@ -54,6 +49,6 @@
         </table>
 <hr>
 
-{% endblock %}
+{% endblock content %}
 
 {# ============================================================================= #}

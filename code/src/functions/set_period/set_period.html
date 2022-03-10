@@ -3,36 +3,37 @@
 {# (c) Sertechno 2020                                                 #}
 {# GLVH @ 2020-03-18                                                  #}
 {# ================================================================== #}
-{% extends "base.html" %}
+{% extends "collector_app.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
-{% block title %}Collector{% endblock %}
-{% block head %}
-{{ super() }}
-{% endblock %}
-{% block page_content %}
+{% block title %}{{gettext('Set period')}}{% endblock title %}
+{% block content %}
 <div class="page-header">
-    <h2>Set Period: </h2>
-    <a href="#" onclick="history.go(-1)">
-        <img src="/static/img/back.png"
-        color=yellow width="32" height="32" title="" alt="Add">
+    <h2>{{gettext('Set Period')}}: </h2>
+    <a href="#" onclick="history.go(-1)" 
+        class="btn btn-outline-primary">
+        <i class="bi bi-arrow-left text-primary" width=32></i>
     </a>
+    <a href="/"                          
+        class="btn btn-outline-primary">
+        <i class="bi bi-house-door text-primary" width=32></i>
+    </a>    
 </div>
 
     <table class="table table-striped table-hover table-sm">
         <thead class="thead-dark">
         <tr>
-            <th>CONTEXT</th>
-            <th>ARGUMENT</th>
-            <th>VALUE</th>
+            <th>{{gettext('context')|upper}}</th>
+            <th>{{gettext('argument')|upper}}</th>
+            <th>{{gettext('value')|upper}}</th>
         </tr>
         </thead>
         <tbody>
-        <tr><td>Context</td><td>Current</td><td>{{data.current}}</td></tr>
-        <tr><td>Context</td><td>Active</td><td>{{data.active}}</td></tr>
-        <tr><td>Context</td><td>Available</td><td>{{data.available|replace(',',', ')}}</td></tr>
+        <tr><td>{{gettext('context')|capitalize}}</td><td>{{gettext('current')|capitalize}}</td><td>{{data.current}}</td></tr>
+        <tr><td>{{gettext('context')|capitalize}}</td><td>{{gettext('active')|capitalize}}</td><td>{{data.active}}</td></tr>
+        <tr><td>{{gettext('context')|capitalize}}</td><td>{{gettext('available')|capitalize}}</td><td>{{data.available|replace(',',', ')}}</td></tr>
         </tbody>
     </table>
 {{ wtf.quick_form(form) }}
 <hr>
-{% endblock %}
+{% endblock content %}
 {# ================================================================== #}

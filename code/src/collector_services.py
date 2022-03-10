@@ -49,10 +49,10 @@ if (os.path.isfile(config_file)):
     config_ini.read( config_file )
     # GV Forced production environment configuration
     # GV from config_ini file
-    handlerType=config_ini.get(driver_group,'handler_type',fallback='TIME_ROTATING')
-    when=config_ini.get(driver_group,'when',fallback='d')
-    interval=config_ini.getint(driver_group,'interval',fallback=7)
-    backupCount=config_ini.getint(driver_group,'backupCount',fallback=53)
+    handlerType = config_ini.get(driver_group,'handler_type',fallback='TIME_ROTATING')
+    when        = config_ini.get(driver_group,'when',fallback='d')
+    interval    = config_ini.getint(driver_group,'interval',fallback=7)
+    backupCount = config_ini.getint(driver_group,'backupCount',fallback=53)
             
     # GV Will work with configuration file
     C = Context(app_name="Collector Services",app_ini_file=config_file,logger=logger)    
@@ -65,7 +65,12 @@ if (os.path.isfile(config_file)):
     config_name=os.getenv('COLLECTOR_CONFIG') or 'default'
     app     = create_minimal_app(config_file,config_name,db=db,logger=logger)
     app_ctx = app.app_context()
-    app_ctx.push()    
+    app_ctx.push()   
+    
+    print(f"app = {app}") 
+    print(f"db = {db}") 
+    print(f"Charge_Items = {Charge_Items}") 
+    print(f"Charge_Items.__tablename__ = {Charge_Items.__tablename__}") 
 
     if driver_group in config_ini.sections():
         driver_name = config_ini.get(driver_group,'name',fallback=driver_group)
@@ -133,6 +138,7 @@ if (os.path.isfile(config_file)):
                         break
                     for collector in collectors:
                         logger.info(f"{name}: Executing collector mode '{collector}'")
+                        print(f"{name}: {time.strftime('%H:%M:%S')} Executing collector mode '{collector}'")
                         if collector == 'Monthly_Auto':
                             Execute_Collector_Daemon(C,config_ini,driver_group,Monthly_Auto_Collector)
                         elif collector == 'Auto_CC':
@@ -167,7 +173,7 @@ if (os.path.isfile(config_file)):
                     logger.info(message)
                     logger.info(f"{name}: Waiting {pool_seconds} seconds ...")
                     print(message)
-                    print(f"{name}: Waiting {pool_seconds} seconds ...")
+                    print(f"{name}: {time.strftime('%H:%M:%S')} Waiting {pool_seconds} seconds ...")
                     sleep(pool_seconds)
                 except Exception as e:
                     logger.error(f"{name}: Exception catched while pooling. 'errno:{e.errno},strerror:{e.strerror},args:{e.args}'")

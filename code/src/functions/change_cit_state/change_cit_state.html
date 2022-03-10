@@ -2,19 +2,18 @@
 {# Charge CIT Status                                                             #}
 {# (c) Sertechno 2018                                                            #}
 {# GLVH @ 2018-12-06                                                             #}
+{# GLVH @ 2022-03-07 Refactor to bootstrap 5                                     #}
 {# ============================================================================= #}
-{% extends "base.html" %}
+{% extends "collector_app.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
-{% block title %}Collector{% endblock %}
-{% block head %}
-{{ super() }}
-{% endblock %}
-{% block page_content %}
+{% block title %}gettext('Change CIT status'){% endblock title %}
+{% block content %}
 <div class="page-header">
     <h2>Change CIT Status: </h2>
-    <a href="#" onclick="history.go(-1)"><img src="/static/img/back.png"  color=yellow width="32" height="32" title="" alt="Add"></a>
+    <a href="#" onclick="history.go(-1)" class="btn btn-outline-primary"><i class="bi bi-arrow-left text-primary" width=32></i></a>
+    <a href="/"                          class="btn btn-outline-primary"><i class="bi bi-house-door text-primary" width=32></i></a>    
 </div>
 {{ wtf.quick_form(form) }}
 <hr>
-{% endblock %}
+{% endblock content %}
 {# ============================================================================= #}

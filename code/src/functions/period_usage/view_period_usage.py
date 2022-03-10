@@ -58,13 +58,15 @@ def report_Period_Usage():
     suffix = f"{current_user.cost_center.Cus_Id}_{collectordata['COLLECTOR_PERIOD']['active']}"
     Charge_Items.set_shard(suffix,db.engine)  
     # GV BETA Message, to be removed --------------------------------------
-    flash('Beta version. Query in development. Results are referential only','error')
+    flash(gettext('Beta version. Query in development. Results are referential only'),'warning')
     # GV BETA Message, to be removed --------------------------------------
     usage = db.Get_Period_Usage(customer_id=Cus_Id,rates=Rates)
     # GV pprint(usage)
     # Updated cached data for this specific query if requested 
     dt = datetime.strptime(usage.get('period'),'%Y%m')
-    usage.update({'period_text':dt.strftime('%B %Y')})
+    usage.update({'period_month':f"{dt.strftime('%B').lower()}" })
+    usage.update({'period_year':f"{dt.strftime('%Y')}"          })
+    usage.update({'period_text':f"{dt.strftime('%B %Y')}"       })
     customer = db.session.query(Customers.Cus_Name
                 ).filter(Customers.Cus_Id==current_user.cost_center.Cus_Id
                 ).one_or_none()

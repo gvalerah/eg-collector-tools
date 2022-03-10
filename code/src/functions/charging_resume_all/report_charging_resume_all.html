@@ -4,20 +4,16 @@
 {# (c) Sertechno 2018,2019                                                       #}
 {# GLVH @ 2018-13-12                                                             #}
 {# ============================================================================= #}
-{% extends "base.html" %}
+{% extends "collector_app.html" %}
 
 {% import "bootstrap/wtf.html" as wtf %}
 
 {% import "_macros.html" as macros %}
 
-{% block title %}Collector{% endblock %}
-
-{% block head %}
-   {{ super() }}
-{% endblock %}
+{% block title %}{{gettext('Charging Report')}}{% endblock title %}
 
     
-{% block page_content %}
+{% block content %}
     {% set prev_CC = ['***'] -%}
     {% set prev_CC_ID = [-1] -%}
     {% set prev_CI = ['***'] -%}
@@ -30,7 +26,7 @@
     
     {% set sum_Total = [0] -%}
         <div class="page-header">
-            <h2>Charging Report All Platforms:<h2>
+            <h2>{{gettext('Charging Report All Platforms'):<h2>
             <h3>
             <table>
                 {# <tr><td>Platform   </td><td> : </td><td>{{Pla_Name}}</td></tr> #} 
@@ -190,6 +186,6 @@ Resume Records : <b>{{"{:,d}".format(count_REC.0)}}</b>
 Charge Pool Records: <b>{{"{:,d}".format(count_CIT.0)}}</b>
 <hr>
 
-{% endblock %}
+{% endblock content %}
 
 {# ============================================================================= #}

@@ -1,17 +1,13 @@
-{% extends "base.html" %}
+{% extends "collector_app.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
 
-{% block title %}Collector{% endblock %}
+{% block title %}Collector{% endblock title %}
 
-{% block head %}
-{{ super() }}
-{% endblock %}
-
-{% block page_content %}
+{% block content %}
 <div class="page-header">
     <br>
     <h1>Collector v 2.1.0</h1>
-    <p>(c) EMTEC GROUP 2018/2019/2020/2021 - GLVH</p>
+    <p>(c) EMTEC GROUP 2018-2022 - GLVH</p>
     <hr>
     {% if current_user.is_authenticated %}
         <p>Current logged in user is '<b>{{ current_user.username }}</b>' with role '<b>{{ current_user.role.name}}</b>'</p>

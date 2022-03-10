@@ -6,28 +6,28 @@
 {# GLVH @ 2020-10-23 precicion standarized to .12                                #}
 {# GLVH @ 2021-12-11 Progress bar mode integration                               #}
 {# ============================================================================= #}
-{% extends "base.html" %}
+{% extends "collector_app.html" %}
 
 {% import "bootstrap/wtf.html" as wtf %}
 
 {% import "_macros.html" as macros %}
 
-{% block title %}Collector{% endblock %}
+{% block title %}{{gettext('Charging Report')}}{% endblock title %}
 
-{% block head %}
+{#% block head %}
     {{ super() }}
-    {#
+    { #
     <script type="text/javascript">    
       $(document).ready(function(){    
            var html="<div class='progress-bar progress-bar-striped active' role='progressbar' aria-valuenow=0 aria-valuemin='0' aria-valuemax='100' style='width:0%'>0%</div>";    
            $(".progress").append(html);    
           });    
     </script>
-    #}
-{% endblock %}
+    # }
+{% endblock %#}
 
     
-{% block page_content %}
+{% block content %}
 
     {% set prev_CC = ['***'] -%}
     {% set prev_CC_ID = [-1] -%}
@@ -45,21 +45,24 @@
             <h3>
             <table>
                 {%- if Cus_Name is defined and Cus_name is not none %}
-                <tr><td>Customer   </td><td> : </td><td>{{Cus_Name}}</td></tr>
+                <tr><td>{{gettext('customer')|capitalize}}   </td><td> : </td><td>{{Cus_Name}}</td></tr>
                 {%- endif %} 
                 {%- if CC_Description is defined and CC_Description is not none %}
-                <tr><td>Cost Center</td><td> : </td><td>{{CC_Description}}</td></tr>
+                <tr><td>{{gettext('cost center')|capitalize}}</td><td> : </td><td>{{CC_Description}}</td></tr>
                 {%- endif %} 
                 {%- if Pla_Name is defined and Pla_Name is not none %}
-                <tr><td>Platform</td><td> : </td><td>{{Pla_Name}}</td></tr>
+                <tr><td>{{gettext('platform')|capitalize}}</td><td> : </td><td>{{Pla_Name}}</td></tr>
                 {%- endif %} 
-                <tr><td>Report From</td><td> : </td><td>{{CIT_Date_From}}</td></tr>
-                <tr><td>Report To  </td><td> : </td><td>{{CIT_Date_To}}</td></tr>
-                <tr><td>Status     </td><td> : </td><td>{{CIT_Status_Value}}</td></tr>
-                <tr><td>Currency   </td><td> : </td><td>{{Cur_Name}} ({{Cur_Code}})</td></tr>
+                <tr><td>{{gettext('report from')|capitalize}}</td><td> : </td><td>{{CIT_Date_From}}</td></tr>
+                <tr><td>{{gettext('report To')|capitalize}}  </td><td> : </td><td>{{CIT_Date_To}}</td></tr>
+                <tr><td>{{gettext('status')|capitalize}}     </td><td> : </td><td>{{CIT_Status_Value}}</td></tr>
+                <tr><td>{{gettext('currency')|capitalize}}   </td><td> : </td><td>{{Cur_Name}} ({{Cur_Code}})</td></tr>
             </table>
+            <a href="#" onclick="history.go(-1)" class="btn btn-outline-primary"><i class="bi bi-arrow-left text-primary" width=32></i></a>
+            <a href="/"                          class="btn btn-outline-primary"><i class="bi bi-house-door text-primary" width=32></i></a>    
         
-            <a href="#" onclick="history.go(-1)"><img src="/static/img/back.png"  color=yellow width="32" height="32" title="" alt="Add"></a>
+                
+            <!--a href="#" onclick="history.go(-1)"><img src="/static/img/back.png"  color=yellow width="32" height="32" title="" alt="Add"></a-->
 
         </div>
         <hr>
@@ -192,6 +195,7 @@
         </div>
         </td></tr>
     </table>
+    <!-- GV END OF PROGRESS BAR ------------------------------------ -->
     <hr>
     <b>{{collectordata.COLLECTOR_PERIOD.current}}|{{collectordata.COLLECTOR_PERIOD.active}}|{{collectordata.COLLECTOR_PERIOD.available|replace(',',' ')}}|{{collectordata.COLLECTOR_PERIOD.start}}|{{collectordata.COLLECTOR_PERIOD.end}}</b><br>
 {% endblock %}

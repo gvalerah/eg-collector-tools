@@ -78,6 +78,7 @@ else:
 from    app                 import db
 from    app                 import logger
 from    app                 import create_flask_app
+from    app                 import babel
 
 C = Context("Collector Web Server",config_file,logger)
 C.Set()
@@ -112,6 +113,20 @@ audit_handler=add_Logging_Handler(
     )
 # GV -------------------------------------------------------------------
 
+# GV Internationalization code -----------------------------------------
+from flask_babel import Babel, gettext, ngettext, lazy_gettext, force_locale
+
+print(f"Set App enabled Languages ...")
+setattr(app.config,'LANGUAGES',{
+        'en': 'English',
+        'es': 'Español'
+    })
+    
+print(f"Set Default App Language ...")
+setattr(app.config,'CURRENT_LANGUAGE',None)
+
+print (f"Set Global multilanguage strings ...")
+
 if __name__ == '__main__':
     app_ctx = app.app_context()
     app_ctx.push()
@@ -137,6 +152,7 @@ if __name__ == '__main__':
         logger.debug("app.template_folder 1 = %s"%app.template_folder)
         app.template_folder="%s/templates"%(app.root_path)
         logger.debug("app.template_folder 2 = %s"%app.template_folder)
+        logger.debug("babel                 = %s"%babel)
         for key in app.config.keys():
             if key == key.upper():
                 logger.debug("%-40s = %s"%(key,app.config[key]))

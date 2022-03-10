@@ -3,25 +3,21 @@
 {# (c) Sertechno 2018                                                            #}
 {# GLVH @ 2018-11-11                                                             #}
 {# ============================================================================= #}
-{% extends "base.html" %}
+{% extends "collector_app.html" %}
 
 {% import "bootstrap/wtf.html" as wtf %}
 
 {% import "_macros.html" as macros %}
 
 
-{% block title %}Collector{% endblock %}
-
-{% block head %}
-   {{ super() }}
-{% endblock %}
-
+{% block title %}About Collector{% endblock title %}
     
-{% block page_content %}
+{% block content %}
     <div class="page-header">
             <h1><a name="_collector_about">Collector v 2.1.0</a></h1>
-            <a href="#" onclick="history.go(-1)"><img src="/static/img/back.png"  color=yellow width="32" height="32" title="" alt="Add"></a>
-
+            <a href="#" onclick="history.go(-1)" class="btn btn-outline-primary"><i class="bi bi-arrow-left text-primary" width=32></i></a>
+            <a href="/"                          class="btn btn-outline-primary"><i class="bi bi-house-door text-primary" width=32></i></a>  
+    
             <table>
             <tr><td><a href="#_A">About Collector</a></td></tr> 
             <tr><td><a href="#_B">Collector Use Licence</a></td></tr> 
@@ -107,7 +103,7 @@ WTForms==2.1
         
     </div>
 
-{% endblock %}
+{% endblock content %}
 
 {# ============================================================================= #}
 

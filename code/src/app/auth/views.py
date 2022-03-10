@@ -19,7 +19,8 @@ from flask_login                        import login_user
 from flask_login                        import logout_user
 from flask_login                        import login_required
 from flask_login                        import current_user
-
+from flask_babel                        import gettext
+from flask_babel                        import lazy_gettext
 # Application context
 #from ..                                 import app
 from ..                                 import db

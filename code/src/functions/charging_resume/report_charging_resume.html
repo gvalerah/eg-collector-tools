@@ -5,20 +5,15 @@
 {# GLVH @ 2018-11-11                                                             #}
 {# GLVH @ 2020-10-23 precicion standarized to .12                                #}
 {# ============================================================================= #}
-{% extends "base.html" %}
+{% extends "collector_app.html" %}
 
 {% import "bootstrap/wtf.html" as wtf %}
 
 {% import "_macros.html" as macros %}
 
-{% block title %}Collector{% endblock %}
-
-{% block head %}
-   {{ super() }}
-{% endblock %}
-
+{% block title %}{{ gettext('Charging Report') }}{% endblock title %}
     
-{% block page_content %}
+{% block content %}
     {% set prev_CC = ['***'] -%}
     {% set prev_CC_ID = [-1] -%}
     {% set prev_CI = ['***'] -%}
@@ -35,29 +30,43 @@
             <h3>
             <table>
                 {%- if Cus_Name is defined and Cus_name is not none %}
-                <tr><td>Customer   </td><td> : </td><td>{{Cus_Name}}</td></tr>
+                <tr><td>{{gettext('customer')|capitalize}}   </td><td> : </td><td>{{Cus_Name}}</td></tr>
                 {%- endif %} 
                 {%- if CC_Description is defined and CC_Description is not none %}
-                <tr><td>Cost Center</td><td> : </td><td>{{CC_Description}}</td></tr>
+                <tr><td>{{gettext('cost center')|capitalize}}</td><td> : </td><td>{{CC_Description}}</td></tr>
                 {%- endif %} 
                 {%- if Pla_Name is defined and Pla_Name is not none %}
-                <tr><td>Platform</td><td> : </td><td>{{Pla_Name}}</td></tr>
+                <tr><td>{{gettext('platform')|capitalize}}</td><td> : </td><td>{{Pla_Name}}</td></tr>
                 {%- endif %} 
-                <tr><td>Report From</td><td> : </td><td>{{CIT_Date_From}}</td></tr>
-                <tr><td>Report To  </td><td> : </td><td>{{CIT_Date_To}}</td></tr>
-                <tr><td>Status     </td><td> : </td><td>{{CIT_Status_Value}}</td></tr>
-                <tr><td>Currency   </td><td> : </td><td>{{Cur_Name}} ({{Cur_Code}})</td></tr>
+                <tr><td>{{gettext('report from')|capitalize}}</td><td> : </td><td>{{CIT_Date_From}}</td></tr>
+                <tr><td>{{gettext('report to')|capitalize}}  </td><td> : </td><td>{{CIT_Date_To}}</td></tr>
+                <tr><td>{{gettext('status')|capitalize}}     </td><td> : </td><td>{{CIT_Status_Value}}</td></tr>
+                <tr><td>{{gettext('currency')|capitalize}}   </td><td> : </td><td>{{Cur_Name}} ({{Cur_Code}})</td></tr>
                 {#%- if Level_Name is defined and Level_Name is not none %}
-                <tr><td>Resume Level</td><td> : </td><td>{{Level_Name}}</td></tr>
+                <tr><td>{{gettext('resume level')|capitalize}}</td><td> : </td><td>{{Level_Name}}</td></tr>
                 {%- endif %#}
             </table>
+            
         
-            <a href="#" onclick="history.go(-1)"><img src="/static/img/back.png"  color=yellow width="32" height="32" title="" alt="Add"></a>
+            <!--a href="#" onclick="history.go(-1)"><img src="/static/img/back.png"  color=yellow width="32" height="32" title="" alt="Add"></a>
             <a href="/download/Charging_Resume?Cus_Id={{Cus_Id}}&CIT_Date_From={{CIT_Date_From}}&CIT_Date_To={{CIT_Date_To}}&CIT_Status={{CIT_Status}}&Cur_Code={{Cur_Code}}&filter_type={{filter_type}}&filter_code={{filter_code}}"> 
                 <img src="/static/img/download.png"
                 color=yellow width="32" height="32" title="" alt="Download">
-            </a>
+            </a-->
 
+            <a href="#" onclick="history.go(-1)" 
+                class="btn btn-outline-primary">
+                <i class="bi bi-arrow-left text-primary" width=32></i>
+            </a>
+            <a href="/"                          
+                class="btn btn-outline-primary">
+                <i class="bi bi-house-door text-primary" width=32></i>
+            </a>    
+            <a href="/download/Charging_Resume?Cus_Id={{Cus_Id}}&CIT_Date_From={{CIT_Date_From}}&CIT_Date_To={{CIT_Date_To}}&CIT_Status={{CIT_Status}}&Cur_Code={{Cur_Code}}&filter_type={{filter_type}}&filter_code={{filter_code}}"
+                class="btn btn-outline-primary">
+                <i class="bi bi-cloud-download text-primary" width=32></i>
+            </a>
+        
         </div>
         <hr>
     {% for row in rows %}
@@ -67,7 +76,7 @@
             {% if not loop.first %}
             <tr>
                 <td></td><td></td><td></td><td></td><td>
-                </td><td align="right">Total CI :</td>
+                </td><td align="right">{{gettext('Total CI')}} :</td>
                 <td align="right"><b>{{ "{:,.12f}".format(sum_CI.0) }}</b> {{Cur_Code}}</td>
             </tr>
             </table>
@@ -83,7 +92,7 @@
                 <hr>
                 <table>
                 <tr>
-                    <td align="right"><b>Total CC : <a href="/forms/Cost_Centers?CC_Id={{ prev_CC_ID.0 }}">{{ prev_CC.0 }}</a></b> : </td>
+                    <td align="right"><b>{{gettext('Total CC')}} : <a href="/forms/Cost_Centers?CC_Id={{ prev_CC_ID.0 }}">{{ prev_CC.0 }}</a></b> : </td>
                     <td align="right"><b>{{ "{:,.12f}".format(sum_CC.0) }}</b> {{Cur_Code}}</td>
                 </tr>
                 </table>
@@ -92,7 +101,7 @@
                 
                 <table>
                     <tr>
-                        <b>Cost Center : <a href="/forms/Cost_Centers?CC_Id={{ row.CI_CC_Id }}">{{ row.CC_Description }}</a></b>
+                        <b>{{gettext('Cost Center')}} : <a href="/forms/Cost_Centers?CC_Id={{ row.CI_CC_Id }}">{{ row.CC_Description }}</a></b>
                     </tr> 
                 </table>
                 <hr>
@@ -111,7 +120,7 @@
  
             <table>
                 <tr>
-                    <b>Configuration Item : <a href="/forms/Configuration_Items?CI_Id={{ row.CI_Id }}">{{ row.CI_Name }}</a></b>
+                    <b>{{gettext('Configuration Item')}} : <a href="/forms/Configuration_Items?CI_Id={{ row.CI_Id }}">{{ row.CI_Name }}</a></b>
                 </tr> 
             </table>
             {# Reset acumulator and control variables #}
@@ -123,14 +132,14 @@
             <table class="table">
                 <thead class="thead-dark">
                     <tr>
-                        <th align="center" valign="top">RECORDED<br>HOURS</th>
-                        <th align="center">CHARGE<br>UNIT</th>
-                        <th align="center">CHARGE UNIT<br>RATE</th>
-                        <th align="center">PERIOD<br>QUANTITY</th>
-                        <th align="center">SUB-TOTAL<br>@ RATE</th>            
-                        {# <th align="center">EXCHANGE<br>RATE<br>{{row.Rat_Cur_Code}}->{{row.Cur_Code}}</th> #}
-                        <th align="center">EXCHANGE<br>RATE</th> 
-                        <th align="center">TOTAL CHARGE<br>{{Cur_Code}}</th>
+                        <th align="center" valign="top">{{gettext('RECORDED<br>HOURS')}}</th>
+                        <th align="center">{{gettext('CHARGE<br>UNIT')}}</th>
+                        <th align="center">{{gettext('CHARGE UNIT<br>RATE')}}</th>
+                        <th align="center">{{gettext('PERIOD<br>QUANTITY')}}</th>
+                        <th align="center">{{gettext('SUB-TOTAL<br>@ RATE')}}</th>            
+                        {# <th align="center">{{gettext('EXCHANGE<br>RATE<br>')}}{{row.Rat_Cur_Code}}->{{row.Cur_Code}}</th> #}
+                        <th align="center">{{gettext('EXCHANGE<br>RATE')}}</th> 
+                        <th align="center">{{gettext('TOTAL CHARGE')}}<br>{{Cur_Code}}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -179,7 +188,7 @@
             
                     <tr>
                         <td></td><td></td><td></td><td></td><td>
-                        </td><td align="right">Total CI :</td>
+                        </td><td align="right">{{gettext('Total CI')}} :</td>
                         <td align="right"><b>{{ "{:,.12f}".format(sum_CI.0) }}</b> {{Cur_Code}}</td>
                     </tr>
                 </tbody>
@@ -187,25 +196,25 @@
             <hr>
             <table>
                 <tr>
-                    <td align="right"><b>Total CC : <a href="/forms/Cost_Centers?CC_Id={{ prev_CC_ID.0 }}">{{ prev_CC.0 }}</a></b> : </td>
+                    <td align="right"><b>{{gettext('Total CC')}} : <a href="/forms/Cost_Centers?CC_Id={{ prev_CC_ID.0 }}">{{ prev_CC.0 }}</a></b> : </td>
                     <td align="right"><b>{{ "{:,.12f}".format(sum_CC.0) }}</b> {{Cur_Code}}</td>
                 </tr>
             </table>
             <hr>
             <table>
                 <tr>
-                    <td align="right">Total of <b>{{CIT_Status_Value}}</b> for customer <b>{{Cus_Name}}</b> between <b>{{CIT_Date_From}}</b> and <b>{{CIT_Date_To}}</b> is </td>
+                    <td align="right">{{gettext('Total of')}} <b>{{CIT_Status_Value}}</b> for customer <b>{{Cus_Name}}</b> between <b>{{CIT_Date_From}}</b> and <b>{{CIT_Date_To}}</b> is </td>
                     <td align="right"><b>{{ "{:,.12f}".format(sum_Total.0) }}</b> {{Cur_Code}}</td>
                 </tr>
             </table>
 <hr>
-Reports Statistics :
-Charge Groups: <b>{{"{:,d}".format(count_CC.0)}}</b>
-Configuration Items : <b>{{"{:,d}".format(count_CI.0)}}</b>
-Resume Records : <b>{{"{:,d}".format(count_REC.0)}}</b>
-Charge Pool Records: <b>{{"{:,d}".format(count_CIT.0)}}</b>
+{{gettext('Reports Statistics')}} :
+{{gettext('Charge Groups')}}: <b>{{"{:,d}".format(count_CC.0)}}</b>
+{{gettext('Configuration Items')}} : <b>{{"{:,d}".format(count_CI.0)}}</b>
+{{gettext('Resume Records')}} : <b>{{"{:,d}".format(count_REC.0)}}</b>
+{{gettext('Charge Pool Records')}}: <b>{{"{:,d}".format(count_CIT.0)}}</b>
 <hr>
 <b>{{collectordata.COLLECTOR_PERIOD.current}}|{{collectordata.COLLECTOR_PERIOD.active}}|{{collectordata.COLLECTOR_PERIOD.available|replace(',',' ')}}|{{collectordata.COLLECTOR_PERIOD.start}}|{{collectordata.COLLECTOR_PERIOD.end}}</b><br>
-{% endblock %}
+{% endblock content %}
 
 {# ============================================================================= #}

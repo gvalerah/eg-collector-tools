@@ -19,6 +19,7 @@ from flask_login                        import logout_user
 from flask_login                        import login_required
 from flask_login                        import current_user
 from flask                              import current_app
+from flask_babel import Babel, gettext, lazy_gettext, force_locale
 
 from    emtec.common.functions              import *
 #from    emtec.collector.common.functions    import *
@@ -28,10 +29,11 @@ from    emtec.collector.db.orm              import *
 add_Logging_Levels()
 
 # Local objects --------------------------------------------------------
-bootstrap                           = Bootstrap()
+# GV 20220304 bootstrap                           = Bootstrap()
 mail                                = Mail()
 moment                              = Moment()
 login_manager                       = LoginManager()
+babel                               = Babel()
 # Setup Login manager
 login_manager.session_protection    = 'strong'
 login_manager.login_view            = 'auth.login'
@@ -141,11 +143,12 @@ def create_flask_app(app_name,config_file=None):
             print("create_flask_app: %-30s = %s"%(key,app.config[key]))
     
     # Inititializes applications (incomplete by now)
-    bootstrap.init_app      (app)
+    # GV 20220304 bootstrap.init_app      (app)
     mail.init_app           (app)
     moment.init_app         (app)
     db.init_app             (app)
     login_manager.init_app  (app)
+    babel.init_app          (app)
     # Collector's modules
     
     # attach routes and custom error pages here

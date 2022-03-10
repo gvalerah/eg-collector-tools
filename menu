@@ -14,7 +14,11 @@ OPTIONS=(
             2 "Generate and Compile Source Code" 
             1 "GITLab Pull"
             a "GitLab Push"
-            b "Collector Source Up (Flask)"
+            b "Collector              Source Up (Flask) DEV"
+            e "Collector              Source Up (Flask) QA"
+            f "Collector              Source Up (Flask) AAAA"
+            c "Collector Nutanix PC 3 Source Up"
+            d "Collector Services     Source Up"
             s "SQL Tools Menu"
             q "Quit"
         )
@@ -48,7 +52,23 @@ do
             ;;
         b)
             cd ${COLLECTOR}
-            python ${COLLECTOR}/collector.py ${COLLECTOR}/collector.ini FLASK
+            python ${COLLECTOR}/collector.py ${COLLECTOR}/collector-dev.ini FLASK
+            ;;
+        e)
+            cd ${COLLECTOR}
+            python ${COLLECTOR}/collector.py ${COLLECTOR}/collector-qa.ini FLASK
+            ;;
+        f)
+            cd ${COLLECTOR}
+            python ${COLLECTOR}/collector.py ${COLLECTOR}/collector-aaaa.ini FLASK
+            ;;
+        c)
+            cd ${COLLECTOR}
+	    python ${COLLECTOR}/collector_drv_nutanix.py ${COLLECTOR}/collector.ini Nutanix_1_PC_3
+            ;;
+        d)
+            cd ${COLLECTOR}
+	    python ${COLLECTOR}/collector_services.py ${COLLECTOR}/collector.ini Services
             ;;
         s)
             cd ${COLLECTOR}/sql

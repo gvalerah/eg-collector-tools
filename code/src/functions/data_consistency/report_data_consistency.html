@@ -3,21 +3,16 @@
 {# (c) Sertechno 2018                                                            #}
 {# GLVH @ 2018-11-11                                                             #}
 {# ============================================================================= #}
-{% extends "base.html" %}
+{% extends "collector_app.html" %}
 
 {% import "bootstrap/wtf.html" as wtf %}
 
 {% import "_macros.html" as macros %}
 
-
-{% block title %}Collector{% endblock %}
-
-{% block head %}
-   {{ super() }}
-{% endblock %}
+{% block title %}Collector{% endblock title %}
 
     
-{% block page_content %}
+{% block content %}
     {#<div class="page-header">#}
             <h2>DB Consistency Check Report:</h2>
 
@@ -131,6 +126,6 @@
         
     {#</div>#}
     <hr>
-{% endblock %}
+{% endblock content %}
 
 {# ============================================================================= #}

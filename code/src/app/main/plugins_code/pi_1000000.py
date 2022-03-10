@@ -11,7 +11,7 @@ from wtforms.validators     import IPAddress, InputRequired, Length, MacAddress,
 from wtforms.validators     import Regexp, Required
 
 def pi_1000000_0(data):
-    print("enter: pi_1000000.py:pi_1000000_0()"
+    print("enter: pi_1000000.py:pi_1000000_0()")
     print("%s: ***************"%__name__)
     print("%s: pi_1000000 0 IN"%__name__)
     print("%s: ***************"%__name__)
@@ -24,7 +24,7 @@ def pi_1000000_0(data):
     return data
 
 def pi_1000000_1(data):
-    print("enter: pi_1000000.py:pi_1000000_1()"
+    print("enter: pi_1000000.py:pi_1000000_1()")
     print("%s: ***************"%__name__)
     print("%s: pi_1000000 1 IN"%__name__)
     print("%s: ***************"%__name__)
@@ -44,8 +44,7 @@ class frm_pi_1000000(Form):
     functions.append(pi_1000000_1)
        
 def pi_1000000(data):
-    print("enter: pi_1000000.py:pi_1000000()"
+    print("enter: pi_1000000.py:pi_1000000()")
     data.append({'code':1000000,'description':'Reporte de Billing en UF (AR)','form':frm_pi_1000000()})
     print("data=",data)
     return data
-

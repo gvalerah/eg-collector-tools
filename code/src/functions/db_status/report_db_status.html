@@ -3,21 +3,17 @@
 {# (c) Sertechno 2018                                                            #}
 {# GLVH @ 2018-11-11                                                             #}
 {# ============================================================================= #}
-{% extends "base.html" %}
+{% extends "collector_app.html" %}
 
 {% import "bootstrap/wtf.html" as wtf %}
 
 {% import "_macros.html" as macros %}
 
 
-{% block title %}Collector{% endblock %}
-
-{% block head %}
-   {{ super() }}
-{% endblock %}
+{% block title %}Collector{% endblock title %}
 
     
-{% block page_content %}
+{% block content %}
     <div class="page-header">
             <h2>DB Status Report:</h2>
 
@@ -46,6 +42,6 @@
             <a href="#" onclick="history.go(-1)"><img src="/static/img/back.png"  color=yellow width="32" height="32" title="" alt="Add"></a>
     </div>
     <hr>
-{% endblock %}
+{% endblock content %}
 
 {# ============================================================================= #}

@@ -4,18 +4,13 @@
 {# (c) Sertechno 2018                                                            #}
 {# GLVH @ 2018-11-11                                                             #}
 {# ============================================================================= #}
-{% extends "base.html" %}
+{% extends "collector_app.html" %}
 
 {% import "bootstrap/wtf.html" as wtf %}
 
 {% import "_macros.html" as macros %}
 
-{% block title %}Collector{% endblock %}
-
-{% block head %}
-   {{ super() }}
-{% endblock %}
-
+{% block title %}{{gettext('Charging Report')}}{% endblock title %}
     
 {% block page_content %}
     {% set prev_CC = ['***'] -%}
@@ -30,14 +25,14 @@
     
     {% set sum_Total = [0] -%}
         <div class="page-header">
-            <h2>Charging Report:<h2>
+            <h2>{{gettext('Charging Report')}}:<h2>
             <h3>
             <table>
-                <tr><td>Customer CC</td><td> : </td><td>{{CC_Description}}</td></tr> 
-                <tr><td>Report From</td><td> : </td><td>{{CIT_Date_From}}</td></tr>
-                <tr><td>Report To  </td><td> : </td><td>{{CIT_Date_To}}</td></tr>
-                <tr><td>Status     </td><td> : </td><td>{{CIT_Status_Value}}</td></tr>
-                <tr><td>Currency   </td><td> : </td><td>{{Cur_Name}} ({{Cur_Code}})</td></tr>
+                <tr><td>{{gettext('customer CC')|capitalize}}</td><td> : </td><td>{{CC_Description}}</td></tr> 
+                <tr><td>{{gettext('report from')|capitalize}}</td><td> : </td><td>{{CIT_Date_From}}</td></tr>
+                <tr><td>{{gettext('report to')|capitalize}}  </td><td> : </td><td>{{CIT_Date_To}}</td></tr>
+                <tr><td>{{gettext('status')|capitalize}}     </td><td> : </td><td>{{CIT_Status_Value}}</td></tr>
+                <tr><td>{{gettext('currency')|capitalize}}   </td><td> : </td><td>{{Cur_Name}} ({{Cur_Code}})</td></tr>
             </table>
         
             <a href="#" onclick="history.go(-1)"><img src="/static/img/back.png"  color=yellow width="32" height="32" title="" alt="Add"></a>
@@ -75,7 +70,7 @@
                 
                 <table>
                     <tr>
-                        <b>Cost Center : <a href="/forms/Cost_Centers?CC_Id={{ row.CI_CC_Id }}">{{ row.CC_Description }}</a></b>
+                        <b>{{gettext('Cost Center')}} : <a href="/forms/Cost_Centers?CC_Id={{ row.CI_CC_Id }}">{{ row.CC_Description }}</a></b>
                     </tr> 
                 </table>
                 <hr>
@@ -94,7 +89,7 @@
  
             <table>
                 <tr>
-                    <b>Configuration Item : <a href="/forms/Configuration_Items?CI_Id={{ row.CI_Id }}">{{ row.CI_Name }}</a></b>
+                    <b>{{gettext('Configuration Item')}} : <a href="/forms/Configuration_Items?CI_Id={{ row.CI_Id }}">{{ row.CI_Name }}</a></b>
                 </tr> 
             </table>
             {# Reset acumulator and control variables #}
@@ -106,14 +101,14 @@
             <table class="table">
                 <thead class="thead-dark">
                     <tr>
-                        <th align="center" valign="top">RECORDED<br>HOURS</th>
-                        <th align="center">CHARGE<br>UNIT</th>
-                        <th align="center">CHARGE UNIT<br>RATE</th>
-                        <th align="center">PERIOD<br>QUANTITY</th>
-                        <th align="center">SUB-TOTAL<br>@ RATE</th>            
-                        {# <th align="center">EXCHANGE<br>RATE<br>{{row.Rat_Cur_Code}}->{{row.Cur_Code}}</th> #}
-                        <th align="center">EXCHANGE<br>RATE</th> 
-                        <th align="center">TOTAL CHARGE<br>{{Cur_Code}}</th>
+                        <th align="center" valign="top">{{gettext('recorded<br>hours')|upper</th>
+                        <th align="center">{{gettext('charge<br>unit')|upper</th>
+                        <th align="center">{{gettext('charge unit<br>rate')|upper</th>
+                        <th align="center">{{gettext('period<br>quantity')|upper</th>
+                        <th align="center">{{gettext('sub-total<br>@ rate')|upper</th>            
+                        {# <th align="center">{{gettext('exchange<br>rate')|upper<br>{{row.Rat_Cur_Code}}->{{row.Cur_Code}}</th> #}
+                        <th align="center">{{gettext('exchange<br>rate')|upper</th> 
+                        <th align="center">{{gettext('total charge')|upper<br>{{Cur_Code}}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -184,13 +179,13 @@
                 </tr>
             </table>
 <hr>
-Reports Statistics :
-Charge Groups: <b>{{"{:,d}".format(count_CC.0)}}</b>
-Configuration Items : <b>{{"{:,d}".format(count_CI.0)}}</b>
-Resume Records : <b>{{"{:,d}".format(count_REC.0)}}</b>
-Charge Pool Records: <b>{{"{:,d}".format(count_CIT.0)}}</b>
+{{gettext('Reports Statistics')}} :
+{{gettext('Charge Groups')}}: <b>{{"{:,d}".format(count_CC.0)}}</b>
+{{gettext('Configuration Items')}} : <b>{{"{:,d}".format(count_CI.0)}}</b>
+{{gettext('Resume Records')}} : <b>{{"{:,d}".format(count_REC.0)}}</b>
+{{gettext('Charge Pool Records')}}: <b>{{"{:,d}".format(count_CIT.0)}}</b>
 <hr>
 
-{% endblock %}
+{% endblock content %}
 
 {# ============================================================================= #}

@@ -3,16 +3,13 @@
 {# (c) Sertechno 2019                                                            #}
 {# GLVH @ 2019-01-21                                                            #}
 {# ============================================================================= #}
-{% extends "base.html" %}
+{% extends "collector_app.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
-{% block title %}Collector{% endblock %}
-{% block head %}
-{{ super() }}
-{% endblock %}
-{% block page_content %}
+{% block title %}{{gettext('statistics')|capitalize}}{% endblock title %}
+{% block content %}
 <div class="page-header">
-    <h2>Statistics: </h2>
-    <h2>Use per Charge Unit Type</h2>
+    <h2>{{gettext('statistics')|capitalize}}: </h2>
+    <h2>{{gettext('Use per Charge Unit Type')}}</h2>
     <a href="#" onclick="history.go(-1)"><img src="/static/img/back.png"  color=yellow width="32" height="32" title="" alt="Add"></a>
 </div>
 <hr>
@@ -26,7 +23,7 @@
             <table class="table">
                 <thead class="thead-dark">
                     <tr>
-                        <th>Actual Data</th>
+                        <th>{{gettext('Actual Data')}}</th>
                         {% for i in range(0,12) %}
                             <th>{{months[i][0:3]}}</th>
                         {% endfor %}
@@ -44,7 +41,7 @@
             <table class="table">
                 <thead class="thead-dark">
                     <tr>
-                        <th>Estimate Data</th>
+                        <th>{{gettext('Estimate Data')}}</th>
                         {% for i in range(0,12) %}
                             <th>{{months[i][0:3]}}</th>
                         {% endfor %}
@@ -66,5 +63,5 @@
     </tr>
 </table>
 <hr>
-{% endblock %}
+{% endblock content %}
 {# ============================================================================= #}

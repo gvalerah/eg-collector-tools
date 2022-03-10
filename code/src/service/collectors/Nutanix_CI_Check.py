@@ -11,6 +11,7 @@ from sqlalchemy                         import create_engine
 from sqlalchemy.orm                     import sessionmaker
 
 from emtec.data                         import *
+from emtec.debug                        import *
 
 from emtec.collector.db.orm_model       import Configuration_Items
 from emtec.collector.db.orm_model       import Platforms
@@ -66,8 +67,24 @@ def Nutanix_CI_Check_Collector(C,config,group):
 
                         C.logger.info (f"{__name__}: Found {len(data.get('entities'))} CIs of type VM in {group} ({N.processed_vms}/{N.total_matches})")
                         vms += len(data.get('entities'))
-                        for e in data.get('entities'):
-                            ci_list.append({'name': e['spec']['name'], 'uuid': e['metadata']['uuid'],'type':'VM'})
+                        for vm in data.get('entities'):                            
+                            if 'spec' in vm:
+                                if 'name' in vm['spec']:
+                                    if 'metadata' in vm:
+                                        if 'uuid' in vm['metadata']:
+                                            try:
+                                                ci_list.append({'name': vm['spec']['name'], 'uuid': vm['metadata']['uuid'],'type':'VM'})
+                                            except Exception as e:
+                                                C.logger.warning(f"vm = {vm}")
+                                                emtec_handle_general_exception(e,logger=C.logger)                        
+                                        else:
+                                            C.logger.warning(f"{this()}: 'uuid' missing virtual machine ignored: {vm}")
+                                    else:
+                                        C.logger.warning(f"{this()}: 'metadata' missing. virtual machine ignored: {vm}")
+                                else:
+                                    C.logger.warning(f"{this()}: 'name' missing virtual machine ignored: {vm}")
+                            else:
+                                C.logger.warning(f"{this()}: 'spec' missing. virtual machine ignored: {vm}")
                         if N.processed_vms >= N.total_matches:
                             N.has_more_data = False
                             C.logger.info(f"{__name__}: NO MORE DATA EXPECTED has_more_data={N.has_more_data} total = {N.total_matches} processed={N.processed_vms}")
@@ -87,16 +104,36 @@ def Nutanix_CI_Check_Collector(C,config,group):
                 if status == 200:
                     C.logger.info(f"{__name__}: Found {len(data.get('entities'))} CIs of type Image in {node}")
                     imgs += len(data.get('entities'))
-                    for e in data.get('entities'):
-                        ci_list.append({'name': e['name'], 'uuid': e['uuid'],'type':'IMG'})
+                    for img in data.get('entities'):
+                        if 'name' in img:
+                            if 'uuid' in img:
+                                try:
+                                    ci_list.append({'name': img['name'], 'uuid': img['uuid'],'type':'IMG'})
+                                except Exception as e:
+                                    C.logger.warning(f"img = {img}")
+                                    emtec_handle_general_exception(e,logger=C.logger)
+                            else:
+                                C.logger.warning(f"{this()}: 'uuid' missing. image ignored: {img}")
+                        else:
+                            C.logger.warning(f"{this()}: 'name' missing. image ignored: {img}")
                 # Volume Groups
                 status,data = N.getVGroupsInformation(N.API_version)
                 if status == 200:
                     if len(data):
                         vgs += len(data[0].get('entities'))
                         C.logger.info(f"{__name__}: Found {len(data[0].get('entities'))} CIs of type Volume Group  in {node}")
-                        for e in data[0].get('entities'):
-                            ci_list.append({'name': e['name'], 'uuid': e['uuid'],'type':'VG'})
+                        for vg in data[0].get('entities'):
+                            if 'name' in vg:
+                                if 'uuid' in vg:
+                                    try:
+                                        ci_list.append({'name': vg['name'], 'uuid': vg['uuid'],'type':'VG'})
+                                    except Exception as e:
+                                        C.logger.warning(f"volume group = {vg}")
+                                        emtec_handle_general_exception(e,logger=C.logger)
+                                else:
+                                    C.logger.warning(f"{this()}: 'uuid' missing. volume group ignored: {vg}")
+                            else:
+                                C.logger.warning(f"{this()}: 'name' missing. volume group ignored: {vg}")
             C.logger.info(f"{__name__}: {len(ci_list)} CIs found in Nutanix (vms={vms},imgs={imgs},vgs={vgs})")
             C.logger.info(f"{__name__}: Overriding Decommissioning DateTime for active CIs")
             uuid_list = []

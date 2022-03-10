@@ -21,7 +21,7 @@ from sqlalchemy import ForeignKey
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-01-04 10:12:30
+# GLVH @ 2022-03-07 18:58:14
 # =============================================================================
 
 from sqlalchemy                 import Table, Column
@@ -36,7 +36,7 @@ from sqlalchemy                 import VARBINARY
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-01-04 10:12:30
+# GLVH @ 2022-03-07 18:58:14
 # =============================================================================
 import json
 import logging
@@ -50,10 +50,10 @@ Base = declarative_base()
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-01-04 10:12:30
+# GLVH @ 2022-03-07 18:58:14
 # =============================================================================
 
-# GV gen_model_flask.py:413 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_cit_generations.py
+# GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_cit_generations.py
 class CIT_Generations(Base):
     __tablename__ = 'CIT_Generations'
     engine        = None
@@ -211,10 +211,10 @@ class CIT_Generations(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-01-04 10:12:30
+# GLVH @ 2022-03-07 18:58:14
 # =============================================================================
 
-# GV gen_model_flask.py:413 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_cit_statuses.py
+# GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_cit_statuses.py
 class CIT_Statuses(Base):
     __tablename__ = 'CIT_Statuses'
     engine        = None
@@ -372,10 +372,10 @@ class CIT_Statuses(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-01-04 10:12:30
+# GLVH @ 2022-03-07 18:58:14
 # =============================================================================
 
-# GV gen_model_flask.py:413 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_cu_operations.py
+# GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_cu_operations.py
 class CU_Operations(Base):
     __tablename__ = 'CU_Operations'
     engine        = None
@@ -537,10 +537,10 @@ class CU_Operations(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-01-04 10:12:30
+# GLVH @ 2022-03-07 18:58:14
 # =============================================================================
 
-# GV gen_model_flask.py:413 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_cu_types.py
+# GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_cu_types.py
 class CU_Types(Base):
     __tablename__ = 'CU_Types'
     engine        = None
@@ -698,10 +698,10 @@ class CU_Types(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-01-04 10:12:30
+# GLVH @ 2022-03-07 18:58:14
 # =============================================================================
 
-# GV gen_model_flask.py:413 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_charge_items.py
+# GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_charge_items.py
 class Charge_Items(Base):
     __tablename__ = 'Charge_Items'
     engine        = None
@@ -869,11 +869,11 @@ class Charge_Items(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-01-04 10:12:30
+# GLVH @ 2022-03-07 18:58:14
 # =============================================================================
 
-# gen_model_flask.py:817 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_charge_items.py
-# gen_model_flask.py: Table sharding code follows:
+# gen_model_flask.py:865 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_charge_items.py
+# gen_model_flask.py:866 Table sharding code follows:
 def get_Charge_Items(table_name_suffix):
   class Charge_Items_Class(Base):
     __tablename__ = 'Charge_Items_%s'%(table_name_suffix)
@@ -1030,10 +1030,10 @@ def get_Charge_Items(table_name_suffix):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-01-04 10:12:30
+# GLVH @ 2022-03-07 18:58:14
 # =============================================================================
 
-# GV gen_model_flask.py:413 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_charge_resumes.py
+# GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_charge_resumes.py
 class Charge_Resumes(Base):
     __tablename__ = 'Charge_Resumes'
     engine        = None
@@ -1263,10 +1263,10 @@ class Charge_Resumes(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-01-04 10:12:30
+# GLVH @ 2022-03-07 18:58:14
 # =============================================================================
 
-# GV gen_model_flask.py:413 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_charge_unit_egm.py
+# GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_charge_unit_egm.py
 class Charge_Unit_EGM(Base):
     __tablename__ = 'Charge_Unit_EGM'
     engine        = None
@@ -1440,10 +1440,10 @@ class Charge_Unit_EGM(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-01-04 10:12:30
+# GLVH @ 2022-03-07 18:58:14
 # =============================================================================
 
-# GV gen_model_flask.py:413 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_charge_units.py
+# GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_charge_units.py
 class Charge_Units(Base):
     __tablename__ = 'Charge_Units'
     engine        = None
@@ -1625,10 +1625,10 @@ class Charge_Units(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-01-04 10:12:30
+# GLVH @ 2022-03-07 18:58:14
 # =============================================================================
 
-# GV gen_model_flask.py:413 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_configuration_items.py
+# GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_configuration_items.py
 class Configuration_Items(Base):
     __tablename__ = 'Configuration_Items'
     engine        = None
@@ -1798,10 +1798,10 @@ class Configuration_Items(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-01-04 10:12:30
+# GLVH @ 2022-03-07 18:58:14
 # =============================================================================
 
-# GV gen_model_flask.py:413 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_cost_centers.py
+# GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_cost_centers.py
 class Cost_Centers(Base):
     __tablename__ = 'Cost_Centers'
     engine        = None
@@ -1971,10 +1971,10 @@ class Cost_Centers(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-01-04 10:12:30
+# GLVH @ 2022-03-07 18:58:14
 # =============================================================================
 
-# GV gen_model_flask.py:413 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_countries.py
+# GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_countries.py
 class Countries(Base):
     __tablename__ = 'Countries'
     engine        = None
@@ -2136,10 +2136,10 @@ class Countries(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-01-04 10:12:30
+# GLVH @ 2022-03-07 18:58:14
 # =============================================================================
 
-# GV gen_model_flask.py:413 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_countries_currencies.py
+# GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_countries_currencies.py
 class Countries_Currencies(Base):
     __tablename__ = 'Countries_Currencies'
     engine        = None
@@ -2299,10 +2299,10 @@ class Countries_Currencies(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-01-04 10:12:30
+# GLVH @ 2022-03-07 18:58:14
 # =============================================================================
 
-# GV gen_model_flask.py:413 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_currencies.py
+# GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_currencies.py
 class Currencies(Base):
     __tablename__ = 'Currencies'
     engine        = None
@@ -2464,10 +2464,10 @@ class Currencies(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-01-04 10:12:30
+# GLVH @ 2022-03-07 18:58:14
 # =============================================================================
 
-# GV gen_model_flask.py:413 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_customers.py
+# GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_customers.py
 class Customers(Base):
     __tablename__ = 'Customers'
     engine        = None
@@ -2627,10 +2627,10 @@ class Customers(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-01-04 10:12:30
+# GLVH @ 2022-03-07 18:58:14
 # =============================================================================
 
-# GV gen_model_flask.py:413 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_exchange_rates.py
+# GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_exchange_rates.py
 class Exchange_Rates(Base):
     __tablename__ = 'Exchange_Rates'
     engine        = None
@@ -2792,10 +2792,10 @@ class Exchange_Rates(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-01-04 10:12:30
+# GLVH @ 2022-03-07 18:58:14
 # =============================================================================
 
-# GV gen_model_flask.py:413 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_interface.py
+# GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_interface.py
 class Interface(Base):
     __tablename__ = 'Interface'
     engine        = None
@@ -2965,10 +2965,10 @@ class Interface(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-01-04 10:12:30
+# GLVH @ 2022-03-07 18:58:14
 # =============================================================================
 
-# GV gen_model_flask.py:413 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_measure_units.py
+# GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_measure_units.py
 class Measure_Units(Base):
     __tablename__ = 'Measure_Units'
     engine        = None
@@ -3126,10 +3126,10 @@ class Measure_Units(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-01-04 10:12:30
+# GLVH @ 2022-03-07 18:58:14
 # =============================================================================
 
-# GV gen_model_flask.py:413 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_platforms.py
+# GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_platforms.py
 class Platforms(Base):
     __tablename__ = 'Platforms'
     engine        = None
@@ -3295,10 +3295,10 @@ class Platforms(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-01-04 10:12:30
+# GLVH @ 2022-03-07 18:58:14
 # =============================================================================
 
-# GV gen_model_flask.py:413 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_rat_periods.py
+# GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_rat_periods.py
 class Rat_Periods(Base):
     __tablename__ = 'Rat_Periods'
     engine        = None
@@ -3456,10 +3456,10 @@ class Rat_Periods(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-01-04 10:12:30
+# GLVH @ 2022-03-07 18:58:14
 # =============================================================================
 
-# GV gen_model_flask.py:413 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_rates.py
+# GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_rates.py
 class Rates(Base):
     __tablename__ = 'Rates'
     engine        = None
@@ -3641,10 +3641,10 @@ class Rates(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-01-04 10:12:30
+# GLVH @ 2022-03-07 18:58:14
 # =============================================================================
 
-# GV gen_model_flask.py:413 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_roles.py
+# GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_roles.py
 class Roles(Base):
     __tablename__ = 'Roles'
     engine        = None
@@ -3806,10 +3806,10 @@ class Roles(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-01-04 10:12:30
+# GLVH @ 2022-03-07 18:58:14
 # =============================================================================
 
-# GV gen_model_flask.py:413 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_st_use_per_cu.py
+# GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_st_use_per_cu.py
 class ST_Use_Per_CU(Base):
     __tablename__ = 'ST_Use_Per_CU'
     engine        = None
@@ -4009,10 +4009,10 @@ class ST_Use_Per_CU(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-01-04 10:12:30
+# GLVH @ 2022-03-07 18:58:14
 # =============================================================================
 
-# GV gen_model_flask.py:413 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_st_use_per_type.py
+# GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_st_use_per_type.py
 class ST_Use_Per_Type(Base):
     __tablename__ = 'ST_Use_Per_Type'
     engine        = None
@@ -4192,10 +4192,10 @@ class ST_Use_Per_Type(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-01-04 10:12:30
+# GLVH @ 2022-03-07 18:58:14
 # =============================================================================
 
-# GV gen_model_flask.py:413 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_trace.py
+# GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_trace.py
 class Trace(Base):
     __tablename__ = 'Trace'
     engine        = None
@@ -4353,10 +4353,10 @@ class Trace(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-01-04 10:12:30
+# GLVH @ 2022-03-07 18:58:14
 # =============================================================================
 
-# GV gen_model_flask.py:413 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_user_resumes.py
+# GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_user_resumes.py
 class User_Resumes(Base):
     __tablename__ = 'User_Resumes'
     engine        = None
@@ -4586,10 +4586,10 @@ class User_Resumes(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-01-04 10:12:30
+# GLVH @ 2022-03-07 18:58:14
 # =============================================================================
 
-# GV gen_model_flask.py:413 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_users.py
+# GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_users.py
 class Users(Base):
     __tablename__ = 'Users'
     engine        = None

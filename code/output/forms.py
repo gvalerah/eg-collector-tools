@@ -13,10 +13,10 @@ from wtforms.validators     import Regexp, Required
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-01-04 10:12:30
+# GLVH @ 2022-03-07 18:58:14
 # =============================================================================
 
-# gen_model_flask:259 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_charge_items.py
+# gen_model_flask.py:289 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_charge_items.py
 from decimal import ROUND_HALF_UP
 
 class frm_charge_item(Form):
@@ -41,10 +41,10 @@ class frm_charge_item_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-01-04 10:12:30
+# GLVH @ 2022-03-07 18:58:14
 # =============================================================================
 
-# gen_model_flask:259 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_charge_resumes.py
+# gen_model_flask.py:289 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_charge_resumes.py
 from decimal import ROUND_HALF_UP
 
 class frm_charge_resume(Form):
@@ -101,10 +101,10 @@ class frm_charge_resume_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-01-04 10:12:30
+# GLVH @ 2022-03-07 18:58:14
 # =============================================================================
 
-# gen_model_flask:259 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_charge_unit_egm.py
+# gen_model_flask.py:289 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_charge_unit_egm.py
 from decimal import ROUND_HALF_UP
 
 class frm_charge_unit_egm(Form):
@@ -133,10 +133,10 @@ class frm_charge_unit_egm_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-01-04 10:12:30
+# GLVH @ 2022-03-07 18:58:14
 # =============================================================================
 
-# gen_model_flask:259 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_charge_units.py
+# gen_model_flask.py:289 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_charge_units.py
 from decimal import ROUND_HALF_UP
 
 class frm_charge_unit(Form):
@@ -168,10 +168,10 @@ class frm_charge_unit_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-01-04 10:12:30
+# GLVH @ 2022-03-07 18:58:14
 # =============================================================================
 
-# gen_model_flask:259 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_cit_generations.py
+# gen_model_flask.py:289 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_cit_generations.py
 from decimal import ROUND_HALF_UP
 
 class frm_cit_generation(Form):
@@ -192,10 +192,10 @@ class frm_cit_generation_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-01-04 10:12:30
+# GLVH @ 2022-03-07 18:58:14
 # =============================================================================
 
-# gen_model_flask:259 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_cit_statuses.py
+# gen_model_flask.py:289 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_cit_statuses.py
 from decimal import ROUND_HALF_UP
 
 class frm_cit_status(Form):
@@ -216,10 +216,10 @@ class frm_cit_status_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-01-04 10:12:30
+# GLVH @ 2022-03-07 18:58:14
 # =============================================================================
 
-# gen_model_flask:259 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_configuration_items.py
+# gen_model_flask.py:289 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_configuration_items.py
 from decimal import ROUND_HALF_UP
 
 class frm_configuration_item(Form):
@@ -245,10 +245,10 @@ class frm_configuration_item_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-01-04 10:12:30
+# GLVH @ 2022-03-07 18:58:14
 # =============================================================================
 
-# gen_model_flask:259 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_cost_centers.py
+# gen_model_flask.py:289 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_cost_centers.py
 from decimal import ROUND_HALF_UP
 
 class frm_cost_center(Form):
@@ -274,10 +274,10 @@ class frm_cost_center_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-01-04 10:12:30
+# GLVH @ 2022-03-07 18:58:14
 # =============================================================================
 
-# gen_model_flask:259 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_countries_currencies.py
+# gen_model_flask.py:289 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_countries_currencies.py
 from decimal import ROUND_HALF_UP
 
 class frm_country_currency(Form):
@@ -299,10 +299,10 @@ class frm_country_currency_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-01-04 10:12:30
+# GLVH @ 2022-03-07 18:58:14
 # =============================================================================
 
-# gen_model_flask:259 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_countries.py
+# gen_model_flask.py:289 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_countries.py
 from decimal import ROUND_HALF_UP
 
 class frm_country(Form):
@@ -325,10 +325,10 @@ class frm_country_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-01-04 10:12:30
+# GLVH @ 2022-03-07 18:58:14
 # =============================================================================
 
-# gen_model_flask:259 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_cu_operations.py
+# gen_model_flask.py:289 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_cu_operations.py
 from decimal import ROUND_HALF_UP
 
 class frm_cu_operation(Form):
@@ -351,10 +351,10 @@ class frm_cu_operation_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-01-04 10:12:30
+# GLVH @ 2022-03-07 18:58:14
 # =============================================================================
 
-# gen_model_flask:259 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_currencies.py
+# gen_model_flask.py:289 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_currencies.py
 from decimal import ROUND_HALF_UP
 
 class frm_currency(Form):
@@ -377,10 +377,10 @@ class frm_currency_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-01-04 10:12:30
+# GLVH @ 2022-03-07 18:58:14
 # =============================================================================
 
-# gen_model_flask:259 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_customers.py
+# gen_model_flask.py:289 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_customers.py
 from decimal import ROUND_HALF_UP
 
 class frm_customer(Form):
@@ -401,10 +401,10 @@ class frm_customer_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-01-04 10:12:30
+# GLVH @ 2022-03-07 18:58:14
 # =============================================================================
 
-# gen_model_flask:259 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_cu_types.py
+# gen_model_flask.py:289 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_cu_types.py
 from decimal import ROUND_HALF_UP
 
 class frm_cu_type(Form):
@@ -425,10 +425,10 @@ class frm_cu_type_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-01-04 10:12:30
+# GLVH @ 2022-03-07 18:58:14
 # =============================================================================
 
-# gen_model_flask:259 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_exchange_rates.py
+# gen_model_flask.py:289 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_exchange_rates.py
 from decimal import ROUND_HALF_UP
 
 class frm_exchange_rate(Form):
@@ -450,10 +450,10 @@ class frm_exchange_rate_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-01-04 10:12:30
+# GLVH @ 2022-03-07 18:58:14
 # =============================================================================
 
-# gen_model_flask:259 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_interface.py
+# gen_model_flask.py:289 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_interface.py
 from decimal import ROUND_HALF_UP
 
 class frm_interface(Form):
@@ -479,10 +479,10 @@ class frm_interface_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-01-04 10:12:30
+# GLVH @ 2022-03-07 18:58:14
 # =============================================================================
 
-# gen_model_flask:259 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_measure_units.py
+# gen_model_flask.py:289 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_measure_units.py
 from decimal import ROUND_HALF_UP
 
 class frm_measure_unit(Form):
@@ -566,10 +566,10 @@ class frm_new_cus_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-01-04 10:12:30
+# GLVH @ 2022-03-07 18:58:14
 # =============================================================================
 
-# gen_model_flask:259 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_platforms.py
+# gen_model_flask.py:289 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_platforms.py
 from decimal import ROUND_HALF_UP
 
 class frm_platform(Form):
@@ -593,10 +593,10 @@ class frm_platform_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-01-04 10:12:30
+# GLVH @ 2022-03-07 18:58:14
 # =============================================================================
 
-# gen_model_flask:259 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_rates.py
+# gen_model_flask.py:289 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_rates.py
 from decimal import ROUND_HALF_UP
 
 class frm_rate(Form):
@@ -624,10 +624,10 @@ class frm_rate_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-01-04 10:12:30
+# GLVH @ 2022-03-07 18:58:14
 # =============================================================================
 
-# gen_model_flask:259 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_rat_periods.py
+# gen_model_flask.py:289 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_rat_periods.py
 from decimal import ROUND_HALF_UP
 
 class frm_rat_period(Form):
@@ -648,10 +648,10 @@ class frm_rat_period_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-01-04 10:12:30
+# GLVH @ 2022-03-07 18:58:14
 # =============================================================================
 
-# gen_model_flask:259 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_roles.py
+# gen_model_flask.py:289 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_roles.py
 from decimal import ROUND_HALF_UP
 
 class frm_Role(Form):
@@ -674,10 +674,10 @@ class frm_Role_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-01-04 10:12:30
+# GLVH @ 2022-03-07 18:58:14
 # =============================================================================
 
-# gen_model_flask:259 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_st_use_per_cu.py
+# gen_model_flask.py:289 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_st_use_per_cu.py
 from decimal import ROUND_HALF_UP
 
 class frm_st_use_per_cu(Form):
@@ -719,10 +719,10 @@ class frm_st_use_per_cu_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-01-04 10:12:30
+# GLVH @ 2022-03-07 18:58:14
 # =============================================================================
 
-# gen_model_flask:259 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_st_use_per_type.py
+# gen_model_flask.py:289 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_st_use_per_type.py
 from decimal import ROUND_HALF_UP
 
 class frm_st_use_per_type(Form):
@@ -800,10 +800,10 @@ class frm_trace_202101_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-01-04 10:12:30
+# GLVH @ 2022-03-07 18:58:14
 # =============================================================================
 
-# gen_model_flask:259 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_trace.py
+# gen_model_flask.py:289 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_trace.py
 from decimal import ROUND_HALF_UP
 
 class frm_trace(Form):
@@ -823,10 +823,10 @@ class frm_trace_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-01-04 10:12:30
+# GLVH @ 2022-03-07 18:58:14
 # =============================================================================
 
-# gen_model_flask:259 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_user_resumes.py
+# gen_model_flask.py:289 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_user_resumes.py
 from decimal import ROUND_HALF_UP
 
 class frm_user_resumes(Form):
@@ -883,10 +883,10 @@ class frm_user_resumes_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-01-04 10:12:30
+# GLVH @ 2022-03-07 18:58:14
 # =============================================================================
 
-# gen_model_flask:259 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_users.py
+# gen_model_flask.py:289 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_users.py
 from decimal import ROUND_HALF_UP
 
 class frm_User(Form):

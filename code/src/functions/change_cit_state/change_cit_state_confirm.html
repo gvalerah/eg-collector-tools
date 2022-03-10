@@ -3,13 +3,10 @@
 {# (c) Sertechno 2018                                                            #}
 {# GLVH @ 2018-12-06                                                             #}
 {# ============================================================================= #}
-{% extends "base.html" %}
+{% extends "collector_app.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
-{% block title %}Collector{% endblock %}
-{% block head %}
-{{ super() }}
-{% endblock %}
-{% block page_content %}
+{% block title %}{{gettext('Change CIT status')}}{% endblock title %}
+{% block content %}
 <div class="page-header">
     <h2>Change Charge Item Status for next {{rows.__len__()}} records: </h2>
     <a href="#" onclick="history.go(-1)"><img src="/static/img/back.png"  color=yellow width="32" height="32" title="" alt="Add"></a>
@@ -19,13 +16,13 @@
     <table class="table">
         <thead class="thead-dark">
             <tr>
-                <th align="center" valign="top">CHARGE UNIT</th>
-                <th align="center" valign="top">DATE</th>
-                <th align="center" valign="top">TIME</th>
-                <th align="center" valign="top">QUANTITY</th>
-                <th align="center" valign="top">ACTIVE</th>
-                <th align="center" valign="top">FROM STATUS</th>
-                <th align="center" valign="top">TO STATUS</th>
+                <th align="center" valign="top">{{gettext('charge unit')|upper</th>
+                <th align="center" valign="top">{{gettext('date')|upper</th>
+                <th align="center" valign="top">{{gettext('time')|upper</th>
+                <th align="center" valign="top">{{gettext('cuantity')|upper</th>
+                <th align="center" valign="top">{{gettext('active')|upper</th>
+                <th align="center" valign="top">{{gettext('from status')|upper</th>
+                <th align="center" valign="top">{{gettext('to status')|upper</th>
             </tr>
         </thead>
         <tbody>    
@@ -44,5 +41,5 @@
     </table>
 </div>
 <hr>
-{% endblock %}
+{% endblock content %}
 {# ============================================================================= #}

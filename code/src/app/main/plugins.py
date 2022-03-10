@@ -2,6 +2,7 @@
 # Plugins Fixed Code
 # (c) Sertechno 2018
 # GLVH @ 2018-11-22
+# GLVH @ 2022-03-07 Refactor to bootstrap 5
 # =============================================================================
 # General Plugins imports
 import sys

@@ -3,16 +3,13 @@
 {# (c) Sertechno 2019                                                            #}
 {# GLVH @ 2019-01-21                                                            #}
 {# ============================================================================= #}
-{% extends "base.html" %}
+{% extends "collector_app.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
-{% block title %}Collector{% endblock %}
-{% block head %}
-{{ super() }}
-{% endblock %}
-{% block page_content %}
+{% block title %}{{gettext('Statistics')}}{% endblock %}
+{% block content %}
 <div class="page-header">
-    <h2>Statistics: </h2>
-    <h2>Use per Charge Unit Type Filtered version</h2>
+    <h2>{{gettext('Statistics')}}: </h2>
+    <h2>{{gettext('Use per Charge Unit Type Filtered version')}}</h2>
     <a href="#" onclick="history.go(-1)"><img src="/static/img/back.png"  color=yellow width="32" height="32" title="" alt="Add"></a>
 </div>
 
@@ -30,12 +27,12 @@
         <td>
             <table class="table">
                 <thead  class="thead-dark">
-                    <tr><th>Filter applied</th><th></th><tr>
+                    <tr><th>{{gettext('Filter applied')}}</th><th></th><tr>
                 </thead>
                 <tbody>
-                    <tr><td>Type:</td><td>{{Data['afield']}} of {{Data['cutype']}}</td></tr>
-                    <tr><td>From: {{months[ Data['from']-1 ][0:3]}}/{{Data['year']}}</td>
-                        <td>To:   {{months[ Data['to']-1   ][0:3]}}/{{Data['year']}}</td></tr>
+                    <tr><td>{{gettext('type')|capitalize}}:</td><td>{{Data['afield']}} {{gettext('of')}} {{Data['cutype']}}</td></tr>
+                    <tr><td>{{gettext('from')|capitalize}}: {{months[ Data['from']-1 ][0:3]}}/{{Data['year']}}</td>
+                        <td>{{gettext('to')|capitalize}}:   {{months[ Data['to']-1   ][0:3]}}/{{Data['year']}}</td></tr>
                     {% if Data['customer']>1 %} <tr><td>Customer:</td>          <td>{{Data['cusname']}}</td>        </tr>{% endif %}
                     {% if Data['platform']>1 %} <tr><td>Platform:</td>          <td>{{Data['planame']}}</td>        </tr>{% endif %}
                     {% if Data['cc']>1 %}       <tr><td>Cost Center:            </td><td>{{Data['ccname']}}</td>    </tr>{% endif %}
@@ -45,7 +42,7 @@
             <table class="table">
                 <thead class="thead-dark">
                     <tr>
-                        <th>Actual Data</th>
+                        <th>{{gettext('Actual Data')}}</th>
                         {% for i in range(0,12) %}
                             <th>{{months[i][0:3]}}</th>
                         {% endfor %}
@@ -68,7 +65,7 @@
             <table class="table">
                 <thead class="thead-dark">
                     <tr>
-                        <th>Estimate Data</th>
+                        <th>{{gettext('Estimate Data')}}</th>
                         {% for i in range(0,12) %}
                             <th>{{months[i][0:3]}}</th>
                         {% endfor %}
@@ -94,24 +91,24 @@
             <table class="table">
                 <thead class="thead-dark">
                     <tr>
-                        <th>STATISTICS</th>{% for i in range(0,12) %}<th></th>{% endfor %}
+                        <th>{{gettext('statistics')|upper}}</th>{% for i in range(0,12) %}<th></th>{% endfor %}
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <td><b>N</b></td>                   <td>{{ Data['rs'].n                                      }}</td>
-                        <td><b>Mean</b></td>                <td>{{ "{:,.2f}".format(Data['rs'].mean())               }} {{Data['mu']}}</td>
+                        <td><b>{{gettext('Mean')}}</b></td>                <td>{{ "{:,.2f}".format(Data['rs'].mean())               }} {{Data['mu']}}</td>
                         <td><b>Min</b></td>                 <td>{{ "{:,.2f}".format(Data['rs'].min())                }} {{Data['mu']}}</td>
                         <td><b>Max</b></td>                 <td>{{ "{:,.2f}".format(Data['rs'].max())                }} {{Data['mu']}}</td>
-                        {# <td><b>Variance</b></td>            <td>{{ "{:,.2f}".format(Data['rs'].variance())           }} {{Data['mu']}}</td> #}
-                        <td><b>Standard Deviation</b></td>  <td>{{ "{:,.2f}".format(Data['rs'].standard_deviation()) }} {{Data['mu']}}</td>
+                        {# <td><b>{{gettext('Variance')}}</b></td>            <td>{{ "{:,.2f}".format(Data['rs'].variance())           }} {{Data['mu']}}</td> #}
+                        <td><b>{{gettext('Standard Deviation')}}</b></td>  <td>{{ "{:,.2f}".format(Data['rs'].standard_deviation()) }} {{Data['mu']}}</td>
                     </tr>
                     {% if Data['coeficients_yx'] != None %}
                     <tr>
-                        <td><b>RL for Actual Data</b></td>
+                        <td><b>{{gettext('LR for Actual Data')}}</b></td>
                         <td><b>y</b> = {{ "{:,.2f}".format(Data['coeficients_yx'].0) }}<b>x</b> + {{ "{:,.2f}".format(Data['coeficients_yx'].1) }}</td>
                         {% if Data['coeficients_yx2'] != None %}
-                        <td><b>RL adjusted by season</b></td>
+                        <td><b>{{gettext('LR adjusted by season')}}</b></td>
                         <td><b>y</b> = {{ "{:,.2f}".format(Data['coeficients_yx2'].0) }}<b>x</b> + {{ "{:,.2f}".format(Data['coeficients_yx2'].1) }}</td>
                         {% endif %}
                     </tr>
@@ -123,5 +120,5 @@
 </table>
 <hr>
 
-{% endblock %}
+{% endblock content %}
 {# ============================================================================= #}
