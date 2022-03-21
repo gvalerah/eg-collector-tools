@@ -6,7 +6,7 @@
 
 # =============================================================================
 class frm_export_Charging_Resume(Form):
-    Export          = SelectField ("Export?", validators=[Required()])
+    Export          = SelectField ("Export?", validators=[DataRequired()])
     #CC              = SelectField ("CC Filter?",coerce=str)
     #Platform        = SelectField ("Platform Filter?",coerce=int)
 

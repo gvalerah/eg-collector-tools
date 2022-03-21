@@ -6,7 +6,7 @@
 
 # =============================================================================
 class frm_set_period(Form):
-    Period          = SelectField ("Active Period ? ", validators=[Required()])
+    Period          = SelectField ("Active Period ? ", validators=[DataRequired()])
 
     submit_Set      = SubmitField ('SET')
     submit_Cancel   = SubmitField ('Cancel')

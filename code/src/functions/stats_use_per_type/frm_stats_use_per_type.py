@@ -7,7 +7,7 @@
 
 # =============================================================================
 class frm_stats_use_per_type(Form):
-    Year             = IntegerField    ("Year ?", validators=[Required()])
+    Year             = IntegerField    ("Year ?", validators=[DataRequired()])
 
     submit_Report    = SubmitField  ('Report')
     submit_Cancel    = SubmitField  ('Cancel')

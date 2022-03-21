@@ -7,9 +7,9 @@
 
 # =============================================================================
 class frm_charging_resume_platform(Form):
-    Pla_Id           = SelectField  ("Platform?", validators=[Required()], coerce=int)
-    CIT_Date_From    = DateField    ("Billing Data from?", validators=[Required()], format="%Y-%m-%d")
-    CIT_Date_To      = DateField    ("Billing Data up to?", validators=[Required()], format="%Y-%m-%d")
+    Pla_Id           = SelectField  ("Platform?", validators=[DataRequired()], coerce=int)
+    CIT_Date_From    = DateField    ("Billing Data from?", validators=[DataRequired()], format="%Y-%m-%d")
+    CIT_Date_To      = DateField    ("Billing Data up to?", validators=[DataRequired()], format="%Y-%m-%d")
     CIT_Status       = SelectField  ("Status to Report?", coerce=int)
     Cur_Code         = SelectField  ("Currency to Report?", coerce=str)
 

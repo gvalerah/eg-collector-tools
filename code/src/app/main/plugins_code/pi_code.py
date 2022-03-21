@@ -5,7 +5,7 @@ from wtforms                import StringField, IntegerField, DecimalField, Date
 from wtforms.fields.html5   import DateField
 from wtforms                import BooleanField, SelectField, SubmitField, RadioField
 from wtforms.validators     import Required, AnyOf, DataRequired, Email, EqualTo, HostnameValidation
-from wtforms.validators     import IPAddress, InputRequired, Length, MacAddress, NoneOf, NumberRange, Optional
+from wtforms.validators     import IPAddress, DataRequired, Length, MacAddress, NoneOf, NumberRange, Optional
 from wtforms.validators     import Regexp, Required
 
 

@@ -7,8 +7,8 @@ import  sys
 import  getpass
 from    pprint              import pprint
 from    flask               import current_app
-from    flask_script        import Manager, Shell
-from    flask_migrate       import Migrate, MigrateCommand
+# GV 20220310 from    flask_script        import Manager, Shell
+# GV 20220310 from    flask_migrate       import Migrate, MigrateCommand
 import  configparser
 from    configparser        import ConfigParser, ExtendedInterpolation
 from    sqlalchemy          import create_engine
@@ -49,13 +49,29 @@ from    emtec.collector.db.orm_model       import *
 
 # GV Setup context data depending on configuration file
 
+# Get Version and Build data
+def print_version():
+    print (f"EG Collector v {MAYOR}.{MINOR}.{PATCH} build {BUILD}")
+
+def version():
+    print (f"{MAYOR}.{MINOR}.{PATCH}")
+
+from collector_version import *
+
+if len(sys.argv) < 2:
+    sys.exit(1)
+
+if sys.argv[1] == '--version':
+    version()
+    sys.exit(1)
+elif sys.argv[1] == '--print_version':
+    print_version()
+    sys.exit(1)
+
 # GV Macro level default values
 config_file = "collector.ini"
 run_mode    = 'GUNICORN'
 
-if len(sys.argv) < 2:
-    sys.exit(1)
-            
 command     = sys.argv[0]
 config_file = sys.argv[1]
 

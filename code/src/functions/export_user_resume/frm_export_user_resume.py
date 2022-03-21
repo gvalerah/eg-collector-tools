@@ -6,7 +6,7 @@
 # 2021-04-22 GLVH Add Delete button
 # ======================================================================
 class frm_export_User_Resume(Form):
-    Export          = SelectField ("Export?", validators=[Required()])
+    Export          = SelectField ("Export?", validators=[DataRequired()])
 
     submit_PDF      = SubmitField ('PDF')
     submit_XLS      = SubmitField ('XLS')

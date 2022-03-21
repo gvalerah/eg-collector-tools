@@ -199,17 +199,22 @@ def forms_Get_Charging_Resume_Progress():
 
         logger.debug(f"{this()} Initializing form choices ...")
         if hasattr(form,'CC_Id'):
-            form.CC_Id.choices      = db.session.query(cost_center.CC_Id,cost_center.CC_Description).all()
+            result      = (db.session.query(cost_center.CC_Id,cost_center.CC_Description).all())
+            form.CC_Id.choices = [(x.CC_Id,x.CC_Description) for x in result]
         if hasattr(form,'Cus_Id'):
-            form.Cus_Id.choices     = db.session.query(customer.Cus_Id,customer.Cus_Name).all()
+            result     = (db.session.query(customer.Cus_Id,customer.Cus_Name).all())
+            form.Cus_Id.choices = [(x.Cus_Id,x.Cus_Name) for x in result]
         if hasattr(form,'Pla_Id'):
-            form.Pla_Id.choices     = db.session.query(platform.Pla_Id,platform.Pla_Name).all()
+            result     = (db.session.query(platform.Pla_Id,platform.Pla_Name).all())
+            form.CC_Id.choices = [(x.Pla_Id,x.Pla_Name) for x in result]
         if hasattr(form,'CIT_Status'):
-            form.CIT_Status.choices = db.session.query(cit_status.CIT_Status,cit_status.Value).all()
+            result = (db.session.query(cit_status.CIT_Status,cit_status.Value).all())
+            form.CIT_Status.choices = [(x.CIT_Status,x.Value) for x in result]
         if hasattr(form,'Cur_Code'):
             query = db.session.query(exchange_rate.Cur_Code.distinct().label('Cur_Code'))
             cur_choices = [row.Cur_Code for row in query.all()]
-            form.Cur_Code.choices   = db.session.query(currency.Cur_Code,currency.Cur_Name).filter(currency.Cur_Code.in_(cur_choices)).all()
+            result   = (db.session.query(currency.Cur_Code,currency.Cur_Name).filter(currency.Cur_Code.in_(cur_choices)).all())
+            form.Cur_Code.choices = [(x.Cur_Code,x.Cur_Name) for x in result]
         if hasattr(form,'Level'):
             form.Level.choices      = [(1,"Cost Center"),(2,"Device"),(3,"Component")]
 
@@ -355,16 +360,29 @@ def forms_Get_Charging_Resume_Progress():
         if hasattr(form,'Level')     :
             form.Level.data         = session['data']['Level']
 
-        logger.debug(f"{this()}: ---------------------------------------")
-        logger.debug(f"{this()}: template      = {template}")
-        logger.debug(f"{this()}: data          = {session.get('data')}")
-        logger.debug(f"{this()}: form          = {form}")
-        logger.debug(f"{this()}: ---------------------------------------")
-        for field in form._fields:
-            logger.debug(f"{this()}: field  = {field} {type(field)}")
-            logger.debug(f"{this()}: {field}  = {getattr(form,field)}")
-        logger.debug(f"{this()}: ---------------------------------------")
+        try:
+            logger.debug(f"{this()}: ---------------------------------------")
+            logger.debug(f"{this()}: template      = {template}")
+            logger.debug(f"{this()}: data          = {session.get('data')}")
+            logger.debug(f"{this()}: form          = {form}")
+            logger.debug(f"{this()}: form._fields  = {form._fields}")
+            logger.debug(f"{this()}: ---------------------------------------")
+            for field in form._fields:
+                ff = getattr(form,field)
+                logger.debug(f"{this()}: field  = {ff} {type(ff)}")
+                if hasattr(ff,'iter_choices'):
+                    for choice in ff.iter_choices():
+                        logger.debug(f"{this()}: choices  = {choice}")
+
+            logger.debug(f"{this()}: ---------------------------------------")
+        except Exception as e:
+            emtec_handle_general_exception(e,logger=logger)
         
+        """
+        logger.warning(f"{this()} form = {form}")
+        logger.warning(f"{this()} session.get('data') = {session.get('data')}")
+        logger.warning(f"{this()} collectordata = {collectordata}")
+        """
         logger.debug(f"{this()} render_template('charging_resume.html'")
         return render_template(
                     'charging_resume.html',

@@ -7,8 +7,8 @@
 
 # =============================================================================
 class frm_graph_use_per_type(Form):
-    Year             = IntegerField    ("Year ?", validators=[Required(),NumberRange(min=2000, max=2030,message='Valid year are beween 2000 and 2030')])
-    Graph            = SelectField   ("Graphic ?", validators=[Required()],coerce=int)
+    Year             = IntegerField    ("Year ?", validators=[DataRequired(),NumberRange(min=2000, max=2030,message='Valid year are beween 2000 and 2030')])
+    Graph            = SelectField   ("Graphic ?", validators=[DataRequired()],coerce=int)
 
     submit_Report    = SubmitField  ('Generate Graphic')
     submit_Cancel    = SubmitField  ('Cancel')

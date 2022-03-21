@@ -8,7 +8,7 @@ from    configparser                        import ExtendedInterpolation
 
 from    flask                               import Flask
 from    flask                               import render_template
-from    flask_bootstrap                     import Bootstrap
+# GV 20220310 from    flask_bootstrap                     import Bootstrap
 from    flask_mail                          import Mail
 from    flask_moment                        import Moment
 from    flask_sqlalchemy                    import SQLAlchemy

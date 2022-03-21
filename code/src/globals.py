@@ -3,8 +3,8 @@
 C = None
 
 class NameForm(Form):
-    name = StringField('What is your name?', validators=[Required()])
-    password = StringField('What is your password?', validators=[Required()])
+    name = StringField('What is your name?', validators=[DataRequired()])
+    password = StringField('What is your password?', validators=[DataRequired()])
     submit = SubmitField('Submit')
 
 

@@ -125,6 +125,7 @@ collector:	${COLLECTOR_CODE_OUTPUT}/models.py ${COLLECTOR_CODE_OUTPUT}/orm_model
 	cp  ${COLLECTOR_CODE_SRC}/collector.py						${COLLECTOR_FOLDER}/collector.py
 	cp  ${COLLECTOR_CODE_SRC}/collector_drv_nutanix.py			${COLLECTOR_FOLDER}/.
 	cp  ${COLLECTOR_CODE_SRC}/collector_services.py				${COLLECTOR_FOLDER}/.
+	cp  ${COLLECTOR_CODE_SRC}/collector_version.py				${COLLECTOR_FOLDER}/.
 	cp  ${COLLECTOR_CODE_SRC}/*.md								${COLLECTOR_FOLDER}/.
 	cp  ${COLLECTOR_CODE_SRC}/app/*.py							${COLLECTOR_FOLDER}/app/.
 	cp  ${COLLECTOR_CODE_SRC}/app/auth/*.py						${COLLECTOR_FOLDER}/app/auth/.

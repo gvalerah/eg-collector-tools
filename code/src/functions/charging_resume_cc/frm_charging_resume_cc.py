@@ -7,9 +7,9 @@
 
 # =============================================================================
 class frm_charging_resume_cc(Form):
-    CC_Id           = SelectField  ("Cost Center?", validators=[Required()], coerce=int)
-    CIT_Date_From    = DateField    ("Billing Data from?", validators=[Required()], format="%Y-%m-%d")
-    CIT_Date_To      = DateField    ("Billing Data up to?", validators=[Required()], format="%Y-%m-%d")
+    CC_Id           = SelectField  ("Cost Center?", validators=[DataRequired()], coerce=int)
+    CIT_Date_From    = DateField    ("Billing Data from?", validators=[DataRequired()], format="%Y-%m-%d")
+    CIT_Date_To      = DateField    ("Billing Data up to?", validators=[DataRequired()], format="%Y-%m-%d")
     CIT_Status       = SelectField  ("Status to Report?", coerce=int)
     Cur_Code         = SelectField  ("Currency to Report?", coerce=str)
 
