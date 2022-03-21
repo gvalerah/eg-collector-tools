@@ -39,6 +39,11 @@ metric_finders= {}
 metric_readers = {}
 annotation_readers = {}
 panel_readers = {}
+nodes_mapping = {'customer': ['EMTEC', 'LUMEN'],
+                 'cost_center': ['30000000', '30000001', ''],
+                 'cu_type':['CPU','RAM','DSK'],
+                 'currency':['UF','CLP','USD']
+                 }
 
 # support functions
 def add_reader(name, reader):
@@ -150,6 +155,33 @@ def _series_to_response(df, target):
     return {'target': '%s' % (df.name),
             'datapoints': zip(values, timestamps)}
 
+def _rows_to_table(rows, target):
+    ''' Expects a list of rows containing value,datetime pairs
+        sorted by datetime ascending
+    '''
+    if rows is None or len(rows) == 0:
+        return {'type': 'table',
+                'columns': [],
+                'rows': []}
+    else:
+        column_names=[]
+        print(f"type of rows   = {type(rows)}")
+        print(f"dir rows       = {dir(rows)}")
+        print(f"type of rows 0 = {type(rows[0])}")
+        print(f"dir rows 0 = {dir(rows[0])}")
+        print(f"dir rows 0 = {rows[0]._asdict()}")
+        print(f"rows 0 _fields= {rows[0]._fields}")
+        print(f"rows 0 keys  = {rows[0].keys()}")
+        for field in rows[0].keys():
+            column_names.append(field)
+        datarows = []
+        for row in rows:
+            datarows.append   (row)
+
+    return {'type': 'table',
+            'columns': column_names,
+            'rows': datarows}
+
 def _rows_to_response(rows, target):
     ''' Expects a list of rows containing value,datetime pairs
         sorted by datetime ascending
@@ -165,24 +197,36 @@ def _rows_to_response(rows, target):
     return {'target': '%s' % (target),
             'datapoints': datapoints}
 
-
+def log_request(request):
+    print (f"log_request: ---------------------------------")
+    print (f"request         : {request}")
+    #rint (f"request: {dir(request)}")
+    print (f"request.method  : {request.method}")
+    print (f"request.args    : {request.args}")
+    print (f"request.form    : {request.args}")
+    print (f"request.data    : {request.data}")
+    print (f"request.headers :\n{request.headers}\n")
+    print (f"request.get_json: {request.get_json()}\n")
+    print (f"log_request: ---------------------------------")
+    
 
 # reader functions
-def get_usage(metric_query,ts_range,**kwargs):
+def get_usage(target,ts_range,**kwargs):
     # suffix need to be defined upon end-start pair
-    print(f"get_usage: metric_query = {metric_query} ts_range = {ts_range}")
+    print(f"{this()}: target = {target} ts_range = {ts_range}")
+    finder,metric_query = target['target'].split(':',1)
     customer,cost_center,cu_type,state,currency = metric_query.split(',',4)
     start = ts_range['$gt']
     end   = ts_range['$lte']
     suffix=f"{customer}_{start.strftime('%Y%m')}"
-    print(f"start = {start} end   = {end} suffix={suffix}")
+    print(f"{this()}: start = {start} end   = {end} suffix={suffix}")
     Charge_Items.set_shard(suffix)
-    print(f"CIT table = {Charge_Items.__tablename__}")
+    print(f"{this()}: CIT table = {Charge_Items.__tablename__}")
 
     # Typ code need to be argument in target !!!!!
     query=session.query(
             func.sum(Charge_Items.CIT_Quantity
-                ),Charge_Items.CIT_DateTime
+            ),Charge_Items.CIT_DateTime
             ).join(Charge_Units,Charge_Units.CU_Id==Charge_Items.CU_Id
             ).join(Configuration_Items,Configuration_Items.CI_Id==Charge_Units.CI_Id
             )
@@ -193,19 +237,25 @@ def get_usage(metric_query,ts_range,**kwargs):
         cost_centers = cost_center.split(';')
         for i in range(len(cost_centers)):
             cost_centers[i] = int(cost_centers[i])
-        print(f"cost_centers={cost_centers}")
+        print(f"{this()}: cost_centers={cost_centers}")
         query = query.filter(Configuration_Items.CC_Id.in_(cost_centers))
     if len(cu_type):
         query = query.filter(Charge_Units.Typ_Code==cu_type)
     query = query.group_by(Charge_Units.Typ_Code,Charge_Items.CIT_DateTime)
     query = query.order_by(Charge_Units.Typ_Code,Charge_Items.CIT_DateTime)
-    print(f"query={query}")
+    #print(f"query={query}")
     rows = query.all()
     if rows:
-        print(f"rows = {len(rows)}")
+        print(f"{this()}: rows = {len(rows)}")
     else:
-        print(f"No rows found. rows = {rows}")
-    response = _rows_to_response(rows,metric_query)
+        print(f"{this()}: No rows found. rows = {rows}")
+    if target['type']=='timeserie':
+        response = _rows_to_response(rows,target['target'])
+    else:
+        response = _rows_to_table(rows,target['target'])
+
+    print(f"{this()}: response.target = {response.get('target')}")
+    #print(f"{this()}: response.datapoints = {len(response.get('datapoints'))}")
     return response
 
 # Datasource views
@@ -218,19 +268,13 @@ def entry_point():
 @app.route('/search',methods=methods)
 @cross_origin()
 def search():
-    #print (f"request: {request}")
-    #rint (f"request: {dir(request)}")
-    #print (f"request.args: {request.args}")
-    #print (f"request.data: {request.data}")
-    #print (f"request.headers:\n{request.headers}\n")
-    #print (f"request.get_json={request.get_json()}\n")
     # POST method required
     # Content-Type: application/json required
     # Gets request arguments as dictionary
+    log_request(request)
     req = request.get_json()
 
     if req is not None:
-        #print (f"req: {type(req)} {req}")
         try:
             # Gets 'target' attribute or defaults to '*'
             target = req.get('target', '*')
@@ -240,33 +284,26 @@ def search():
             else:
                 finder = target
 
-            #print(f"metric_finders.keys()={metric_finders.keys()} {type(metric_finders.keys())}")
             if not target or finder not in metric_finders:
                 metrics = []
                 if target == '*':
-                    #print(f"metric_readers.keys()={metric_readers.keys()} {type(metric_readers.keys())}")
                     metrics += list(metric_finders.keys()) + list(metric_readers.keys())
-
                 else:
                     metrics.append(target)
 
-                #print(f"metrics ={metrics} {type(metrics)}")
                 return jsonify(metrics)
             else:
                 return jsonify(list(metric_finders[finder](target)))
         except Exception as e:
             print(f"EXCEPTION: {str(e)}")
             abort(404,f"EXCEPTION: {str(e)}")
-            #return jsonify("[]")
     print(f"ERROR: arguments error.req={req} type={str(type(req))}")
     abort(404,Exception(f"ERROR: arguments error.req={req} type={str(type(req))}"))
-    #return jsonify("[]")
 
 @app.route('/query',methods=methods)
 @cross_origin(max_age=600)
 def query():    
-    print (request.headers)
-    print (request.get_json())
+    log_request(request)
     # gets request data, method POST required
     # data required:
     # { range:{from:timestamp, to:timestamp}
@@ -278,18 +315,16 @@ def query():
 
     results = []
 
-    ts_range = {'$gt': pd.Timestamp(req['range']['from']).to_pydatetime(),
-                '$lte': pd.Timestamp(req['range']['to']).to_pydatetime()}
-    ts_range = {'$gt': datetime.datetime.fromtimestamp(req['range']['from']/1000),
-                '$lte': datetime.datetime.fromtimestamp(req['range']['to']/1000)}
+    ts_range = {'$gt':  datetime.datetime.strptime(req['range']['from'],'%Y-%m-%dT%H:%M:%S.%fZ'),
+                '$lte': datetime.datetime.strptime(req['range']['to']  ,'%Y-%m-%dT%H:%M:%S.%fZ')}
 
-    print(f"ts_range={ts_range}")
+    print(f"{this()}: ts_range={ts_range}")
     if 'intervalMs' in req:
         freq = str(req.get('intervalMs')) + 'ms'
     else:
         freq = None
 
-    print(f"targets={req['targets']} {type(req['targets'])}")
+    print(f"{this()}: targets={req['targets']} {type(req['targets'])}")
     for target in req['targets']:
         print(f"target={target} {type(target)}")
         if ':' not in target.get('target', ''):
@@ -298,9 +333,8 @@ def query():
         req_type = target.get('type', 'timeserie')
 
         finder, metric_query = target['target'].split(':', 1)
-        print(f"will call function '{finder}:{metric_readers[finder]}' with metric_query={metric_query} and ts_range={ts_range}")
-        query_results = metric_readers[finder](metric_query, ts_range)
-        #print(f"query_results={query_results} {type(query_results)}")
+        print(f"{this()}: will use reader '{finder}' with target={target} and ts_range={ts_range}")
+        query_results = metric_readers[finder](target, ts_range)
         # Check if valid pandas dataframe (legacy)
         if hasattr(query_results,'empty'):
             if req_type == 'table':
@@ -308,7 +342,11 @@ def query():
             else:
                 results.extend(dataframe_to_response(target, query_results, freq=freq))
         else:
-            results=query_results
+            print(f"{this()}: query_results = {type(query_results)}")
+            if type(query_results) == dict:
+                print(f"query_results.target = {query_results.get('target')}")
+                print(f"query_results.datapoints = {len(query_results.get('datapoints',[]))}")
+            results.append(query_results)
     return jsonify(results)
 
 @app.route('/annotations',methods=methods)
@@ -319,12 +357,37 @@ def annotations():
 @app.route('/tag-keys',methods=methods)
 @cross_origin()
 def tag_keys():
-    return f'{NAME} v {MAYOR}.{MINOR}.{PATCH} build {BUILD} tag-keys\n'
+    array = [
+        {"type":"string","text":"customer"},
+        {"type":"string","text":"cost_center"},
+        {"type":"string","text":"cu_type"},
+        {"type":"string","text":"state"},
+        {"type":"string","text":"currency"},
+    ]
+    return jsonify(array)
 
 @app.route('/tag-values',methods=methods)
 @cross_origin()
 def tag_values():
-    return f'{NAME} v {MAYOR}.{MINOR}.{PATCH} build {BUILD} tag-values\n'
+    log_request(request)
+    data = request.get_json()
+    if data:
+        key = data.get('key')
+        if key == 'customer':
+            array = [{'text':'EMTEC'},{'text':'LUMEN'}]
+        elif key == 'cost_center':
+            array = [{'text':'30000000'}]
+        elif key == 'cu_type':
+            array = [{'text':'CPU'},{'text':'RAM'},{'text':'DSK'}]
+        elif key == 'state':
+            array = [{'text':'Created'},{'text':'Rejected'},{'text':'Paid'}]
+        elif key == 'currency':
+            array = [{'text':'UF'},{'text':'USD'},{'text':'CLP'}]
+        else:
+            array = []
+    else:
+        array=[]
+    return jsonify(array)
 
 @app.route('/panels',methods=methods)
 @cross_origin()
@@ -356,6 +419,7 @@ print("just loaded class:",Charge_Items)
 if __name__ == '__main__':
     # load datasource readers
     add_reader('monthly_usage',get_usage)
+    add_finder('get_nodes', lambda q: nodes_mapping.get(q, nodes_mapping.keys()) if q != '*' else sum(nodes_mapping.values(), []))
 
     app.run(host=HOST,port=PORT,debug=DEBUG)
 
@@ -431,4 +495,47 @@ where Typ_Code="DSK"
 group by Typ_Code,CIT_DateTime 
 order by Typ_Code,CIT_DateTime;
 
+"""
+
+"""
+query request data:
+request.data    : b'
+{
+    "app":"dashboard",
+    "requestId":"Q101",
+    "timezone":"browser",
+    "panelId":2,
+    "dashboardId":null,
+    "range":{
+        "from":"2022-03-21T12:01:33.482Z",
+        "to":"2022-03-21T18:01:33.482Z",
+        "raw":{
+            "from":"now-6h",
+            "to":"now"
+            }
+        },
+    "timeInfo":"",
+    "interval":"15s",
+    "intervalMs":15000,
+    "targets":[
+        {"target":"","refId":"A","type":"timeserie"}
+        ],
+    "maxDataPoints":1377,
+    "scopedVars":{
+        "__interval":{
+            "text":"15s",
+            "value":"15s"
+            },
+        "__interval_ms":{
+            "text":"15000",
+            "value":15000
+            }
+        },
+    "startTime":1647885693484,
+    "rangeRaw":{
+        "from":"now-6h",
+        "to":"now"
+        },
+    "adhocFilters":[]
+}'
 """
