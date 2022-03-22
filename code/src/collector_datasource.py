@@ -7,45 +7,74 @@
 # GLVH Gerardo L Valera gvalera@emtecgroup.net
 
 # Application imports
-from sre_constants import CATEGORY_UNI_DIGIT
-from flask import Flask, request, jsonify, json, abort
-from flask_cors import CORS, cross_origin
+import  os
+import  sys
+import  argparse
+import  logging
+import  pandas as pd         # NOT USED
+import  datetime
+from    configparser    import ConfigParser,ExtendedInterpolation
+from    sre_constants   import CATEGORY_UNI_DIGIT
+from    flask           import Flask, request, jsonify, json, abort
+from    flask_cors      import CORS, cross_origin
 
-import pandas as pd
-import datetime
+from    emtec                           import *
+from    emtec.collector.db.orm          import *
+from    emtec.collector.db.orm_model    import *
 
-from emtec import *
-from emtec.collector.db.orm import *
-from emtec.collector.db.orm_model import *
-
-
+# Main Global definitions
 app = Flask(__name__)
-cors=CORS(app)
+# Required for Grafana cross_origin
+cors = CORS(app)
 app.config['CORS_HEADERS'] = "Content-Type"
 methods = ('GET','POST')
 
-# Datasource constants
-NAME="EG Colector - Datasource"
-MAYOR=0
-MINOR=0
-PATCH=1
-BUILD=1
-HOST='0.0.0.0'
-PORT=8050
-DEBUG=True
+# Datasource constants/defaults
+NAME    = "EG Collector - Grafana Datasource"
+MAYOR   = 0
+MINOR   = 0
+PATCH   = 1
+BUILD   = 1
+HOST    = '0.0.0.0'
+PORT    = 8050
+DETAIL  = False
+DEBUG   = False
+logger  = None
+
+# Application Global Context Setup here
 
 # Operational data buffers
 metric_finders= {}
 metric_readers = {}
 annotation_readers = {}
 panel_readers = {}
-nodes_mapping = {'customer': ['EMTEC', 'LUMEN'],
-                 'cost_center': ['30000000', '30000001', ''],
-                 'cu_type':['CPU','RAM','DSK'],
-                 'currency':['UF','CLP','USD']
+nodes_mapping = {'customer': [],
+                 'cost_center': [],
+                 'cu_type':[],
+                 'state':[],
+                 'currency':[]
                  }
 
 # support functions
+def get_args():
+    parser = argparse.ArgumentParser(description=f'{NAME} v {MAYOR}.{MINOR}.{PATCH} build {BUILD}')
+    parser.add_argument('-V', '--version', action='version', version='%(prog)s v' + f'{MAYOR}.{MINOR}.{PATCH}')
+    parser.add_argument('-v', '--verbose', action='count', required=False, default=0,
+                        help="Increase verbosity.")
+    parser.add_argument('-H', '--host', required=False, default='0.0.0.0',help='Listener host defaults to 0.0.0.0')
+    parser.add_argument('-P', '--port', required=False,default=8050,help='Listener port defaults to 8050')
+    parser.add_argument('-c', '--config', required=False,default='collector.ini',help='Configuration file name (collector.ini)')
+
+    parser.add_argument('--rdbms',      required=False,default='mysql', help='RDBMS')
+    parser.add_argument('--dialect',    required=False,default='pymysql', help='RDBMS dialect')
+    parser.add_argument('--dbhost',     required=False,default='localhost', help='DB Host')
+    parser.add_argument('--dbport',     required=False,default=3306, help='DB Listener port')
+    parser.add_argument('--user',       required=False,default=None, help='DB username')
+    parser.add_argument('--password',   required=False,default=None, help='DB password')
+    parser.add_argument('--schema',     required=False,default=None, help='DB schema')
+
+    return parser.parse_args()
+
 def add_reader(name, reader):
     metric_readers[name] = reader
 
@@ -156,8 +185,8 @@ def _series_to_response(df, target):
             'datapoints': zip(values, timestamps)}
 
 def _rows_to_table(rows, target):
-    ''' Expects a list of rows containing value,datetime pairs
-        sorted by datetime ascending
+    ''' Expects a list of rows containing value,datetime pairs 
+        and/or other fields (sorted by datetime ascending)
     '''
     if rows is None or len(rows) == 0:
         return {'type': 'table',
@@ -165,18 +194,17 @@ def _rows_to_table(rows, target):
                 'rows': []}
     else:
         column_names=[]
-        print(f"type of rows   = {type(rows)}")
-        print(f"dir rows       = {dir(rows)}")
-        print(f"type of rows 0 = {type(rows[0])}")
-        print(f"dir rows 0 = {dir(rows[0])}")
-        print(f"dir rows 0 = {rows[0]._asdict()}")
-        print(f"rows 0 _fields= {rows[0]._fields}")
-        print(f"rows 0 keys  = {rows[0].keys()}")
         for field in rows[0].keys():
             column_names.append(field)
         datarows = []
         for row in rows:
-            datarows.append   (row)
+            data=[]
+            for i in range(len(column_names)):
+                value=row[i]
+                if type(value) == datetime.datetime:
+                    value = int(value.timestamp()*1000)
+                data.append(value)
+            datarows.append   (data)
 
     return {'type': 'table',
             'columns': column_names,
@@ -198,38 +226,41 @@ def _rows_to_response(rows, target):
             'datapoints': datapoints}
 
 def log_request(request):
-    print (f"log_request: ---------------------------------")
-    print (f"request         : {request}")
-    #rint (f"request: {dir(request)}")
-    print (f"request.method  : {request.method}")
-    print (f"request.args    : {request.args}")
-    print (f"request.form    : {request.args}")
-    print (f"request.data    : {request.data}")
-    print (f"request.headers :\n{request.headers}\n")
-    print (f"request.get_json: {request.get_json()}\n")
-    print (f"log_request: ---------------------------------")
+    logger.debug (f"log_request: ---------------------------------")
+    logger.debug (f"request         : {request}")
+    logger.debug (f"request.method  : {request.method}")
+    logger.debug (f"request.args    : {request.args}")
+    logger.debug (f"request.form    : {request.args}")
+    logger.debug (f"request.data    : {request.data}")
+    logger.debug (f"request.headers :\n{request.headers}\n")
+    logger.debug (f"request.get_json: {request.get_json()}\n")
+    logger.debug (f"log_request: ---------------------------------")
     
-
 # reader functions
 def get_usage(target,ts_range,**kwargs):
     # suffix need to be defined upon end-start pair
-    print(f"{this()}: target = {target} ts_range = {ts_range}")
+    logger.debug(f"{this()}: target = {target} ts_range = {ts_range}")
     finder,metric_query = target['target'].split(':',1)
     customer,cost_center,cu_type,state,currency = metric_query.split(',',4)
     start = ts_range['$gt']
     end   = ts_range['$lte']
     suffix=f"{customer}_{start.strftime('%Y%m')}"
-    print(f"{this()}: start = {start} end   = {end} suffix={suffix}")
+    logger.debug(f"{this()}: start = {start} end   = {end} suffix={suffix}")
     Charge_Items.set_shard(suffix)
-    print(f"{this()}: CIT table = {Charge_Items.__tablename__}")
+    logger.debug(f"{this()}: CIT table = {Charge_Items.__tablename__}")
 
     # Typ code need to be argument in target !!!!!
     query=session.query(
-            func.sum(Charge_Items.CIT_Quantity
-            ),Charge_Items.CIT_DateTime
-            ).join(Charge_Units,Charge_Units.CU_Id==Charge_Items.CU_Id
-            ).join(Configuration_Items,Configuration_Items.CI_Id==Charge_Units.CI_Id
-            )
+            func.sum(Charge_Items.CIT_Quantity).label('QUANTITY'
+            ),Charge_Items.CIT_DateTime.label('TIME')
+        )
+    if target['type'] == 'table':
+        query=query.add_columns(func.count().label('COUNT'))
+        query=query.add_columns(func.avg(Charge_Items.CIT_Quantity).label('AVERAGE'))
+
+    query = query.join(Charge_Units,Charge_Units.CU_Id==Charge_Items.CU_Id
+                ).join(Configuration_Items,Configuration_Items.CI_Id==Charge_Units.CI_Id
+                )
     if len(customer):
         query = query.filter(Configuration_Items.Cus_Id==int(customer))
     if len(cost_center):
@@ -237,25 +268,24 @@ def get_usage(target,ts_range,**kwargs):
         cost_centers = cost_center.split(';')
         for i in range(len(cost_centers)):
             cost_centers[i] = int(cost_centers[i])
-        print(f"{this()}: cost_centers={cost_centers}")
+        logger.debug(f"{this()}: cost_centers={cost_centers}")
         query = query.filter(Configuration_Items.CC_Id.in_(cost_centers))
     if len(cu_type):
         query = query.filter(Charge_Units.Typ_Code==cu_type)
     query = query.group_by(Charge_Units.Typ_Code,Charge_Items.CIT_DateTime)
     query = query.order_by(Charge_Units.Typ_Code,Charge_Items.CIT_DateTime)
-    #print(f"query={query}")
     rows = query.all()
     if rows:
-        print(f"{this()}: rows = {len(rows)}")
+        logger.debug(f"{this()}: rows        = {len(rows)}")
+        logger.debug(f"{this()}: rows[0]     = {rows[0]} {type(rows[0])} {rows[0].keys()}")
     else:
-        print(f"{this()}: No rows found. rows = {rows}")
+        logger.debug(f"{this()}: No rows found. rows = {rows}")
     if target['type']=='timeserie':
         response = _rows_to_response(rows,target['target'])
     else:
         response = _rows_to_table(rows,target['target'])
 
-    print(f"{this()}: response.target = {response.get('target')}")
-    #print(f"{this()}: response.datapoints = {len(response.get('datapoints'))}")
+    logger.debug(f"{this()}: response.target = {response.get('target')}")
     return response
 
 # Datasource views
@@ -295,9 +325,9 @@ def search():
             else:
                 return jsonify(list(metric_finders[finder](target)))
         except Exception as e:
-            print(f"EXCEPTION: {str(e)}")
+            emtec_handle_general_exception(e,logger=logger)
             abort(404,f"EXCEPTION: {str(e)}")
-    print(f"ERROR: arguments error.req={req} type={str(type(req))}")
+    logger.error(f"ERROR: arguments error.req={req} type={str(type(req))}")
     abort(404,Exception(f"ERROR: arguments error.req={req} type={str(type(req))}"))
 
 @app.route('/query',methods=methods)
@@ -318,22 +348,22 @@ def query():
     ts_range = {'$gt':  datetime.datetime.strptime(req['range']['from'],'%Y-%m-%dT%H:%M:%S.%fZ'),
                 '$lte': datetime.datetime.strptime(req['range']['to']  ,'%Y-%m-%dT%H:%M:%S.%fZ')}
 
-    print(f"{this()}: ts_range={ts_range}")
+    logger.debug(f"{this()}: ts_range={ts_range}")
     if 'intervalMs' in req:
         freq = str(req.get('intervalMs')) + 'ms'
     else:
         freq = None
 
-    print(f"{this()}: targets={req['targets']} {type(req['targets'])}")
+    logger.debug(f"{this()}: targets={req['targets']} {type(req['targets'])}")
     for target in req['targets']:
-        print(f"target={target} {type(target)}")
+        logger.debug(f"target={target} {type(target)}")
         if ':' not in target.get('target', ''):
             abort(404, Exception('Target must be of type: <finder>:<metric_query>, got instead: ' + target['target']))
 
         req_type = target.get('type', 'timeserie')
 
         finder, metric_query = target['target'].split(':', 1)
-        print(f"{this()}: will use reader '{finder}' with target={target} and ts_range={ts_range}")
+        logger.debug(f"{this()}: will use reader '{finder}' with target={target} and ts_range={ts_range}")
         query_results = metric_readers[finder](target, ts_range)
         # Check if valid pandas dataframe (legacy)
         if hasattr(query_results,'empty'):
@@ -342,10 +372,10 @@ def query():
             else:
                 results.extend(dataframe_to_response(target, query_results, freq=freq))
         else:
-            print(f"{this()}: query_results = {type(query_results)}")
+            logger.debug(f"{this()}: query_results = {type(query_results)}")
             if type(query_results) == dict:
-                print(f"query_results.target = {query_results.get('target')}")
-                print(f"query_results.datapoints = {len(query_results.get('datapoints',[]))}")
+                logger.debug(f"query_results.target = {query_results.get('target')}")
+                logger.debug(f"query_results.datapoints = {len(query_results.get('datapoints',[]))}")
             results.append(query_results)
     return jsonify(results)
 
@@ -373,16 +403,27 @@ def tag_values():
     data = request.get_json()
     if data:
         key = data.get('key')
+        array = []
         if key == 'customer':
-            array = [{'text':'EMTEC'},{'text':'LUMEN'}]
+            rows = session.query(Customers).filter(Customers.Cus_Id>1).all()
+            for row in rows:
+                array.append({'text':row.Cus_Name})
         elif key == 'cost_center':
-            array = [{'text':'30000000'}]
+            rows = session.query(Cost_Centers).filter(Cost_Centers.CC_Id>1).all()
+            for row in rows:
+                array.append({'text':f"{row.CC_Code}:{row.CC_Description}"})
         elif key == 'cu_type':
-            array = [{'text':'CPU'},{'text':'RAM'},{'text':'DSK'}]
+            rows = session.query(CU_Types).all()
+            for row in rows:
+                array.append({'text':f"{row.Typ_Code}:{row.Typ_Description}"})
         elif key == 'state':
-            array = [{'text':'Created'},{'text':'Rejected'},{'text':'Paid'}]
+            rows = session.query(CIT_Statuses).all()
+            for row in rows:
+                array.append({'text':f"{row.CIT_Status}:{row.Value}"})
         elif key == 'currency':
-            array = [{'text':'UF'},{'text':'USD'},{'text':'CLP'}]
+            rows = session.query(Currencies).all()
+            for row in rows:
+                array.append({'text':f"{row.Cur_Code}:{row.Cur_Name}"})
         else:
             array = []
     else:
@@ -394,31 +435,97 @@ def tag_values():
 def panels():
     return f'{NAME} v {MAYOR}.{MINOR}.{PATCH} build {BUILD} panels\n'
 
+def update_nodes_mapping():
+    nodes_mapping = {'customer': [],
+                    'cost_center': [],
+                    'cu_type':[],
+                    'state':[],
+                    'currency':[],
+                    }
+    rows = session.query(Customers).filter(Customers.Cus_Id>1).all()
+    for row in rows:
+        nodes_mapping['customer'].append(row.Cus_Name)
+    rows = session.query(Cost_Centers).filter(Cost_Centers.CC_Id>1).all()
+    for row in rows:
+        nodes_mapping['customer'].append(f"{row.CC_Code}:{row.CC_Description}")
+    rows = session.query(CU_Types).all()
+    for row in rows:
+        nodes_mapping['cu_type'].append(f"{row.Typ_Code}:{row.Typ_Description}")
+    rows = session.query(CIT_Statuses).all()
+    for row in rows:
+        nodes_mapping['state'].append(f"{row.CIT_Status}:{row.Value}")
+    rows = session.query(Currencies).all()
+    for row in rows:
+        nodes_mapping['currency'].append(f"{row.Cur_Code}:{row.Cur_Name}")
 
-# Application Global Context Setup here
-rdbms='mysql'
-dialect='pymysql'
-host='localhost'
-port=3306
-user='root'
-password='36MMySQLr00t1.,'
-schema='collector'
+args = get_args()
 
-connection_string=f"{rdbms}+{dialect}://{user}:{password}@{host}:{port}/{schema}"
-print("connection_string=",connection_string)
-db=create_engine(connection_string)
-print("db               =",db)
-Session=sessionmaker(bind=db)
-print("Session          =",Session)
-session=Session()
-print("session          =",session)
-print("just loaded class:",Charge_Items)    
-#print_class(CU_Types,session=session)
+# Setup application logging system
 
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.WARNING)
+#formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+formatter = logging.Formatter('%(levelname)8s - %(message)s')
+ch = logging.StreamHandler()
+ch.setFormatter(formatter)
+if args.verbose > 0: 
+    DETAIL=True
+    logger.setLevel(logging.INFO)
+    ch.setLevel(logging.INFO)
+if args.verbose > 1: 
+    DEBUG=True
+    logger.setLevel(logging.DEBUG)
+    ch.setLevel(logging.DEBUG)
+logger.addHandler(ch)
+
+# Load needed data from configuration file is reqired
+# overrides defaults and command line arguments
+if os.path.exists(args.config):
+    config = ConfigParser(interpolation=ExtendedInterpolation())
+    logger.info(f"reading configuration from '{args.config}'")
+    config.read(args.config)
+    if config.get('DB','rdbms'):    args.rdbms   =config.get('DB','rdbms')
+    if config.get('DB','dialect'):  args.dialect =config.get('DB','dialect')
+    if config.get('DB','host'):     args.dbhost  =config.get('DB','host')
+    if config.get('DB','port'):     args.dbport  =config.get('DB','port')
+    if config.get('DB','user'):     args.user    =config.get('DB','user')
+    if config.get('DB','password'): args.password=config.get('DB','password')
+    if config.get('DB','schema'):   args.schema  =config.get('DB','schema')
+
+logger.debug(f"{this()}: args = {args}")
+
+# Global DB Connection
+
+try:
+    connection_string=f"{args.rdbms}+{args.dialect}://{args.user}:{args.password}@{args.dbhost}:{args.dbport}/{args.schema}"
+    logger.debug(f"connection_string= {connection_string}")
+    db=create_engine(connection_string)
+    if db is None:
+        logger.error(f"ERROR: NO DB connection")
+        sys.exit(1)
+    logger.debug(f"db               = {db}")
+    db.connect()
+    Session=sessionmaker(bind=db)
+    if Session is None:
+        logger.debug(f"ERROR: NO DB Session binded to engine: {db}")
+        sys.exit(1)
+
+    logger.debug(f"Session          = {Session}")
+    session=Session()
+    if session is None:
+        logger.error(f"ERROR: NO DB session conection to engine: {db}")
+        sys.exit(1)
+    logger.debug(f"session          = {session}")
+except Exception as e:
+    emtec_handle_general_exception(e,logger=logger)
+    sys.exit(1)
 
 if __name__ == '__main__':
     # load datasource readers
     add_reader('monthly_usage',get_usage)
+    
+    # load nodes mappings
+    update_nodes_mapping()
     add_finder('get_nodes', lambda q: nodes_mapping.get(q, nodes_mapping.keys()) if q != '*' else sum(nodes_mapping.values(), []))
 
     app.run(host=HOST,port=PORT,debug=DEBUG)
