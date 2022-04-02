@@ -143,6 +143,12 @@ setattr(app.config,'CURRENT_LANGUAGE',None)
 
 print (f"Set Global multilanguage strings ...")
 
+# GV -------------------------------------------------------------------
+# GV Global JINJA 2 Functions
+app.jinja_env.globals.update(has_access=has_access)
+# GV -------------------------------------------------------------------
+
+
 if __name__ == '__main__':
     app_ctx = app.app_context()
     app_ctx.push()

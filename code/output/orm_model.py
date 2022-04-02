@@ -21,7 +21,7 @@ from sqlalchemy import ForeignKey
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-03-14 14:55:57
+# GLVH @ 2022-04-02 15:33:31
 # =============================================================================
 
 from sqlalchemy                 import Table, Column
@@ -36,7 +36,7 @@ from sqlalchemy                 import VARBINARY
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-03-14 14:55:57
+# GLVH @ 2022-04-02 15:33:31
 # =============================================================================
 import json
 import logging
@@ -50,7 +50,7 @@ Base = declarative_base()
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-03-14 14:55:57
+# GLVH @ 2022-04-02 15:33:31
 # =============================================================================
 
 # GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_cit_generations.py
@@ -222,7 +222,7 @@ class CIT_Generations(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-03-14 14:55:57
+# GLVH @ 2022-04-02 15:33:31
 # =============================================================================
 
 # GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_cit_statuses.py
@@ -394,7 +394,7 @@ class CIT_Statuses(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-03-14 14:55:57
+# GLVH @ 2022-04-02 15:33:31
 # =============================================================================
 
 # GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_cu_operations.py
@@ -570,7 +570,7 @@ class CU_Operations(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-03-14 14:55:57
+# GLVH @ 2022-04-02 15:33:31
 # =============================================================================
 
 # GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_cu_types.py
@@ -742,7 +742,7 @@ class CU_Types(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-03-14 14:55:57
+# GLVH @ 2022-04-02 15:33:31
 # =============================================================================
 
 # GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_charge_items.py
@@ -924,7 +924,7 @@ class Charge_Items(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-03-14 14:55:57
+# GLVH @ 2022-04-02 15:33:31
 # =============================================================================
 
 # gen_model_flask.py:865 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_charge_items.py
@@ -1085,7 +1085,7 @@ def get_Charge_Items(table_name_suffix):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-03-14 14:55:57
+# GLVH @ 2022-04-02 15:33:31
 # =============================================================================
 
 # GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_charge_resumes.py
@@ -1329,7 +1329,7 @@ class Charge_Resumes(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-03-14 14:55:57
+# GLVH @ 2022-04-02 15:33:31
 # =============================================================================
 
 # GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_charge_unit_egm.py
@@ -1517,7 +1517,7 @@ class Charge_Unit_EGM(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-03-14 14:55:57
+# GLVH @ 2022-04-02 15:33:31
 # =============================================================================
 
 # GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_charge_units.py
@@ -1713,7 +1713,7 @@ class Charge_Units(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-03-14 14:55:57
+# GLVH @ 2022-04-02 15:33:31
 # =============================================================================
 
 # GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_configuration_items.py
@@ -1897,7 +1897,7 @@ class Configuration_Items(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-03-14 14:55:57
+# GLVH @ 2022-04-02 15:33:31
 # =============================================================================
 
 # GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_cost_centers.py
@@ -2081,7 +2081,7 @@ class Cost_Centers(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-03-14 14:55:57
+# GLVH @ 2022-04-02 15:33:31
 # =============================================================================
 
 # GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_countries.py
@@ -2257,7 +2257,7 @@ class Countries(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-03-14 14:55:57
+# GLVH @ 2022-04-02 15:33:31
 # =============================================================================
 
 # GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_countries_currencies.py
@@ -2431,7 +2431,7 @@ class Countries_Currencies(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-03-14 14:55:57
+# GLVH @ 2022-04-02 15:33:31
 # =============================================================================
 
 # GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_currencies.py
@@ -2607,7 +2607,7 @@ class Currencies(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-03-14 14:55:57
+# GLVH @ 2022-04-02 15:33:31
 # =============================================================================
 
 # GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_customers.py
@@ -2781,7 +2781,7 @@ class Customers(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-03-14 14:55:57
+# GLVH @ 2022-04-02 15:33:31
 # =============================================================================
 
 # GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_exchange_rates.py
@@ -2957,7 +2957,7 @@ class Exchange_Rates(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-03-14 14:55:57
+# GLVH @ 2022-04-02 15:33:31
 # =============================================================================
 
 # GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_interface.py
@@ -3141,7 +3141,7 @@ class Interface(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-03-14 14:55:57
+# GLVH @ 2022-04-02 15:33:31
 # =============================================================================
 
 # GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_measure_units.py
@@ -3313,7 +3313,7 @@ class Measure_Units(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-03-14 14:55:57
+# GLVH @ 2022-04-02 15:33:31
 # =============================================================================
 
 # GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_platforms.py
@@ -3493,7 +3493,7 @@ class Platforms(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-03-14 14:55:57
+# GLVH @ 2022-04-02 15:33:31
 # =============================================================================
 
 # GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_rat_periods.py
@@ -3665,7 +3665,7 @@ class Rat_Periods(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-03-14 14:55:57
+# GLVH @ 2022-04-02 15:33:31
 # =============================================================================
 
 # GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_rates.py
@@ -3861,7 +3861,7 @@ class Rates(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-03-14 14:55:57
+# GLVH @ 2022-04-02 15:33:31
 # =============================================================================
 
 # GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_roles.py
@@ -4037,7 +4037,7 @@ class Roles(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-03-14 14:55:57
+# GLVH @ 2022-04-02 15:33:31
 # =============================================================================
 
 # GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_st_use_per_cu.py
@@ -4251,7 +4251,7 @@ class ST_Use_Per_CU(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-03-14 14:55:57
+# GLVH @ 2022-04-02 15:33:31
 # =============================================================================
 
 # GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_st_use_per_type.py
@@ -4445,7 +4445,374 @@ class ST_Use_Per_Type(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-03-14 14:55:57
+# GLVH @ 2022-04-02 15:33:31
+# =============================================================================
+
+# GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_statistics.py
+import sqlalchemy
+class Statistics(Base):
+    __tablename__ = 'Statistics'
+    engine        = None
+    logger        = None
+
+    def check_shard(suffix=None,engine=None):
+       if engine is not None:
+           try:
+               if sqlalchemy.__version__ >= '1.4':
+                   inspector = sqlalchemy.inspect(engine)
+                   table_exists = inspector.has_table(__class__.__tablename__,schema='collector')
+               else:
+                   table_exists = engine.dialect.has_table(engine, __class__.__tablename__)
+               if not table_exists:
+                   metadata=MetaData()
+                   metadata.bind=engine
+                   __class__.__table__.metadata=metadata
+                   __class__.__table__.create(checkfirst=True)
+                   if sqlalchemy.__version__ >= '1.4':
+                       inspector = sqlalchemy.inspect(engine)
+                       table_exists = inspector.has_table(__class__.__tablename__,schema='collector')
+                   else:
+                       table_exists = engine.dialect.has_table(engine, __class__.__tablename__)
+                   if not table_exists:
+                       print('460 Table %s does not exist. creation error?'% __class__.__tablename__)
+                   else:
+                       pass # GV print('462 Table %s exist !!!'% __class__.__tablename__)
+               else:
+                   pass # GV print('464 Table %s exist !!!'% __class__.__tablename__)
+           except Exception as e:
+              print(f'gen/gen_model_flask.py: 466 exception: {str(e)}')
+           return
+    def set_shard(suffix=None,engine=None):
+       if suffix is not None:
+           name='Statistics_{suffix}'.format(suffix=suffix)
+           __class__.__tablename__  = name
+           __class__.__table__.name = name
+       __class__.check_shard(suffix,engine)
+       return __class__.__tablename__
+
+    CR_Date_From = Column( Date, primary_key=True )
+    CR_Date_To   = Column( Date, primary_key=True )
+    Cus_Id       = Column( Integer, primary_key=True )
+    CC_Id        = Column( Integer, primary_key=True )
+    CI_Id        = Column( Integer, primary_key=True )
+    CU_Id        = Column( Integer, primary_key=True )
+    Typ_Code     = Column( String(10) )
+    CR_Quantity  = Column( Numeric(20,12) )
+    CR_ST_at_Cur = Column( Numeric(20,12) )
+    Cur_Code     = Column( String(3) )
+    CIT_Status   = Column( Integer )
+    CIT_Count    = Column( Integer )
+    Pla_Id       = Column( Integer )
+    
+    def __init__(self, CR_Date_From=None, CR_Date_To=None, Cus_Id=None, CC_Id=0, CI_Id=1, CU_Id=None, Typ_Code='NUL', CR_Quantity=0.000000000000, CR_ST_at_Cur=0.000000000000, Cur_Code='None', CIT_Status=None, CIT_Count=0, Pla_Id=0,engine=None,logger=None):
+        """ Initiates a Statistics class record """
+        self.engine=engine
+        self.logger=logger
+        self.CR_Date_From = CR_Date_From
+        self.CR_Date_To   = CR_Date_To
+        self.Cus_Id       = Cus_Id
+        self.CC_Id        = CC_Id
+        self.CI_Id        = CI_Id
+        self.CU_Id        = CU_Id
+        self.Typ_Code     = Typ_Code
+        self.CR_Quantity  = CR_Quantity
+        self.CR_ST_at_Cur = CR_ST_at_Cur
+        self.Cur_Code     = Cur_Code
+        self.CIT_Status   = CIT_Status
+        self.CIT_Count    = CIT_Count
+        self.Pla_Id       = Pla_Id
+
+        self.log('Created %s'%self)
+    def __repr__(self):
+        """ default class Statistics representation function """
+        return "<Statistics( CR_Date_From='%s', CR_Date_To='%s', Cus_Id='%s', CC_Id='%s', CI_Id='%s', CU_Id='%s', Typ_Code='%s', CR_Quantity='%s', CR_ST_at_Cur='%s', Cur_Code='%s', CIT_Status='%s', CIT_Count='%s', Pla_Id='%s')>" % \
+                ( self.CR_Date_From, self.CR_Date_To, self.Cus_Id, self.CC_Id, self.CI_Id, self.CU_Id, self.Typ_Code, self.CR_Quantity, self.CR_ST_at_Cur, self.Cur_Code, self.CIT_Status, self.CIT_Count, self.Pla_Id)
+
+    def get_list(self):
+        """ Gets Statistics record in list format """
+        __list = [ self.CR_Date_From, self.CR_Date_To, self.Cus_Id, self.CC_Id, self.CI_Id, self.CU_Id, self.Typ_Code, self.CR_Quantity, self.CR_ST_at_Cur, self.Cur_Code, self.CIT_Status, self.CIT_Count, self.Pla_Id]
+        return __list
+
+    def get_tuple(self):
+        """ Gets Statistics record in tuple format """
+        __tuple = ( self.CR_Date_From, self.CR_Date_To, self.Cus_Id, self.CC_Id, self.CI_Id, self.CU_Id, self.Typ_Code, self.CR_Quantity, self.CR_ST_at_Cur, self.Cur_Code, self.CIT_Status, self.CIT_Count, self.Pla_Id)
+        return __tuple
+
+    def get_dict(self):
+        """ Gets Statistics record in dict format """
+        __dict={'CR_Date_From':self.CR_Date_From,'CR_Date_To':self.CR_Date_To,'Cus_Id':self.Cus_Id,'CC_Id':self.CC_Id,'CI_Id':self.CI_Id,'CU_Id':self.CU_Id,'Typ_Code':self.Typ_Code,'CR_Quantity':self.CR_Quantity,'CR_ST_at_Cur':self.CR_ST_at_Cur,'Cur_Code':self.Cur_Code,'CIT_Status':self.CIT_Status,'CIT_Count':self.CIT_Count,'Pla_Id':self.Pla_Id}
+
+        return __dict
+
+    def get_json_dict(self,dateformat='%Y-%m-%d',timeformat='%H:%M:%S',datetimeformat=None):
+        __dict = self.get_dict()
+        if datetimeformat is None: 
+            datetimeformat='%s %s'%(dateformat,timeformat)
+        for key in __dict.keys():
+            if   'datetime.datetime' in str(type(__dict[key])): __dict[key]=__dict[key].strftime(datetimeformat)
+            elif 'datetime.date'     in str(type(__dict[key])): __dict[key]=__dict[key].strftime(dateformat)
+            elif 'datetime.time'     in str(type(__dict[key])): __dict[key]=__dict[key].strftime(timeformat)
+            elif 'decimal.Decimal'   in str(type(__dict[key])): __dict[key]=float(__dict[key])
+        return __dict
+
+    def get_json(self,dateformat='%Y-%m-%d',timeformat='%H:%M:%S',datetimeformat=None):
+        __dict = self.get_dict()
+        if datetimeformat is None: 
+            datetimeformat='%s %s'%(dateformat,timeformat)
+        for key in __dict.keys():
+            if   'datetime.datetime' in str(type(__dict[key])): __dict[key]=__dict[key].strftime(datetimeformat)
+            elif 'datetime.date'     in str(type(__dict[key])): __dict[key]=__dict[key].strftime(dateformat)
+            elif 'datetime.time'     in str(type(__dict[key])): __dict[key]=__dict[key].strftime(timeformat)
+            elif 'decimal.Decimal'   in str(type(__dict[key])): __dict[key]=float(__dict[key])
+        return json.dumps(__dict)
+
+    def post(self):
+       return self
+
+    def patch(self,**kwargs):
+       for field in self.get_column_headers():
+           if field in kwargs.keys():
+               setattr(self,field,kwargs[field])
+       return self
+
+    def delete(self):
+       return True
+
+    def get_json_array(self,dateformat='%Y-%m-%d',timeformat='%H:%M:%S',datetimeformat=None):
+        """ Gets Statistics record in JSON array format """
+        __list = self.get_list()
+        if datetimeformat is None: 
+            datetimeformat='%s %s'%(dateformat,timeformat)
+        for field in range(len(__list)):
+            if   'datetime.datetime' in str(type(__list[field])): __list[field]=__list[field].strftime(datetimeformat)
+            elif 'datetime.date'     in str(type(__list[field])): __list[field]=__list[field].strftime(dateformat)
+            elif 'datetime.time'     in str(type(__list[field])): __list[field]=__list[field].strftime(timeformat)
+            elif 'decimal.Decimal'   in str(type(__list[field])): __list[field]=float(__list[field])
+        return __list
+
+    def get_columns(self):
+        """ Gets Statistics record column full details list """
+        __list=[{'field': 'CR_Date_From', 'type': 'date', 'type_flask': 'db.Date', 'type_sqlalchemy': 'Date', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 1, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'DateField', 'is_id': False, 'header': 'CR_Date_From', 'is_time': False}, {'field': 'CR_Date_To', 'type': 'date', 'type_flask': 'db.Date', 'type_sqlalchemy': 'Date', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 2, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'DateField', 'is_id': False, 'header': 'CR_Date_To', 'is_time': False}, {'field': 'Cus_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 3, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'Cus_Id', 'is_time': False}, {'field': 'CC_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': '0', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 4, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'CC_Id', 'is_time': False}, {'field': 'CI_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': '1', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 5, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'CI_Id', 'is_time': False}, {'field': 'CU_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 6, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'CU_Id', 'is_time': False}, {'field': 'Typ_Code', 'type': 'varchar(10)', 'type_flask': 'db.String(10)', 'type_sqlalchemy': 'String(10)', 'null': 'NO', 'key': '', 'default': 'NUL', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 7, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Typ_Code', 'is_time': False}, {'field': 'CR_Quantity', 'type': 'decimal(20,12)', 'type_flask': 'db.Numeric(20,12)', 'type_sqlalchemy': 'Numeric(20,12)', 'null': 'YES', 'key': '', 'default': '0.000000000000', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 8, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'CR_Quantity', 'is_time': False}, {'field': 'CR_ST_at_Cur', 'type': 'decimal(20,12)', 'type_flask': 'db.Numeric(20,12)', 'type_sqlalchemy': 'Numeric(20,12)', 'null': 'YES', 'key': '', 'default': '0.000000000000', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 9, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'CR_ST_at_Cur', 'is_time': False}, {'field': 'Cur_Code', 'type': 'varchar(3)', 'type_flask': 'db.String(3)', 'type_sqlalchemy': 'String(3)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 10, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Cur_Code', 'is_time': False}, {'field': 'CIT_Status', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 11, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'CIT_Status', 'is_time': False}, {'field': 'CIT_Count', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': '0', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 12, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'CIT_Count', 'is_time': False}, {'field': 'Pla_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': '0', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 13, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'Pla_Id', 'is_time': False}]
+
+        return __list
+
+    def get_column_headers(self):
+        """ Gets Statistics record column headers list """
+        __list=['CR_Date_From', 'CR_Date_To', 'Cus_Id', 'CC_Id', 'CI_Id', 'CU_Id', 'Typ_Code', 'CR_Quantity', 'CR_ST_at_Cur', 'Cur_Code', 'CIT_Status', 'CIT_Count', 'Pla_Id']
+
+        return __list
+
+    def get_column_types(self):
+        """ Gets Statistics record column data types list """
+        __list=['Date', 'Date', 'Integer', 'Integer', 'Integer', 'Integer', 'String(10)', 'Numeric(20,12)', 'Numeric(20,12)', 'String(3)', 'Integer', 'Integer', 'Integer']
+
+        return __list
+
+    def get_column_meta(self):
+        """ Gets Statistics record column data meta list """
+        __list=[('CR_Date_From', 'Date'), ('CR_Date_To', 'Date'), ('Cus_Id', 'Integer'), ('CC_Id', 'Integer'), ('CI_Id', 'Integer'), ('CU_Id', 'Integer'), ('Typ_Code', 'String(10)'), ('CR_Quantity', 'Numeric(20,12)'), ('CR_ST_at_Cur', 'Numeric(20,12)'), ('Cur_Code', 'String(3)'), ('CIT_Status', 'Integer'), ('CIT_Count', 'Integer'), ('Pla_Id', 'Integer')]
+
+        return __list
+
+    def search_key(self,CR_Date_From,CR_Date_To,Cus_Id,CC_Id,CI_Id,CU_Id):
+        """ Search for an unique Statistics record using all key fields (CR_Date_From,CR_Date_To,Cus_Id,CC_Id,CI_Id,CU_Id) """
+        try:
+            if self.engine is not None:
+                Session=sessionmaker(bind=self.engine)
+                session=Session()
+                record = session.query(Statistics).filter(Statistics.CR_Date_From==CR_Date_From).filter(Statistics.CR_Date_To==CR_Date_To).filter(Statistics.Cus_Id==Cus_Id).filter(Statistics.CC_Id==CC_Id).filter(Statistics.CI_Id==CI_Id).filter(Statistics.CU_Id==CU_Id).one_or_none()
+                session.flush()
+            else:
+                session.rollback()
+                record = None
+        except Exception as e:
+            detail='Statistics.search_key(%s,%s,%s,%s,%s,%s): Exception: %s'%(CR_Date_From,CR_Date_To,Cus_Id,CC_Id,CI_Id,CU_Id,e)
+            emtec_handle_general_exception(e,detail=detail,module=__name__,function='Statistics.search_key()',logger=self.logger)
+            record = None
+        return record
+
+    def log(self,message,level=logging.DEBUG):
+        """ Class Statistics log function """
+        if self.logger is not None:
+            self.logger.log(level,message)
+
+# =============================================================================
+# Auto-Generated code. do not modify
+# (c) Sertechno 2018
+# GLVH @ 2022-04-02 15:33:31
+# =============================================================================
+
+# gen_model_flask.py:865 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_statistics.py
+# gen_model_flask.py:866 Table sharding code follows:
+def get_Statistics(table_name_suffix):
+  class Statistics_Class(Base):
+    __tablename__ = 'Statistics_%s'%(table_name_suffix)
+    engine        = None
+    logger        = None
+
+    def set_shard(suffix=None,engine=None):
+       if suffix is not None:
+           name='Statistics_{suffix}'.format(suffix=suffix)
+           __class__.__tablename__  = name
+           __class__.__table_args__ = {'extend_existing':True}
+           __class__.__table__.name = name
+           __class__.check_shard(suffix,engine)
+       return __class__.__tablename__
+
+    CR_Date_From = Column( Date, primary_key=True )
+    CR_Date_To   = Column( Date, primary_key=True )
+    Cus_Id       = Column( Integer, primary_key=True )
+    CC_Id        = Column( Integer, primary_key=True )
+    CI_Id        = Column( Integer, primary_key=True )
+    CU_Id        = Column( Integer, primary_key=True )
+    Typ_Code     = Column( String(10) )
+    CR_Quantity  = Column( Numeric(20,12) )
+    CR_ST_at_Cur = Column( Numeric(20,12) )
+    Cur_Code     = Column( String(3) )
+    CIT_Status   = Column( Integer )
+    CIT_Count    = Column( Integer )
+    Pla_Id       = Column( Integer )
+    
+    def __init__(self, CR_Date_From=None, CR_Date_To=None, Cus_Id=None, CC_Id=0, CI_Id=1, CU_Id=None, Typ_Code='NUL', CR_Quantity=0.000000000000, CR_ST_at_Cur=0.000000000000, Cur_Code='None', CIT_Status=None, CIT_Count=0, Pla_Id=0,engine=None,logger=None):
+        """ Initiates a Statistics class record """
+        self.engine=engine
+        self.logger=logger
+        self.CR_Date_From = CR_Date_From
+        self.CR_Date_To   = CR_Date_To
+        self.Cus_Id       = Cus_Id
+        self.CC_Id        = CC_Id
+        self.CI_Id        = CI_Id
+        self.CU_Id        = CU_Id
+        self.Typ_Code     = Typ_Code
+        self.CR_Quantity  = CR_Quantity
+        self.CR_ST_at_Cur = CR_ST_at_Cur
+        self.Cur_Code     = Cur_Code
+        self.CIT_Status   = CIT_Status
+        self.CIT_Count    = CIT_Count
+        self.Pla_Id       = Pla_Id
+
+        self.log('Created %s'%self)
+    def __repr__(self):
+        """ default class Statistics representation function """
+        return "<Statistics( CR_Date_From='%s', CR_Date_To='%s', Cus_Id='%s', CC_Id='%s', CI_Id='%s', CU_Id='%s', Typ_Code='%s', CR_Quantity='%s', CR_ST_at_Cur='%s', Cur_Code='%s', CIT_Status='%s', CIT_Count='%s', Pla_Id='%s')>" % \
+                ( self.CR_Date_From, self.CR_Date_To, self.Cus_Id, self.CC_Id, self.CI_Id, self.CU_Id, self.Typ_Code, self.CR_Quantity, self.CR_ST_at_Cur, self.Cur_Code, self.CIT_Status, self.CIT_Count, self.Pla_Id)
+
+    def get_list(self):
+        """ Gets Statistics record in list format """
+        __list = [ self.CR_Date_From, self.CR_Date_To, self.Cus_Id, self.CC_Id, self.CI_Id, self.CU_Id, self.Typ_Code, self.CR_Quantity, self.CR_ST_at_Cur, self.Cur_Code, self.CIT_Status, self.CIT_Count, self.Pla_Id]
+        return __list
+
+    def get_tuple(self):
+        """ Gets Statistics record in tuple format """
+        __tuple = ( self.CR_Date_From, self.CR_Date_To, self.Cus_Id, self.CC_Id, self.CI_Id, self.CU_Id, self.Typ_Code, self.CR_Quantity, self.CR_ST_at_Cur, self.Cur_Code, self.CIT_Status, self.CIT_Count, self.Pla_Id)
+        return __tuple
+
+    def get_dict(self):
+        """ Gets Statistics record in dict format """
+        __dict={'CR_Date_From':self.CR_Date_From,'CR_Date_To':self.CR_Date_To,'Cus_Id':self.Cus_Id,'CC_Id':self.CC_Id,'CI_Id':self.CI_Id,'CU_Id':self.CU_Id,'Typ_Code':self.Typ_Code,'CR_Quantity':self.CR_Quantity,'CR_ST_at_Cur':self.CR_ST_at_Cur,'Cur_Code':self.Cur_Code,'CIT_Status':self.CIT_Status,'CIT_Count':self.CIT_Count,'Pla_Id':self.Pla_Id}
+
+        return __dict
+
+    def get_json_dict(self,dateformat='%Y-%m-%d',timeformat='%H:%M:%S',datetimeformat=None):
+        __dict = self.get_dict()
+        if datetimeformat is None: 
+            datetimeformat='%s %s'%(dateformat,timeformat)
+        for key in __dict.keys():
+            if   'datetime.datetime' in str(type(__dict[key])): __dict[key]=__dict[key].strftime(datetimeformat)
+            elif 'datetime.date'     in str(type(__dict[key])): __dict[key]=__dict[key].strftime(dateformat)
+            elif 'datetime.time'     in str(type(__dict[key])): __dict[key]=__dict[key].strftime(timeformat)
+            elif 'decimal.Decimal'   in str(type(__dict[key])): __dict[key]=float(__dict[key])
+        return __dict
+
+    def get_json(self,dateformat='%Y-%m-%d',timeformat='%H:%M:%S',datetimeformat=None):
+        __dict = self.get_dict()
+        if datetimeformat is None: 
+            datetimeformat='%s %s'%(dateformat,timeformat)
+        for key in __dict.keys():
+            if   'datetime.datetime' in str(type(__dict[key])): __dict[key]=__dict[key].strftime(datetimeformat)
+            elif 'datetime.date'     in str(type(__dict[key])): __dict[key]=__dict[key].strftime(dateformat)
+            elif 'datetime.time'     in str(type(__dict[key])): __dict[key]=__dict[key].strftime(timeformat)
+            elif 'decimal.Decimal'   in str(type(__dict[key])): __dict[key]=float(__dict[key])
+        return json.dumps(__dict)
+
+    def post(self):
+       return self
+
+    def patch(self,**kwargs):
+       for field in self.get_column_headers():
+           if field in kwargs.keys():
+               setattr(self,field,kwargs[field])
+       return self
+
+    def delete(self):
+       return True
+
+    def get_json_array(self,dateformat='%Y-%m-%d',timeformat='%H:%M:%S',datetimeformat=None):
+        """ Gets Statistics record in JSON array format """
+        __list = self.get_list()
+        if datetimeformat is None: 
+            datetimeformat='%s %s'%(dateformat,timeformat)
+        for field in range(len(__list)):
+            if   'datetime.datetime' in str(type(__list[field])): __list[field]=__list[field].strftime(datetimeformat)
+            elif 'datetime.date'     in str(type(__list[field])): __list[field]=__list[field].strftime(dateformat)
+            elif 'datetime.time'     in str(type(__list[field])): __list[field]=__list[field].strftime(timeformat)
+            elif 'decimal.Decimal'   in str(type(__list[field])): __list[field]=float(__list[field])
+        return __list
+
+    def get_columns(self):
+        """ Gets Statistics record column full details list """
+        __list=[{'field': 'CR_Date_From', 'type': 'date', 'type_flask': 'db.Date', 'type_sqlalchemy': 'Date', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 1, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'DateField', 'is_id': False, 'header': 'CR_Date_From', 'is_time': False}, {'field': 'CR_Date_To', 'type': 'date', 'type_flask': 'db.Date', 'type_sqlalchemy': 'Date', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 2, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'DateField', 'is_id': False, 'header': 'CR_Date_To', 'is_time': False}, {'field': 'Cus_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 3, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'Cus_Id', 'is_time': False}, {'field': 'CC_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': '0', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 4, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'CC_Id', 'is_time': False}, {'field': 'CI_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': '1', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 5, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'CI_Id', 'is_time': False}, {'field': 'CU_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 6, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'CU_Id', 'is_time': False}, {'field': 'Typ_Code', 'type': 'varchar(10)', 'type_flask': 'db.String(10)', 'type_sqlalchemy': 'String(10)', 'null': 'NO', 'key': '', 'default': 'NUL', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 7, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Typ_Code', 'is_time': False}, {'field': 'CR_Quantity', 'type': 'decimal(20,12)', 'type_flask': 'db.Numeric(20,12)', 'type_sqlalchemy': 'Numeric(20,12)', 'null': 'YES', 'key': '', 'default': '0.000000000000', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 8, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'CR_Quantity', 'is_time': False}, {'field': 'CR_ST_at_Cur', 'type': 'decimal(20,12)', 'type_flask': 'db.Numeric(20,12)', 'type_sqlalchemy': 'Numeric(20,12)', 'null': 'YES', 'key': '', 'default': '0.000000000000', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 9, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'CR_ST_at_Cur', 'is_time': False}, {'field': 'Cur_Code', 'type': 'varchar(3)', 'type_flask': 'db.String(3)', 'type_sqlalchemy': 'String(3)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 10, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Cur_Code', 'is_time': False}, {'field': 'CIT_Status', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 11, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'CIT_Status', 'is_time': False}, {'field': 'CIT_Count', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': '0', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 12, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'CIT_Count', 'is_time': False}, {'field': 'Pla_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': '0', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 13, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'Pla_Id', 'is_time': False}]
+
+        return __list
+
+    def get_column_headers(self):
+        """ Gets Statistics record column headers list """
+        __list=['CR_Date_From', 'CR_Date_To', 'Cus_Id', 'CC_Id', 'CI_Id', 'CU_Id', 'Typ_Code', 'CR_Quantity', 'CR_ST_at_Cur', 'Cur_Code', 'CIT_Status', 'CIT_Count', 'Pla_Id']
+
+        return __list
+
+    def get_column_types(self):
+        """ Gets Statistics record column data types list """
+        __list=['Date', 'Date', 'Integer', 'Integer', 'Integer', 'Integer', 'String(10)', 'Numeric(20,12)', 'Numeric(20,12)', 'String(3)', 'Integer', 'Integer', 'Integer']
+
+        return __list
+
+    def get_column_meta(self):
+        """ Gets Statistics record column data meta list """
+        __list=[('CR_Date_From', 'Date'), ('CR_Date_To', 'Date'), ('Cus_Id', 'Integer'), ('CC_Id', 'Integer'), ('CI_Id', 'Integer'), ('CU_Id', 'Integer'), ('Typ_Code', 'String(10)'), ('CR_Quantity', 'Numeric(20,12)'), ('CR_ST_at_Cur', 'Numeric(20,12)'), ('Cur_Code', 'String(3)'), ('CIT_Status', 'Integer'), ('CIT_Count', 'Integer'), ('Pla_Id', 'Integer')]
+
+        return __list
+
+    def search_key(self,CR_Date_From,CR_Date_To,Cus_Id,CC_Id,CI_Id,CU_Id):
+        """ Search for an unique Statistics record using all key fields (CR_Date_From,CR_Date_To,Cus_Id,CC_Id,CI_Id,CU_Id) """
+        try:
+            if self.engine is not None:
+                Session=sessionmaker(bind=self.engine)
+                session=Session()
+                record = session.query(Statistics).filter(Statistics.CR_Date_From==CR_Date_From).filter(Statistics.CR_Date_To==CR_Date_To).filter(Statistics.Cus_Id==Cus_Id).filter(Statistics.CC_Id==CC_Id).filter(Statistics.CI_Id==CI_Id).filter(Statistics.CU_Id==CU_Id).one_or_none()
+                session.flush()
+            else:
+                session.rollback()
+                record = None
+        except Exception as e:
+            detail='Statistics.search_key(%s,%s,%s,%s,%s,%s): Exception: %s'%(CR_Date_From,CR_Date_To,Cus_Id,CC_Id,CI_Id,CU_Id,e)
+            emtec_handle_general_exception(e,detail=detail,module=__name__,function='Statistics.search_key()',logger=self.logger)
+            record = None
+        return record
+
+    def log(self,message,level=logging.DEBUG):
+        """ Class Statistics log function """
+        if self.logger is not None:
+            self.logger.log(level,message)
+
+  Statistics_Class.__name__ = 'Statistics_%s'%(table_name_suffix)
+  x = Statistics_Class
+  return x
+
+# =============================================================================
+# Auto-Generated code. do not modify
+# (c) Sertechno 2018
+# GLVH @ 2022-04-02 15:33:31
 # =============================================================================
 
 # GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_trace.py
@@ -4617,7 +4984,7 @@ class Trace(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-03-14 14:55:57
+# GLVH @ 2022-04-02 15:33:31
 # =============================================================================
 
 # GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_user_resumes.py
@@ -4861,7 +5228,7 @@ class User_Resumes(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-03-14 14:55:57
+# GLVH @ 2022-04-02 15:33:31
 # =============================================================================
 
 # GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_users.py
@@ -4908,43 +5275,61 @@ class Users(Base):
 
     id            = Column( Integer, primary_key=True, autoincrement=True )
     username      = Column( String(64) )
+    name          = Column( String(255) )
     role_id       = Column( Integer, ForeignKey('Roles.id') )
     email         = Column( String(64) )
     password_hash = Column( String(128) )
     confirmed     = Column( Boolean )
     CC_Id         = Column( Integer, ForeignKey('Cost_Centers.CC_Id') )
+    roles         = Column( String(255) )
+    ldap          = Column( Boolean )
+    ldap_user     = Column( String(45) )
+    ldap_common   = Column( String(45) )
+    ldap_host     = Column( String(45) )
+    ldap_port     = Column( Integer )
+    ldap_domain   = Column( String(45) )
+    vars          = Column( String(255) )
     
-    def __init__(self, id=0, username='None', role_id=None, email='None', password_hash='None', confirmed=0, CC_Id=1,engine=None,logger=None):
+    def __init__(self, id=0, username='None', name='None', role_id=None, email='None', password_hash='None', confirmed=0, CC_Id=1, roles='None', ldap=0, ldap_user='None', ldap_common='None', ldap_host='None', ldap_port=0, ldap_domain='None', vars='None',engine=None,logger=None):
         """ Initiates a Users class record """
         self.engine=engine
         self.logger=logger
         self.id            = id
         self.username      = username
+        self.name          = name
         self.role_id       = role_id
         self.email         = email
         self.password_hash = password_hash
         self.confirmed     = confirmed
         self.CC_Id         = CC_Id
+        self.roles         = roles
+        self.ldap          = ldap
+        self.ldap_user     = ldap_user
+        self.ldap_common   = ldap_common
+        self.ldap_host     = ldap_host
+        self.ldap_port     = ldap_port
+        self.ldap_domain   = ldap_domain
+        self.vars          = vars
 
         self.log('Created %s'%self)
     def __repr__(self):
         """ default class Users representation function """
-        return "<Users( id='%s', username='%s', role_id='%s', email='%s', password_hash='%s', confirmed='%s', CC_Id='%s')>" % \
-                ( self.id, self.username, self.role_id, self.email, self.password_hash, self.confirmed, self.CC_Id)
+        return "<Users( id='%s', username='%s', name='%s', role_id='%s', email='%s', password_hash='%s', confirmed='%s', CC_Id='%s', roles='%s', ldap='%s', ldap_user='%s', ldap_common='%s', ldap_host='%s', ldap_port='%s', ldap_domain='%s', vars='%s')>" % \
+                ( self.id, self.username, self.name, self.role_id, self.email, self.password_hash, self.confirmed, self.CC_Id, self.roles, self.ldap, self.ldap_user, self.ldap_common, self.ldap_host, self.ldap_port, self.ldap_domain, self.vars)
 
     def get_list(self):
         """ Gets Users record in list format """
-        __list = [ self.id, self.username, self.role_id, self.email, self.password_hash, self.confirmed, self.CC_Id]
+        __list = [ self.id, self.username, self.name, self.role_id, self.email, self.password_hash, self.confirmed, self.CC_Id, self.roles, self.ldap, self.ldap_user, self.ldap_common, self.ldap_host, self.ldap_port, self.ldap_domain, self.vars]
         return __list
 
     def get_tuple(self):
         """ Gets Users record in tuple format """
-        __tuple = ( self.id, self.username, self.role_id, self.email, self.password_hash, self.confirmed, self.CC_Id)
+        __tuple = ( self.id, self.username, self.name, self.role_id, self.email, self.password_hash, self.confirmed, self.CC_Id, self.roles, self.ldap, self.ldap_user, self.ldap_common, self.ldap_host, self.ldap_port, self.ldap_domain, self.vars)
         return __tuple
 
     def get_dict(self):
         """ Gets Users record in dict format """
-        __dict={'id':self.id,'username':self.username,'role_id':self.role_id,'email':self.email,'password_hash':self.password_hash,'confirmed':self.confirmed,'CC_Id':self.CC_Id}
+        __dict={'id':self.id,'username':self.username,'name':self.name,'role_id':self.role_id,'email':self.email,'password_hash':self.password_hash,'confirmed':self.confirmed,'CC_Id':self.CC_Id,'roles':self.roles,'ldap':self.ldap,'ldap_user':self.ldap_user,'ldap_common':self.ldap_common,'ldap_host':self.ldap_host,'ldap_port':self.ldap_port,'ldap_domain':self.ldap_domain,'vars':self.vars}
 
         return __dict
 
@@ -4996,25 +5381,25 @@ class Users(Base):
 
     def get_columns(self):
         """ Gets Users record column full details list """
-        __list=[{'field': 'id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': 'auto_increment', 'is_form_editable': True, 'format': None, 'order': 1, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': True, 'header': 'Id', 'is_time': False}, {'field': 'username', 'type': 'varchar(64)', 'type_flask': 'db.String(64)', 'type_sqlalchemy': 'String(64)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 2, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'username', 'is_time': False}, {'field': 'role_id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'MUL', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 3, 'is_searchable': True, 'is_fk': True, 'foreign_field': 'id', 'referenced_table': 'Roles', 'referenced_class': 'Role', 'foreign_key': 'id', 'foreign_value': 'name', 'is_numeric': False, 'form_type': 'SelectField', 'is_id': False, 'header': 'role_id', 'is_time': False}, {'field': 'email', 'type': 'varchar(64)', 'type_flask': 'db.String(64)', 'type_sqlalchemy': 'String(64)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 4, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'email', 'is_time': False}, {'field': 'password_hash', 'type': 'varchar(128)', 'type_flask': 'db.String(128)', 'type_sqlalchemy': 'String(128)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 5, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'password_hash', 'is_time': False}, {'field': 'confirmed', 'type': 'tinyint', 'type_flask': 'db.Boolean', 'type_sqlalchemy': 'Boolean', 'null': 'YES', 'key': '', 'default': '0', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 6, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'BooleanField', 'is_id': False, 'header': 'confirmed', 'is_time': False}, {'field': 'CC_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'MUL', 'default': '1', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 7, 'is_searchable': True, 'is_fk': True, 'foreign_field': 'CC_Id', 'referenced_table': 'Cost_Centers', 'referenced_class': 'cost_center', 'foreign_key': 'CC_Id', 'foreign_value': 'CC_Description', 'is_numeric': False, 'form_type': 'SelectField', 'is_id': False, 'header': 'CC_Id', 'is_time': False}]
+        __list=[{'field': 'id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': 'auto_increment', 'is_form_editable': True, 'format': None, 'order': 1, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': True, 'header': 'Id', 'is_time': False}, {'field': 'username', 'type': 'varchar(64)', 'type_flask': 'db.String(64)', 'type_sqlalchemy': 'String(64)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 2, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'username', 'is_time': False}, {'field': 'name', 'type': 'varchar(255)', 'type_flask': 'db.String(255)', 'type_sqlalchemy': 'String(255)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 3, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'name', 'is_time': False}, {'field': 'role_id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'MUL', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 4, 'is_searchable': True, 'is_fk': True, 'foreign_field': 'id', 'referenced_table': 'Roles', 'referenced_class': 'Role', 'foreign_key': 'id', 'foreign_value': 'name', 'is_numeric': False, 'form_type': 'SelectField', 'is_id': False, 'header': 'role_id', 'is_time': False}, {'field': 'email', 'type': 'varchar(64)', 'type_flask': 'db.String(64)', 'type_sqlalchemy': 'String(64)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 5, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'email', 'is_time': False}, {'field': 'password_hash', 'type': 'varchar(128)', 'type_flask': 'db.String(128)', 'type_sqlalchemy': 'String(128)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 6, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'password_hash', 'is_time': False}, {'field': 'confirmed', 'type': 'tinyint', 'type_flask': 'db.Boolean', 'type_sqlalchemy': 'Boolean', 'null': 'YES', 'key': '', 'default': '0', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 7, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'BooleanField', 'is_id': False, 'header': 'confirmed', 'is_time': False}, {'field': 'CC_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'MUL', 'default': '1', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 8, 'is_searchable': True, 'is_fk': True, 'foreign_field': 'CC_Id', 'referenced_table': 'Cost_Centers', 'referenced_class': 'cost_center', 'foreign_key': 'CC_Id', 'foreign_value': 'CC_Description', 'is_numeric': False, 'form_type': 'SelectField', 'is_id': False, 'header': 'CC_Id', 'is_time': False}, {'field': 'roles', 'type': 'varchar(255)', 'type_flask': 'db.String(255)', 'type_sqlalchemy': 'String(255)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 9, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'roles', 'is_time': False}, {'field': 'ldap', 'type': 'tinyint', 'type_flask': 'db.Boolean', 'type_sqlalchemy': 'Boolean', 'null': 'YES', 'key': '', 'default': '0', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 10, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'BooleanField', 'is_id': False, 'header': 'ldap', 'is_time': False}, {'field': 'ldap_user', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 11, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'ldap_user', 'is_time': False}, {'field': 'ldap_common', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 12, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'ldap_common', 'is_time': False}, {'field': 'ldap_host', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 13, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'ldap_host', 'is_time': False}, {'field': 'ldap_port', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': '0', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 14, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'ldap_port', 'is_time': False}, {'field': 'ldap_domain', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 15, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'ldap_domain', 'is_time': False}, {'field': 'vars', 'type': 'varchar(255)', 'type_flask': 'db.String(255)', 'type_sqlalchemy': 'String(255)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 16, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'vars', 'is_time': False}]
 
         return __list
 
     def get_column_headers(self):
         """ Gets Users record column headers list """
-        __list=['id', 'username', 'role_id', 'email', 'password_hash', 'confirmed', 'CC_Id']
+        __list=['id', 'username', 'name', 'role_id', 'email', 'password_hash', 'confirmed', 'CC_Id', 'roles', 'ldap', 'ldap_user', 'ldap_common', 'ldap_host', 'ldap_port', 'ldap_domain', 'vars']
 
         return __list
 
     def get_column_types(self):
         """ Gets Users record column data types list """
-        __list=['Integer', 'String(64)', 'Integer', 'String(64)', 'String(128)', 'Boolean', 'Integer']
+        __list=['Integer', 'String(64)', 'String(255)', 'Integer', 'String(64)', 'String(128)', 'Boolean', 'Integer', 'String(255)', 'Boolean', 'String(45)', 'String(45)', 'String(45)', 'Integer', 'String(45)', 'String(255)']
 
         return __list
 
     def get_column_meta(self):
         """ Gets Users record column data meta list """
-        __list=[('id', 'Integer'), ('username', 'String(64)'), ('role_id', 'Integer'), ('email', 'String(64)'), ('password_hash', 'String(128)'), ('confirmed', 'Boolean'), ('CC_Id', 'Integer')]
+        __list=[('id', 'Integer'), ('username', 'String(64)'), ('name', 'String(255)'), ('role_id', 'Integer'), ('email', 'String(64)'), ('password_hash', 'String(128)'), ('confirmed', 'Boolean'), ('CC_Id', 'Integer'), ('roles', 'String(255)'), ('ldap', 'Boolean'), ('ldap_user', 'String(45)'), ('ldap_common', 'String(45)'), ('ldap_host', 'String(45)'), ('ldap_port', 'Integer'), ('ldap_domain', 'String(45)'), ('vars', 'String(255)')]
 
         return __list
 

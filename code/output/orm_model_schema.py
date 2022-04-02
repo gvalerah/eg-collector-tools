@@ -1,7 +1,7 @@
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-03-14 14:55:57
+# GLVH @ 2022-04-02 15:33:31
 # =============================================================================
 
 # gen_model_flask.py:67 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/ORM_model_schema.py
@@ -334,6 +334,25 @@ def Create_Tables(engine):
     except Exception as e:
         print('EXCEPTION:',e)
     try:
+        Statistics = Table(
+                'Statistics',Meta,
+                Column( 'CR_Date_From',Date, primary_key=True ),
+                Column( 'CR_Date_To',Date, primary_key=True ),
+                Column( 'Cus_Id',Integer, primary_key=True ),
+                Column( 'CC_Id',Integer, primary_key=True ),
+                Column( 'CI_Id',Integer, primary_key=True ),
+                Column( 'CU_Id',Integer, primary_key=True ),
+                Column( 'Typ_Code',String(10) ),
+                Column( 'CR_Quantity',Numeric(20,12) ),
+                Column( 'CR_ST_at_Cur',Numeric(20,12) ),
+                Column( 'Cur_Code',String(3) ),
+                Column( 'CIT_Status',Integer ),
+                Column( 'CIT_Count',Integer ),
+                Column( 'Pla_Id',Integer ),
+        )
+    except Exception as e:
+        print('EXCEPTION:',e)
+    try:
         Trace = Table(
                 'Trace',Meta,
                 Column( 'ID',Integer, primary_key=True, autoincrement=True ),
@@ -390,11 +409,20 @@ def Create_Tables(engine):
                 'Users',Meta,
                 Column( 'id',Integer, primary_key=True, autoincrement=True ),
                 Column( 'username',String(64) ),
+                Column( 'name',String(255) ),
                 Column( 'role_id',Integer, ForeignKey('Roles.id') ),
                 Column( 'email',String(64) ),
                 Column( 'password_hash',String(128) ),
                 Column( 'confirmed',Boolean ),
                 Column( 'CC_Id',Integer, ForeignKey('Cost_Centers.CC_Id') ),
+                Column( 'roles',String(255) ),
+                Column( 'ldap',Boolean ),
+                Column( 'ldap_user',String(45) ),
+                Column( 'ldap_common',String(45) ),
+                Column( 'ldap_host',String(45) ),
+                Column( 'ldap_port',Integer ),
+                Column( 'ldap_domain',String(45) ),
+                Column( 'vars',String(255) ),
         )
     except Exception as e:
         print('EXCEPTION:',e)

@@ -41,7 +41,7 @@
                     <!-- Dropdown -->
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="/" id="navbardrop" data-bs-toggle="dropdown" aria-expanded="false">
-                          {{name|safe}}
+                          {{gettext(name)|safe}}
                         </a>
                         <ul class="dropdown-menu">
                     {%- for suboption in option.options %}
@@ -49,7 +49,7 @@
                             {%- if current_app.config.TESTING %}
                             <!-- _macros.html: - Gen_SubOption !{{suboption|safe}}! TEST MODE -->
                                 {%- if suboption.header is not none %}
-                            <b>{{suboption.header}}</b>
+                            <b>{{gettext(suboption.header)}}</b>
                                 {%- endif %}
                             <li><a class="dropdown-item" href="{{suboption.url}}">{{gettext(suboption.name)}}</a></li>
                                 {%- if suboption.hr %}
@@ -60,7 +60,7 @@
                         {%- else %}
                             <!-- _macros.html - Gen_SubOption !{{suboption|safe}}! -->
                             {%- if suboption.header is not none %}
-                            <b>{{suboption.header}}</b>
+                            <b>{{gettext(suboption.header)}}</b>
                             {%- endif %}
                             <li><a class="dropdown-item" href="{{suboption.url}}">{{gettext(suboption.name)}}</a></li>
                             {%- if suboption.hr %}

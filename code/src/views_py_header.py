@@ -63,6 +63,12 @@ DAYS={
     'friday':       gettext('friday'),
     'saturday':     gettext('saturday'),
 }
+TRANSLATION_SYMBOLS=[
+    gettext('Adds'),
+    gettext('Queries'),
+    gettext('Reports'),
+    gettext('AAAA - Display Period Usage'),
+]
 
 from ..decorators   import admin_required, permission_required
 
@@ -230,6 +236,7 @@ def get_collectordata():
     
     # Aqui debe leer configuracion
     config = configparser.ConfigParser()
+    logger.debug(f"views_py_header: get_collectordata(): COLLECTOR_CONFIG_FILE = {current_app.config.get('COLLECTOR_CONFIG_FILE')}")
     config.read(current_app.config.get('COLLECTOR_CONFIG_FILE'))
     if current_user.role.id in [ROLE_CUSTOMER,ROLE_ADMINISTRATOR,ROLE_GOD]:
         if 'Customer_Options' in config.sections():
@@ -252,7 +259,7 @@ def get_collectordata():
                     }
                 })
         
-    # GV print(f"views_py_header: get_collectordata(): collectordata = {collectordata}")
+    logger.debug(f"views_py_header: get_collectordata(): collectordata = {collectordata}")
     
     return collectordata
 
