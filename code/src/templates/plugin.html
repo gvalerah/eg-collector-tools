@@ -1,0 +1,17 @@
+<!-- will extend "collector_app.html" -->
+{%- extends "collector_app.html" %}
+<!-- will import bootstrap/wtf.html" as wtf -->
+{%- import "bootstrap/wtf.html" as wtf %}
+
+<!-- will replace title block here -->
+{%- block title %}Plugin{% endblock %}
+
+<!-- will replace content block here -->
+{%- block content %}
+<div class="page-header">
+    {{body|safe}}
+</div>
+{%- endblock content %}
+
+
+

@@ -148,6 +148,23 @@ print (f"Set Global multilanguage strings ...")
 app.jinja_env.globals.update(has_access=has_access)
 # GV -------------------------------------------------------------------
 
+from emtec.plugins import *
+# Plugins management enabler
+
+plugins_dir = os.path.join(app.root_path,'plugins')
+print(f"Loading plugins from: {plugins_dir}")
+app.config.update({'PLUGINS_MANAGER':PluginsManager(app=app,user=None,folder=plugins_dir,logger=logger)})
+print(f"app.config.PLUGINS_MANAGER = {app.config.get('PLUGINS_MANAGER')}")
+plugins = app.config.get('PLUGINS_MANAGER').plugins
+#print(f"plugins= {plugins}")
+for name in plugins:
+    print()
+    print(f"Loaded plugin:   {name} {plugins.get(name).get('version')}")
+    instance = plugins.get(name).get('instance')
+    print(f"         instance: {instance}")
+    print(f"            title: {instance.title}")
+    print(f"short_description: {instance.short_description}")
+    print(f" long_description: {instance.long_description}")
 
 if __name__ == '__main__':
     app_ctx = app.app_context()

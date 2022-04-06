@@ -116,8 +116,9 @@ def forms_Export_Charging_Resume():
     form.Export.choices   = export_choices
     # Este codigo es temporal rebe reinstalarse al arrglar los filtros 
     try:
-        form.CC.choices       = cc_choices
-        form.Platform.choices = platform_choices
+        # GV 20220404 form.CC.choices       = cc_choices
+        # GV 20220404 form.Platform.choices = platform_choices
+        pass
     except:
         pass
     # hasta aqui el omitido 
@@ -128,14 +129,17 @@ def forms_Export_Charging_Resume():
         if     form.submit_PDF.data:
             CC_Name=Pla_Name=''
             try: # codigo de ignorar ...................................
+                ''' GV 20220404 
                 for cc,name in form.CC.choices:
                     if cc == form.CC.data:
                         CC_Name=name
                 for pla,name in form.Platform.choices:
                     if platform == form.Platform.data:
                         Pla_Name=name
+                '''
+                pass
             except:
-                pass # hata aqui .......................................
+                pass # hasta aqui .......................................
             return redirect(url_for('.export_Charging_Resume',
                                 User_Id         = current_user.id,
                                 Cus_Id          = data[1],
@@ -147,9 +151,9 @@ def forms_Export_Charging_Resume():
                                 Cur_Code        = data[5],
                                 Cur_Name        = dcurrencies[data[5]],
                                 Format          = "pdf",
-                                CC_Id           = form.CC.data.split(':')[0],
-                                CC_Code         = form.CC.data.split(':')[1],
-                                Pla_Id          = form.Platform.data,
+                                # GV 20220404 CC_Id           = form.CC.data.split(':')[0],
+                                # GV 20220404 CC_Code         = form.CC.data.split(':')[1],
+                                # GV 20220404 Pla_Id          = form.Platform.data,
                                 CC_Name         = CC_Name,
                                 Pla_Name        = Pla_Name
                                 ))
@@ -414,7 +418,7 @@ def prepare_report( vars ):
     # Setup header & footer
     prepare_report_header(r)
     prepare_report_footer(r)
-    # Setuo Detail format(s)
+    # Setup Detail format(s)
     prepare_detail(r)
     # Adjust Page Geometry if needed
     r.calculate_windows()
@@ -651,7 +655,7 @@ def export_to_fix(output_file,rows,Customer,From,To,Status,Currency):
                     0)
                 )
         count += 1
-    f.write("T%06d%0155d*\n"%(count,0))
+    f.write("T%06d%0159d*\n"%(count,0)) # porque 159, deberia ser 155 pero no sale .. analizar
     f.close()
     return fix_file
 

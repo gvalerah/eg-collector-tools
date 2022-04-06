@@ -28,7 +28,7 @@ from .. import logger
 # Here we import al plugin specific members, classes & methods
 #from .plugins_code import * OBSOLETE NOT FUNCTIONAL ON COMPILED ENVIRONMENT
 
-@main.route('/plugins', methods=['GET', 'POST'])
+@main.route('/plugins_old', methods=['GET', 'POST'])
 def plugins_Menu():
     """ Show a list menu of installed plugins """    
     if logger is not None:
@@ -64,7 +64,7 @@ def plugins_Menu():
     
     return render_template('plugins.html',data=data)
 
-@main.route('/plugins/<code>', methods=['GET', 'POST'])
+@main.route('/plugins_old/<code>', methods=['GET', 'POST'])
 def plugins_Code(code):
     """ Calls the actual Plugin view function and renders plugins main page depending of Plugin code """
     data = []

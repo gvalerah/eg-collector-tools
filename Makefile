@@ -122,18 +122,19 @@ collector:	${COLLECTOR_CODE_OUTPUT}/models.py ${COLLECTOR_CODE_OUTPUT}/orm_model
 	@echo
 	@echo "updating application static programs ..."
 	@echo
-	cp  ${COLLECTOR_CODE_SRC}/collector.py						${COLLECTOR_FOLDER}/collector.py
-	cp  ${COLLECTOR_CODE_SRC}/collector_drv_nutanix.py			${COLLECTOR_FOLDER}/.
-	cp  ${COLLECTOR_CODE_SRC}/collector_services.py				${COLLECTOR_FOLDER}/.
-	cp  ${COLLECTOR_CODE_SRC}/collector_version.py				${COLLECTOR_FOLDER}/.
-	cp  ${COLLECTOR_CODE_SRC}/*.md								${COLLECTOR_FOLDER}/.
-	cp  ${COLLECTOR_CODE_SRC}/app/*.py							${COLLECTOR_FOLDER}/app/.
-	cp  ${COLLECTOR_CODE_SRC}/app/auth/*.py						${COLLECTOR_FOLDER}/app/auth/.
-	cp  ${COLLECTOR_CODE_SRC}/app/main/*.py						${COLLECTOR_FOLDER}/app/main/.
-	cp  ${COLLECTOR_CODE_SRC}/app/main/plugins_code/*.py		${COLLECTOR_FOLDER}/app/main/plugins_code/.
-	cp  ${COLLECTOR_CODE_SRC}/app/static/css/*.css				${COLLECTOR_FOLDER}/app/static/css/.
-	cp  ${COLLECTOR_CODE_SRC}/app/static/css/*.map				${COLLECTOR_FOLDER}/app/static/css/.
-	cp  ${COLLECTOR_CODE_SRC}/app/static/img/*.*				${COLLECTOR_FOLDER}/app/static/img/.
+	cp  ${COLLECTOR_CODE_SRC}/collector.py			${COLLECTOR_FOLDER}/collector.py
+	cp  ${COLLECTOR_CODE_SRC}/collector_drv_nutanix.py	${COLLECTOR_FOLDER}/.
+	cp  ${COLLECTOR_CODE_SRC}/collector_services.py		${COLLECTOR_FOLDER}/.
+	cp  ${COLLECTOR_CODE_SRC}/collector_version.py		${COLLECTOR_FOLDER}/.
+	cp  ${COLLECTOR_CODE_SRC}/*.md				${COLLECTOR_FOLDER}/.
+	cp  ${COLLECTOR_CODE_SRC}/app/*.py			${COLLECTOR_FOLDER}/app/.
+	cp  ${COLLECTOR_CODE_SRC}/app/plugins/*.py		${COLLECTOR_FOLDER}/app/plugins/.
+	cp  ${COLLECTOR_CODE_SRC}/app/auth/*.py			${COLLECTOR_FOLDER}/app/auth/.
+	cp  ${COLLECTOR_CODE_SRC}/app/main/*.py			${COLLECTOR_FOLDER}/app/main/.
+	cp  ${COLLECTOR_CODE_SRC}/app/main/plugins_code/*.py	${COLLECTOR_FOLDER}/app/main/plugins_code/.
+	cp  ${COLLECTOR_CODE_SRC}/app/static/css/*.css		${COLLECTOR_FOLDER}/app/static/css/.
+	cp  ${COLLECTOR_CODE_SRC}/app/static/css/*.map		${COLLECTOR_FOLDER}/app/static/css/.
+	cp  ${COLLECTOR_CODE_SRC}/app/static/img/*.*		${COLLECTOR_FOLDER}/app/static/img/.
 #   following commented lines due to refactoring and system wide links to Global folders
 #	all them need to be linked somewhere
 #	cp  ${COLLECTOR_CODE_SRC}/app/static/js/*.js				${COLLECTOR_FOLDER}/app/static/js/.

@@ -24,6 +24,7 @@ from .              import main
 from ..             import db
 from ..             import logger
 from ..             import babel
+from emtec.plugins  import *
 
 # add to you main app code
 @babel.localeselector
@@ -177,6 +178,75 @@ def collector_faq():
 def collector_about():   
     return render_template('collector_about.html')
 '''
+# Plugins handler views this are reqrured for interface
+# plugins call handlers
+# Main plugins caller view
+@main.route("/plugin/<name>",methods=['GET','POST'])
+def plugin(name):
+    collectordata = get_collectordata()
+    print(f"enter view: plugin/{name}")
+    print(f"current_app  = {current_app}")
+    print(f"current_user = {current_user}")
+    print(f"db           = {db}")
+    print(f"logger       = {logger}")
+    pim   = current_app.config.get('PLUGINS_MANAGER')
+    plgin = pim.plugins.get(name).get('instance')
+    print(f"pim          = {pim}")
+    print(f"plgin        = {plgin.name}")
+
+    try:
+        Period = get_period_data(current_user.id,db.engine,Interface)
+    except:
+        Period = get_period_data()
+    if current_user.is_authenticated:
+        collectordata=get_collectordata()
+    else:
+        collectordata={"COLLECTOR_PERIOD":Period}
+    
+    # load here any argument data
+    data = {}
+
+    kwargs = {
+        'name'              :name,
+        'title'             :plgin.title,
+        'short_description' :plgin.short_description,
+        'long_description'  :plgin.long_description,
+        'app'               :current_app,
+        'user'              :current_user,
+        'request'           :request,
+        'url'               :request.url,
+        'method'            :request.method,
+        'args'              :request.args,
+        'form'              :request.form,
+        'db'                :db,
+        'session'           :session,
+        'rows'              :[],
+        'application_data'  :collectordata,
+        'logger'            :logger,
+        'data'              :data
+    }
+    print(f"will execute plgin.execute ")
+    result = plgin.execute(**kwargs)
+    if plgin.format == 'html_body':
+        result=render_template('plugin.html',body=result)
+    return result
+
+# Main plugins reporter
+# should ve decorated as administrator only
+@main.route("/plugins",methods=['GET','POST'])
+def plugins():
+    output = ""
+    pim    = current_app.config.get('PLUGINS_MANAGER')
+    for name in pim.plugins:
+        plugin=pim.plugins[name]
+        output+=f"{plugin.get('name')} {plugin.get('type')} {plugin.get('scope')} {plugin.get('instance').title}<br>"
+    return output
+
+
+
+
+
+
 
 # GV Flask Caching avoider
 @main.after_request
