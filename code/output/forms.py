@@ -25,7 +25,7 @@ from wtforms.validators     import Regexp
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 
 # gen_model_flask.py:289 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_charge_items.py
@@ -53,7 +53,7 @@ class frm_charge_item_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 
 # gen_model_flask.py:289 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_charge_resumes.py
@@ -113,7 +113,7 @@ class frm_charge_resume_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 
 # gen_model_flask.py:289 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_charge_unit_egm.py
@@ -145,7 +145,7 @@ class frm_charge_unit_egm_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 
 # gen_model_flask.py:289 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_charge_units.py
@@ -180,7 +180,7 @@ class frm_charge_unit_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 
 # gen_model_flask.py:289 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_cit_generations.py
@@ -204,7 +204,7 @@ class frm_cit_generation_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 
 # gen_model_flask.py:289 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_cit_statuses.py
@@ -228,7 +228,7 @@ class frm_cit_status_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 
 # gen_model_flask.py:289 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_configuration_items.py
@@ -257,7 +257,7 @@ class frm_configuration_item_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 
 # gen_model_flask.py:289 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_cost_centers.py
@@ -286,7 +286,7 @@ class frm_cost_center_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 
 # gen_model_flask.py:289 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_countries_currencies.py
@@ -311,7 +311,7 @@ class frm_country_currency_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 
 # gen_model_flask.py:289 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_countries.py
@@ -337,7 +337,7 @@ class frm_country_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 
 # gen_model_flask.py:289 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_cu_operations.py
@@ -363,7 +363,7 @@ class frm_cu_operation_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 
 # gen_model_flask.py:289 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_currencies.py
@@ -389,7 +389,7 @@ class frm_currency_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 
 # gen_model_flask.py:289 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_customers.py
@@ -413,7 +413,7 @@ class frm_customer_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 
 # gen_model_flask.py:289 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_cu_types.py
@@ -437,7 +437,7 @@ class frm_cu_type_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 
 # gen_model_flask.py:289 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_exchange_rates.py
@@ -462,7 +462,7 @@ class frm_exchange_rate_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 
 # gen_model_flask.py:289 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_interface.py
@@ -491,7 +491,7 @@ class frm_interface_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 
 # gen_model_flask.py:289 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_measure_units.py
@@ -515,70 +515,7 @@ class frm_measure_unit_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2020-03-29 16:53:01
-# =============================================================================
-
-from decimal import ROUND_HALF_UP
-
-class frm_new_cit(Form):
-    CU_Id                 = IntegerField("CU_Id?")
-    CIT_Date              = StringField("CIT_Date?")
-    CIT_Time              = StringField("CIT_Time?")
-    CIT_Quantity          = DecimalField("CIT_Quantity?", places=6, rounding=ROUND_HALF_UP)
-    #ERROR campo 'CIT_Status' no tiene 'form_type' type is: 'int(1)'
-    #ERROR campo 'CIT_Is_Active' no tiene 'form_type' type is: 'int(1)'
-    CIT_DateTime          = StringField("CIT_DateTime?")
-
-    submit_Save           = SubmitField  ('Save')
-    submit_New            = SubmitField  ('New')
-    submit_Cancel         = SubmitField  ('Cancel')
-
-    has_FKs               = False
-
-class frm_new_cit_delete(Form):
-    submit_Delete         = SubmitField  ('Delete')
-    submit_Cancel         = SubmitField  ('Cancel')
-
-# =============================================================================
-# =============================================================================
-# Auto-Generated code. do not modify
-# (c) Sertechno 2018
-# GLVH @ 2020-03-29 16:53:01
-# =============================================================================
-
-from decimal import ROUND_HALF_UP
-
-class frm_new_cus(Form):
-    #ERROR campo 'CU_Id' no tiene 'form_type' type is: 'int(1)'
-    CI_Id                         = IntegerField("CI_Id?")
-    CU_Description                = StringField("CU_Description?")
-    #ERROR campo 'CU_UUID' no tiene 'form_type' type is: 'binary(0)'
-    #ERROR campo 'CU_Is_Billeable' no tiene 'form_type' type is: 'int(1)'
-    #ERROR campo 'CU_Is_AlwaysBilleable' no tiene 'form_type' type is: 'int(1)'
-    CU_Quantity                   = DecimalField("CU_Quantity?", places=6, rounding=ROUND_HALF_UP)
-    CU_Operation                  = StringField("CU_Operation?")
-    Typ_Code                      = StringField("Typ_Code?")
-    #ERROR campo 'CIT_Generation' no tiene 'form_type' type is: 'int(1)'
-    #ERROR campo 'Rat_Id' no tiene 'form_type' type is: 'binary(0)'
-    #ERROR campo 'CU_Reference_1' no tiene 'form_type' type is: 'binary(0)'
-    #ERROR campo 'CU_Reference_2' no tiene 'form_type' type is: 'binary(0)'
-    #ERROR campo 'CU_reference_3' no tiene 'form_type' type is: 'binary(0)'
-
-    submit_Save                   = SubmitField  ('Save')
-    submit_New                    = SubmitField  ('New')
-    submit_Cancel                 = SubmitField  ('Cancel')
-
-    has_FKs                       = False
-
-class frm_new_cus_delete(Form):
-    submit_Delete                 = SubmitField  ('Delete')
-    submit_Cancel                 = SubmitField  ('Cancel')
-
-# =============================================================================
-# =============================================================================
-# Auto-Generated code. do not modify
-# (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 
 # gen_model_flask.py:289 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_platforms.py
@@ -605,7 +542,7 @@ class frm_platform_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 
 # gen_model_flask.py:289 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_rates.py
@@ -636,7 +573,7 @@ class frm_rate_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 
 # gen_model_flask.py:289 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_rat_periods.py
@@ -660,7 +597,7 @@ class frm_rat_period_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 
 # gen_model_flask.py:289 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_roles.py
@@ -686,77 +623,45 @@ class frm_Role_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-02 11:27:47
-# =============================================================================
-
-# gen_model_flask.py:289 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_st2.py
-from decimal import ROUND_HALF_UP
-
-class frm_st2(Form):
-    CR_Date_From         = DateField("CR_Date_From?", format='%Y-%m-%d')
-    CR_Date_To           = DateField("CR_Date_To?", format='%Y-%m-%d')
-    Cus_Id               = IntegerField("Cus_Id?")
-    CC_Id                = IntegerField("CC_Id?")
-    CI_Id                = IntegerField("CI_Id?")
-    CU_Id                = IntegerField("CU_Id?")
-    Typ_Code             = StringField("Typ_Code?")
-    CR_Quantity          = DecimalField("CR_Quantity?", places=12, rounding=ROUND_HALF_UP)
-    CR_ST_at_Cur         = DecimalField("CR_ST_at_Cur?", places=12, rounding=ROUND_HALF_UP)
-    Cur_Code             = StringField("Cur_Code?")
-    CIT_Status           = IntegerField("CIT_Status?")
-    CIT_Count            = IntegerField("CIT_Count?")
-    Pla_Id               = IntegerField("Pla_Id?")
-
-    submit_Save          = SubmitField  ('Save')
-    submit_New           = SubmitField  ('New')
-    submit_Cancel        = SubmitField  ('Cancel')
-
-    has_FKs              = False
-
-class frm_st2_delete(Form):
-    submit_Delete        = SubmitField  ('Delete')
-    submit_Cancel        = SubmitField  ('Cancel')
-
-# =============================================================================
-# =============================================================================
-# Auto-Generated code. do not modify
-# (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 
 # gen_model_flask.py:289 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_statistics.py
 from decimal import ROUND_HALF_UP
 
 class frm_statistics(Form):
-    CR_Date_From         = DateField("CR_Date_From?", validators=[DataRequired()], format='%Y-%m-%d')
-    CR_Date_To           = DateField("CR_Date_To?", validators=[DataRequired()], format='%Y-%m-%d')
-    Cus_Id               = IntegerField("Cus_Id?", validators=[DataRequired()])
-    CC_Id                = IntegerField("CC_Id?", validators=[DataRequired()])
-    CI_Id                = IntegerField("CI_Id?", validators=[DataRequired()])
-    CU_Id                = IntegerField("CU_Id?", validators=[DataRequired()])
-    Typ_Code             = StringField("Typ_Code?")
-    CR_Quantity          = DecimalField("CR_Quantity?", places=12, rounding=ROUND_HALF_UP)
-    CR_ST_at_Cur         = DecimalField("CR_ST_at_Cur?", places=12, rounding=ROUND_HALF_UP)
-    Cur_Code             = StringField("Cur_Code?")
-    CIT_Status           = IntegerField("CIT_Status?")
-    CIT_Count            = IntegerField("CIT_Count?")
-    Pla_Id               = IntegerField("Pla_Id?")
+    CR_Date_From                = DateField("CR_Date_From?", validators=[DataRequired()], format='%Y-%m-%d')
+    CR_Date_To                  = DateField("CR_Date_To?", validators=[DataRequired()], format='%Y-%m-%d')
+    User_Id                     = IntegerField("User_Id?", validators=[DataRequired()])
+    Cus_Id                      = IntegerField("Cus_Id?", validators=[DataRequired()])
+    CC_Id                       = IntegerField("CC_Id?", validators=[DataRequired()])
+    CI_Id                       = IntegerField("CI_Id?", validators=[DataRequired()])
+    CU_Id                       = IntegerField("CU_Id?", validators=[DataRequired()])
+    Typ_Code                    = StringField("Typ_Code?", validators=[DataRequired()])
+    Agregation                  = IntegerField("Agregation?", validators=[DataRequired()])
+    CR_Quantity_at_Rate         = DecimalField("CR_Quantity_at_Rate?", places=12, rounding=ROUND_HALF_UP)
+    CR_Quantity                 = DecimalField("CR_Quantity?", places=12, rounding=ROUND_HALF_UP)
+    CR_ST_at_Cur                = DecimalField("CR_ST_at_Cur?", places=12, rounding=ROUND_HALF_UP)
+    Cur_Code                    = StringField("Cur_Code?")
+    CIT_Status                  = IntegerField("CIT_Status?")
+    CIT_Count                   = IntegerField("CIT_Count?")
+    Pla_Id                      = IntegerField("Pla_Id?")
 
-    submit_Save          = SubmitField  ('Save')
-    submit_New           = SubmitField  ('New')
-    submit_Cancel        = SubmitField  ('Cancel')
+    submit_Save                 = SubmitField  ('Save')
+    submit_New                  = SubmitField  ('New')
+    submit_Cancel               = SubmitField  ('Cancel')
 
-    has_FKs              = False
+    has_FKs                     = False
 
 class frm_statistics_delete(Form):
-    submit_Delete        = SubmitField  ('Delete')
-    submit_Cancel        = SubmitField  ('Cancel')
+    submit_Delete               = SubmitField  ('Delete')
+    submit_Cancel               = SubmitField  ('Cancel')
 
 # =============================================================================
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 
 # gen_model_flask.py:289 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_st_use_per_cu.py
@@ -801,7 +706,7 @@ class frm_st_use_per_cu_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 
 # gen_model_flask.py:289 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_st_use_per_type.py
@@ -836,53 +741,7 @@ class frm_st_use_per_type_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2020-10-18 20:12:04
-# =============================================================================
-
-# gen_model_flask:259 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_trace_202003.py
-from decimal import ROUND_HALF_UP
-
-class frm_trace_202003(Form):
-    LINE         = StringField("LINE?")
-
-    submit_Save  = SubmitField  ('Save')
-    submit_New   = SubmitField  ('New')
-    submit_Cancel = SubmitField  ('Cancel')
-
-    has_FKs      = False
-
-class frm_trace_202003_delete(Form):
-    submit_Delete = SubmitField  ('Delete')
-    submit_Cancel = SubmitField  ('Cancel')
-
-# =============================================================================
-# =============================================================================
-# Auto-Generated code. do not modify
-# (c) Sertechno 2018
-# GLVH @ 2020-10-18 20:12:04
-# =============================================================================
-
-# gen_model_flask:259 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_trace_202101.py
-from decimal import ROUND_HALF_UP
-
-class frm_trace_202101(Form):
-    LINE         = StringField("LINE?")
-
-    submit_Save  = SubmitField  ('Save')
-    submit_New   = SubmitField  ('New')
-    submit_Cancel = SubmitField  ('Cancel')
-
-    has_FKs      = False
-
-class frm_trace_202101_delete(Form):
-    submit_Delete = SubmitField  ('Delete')
-    submit_Cancel = SubmitField  ('Cancel')
-
-# =============================================================================
-# =============================================================================
-# Auto-Generated code. do not modify
-# (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 
 # gen_model_flask.py:289 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_trace.py
@@ -905,7 +764,7 @@ class frm_trace_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 
 # gen_model_flask.py:289 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_user_resumes.py
@@ -918,10 +777,10 @@ class frm_user_resumes(Form):
     CR_Date_To                     = DateField("CR_Date_To?", validators=[DataRequired()], format='%Y-%m-%d')
     CIT_Status                     = IntegerField("CIT_Status?", validators=[DataRequired()])
     Cur_Code                       = StringField("Cur_Code?", validators=[DataRequired()])
-    CU_Id                          = IntegerField("CU_Id?", validators=[DataRequired()])
     CIT_Count                      = IntegerField("CIT_Count?")
     CIT_Quantity                   = DecimalField("CIT_Quantity?", places=12, rounding=ROUND_HALF_UP)
     CIT_Generation                 = IntegerField("CIT_Generation?")
+    CU_Id                          = IntegerField("CU_Id?", validators=[DataRequired()])
     CI_CC_Id                       = IntegerField("CI_CC_Id?")
     CU_Operation                   = StringField("CU_Operation?")
     Typ_Code                       = StringField("Typ_Code?")
@@ -965,7 +824,7 @@ class frm_user_resumes_delete(Form):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 
 # gen_model_flask.py:289 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/forms/frm_users.py

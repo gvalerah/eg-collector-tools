@@ -78,7 +78,7 @@ def load_user(user_id):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 
 # gen_model_flask.py:117 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_charge_items.py
@@ -128,12 +128,12 @@ class charge_item(db.Model,Serializer):
     CIT_Quantity  = db.Column( db.Numeric(20,12), default=0.000000000000 )
     CIT_Status    = db.Column( db.Integer, db.ForeignKey('CIT_Statuses.CIT_Status'), default=0 )
     CIT_Is_Active = db.Column( db.Boolean, default=0 )
-    CIT_DateTime  = db.Column( db.DateTime, primary_key=True )
+    CIT_DateTime  = db.Column( db.DateTime, primary_key=True, default='CURRENT_TIMESTAMP' )
 
 
     # looking for include file: /home/gvalera/GIT/EG-Suite-Tools/Collector/code/src/include/models/flask_charge_items_properties.py
     # file: /home/gvalera/GIT/EG-Suite-Tools/Collector/code/src/include/models/flask_charge_items_properties.py not found
-    def __init__(self, CU_Id=0, CIT_Date=None, CIT_Time=None, CIT_Quantity=0.000000000000, CIT_Status=0, CIT_Is_Active=0, CIT_DateTime=None):
+    def __init__(self, CU_Id=0, CIT_Date=None, CIT_Time=None, CIT_Quantity=0.000000000000, CIT_Status=0, CIT_Is_Active=0, CIT_DateTime=datetime.datetime.utcnow()):
         self.CU_Id         = CU_Id
         self.CIT_Date      = CIT_Date
         self.CIT_Time      = CIT_Time
@@ -149,7 +149,7 @@ class charge_item(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 
 # gen_model_flask.py:717 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_charge_items.py
@@ -172,10 +172,10 @@ def get_charge_item(table_name_suffix):
     CIT_Quantity  = db.Column( db.Numeric(20,12), default=0.000000000000 )
     CIT_Status    = db.Column( db.Integer, db.ForeignKey('CIT_Statuses.CIT_Status'), default=0 )
     CIT_Is_Active = db.Column( db.Boolean, default=0 )
-    CIT_DateTime  = db.Column( db.DateTime, primary_key=True )
+    CIT_DateTime  = db.Column( db.DateTime, primary_key=True, default='CURRENT_TIMESTAMP' )
 
 
-    def __init__(self, CU_Id=0, CIT_Date=None, CIT_Time=None, CIT_Quantity=0.000000000000, CIT_Status=0, CIT_Is_Active=0, CIT_DateTime=None):
+    def __init__(self, CU_Id=0, CIT_Date=None, CIT_Time=None, CIT_Quantity=0.000000000000, CIT_Status=0, CIT_Is_Active=0, CIT_DateTime=datetime.datetime.utcnow()):
         self.CU_Id         = CU_Id
         self.CIT_Date      = CIT_Date
         self.CIT_Time      = CIT_Time
@@ -194,40 +194,7 @@ def get_charge_item(table_name_suffix):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2020-02-24 15:33:48
-# =============================================================================
-
-def get_charge_item(table_name_sufix):
-  class charge_item_Class(db.Model,Serializer):
-    __tablename__ = 'Charge_Items_%s'%(table_name_sufix)
-    CU_Id         = db.Column( db.Integer, db.ForeignKey('Charge_Units.CU_Id'), primary_key=True, default=0 )
-    CIT_Date      = db.Column( db.Date )
-    CIT_Time      = db.Column( db.Time )
-    CIT_Quantity  = db.Column( db.Numeric(20,6), default=0.000000 )
-    CIT_Status    = db.Column( db.Integer, db.ForeignKey('CIT_Statuses.CIT_Status'), default=0 )
-    CIT_Is_Active = db.Column( db.Boolean, default=0 )
-    CIT_DateTime  = db.Column( db.DateTime, primary_key=True )
-
-
-    def __init__(self, CU_Id=0, CIT_Date=None, CIT_Time=None, CIT_Quantity=0.000000, CIT_Status=0, CIT_Is_Active=0, CIT_DateTime=None):
-        self.CU_Id         = CU_Id
-        self.CIT_Date      = CIT_Date
-        self.CIT_Time      = CIT_Time
-        self.CIT_Quantity  = CIT_Quantity
-        self.CIT_Status    = CIT_Status
-        self.CIT_Is_Active = CIT_Is_Active
-        self.CIT_DateTime  = CIT_DateTime
-
-    def __repr__(self):
-        return "<Charge_Items( CU_Id='%s', CIT_Date='%s', CIT_Time='%s', CIT_Quantity='%s', CIT_Status='%s', CIT_Is_Active='%s', CIT_DateTime='%s')>" % \
-                ( self.CU_Id, self.CIT_Date, self.CIT_Time, self.CIT_Quantity, self.CIT_Status, self.CIT_Is_Active, self.CIT_DateTime)
-
-  charge_item_Class.__name__ = 'charge_item_%s'%(table_name_sufix)
-  return charge_item_Class
-# =============================================================================
-# Auto-Generated code. do not modify
-# (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 
 # gen_model_flask.py:117 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_charge_resumes.py
@@ -278,42 +245,42 @@ class charge_resume(db.Model,Serializer):
     CIT_Status             = db.Column( db.Integer, primary_key=True )
     Cur_Code               = db.Column( db.String(3), primary_key=True )
     CU_Id                  = db.Column( db.Integer, primary_key=True )
-    CIT_Count              = db.Column( db.Integer, default=0 )
-    CIT_Quantity           = db.Column( db.Numeric(20,12), default=0.000000000000 )
+    CIT_Count              = db.Column( db.Integer )
+    CIT_Quantity           = db.Column( db.Numeric(20,12) )
     CIT_Generation         = db.Column( db.Integer, default=1 )
-    CI_CC_Id               = db.Column( db.Integer, default=0 )
-    CU_Operation           = db.Column( db.String(10), default='NONE' )
-    Typ_Code               = db.Column( db.String(10), default='NUL' )
-    CC_Cur_Code            = db.Column( db.String(3), default='UF' )
-    CI_Id                  = db.Column( db.Integer, default=1 )
-    Rat_Id                 = db.Column( db.Integer, default=0 )
-    Rat_Price              = db.Column( db.Numeric(20,12), default=0.000000000000 )
-    Rat_MU_Code            = db.Column( db.String(3), default='UNT' )
-    Rat_Cur_Code           = db.Column( db.String(3), default='UF' )
-    Rat_Period             = db.Column( db.Integer, default=1 )
-    Rat_Hourly             = db.Column( db.Numeric(20,12), default=0.000000000000 )
-    Rat_Daily              = db.Column( db.Numeric(20,12), default=0.000000000000 )
-    Rat_Monthly            = db.Column( db.Numeric(20,12), default=0.000000000000 )
-    CR_Quantity            = db.Column( db.Numeric(20,12), default=0.000000000000 )
-    CR_Quantity_at_Rate    = db.Column( db.Numeric(20,12), default=0.000000000000 )
-    CC_XR                  = db.Column( db.Numeric(20,12), default=0.000000000000 )
-    CR_Cur_XR              = db.Column( db.Numeric(20,12), default=0.000000000000 )
-    CR_ST_at_Rate_Cur      = db.Column( db.Numeric(20,12), default=0.000000000000 )
-    CR_ST_at_CC_Cur        = db.Column( db.Numeric(20,12), default=0.000000000000 )
-    CR_ST_at_Cur           = db.Column( db.Numeric(20,12), default=0.000000000000 )
+    CI_CC_Id               = db.Column( db.Integer )
+    CU_Operation           = db.Column( db.String(10) )
+    Typ_Code               = db.Column( db.String(10) )
+    CC_Cur_Code            = db.Column( db.String(3) )
+    CI_Id                  = db.Column( db.Integer )
+    Rat_Id                 = db.Column( db.Integer )
+    Rat_Price              = db.Column( db.Numeric(20,12) )
+    Rat_MU_Code            = db.Column( db.String(3) )
+    Rat_Cur_Code           = db.Column( db.String(3) )
+    Rat_Period             = db.Column( db.Integer )
+    Rat_Hourly             = db.Column( db.Numeric(20,12) )
+    Rat_Daily              = db.Column( db.Numeric(20,12) )
+    Rat_Monthly            = db.Column( db.Numeric(20,12) )
+    CR_Quantity            = db.Column( db.Numeric(20,12) )
+    CR_Quantity_at_Rate    = db.Column( db.Numeric(20,12) )
+    CC_XR                  = db.Column( db.Numeric(20,12) )
+    CR_Cur_XR              = db.Column( db.Numeric(20,12) )
+    CR_ST_at_Rate_Cur      = db.Column( db.Numeric(20,12) )
+    CR_ST_at_CC_Cur        = db.Column( db.Numeric(20,12) )
+    CR_ST_at_Cur           = db.Column( db.Numeric(20,12) )
     Cus_Name               = db.Column( db.String(255) )
     CI_Name                = db.Column( db.String(255) )
     CU_Description         = db.Column( db.String(255) )
     CC_Description         = db.Column( db.String(255) )
     Rat_Period_Description = db.Column( db.String(10) )
     CC_Code                = db.Column( db.String(45) )
-    Pla_Id                 = db.Column( db.Integer, default=0 )
+    Pla_Id                 = db.Column( db.Integer )
     Pla_Name               = db.Column( db.String(255) )
 
 
     # looking for include file: /home/gvalera/GIT/EG-Suite-Tools/Collector/code/src/include/models/flask_charge_resumes_properties.py
     # file: /home/gvalera/GIT/EG-Suite-Tools/Collector/code/src/include/models/flask_charge_resumes_properties.py not found
-    def __init__(self, User_Id=None, Cus_Id=None, CR_Date_From=None, CR_Date_To=None, CIT_Status=None, Cur_Code='None', CU_Id=None, CIT_Count=0, CIT_Quantity=0.000000000000, CIT_Generation=1, CI_CC_Id=0, CU_Operation='NONE', Typ_Code='NUL', CC_Cur_Code='UF', CI_Id=1, Rat_Id=0, Rat_Price=0.000000000000, Rat_MU_Code='UNT', Rat_Cur_Code='UF', Rat_Period=1, Rat_Hourly=0.000000000000, Rat_Daily=0.000000000000, Rat_Monthly=0.000000000000, CR_Quantity=0.000000000000, CR_Quantity_at_Rate=0.000000000000, CC_XR=0.000000000000, CR_Cur_XR=0.000000000000, CR_ST_at_Rate_Cur=0.000000000000, CR_ST_at_CC_Cur=0.000000000000, CR_ST_at_Cur=0.000000000000, Cus_Name='None', CI_Name='None', CU_Description='None', CC_Description='None', Rat_Period_Description='None', CC_Code='None', Pla_Id=0, Pla_Name='None'):
+    def __init__(self, User_Id=None, Cus_Id=None, CR_Date_From=None, CR_Date_To=None, CIT_Status=None, Cur_Code='None', CU_Id=None, CIT_Count=None, CIT_Quantity=None, CIT_Generation=1, CI_CC_Id=None, CU_Operation='None', Typ_Code='None', CC_Cur_Code='None', CI_Id=None, Rat_Id=None, Rat_Price=None, Rat_MU_Code='None', Rat_Cur_Code='None', Rat_Period=None, Rat_Hourly=None, Rat_Daily=None, Rat_Monthly=None, CR_Quantity=None, CR_Quantity_at_Rate=None, CC_XR=None, CR_Cur_XR=None, CR_ST_at_Rate_Cur=None, CR_ST_at_CC_Cur=None, CR_ST_at_Cur=None, Cus_Name='None', CI_Name='None', CU_Description='None', CC_Description='None', Rat_Period_Description='None', CC_Code='None', Pla_Id=None, Pla_Name='None'):
         self.User_Id                = User_Id
         self.Cus_Id                 = Cus_Id
         self.CR_Date_From           = CR_Date_From
@@ -360,7 +327,7 @@ class charge_resume(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 
 # gen_model_flask.py:117 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_charge_unit_egm.py
@@ -437,7 +404,7 @@ class charge_unit_egm(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 
 # gen_model_flask.py:117 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_charge_units.py
@@ -524,56 +491,7 @@ class charge_unit(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2020-02-24 14:48:48
-# =============================================================================
-
-def get_charge_unit(table_name_sufix):
-  class charge_unit_Class(db.Model,Serializer):
-    __tablename__ = 'Charge_Units_%s'%(table_name_sufix)
-    CU_Id                  = db.Column( db.Integer, primary_key=True, autoincrement=True )
-    CI_Id                  = db.Column( db.Integer, db.ForeignKey('Configuration_Items.CI_Id') )
-    CU_Description         = db.Column( db.String(45) )
-    CU_UUID                = db.Column( db.String(45) )
-    CU_Is_Billeable        = db.Column( db.Boolean, default=0 )
-    CU_Is_Always_Billeable = db.Column( db.Boolean, default=0 )
-    CU_Quantity            = db.Column( db.Numeric(20,6) )
-    CU_Operation           = db.Column( db.String(10), db.ForeignKey('CU_Operations.CU_Operation') )
-    Typ_Code               = db.Column( db.String(10), db.ForeignKey('CU_Types.Typ_Code') )
-    CIT_Generation         = db.Column( db.Integer, db.ForeignKey('CIT_Generations.CIT_Generation') )
-    Rat_Id                 = db.Column( db.Integer )
-    CU_Reference_1         = db.Column( db.String(45) )
-    CU_Reference_2         = db.Column( db.String(45) )
-    CU_Reference_3         = db.Column( db.String(45) )
-
-    charge_items           = db.relationship('charge_item',backref='charge_unit',lazy='dynamic')
-    charge_unit_egm        = db.relationship('charge_unit_egm',backref='charge_unit',lazy='dynamic')
-
-    def __init__(self, CU_Id=0, CI_Id=None, CU_Description='None', CU_UUID='None', CU_Is_Billeable=0, CU_Is_Always_Billeable=0, CU_Quantity=None, CU_Operation='None', Typ_Code='None', CIT_Generation=None, Rat_Id=None, CU_Reference_1='None', CU_Reference_2='None', CU_Reference_3='None'):
-        self.CU_Id                  = CU_Id
-        self.CI_Id                  = CI_Id
-        self.CU_Description         = CU_Description
-        self.CU_UUID                = CU_UUID
-        self.CU_Is_Billeable        = CU_Is_Billeable
-        self.CU_Is_Always_Billeable = CU_Is_Always_Billeable
-        self.CU_Quantity            = CU_Quantity
-        self.CU_Operation           = CU_Operation
-        self.Typ_Code               = Typ_Code
-        self.CIT_Generation         = CIT_Generation
-        self.Rat_Id                 = Rat_Id
-        self.CU_Reference_1         = CU_Reference_1
-        self.CU_Reference_2         = CU_Reference_2
-        self.CU_Reference_3         = CU_Reference_3
-
-    def __repr__(self):
-        return "<Charge_Units( CU_Id='%s', CI_Id='%s', CU_Description='%s', CU_UUID='%s', CU_Is_Billeable='%s', CU_Is_Always_Billeable='%s', CU_Quantity='%s', CU_Operation='%s', Typ_Code='%s', CIT_Generation='%s', Rat_Id='%s', CU_Reference_1='%s', CU_Reference_2='%s', CU_Reference_3='%s')>" % \
-                ( self.CU_Id, self.CI_Id, self.CU_Description, self.CU_UUID, self.CU_Is_Billeable, self.CU_Is_Always_Billeable, self.CU_Quantity, self.CU_Operation, self.Typ_Code, self.CIT_Generation, self.Rat_Id, self.CU_Reference_1, self.CU_Reference_2, self.CU_Reference_3)
-
-  charge_unit_Class.__name__ = 'charge_unit_%s'%(table_name_sufix)
-  return charge_unit_Class
-# =============================================================================
-# Auto-Generated code. do not modify
-# (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 
 # gen_model_flask.py:117 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_cit_generations.py
@@ -636,7 +554,7 @@ class cit_generation(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 
 # gen_model_flask.py:117 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_cit_statuses.py
@@ -699,7 +617,7 @@ class cit_status(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 
 # gen_model_flask.py:117 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_configuration_items.py
@@ -776,7 +694,7 @@ class configuration_item(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 
 # gen_model_flask.py:117 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_cost_centers.py
@@ -857,7 +775,7 @@ class cost_center(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 
 # gen_model_flask.py:117 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_countries_currencies.py
@@ -920,7 +838,7 @@ class country_currency(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 
 # gen_model_flask.py:117 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_countries.py
@@ -987,7 +905,7 @@ class country(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 
 # gen_model_flask.py:117 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_cu_operations.py
@@ -1054,7 +972,7 @@ class cu_operation(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 
 # gen_model_flask.py:117 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_currencies.py
@@ -1127,7 +1045,7 @@ class currency(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 
 # gen_model_flask.py:117 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_customers.py
@@ -1194,7 +1112,7 @@ class customer(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 
 # gen_model_flask.py:117 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_cu_types.py
@@ -1259,7 +1177,7 @@ class cu_type(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 
 # gen_model_flask.py:117 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_exchange_rates.py
@@ -1324,7 +1242,7 @@ class exchange_rate(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 
 # gen_model_flask.py:117 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_interface.py
@@ -1397,7 +1315,7 @@ class interface(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 
 # gen_model_flask.py:117 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_measure_units.py
@@ -1460,7 +1378,7 @@ class measure_unit(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 
 # gen_model_flask.py:117 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_platforms.py
@@ -1533,7 +1451,7 @@ class platform(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 
 # gen_model_flask.py:117 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_rates.py
@@ -1618,7 +1536,7 @@ class rate(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 
 # gen_model_flask.py:117 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_rat_periods.py
@@ -1681,7 +1599,7 @@ class rat_period(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 
 # gen_model_flask.py:117 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_roles.py
@@ -1765,7 +1683,7 @@ class Role(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 
 # gen_model_flask.py:117 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_statistics.py
@@ -1809,46 +1727,52 @@ class statistics(db.Model,Serializer):
        __class__.check_shard(suffix,engine)
        return __class__.__tablename__
 
-    CR_Date_From = db.Column( db.Date, primary_key=True )
-    CR_Date_To   = db.Column( db.Date, primary_key=True )
-    Cus_Id       = db.Column( db.Integer, primary_key=True )
-    CC_Id        = db.Column( db.Integer, primary_key=True, default=0 )
-    CI_Id        = db.Column( db.Integer, primary_key=True, default=1 )
-    CU_Id        = db.Column( db.Integer, primary_key=True )
-    Typ_Code     = db.Column( db.String(10), default='NUL' )
-    CR_Quantity  = db.Column( db.Numeric(20,12), default=0.000000000000 )
-    CR_ST_at_Cur = db.Column( db.Numeric(20,12), default=0.000000000000 )
-    Cur_Code     = db.Column( db.String(3) )
-    CIT_Status   = db.Column( db.Integer )
-    CIT_Count    = db.Column( db.Integer, default=0 )
-    Pla_Id       = db.Column( db.Integer, default=0 )
+    CR_Date_From        = db.Column( db.Date, primary_key=True )
+    CR_Date_To          = db.Column( db.Date, primary_key=True )
+    User_Id             = db.Column( db.Integer, primary_key=True )
+    Cus_Id              = db.Column( db.Integer, primary_key=True, default=0 )
+    CC_Id               = db.Column( db.Integer, primary_key=True, default=0 )
+    CI_Id               = db.Column( db.Integer, primary_key=True, default=1 )
+    CU_Id               = db.Column( db.Integer, primary_key=True, default=0 )
+    Typ_Code            = db.Column( db.String(10), primary_key=True, default='NUL' )
+    Agregation          = db.Column( db.Integer, primary_key=True, default=0 )
+    CR_Quantity_at_Rate = db.Column( db.Numeric(24,12), default=0.000000000000 )
+    CR_Quantity         = db.Column( db.Numeric(24,12), default=0.000000000000 )
+    CR_ST_at_Cur        = db.Column( db.Numeric(20,12), default=0.000000000000 )
+    Cur_Code            = db.Column( db.String(3) )
+    CIT_Status          = db.Column( db.Integer )
+    CIT_Count           = db.Column( db.Integer, default=0 )
+    Pla_Id              = db.Column( db.Integer, default=0 )
 
 
     # looking for include file: /home/gvalera/GIT/EG-Suite-Tools/Collector/code/src/include/models/flask_statistics_properties.py
     # file: /home/gvalera/GIT/EG-Suite-Tools/Collector/code/src/include/models/flask_statistics_properties.py not found
-    def __init__(self, CR_Date_From=None, CR_Date_To=None, Cus_Id=None, CC_Id=0, CI_Id=1, CU_Id=None, Typ_Code='NUL', CR_Quantity=0.000000000000, CR_ST_at_Cur=0.000000000000, Cur_Code='None', CIT_Status=None, CIT_Count=0, Pla_Id=0):
-        self.CR_Date_From = CR_Date_From
-        self.CR_Date_To   = CR_Date_To
-        self.Cus_Id       = Cus_Id
-        self.CC_Id        = CC_Id
-        self.CI_Id        = CI_Id
-        self.CU_Id        = CU_Id
-        self.Typ_Code     = Typ_Code
-        self.CR_Quantity  = CR_Quantity
-        self.CR_ST_at_Cur = CR_ST_at_Cur
-        self.Cur_Code     = Cur_Code
-        self.CIT_Status   = CIT_Status
-        self.CIT_Count    = CIT_Count
-        self.Pla_Id       = Pla_Id
+    def __init__(self, CR_Date_From=None, CR_Date_To=None, User_Id=None, Cus_Id=0, CC_Id=0, CI_Id=1, CU_Id=0, Typ_Code='NUL', Agregation=0, CR_Quantity_at_Rate=0.000000000000, CR_Quantity=0.000000000000, CR_ST_at_Cur=0.000000000000, Cur_Code='None', CIT_Status=None, CIT_Count=0, Pla_Id=0):
+        self.CR_Date_From        = CR_Date_From
+        self.CR_Date_To          = CR_Date_To
+        self.User_Id             = User_Id
+        self.Cus_Id              = Cus_Id
+        self.CC_Id               = CC_Id
+        self.CI_Id               = CI_Id
+        self.CU_Id               = CU_Id
+        self.Typ_Code            = Typ_Code
+        self.Agregation          = Agregation
+        self.CR_Quantity_at_Rate = CR_Quantity_at_Rate
+        self.CR_Quantity         = CR_Quantity
+        self.CR_ST_at_Cur        = CR_ST_at_Cur
+        self.Cur_Code            = Cur_Code
+        self.CIT_Status          = CIT_Status
+        self.CIT_Count           = CIT_Count
+        self.Pla_Id              = Pla_Id
 
     def __repr__(self):
-        return "<Statistics( CR_Date_From='%s', CR_Date_To='%s', Cus_Id='%s', CC_Id='%s', CI_Id='%s', CU_Id='%s', Typ_Code='%s', CR_Quantity='%s', CR_ST_at_Cur='%s', Cur_Code='%s', CIT_Status='%s', CIT_Count='%s', Pla_Id='%s')>" % \
-                ( self.CR_Date_From, self.CR_Date_To, self.Cus_Id, self.CC_Id, self.CI_Id, self.CU_Id, self.Typ_Code, self.CR_Quantity, self.CR_ST_at_Cur, self.Cur_Code, self.CIT_Status, self.CIT_Count, self.Pla_Id)
+        return "<Statistics( CR_Date_From='%s', CR_Date_To='%s', User_Id='%s', Cus_Id='%s', CC_Id='%s', CI_Id='%s', CU_Id='%s', Typ_Code='%s', Agregation='%s', CR_Quantity_at_Rate='%s', CR_Quantity='%s', CR_ST_at_Cur='%s', Cur_Code='%s', CIT_Status='%s', CIT_Count='%s', Pla_Id='%s')>" % \
+                ( self.CR_Date_From, self.CR_Date_To, self.User_Id, self.Cus_Id, self.CC_Id, self.CI_Id, self.CU_Id, self.Typ_Code, self.Agregation, self.CR_Quantity_at_Rate, self.CR_Quantity, self.CR_ST_at_Cur, self.Cur_Code, self.CIT_Status, self.CIT_Count, self.Pla_Id)
 
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 
 # gen_model_flask.py:717 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_statistics.py
@@ -1865,39 +1789,45 @@ def get_statistics(table_name_suffix):
            __class__.check_shard(suffix,engine)
         return __class__.__tablename__
 
-    CR_Date_From = db.Column( db.Date, primary_key=True )
-    CR_Date_To   = db.Column( db.Date, primary_key=True )
-    Cus_Id       = db.Column( db.Integer, primary_key=True )
-    CC_Id        = db.Column( db.Integer, primary_key=True, default=0 )
-    CI_Id        = db.Column( db.Integer, primary_key=True, default=1 )
-    CU_Id        = db.Column( db.Integer, primary_key=True )
-    Typ_Code     = db.Column( db.String(10), default='NUL' )
-    CR_Quantity  = db.Column( db.Numeric(20,12), default=0.000000000000 )
-    CR_ST_at_Cur = db.Column( db.Numeric(20,12), default=0.000000000000 )
-    Cur_Code     = db.Column( db.String(3) )
-    CIT_Status   = db.Column( db.Integer )
-    CIT_Count    = db.Column( db.Integer, default=0 )
-    Pla_Id       = db.Column( db.Integer, default=0 )
+    CR_Date_From        = db.Column( db.Date, primary_key=True )
+    CR_Date_To          = db.Column( db.Date, primary_key=True )
+    User_Id             = db.Column( db.Integer, primary_key=True )
+    Cus_Id              = db.Column( db.Integer, primary_key=True, default=0 )
+    CC_Id               = db.Column( db.Integer, primary_key=True, default=0 )
+    CI_Id               = db.Column( db.Integer, primary_key=True, default=1 )
+    CU_Id               = db.Column( db.Integer, primary_key=True, default=0 )
+    Typ_Code            = db.Column( db.String(10), primary_key=True, default='NUL' )
+    Agregation          = db.Column( db.Integer, primary_key=True, default=0 )
+    CR_Quantity_at_Rate = db.Column( db.Numeric(24,12), default=0.000000000000 )
+    CR_Quantity         = db.Column( db.Numeric(24,12), default=0.000000000000 )
+    CR_ST_at_Cur        = db.Column( db.Numeric(20,12), default=0.000000000000 )
+    Cur_Code            = db.Column( db.String(3) )
+    CIT_Status          = db.Column( db.Integer )
+    CIT_Count           = db.Column( db.Integer, default=0 )
+    Pla_Id              = db.Column( db.Integer, default=0 )
 
 
-    def __init__(self, CR_Date_From=None, CR_Date_To=None, Cus_Id=None, CC_Id=0, CI_Id=1, CU_Id=None, Typ_Code='NUL', CR_Quantity=0.000000000000, CR_ST_at_Cur=0.000000000000, Cur_Code='None', CIT_Status=None, CIT_Count=0, Pla_Id=0):
-        self.CR_Date_From = CR_Date_From
-        self.CR_Date_To   = CR_Date_To
-        self.Cus_Id       = Cus_Id
-        self.CC_Id        = CC_Id
-        self.CI_Id        = CI_Id
-        self.CU_Id        = CU_Id
-        self.Typ_Code     = Typ_Code
-        self.CR_Quantity  = CR_Quantity
-        self.CR_ST_at_Cur = CR_ST_at_Cur
-        self.Cur_Code     = Cur_Code
-        self.CIT_Status   = CIT_Status
-        self.CIT_Count    = CIT_Count
-        self.Pla_Id       = Pla_Id
+    def __init__(self, CR_Date_From=None, CR_Date_To=None, User_Id=None, Cus_Id=0, CC_Id=0, CI_Id=1, CU_Id=0, Typ_Code='NUL', Agregation=0, CR_Quantity_at_Rate=0.000000000000, CR_Quantity=0.000000000000, CR_ST_at_Cur=0.000000000000, Cur_Code='None', CIT_Status=None, CIT_Count=0, Pla_Id=0):
+        self.CR_Date_From        = CR_Date_From
+        self.CR_Date_To          = CR_Date_To
+        self.User_Id             = User_Id
+        self.Cus_Id              = Cus_Id
+        self.CC_Id               = CC_Id
+        self.CI_Id               = CI_Id
+        self.CU_Id               = CU_Id
+        self.Typ_Code            = Typ_Code
+        self.Agregation          = Agregation
+        self.CR_Quantity_at_Rate = CR_Quantity_at_Rate
+        self.CR_Quantity         = CR_Quantity
+        self.CR_ST_at_Cur        = CR_ST_at_Cur
+        self.Cur_Code            = Cur_Code
+        self.CIT_Status          = CIT_Status
+        self.CIT_Count           = CIT_Count
+        self.Pla_Id              = Pla_Id
 
     def __repr__(self):
-        return "<Statistics( CR_Date_From='%s', CR_Date_To='%s', Cus_Id='%s', CC_Id='%s', CI_Id='%s', CU_Id='%s', Typ_Code='%s', CR_Quantity='%s', CR_ST_at_Cur='%s', Cur_Code='%s', CIT_Status='%s', CIT_Count='%s', Pla_Id='%s')>" % \
-                ( self.CR_Date_From, self.CR_Date_To, self.Cus_Id, self.CC_Id, self.CI_Id, self.CU_Id, self.Typ_Code, self.CR_Quantity, self.CR_ST_at_Cur, self.Cur_Code, self.CIT_Status, self.CIT_Count, self.Pla_Id)
+        return "<Statistics( CR_Date_From='%s', CR_Date_To='%s', User_Id='%s', Cus_Id='%s', CC_Id='%s', CI_Id='%s', CU_Id='%s', Typ_Code='%s', Agregation='%s', CR_Quantity_at_Rate='%s', CR_Quantity='%s', CR_ST_at_Cur='%s', Cur_Code='%s', CIT_Status='%s', CIT_Count='%s', Pla_Id='%s')>" % \
+                ( self.CR_Date_From, self.CR_Date_To, self.User_Id, self.Cus_Id, self.CC_Id, self.CI_Id, self.CU_Id, self.Typ_Code, self.Agregation, self.CR_Quantity_at_Rate, self.CR_Quantity, self.CR_ST_at_Cur, self.Cur_Code, self.CIT_Status, self.CIT_Count, self.Pla_Id)
 
   statistics_Class.__name__ = 'statistics_%s'%(table_name_suffix)
   return statistics_Class
@@ -1905,7 +1835,7 @@ def get_statistics(table_name_suffix):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 
 # gen_model_flask.py:117 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_st_use_per_cu.py
@@ -2008,7 +1938,7 @@ class st_use_per_cu(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 
 # gen_model_flask.py:117 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_st_use_per_type.py
@@ -2060,16 +1990,16 @@ class st_use_per_type(db.Model,Serializer):
     Year     = db.Column( db.Integer, primary_key=True )
     Month    = db.Column( db.Integer, primary_key=True )
     Count    = db.Column( db.Integer, default=0 )
-    Mean     = db.Column( db.Numeric(20,12), default=0.000000000000 )
-    Variance = db.Column( db.Numeric(20,12), default=0.000000000000 )
-    StdDev   = db.Column( db.Numeric(20,12), default=0.000000000000 )
-    Min      = db.Column( db.Numeric(20,12), default=0.000000000000 )
-    Max      = db.Column( db.Numeric(20,12), default=0.000000000000 )
+    Mean     = db.Column( db.Numeric(20,12) )
+    Variance = db.Column( db.Numeric(20,12) )
+    StdDev   = db.Column( db.Numeric(20,12) )
+    Min      = db.Column( db.Numeric(20,12) )
+    Max      = db.Column( db.Numeric(20,12) )
 
 
     # looking for include file: /home/gvalera/GIT/EG-Suite-Tools/Collector/code/src/include/models/flask_st_use_per_type_properties.py
     # file: /home/gvalera/GIT/EG-Suite-Tools/Collector/code/src/include/models/flask_st_use_per_type_properties.py not found
-    def __init__(self, Typ_Code='None', Cus_Id=1, Pla_Id=1, CC_Id=1, CI_Id=1, Year=None, Month=None, Count=0, Mean=0.000000000000, Variance=0.000000000000, StdDev=0.000000000000, Min=0.000000000000, Max=0.000000000000):
+    def __init__(self, Typ_Code='None', Cus_Id=1, Pla_Id=1, CC_Id=1, CI_Id=1, Year=None, Month=None, Count=0, Mean=None, Variance=None, StdDev=None, Min=None, Max=None):
         self.Typ_Code = Typ_Code
         self.Cus_Id   = Cus_Id
         self.Pla_Id   = Pla_Id
@@ -2091,137 +2021,7 @@ class st_use_per_type(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2020-10-18 20:12:04
-# =============================================================================
-
-# gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_trace_202003.py
-class trace_202003(db.Model,Serializer):
-    __tablename__ = 'Trace_202003'
-
-    def set_shard(suffix=None):
-       if suffix is not None:
-           name='Trace_202003_{suffix}'.format(suffix=suffix)
-           __class__.__tablename__  = name
-           __class__.__table__.name = name
-       return __class__.__tablename__
-
-    ID   = db.Column( db.Integer, primary_key=True, autoincrement=True )
-    LINE = db.Column( db.String(128) )
-
-
-    # looking for include file: /home/gvalera/GIT/EG-Suite-Tools/Collector/code/src/include/models/flask_trace_202003_properties.py
-    # file: /home/gvalera/GIT/EG-Suite-Tools/Collector/code/src/include/models/flask_trace_202003_properties.py not found
-    def __init__(self, ID=0, LINE='None'):
-        self.ID   = ID
-        self.LINE = LINE
-
-    def __repr__(self):
-        return "<Trace_202003( ID='%s', LINE='%s')>" % \
-                ( self.ID, self.LINE)
-
-# =============================================================================
-# Auto-Generated code. do not modify
-# (c) Sertechno 2018
-# GLVH @ 2020-10-18 20:12:04
-# =============================================================================
-
-# gen_model_flask.py:670 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_trace_202003.py
-def get_trace_202003(table_name_suffix):
-  # gen_model_flask.py:678 =>/home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_trace_202003.py
-  class trace_202003_Class(db.Model,Serializer):
-    __tablename__ = 'Trace_202003_%s'%(table_name_suffix)
-
-    def set_shard(suffix=None):
-        if suffix is not None:
-           name='Trace_202003_{suffix}'.format(suffix=suffix)
-           __class__.__tablename__  = name
-           __class__.__table__.name = name
-        return __class__.__tablename__
-
-    ID   = db.Column( db.Integer, primary_key=True, autoincrement=True )
-    LINE = db.Column( db.String(128) )
-
-
-    def __init__(self, ID=0, LINE='None'):
-        self.ID   = ID
-        self.LINE = LINE
-
-    def __repr__(self):
-        return "<Trace_202003( ID='%s', LINE='%s')>" % \
-                ( self.ID, self.LINE)
-
-  trace_202003_Class.__name__ = 'trace_202003_%s'%(table_name_suffix)
-  return trace_202003_Class
-  # gen_model_flask.py 801 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_trace_202003.py
-# =============================================================================
-# Auto-Generated code. do not modify
-# (c) Sertechno 2018
-# GLVH @ 2020-10-18 20:12:04
-# =============================================================================
-
-# gen_model_flask.py:115 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_trace_202101.py
-class trace_202101(db.Model,Serializer):
-    __tablename__ = 'Trace_202101'
-
-    def set_shard(suffix=None):
-       if suffix is not None:
-           name='Trace_202101_{suffix}'.format(suffix=suffix)
-           __class__.__tablename__  = name
-           __class__.__table__.name = name
-       return __class__.__tablename__
-
-    ID   = db.Column( db.Integer, primary_key=True, autoincrement=True )
-    LINE = db.Column( db.String(128) )
-
-
-    # looking for include file: /home/gvalera/GIT/EG-Suite-Tools/Collector/code/src/include/models/flask_trace_202101_properties.py
-    # file: /home/gvalera/GIT/EG-Suite-Tools/Collector/code/src/include/models/flask_trace_202101_properties.py not found
-    def __init__(self, ID=0, LINE='None'):
-        self.ID   = ID
-        self.LINE = LINE
-
-    def __repr__(self):
-        return "<Trace_202101( ID='%s', LINE='%s')>" % \
-                ( self.ID, self.LINE)
-
-# =============================================================================
-# Auto-Generated code. do not modify
-# (c) Sertechno 2018
-# GLVH @ 2020-10-18 20:12:04
-# =============================================================================
-
-# gen_model_flask.py:670 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_trace_202101.py
-def get_trace_202101(table_name_suffix):
-  # gen_model_flask.py:678 =>/home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_trace_202101.py
-  class trace_202101_Class(db.Model,Serializer):
-    __tablename__ = 'Trace_202101_%s'%(table_name_suffix)
-
-    def set_shard(suffix=None):
-        if suffix is not None:
-           name='Trace_202101_{suffix}'.format(suffix=suffix)
-           __class__.__tablename__  = name
-           __class__.__table__.name = name
-        return __class__.__tablename__
-
-    ID   = db.Column( db.Integer, primary_key=True, autoincrement=True )
-    LINE = db.Column( db.String(128) )
-
-
-    def __init__(self, ID=0, LINE='None'):
-        self.ID   = ID
-        self.LINE = LINE
-
-    def __repr__(self):
-        return "<Trace_202101( ID='%s', LINE='%s')>" % \
-                ( self.ID, self.LINE)
-
-  trace_202101_Class.__name__ = 'trace_202101_%s'%(table_name_suffix)
-  return trace_202101_Class
-  # gen_model_flask.py 801 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_trace_202101.py
-# =============================================================================
-# Auto-Generated code. do not modify
-# (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 
 # gen_model_flask.py:117 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_trace.py
@@ -2282,7 +2082,7 @@ class trace(db.Model,Serializer):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 
 # gen_model_flask.py:117 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_user_resumes.py
@@ -2332,10 +2132,10 @@ class user_resumes(db.Model,Serializer):
     CR_Date_To             = db.Column( db.Date, primary_key=True )
     CIT_Status             = db.Column( db.Integer, primary_key=True )
     Cur_Code               = db.Column( db.String(3), primary_key=True )
-    CU_Id                  = db.Column( db.Integer, primary_key=True )
     CIT_Count              = db.Column( db.Integer )
     CIT_Quantity           = db.Column( db.Numeric(20,12) )
     CIT_Generation         = db.Column( db.Integer, default=1 )
+    CU_Id                  = db.Column( db.Integer, primary_key=True )
     CI_CC_Id               = db.Column( db.Integer )
     CU_Operation           = db.Column( db.String(10) )
     Typ_Code               = db.Column( db.String(10) )
@@ -2368,17 +2168,17 @@ class user_resumes(db.Model,Serializer):
 
     # looking for include file: /home/gvalera/GIT/EG-Suite-Tools/Collector/code/src/include/models/flask_user_resumes_properties.py
     # file: /home/gvalera/GIT/EG-Suite-Tools/Collector/code/src/include/models/flask_user_resumes_properties.py not found
-    def __init__(self, User_Id=None, Cus_Id=None, CR_Date_From=None, CR_Date_To=None, CIT_Status=None, Cur_Code='None', CU_Id=None, CIT_Count=None, CIT_Quantity=None, CIT_Generation=1, CI_CC_Id=None, CU_Operation='None', Typ_Code='None', CC_Cur_Code='None', CI_Id=None, Rat_Id=None, Rat_Price=None, Rat_MU_Code='None', Rat_Cur_Code='None', Rat_Period=None, Rat_Hourly=None, Rat_Daily=None, Rat_Monthly=None, CR_Quantity=None, CR_Quantity_at_Rate=None, CC_XR=None, CR_Cur_XR=None, CR_ST_at_Rate_Cur=None, CR_ST_at_CC_Cur=None, CR_ST_at_Cur=None, Cus_Name='None', CI_Name='None', CU_Description='None', CC_Description='None', Rat_Period_Description='None', CC_Code='None', Pla_Id=None, Pla_Name='None'):
+    def __init__(self, User_Id=None, Cus_Id=None, CR_Date_From=None, CR_Date_To=None, CIT_Status=None, Cur_Code='None', CIT_Count=None, CIT_Quantity=None, CIT_Generation=1, CU_Id=None, CI_CC_Id=None, CU_Operation='None', Typ_Code='None', CC_Cur_Code='None', CI_Id=None, Rat_Id=None, Rat_Price=None, Rat_MU_Code='None', Rat_Cur_Code='None', Rat_Period=None, Rat_Hourly=None, Rat_Daily=None, Rat_Monthly=None, CR_Quantity=None, CR_Quantity_at_Rate=None, CC_XR=None, CR_Cur_XR=None, CR_ST_at_Rate_Cur=None, CR_ST_at_CC_Cur=None, CR_ST_at_Cur=None, Cus_Name='None', CI_Name='None', CU_Description='None', CC_Description='None', Rat_Period_Description='None', CC_Code='None', Pla_Id=None, Pla_Name='None'):
         self.User_Id                = User_Id
         self.Cus_Id                 = Cus_Id
         self.CR_Date_From           = CR_Date_From
         self.CR_Date_To             = CR_Date_To
         self.CIT_Status             = CIT_Status
         self.Cur_Code               = Cur_Code
-        self.CU_Id                  = CU_Id
         self.CIT_Count              = CIT_Count
         self.CIT_Quantity           = CIT_Quantity
         self.CIT_Generation         = CIT_Generation
+        self.CU_Id                  = CU_Id
         self.CI_CC_Id               = CI_CC_Id
         self.CU_Operation           = CU_Operation
         self.Typ_Code               = Typ_Code
@@ -2409,13 +2209,13 @@ class user_resumes(db.Model,Serializer):
         self.Pla_Name               = Pla_Name
 
     def __repr__(self):
-        return "<User_Resumes( User_Id='%s', Cus_Id='%s', CR_Date_From='%s', CR_Date_To='%s', CIT_Status='%s', Cur_Code='%s', CU_Id='%s', CIT_Count='%s', CIT_Quantity='%s', CIT_Generation='%s', CI_CC_Id='%s', CU_Operation='%s', Typ_Code='%s', CC_Cur_Code='%s', CI_Id='%s', Rat_Id='%s', Rat_Price='%s', Rat_MU_Code='%s', Rat_Cur_Code='%s', Rat_Period='%s', Rat_Hourly='%s', Rat_Daily='%s', Rat_Monthly='%s', CR_Quantity='%s', CR_Quantity_at_Rate='%s', CC_XR='%s', CR_Cur_XR='%s', CR_ST_at_Rate_Cur='%s', CR_ST_at_CC_Cur='%s', CR_ST_at_Cur='%s', Cus_Name='%s', CI_Name='%s', CU_Description='%s', CC_Description='%s', Rat_Period_Description='%s', CC_Code='%s', Pla_Id='%s', Pla_Name='%s')>" % \
-                ( self.User_Id, self.Cus_Id, self.CR_Date_From, self.CR_Date_To, self.CIT_Status, self.Cur_Code, self.CU_Id, self.CIT_Count, self.CIT_Quantity, self.CIT_Generation, self.CI_CC_Id, self.CU_Operation, self.Typ_Code, self.CC_Cur_Code, self.CI_Id, self.Rat_Id, self.Rat_Price, self.Rat_MU_Code, self.Rat_Cur_Code, self.Rat_Period, self.Rat_Hourly, self.Rat_Daily, self.Rat_Monthly, self.CR_Quantity, self.CR_Quantity_at_Rate, self.CC_XR, self.CR_Cur_XR, self.CR_ST_at_Rate_Cur, self.CR_ST_at_CC_Cur, self.CR_ST_at_Cur, self.Cus_Name, self.CI_Name, self.CU_Description, self.CC_Description, self.Rat_Period_Description, self.CC_Code, self.Pla_Id, self.Pla_Name)
+        return "<User_Resumes( User_Id='%s', Cus_Id='%s', CR_Date_From='%s', CR_Date_To='%s', CIT_Status='%s', Cur_Code='%s', CIT_Count='%s', CIT_Quantity='%s', CIT_Generation='%s', CU_Id='%s', CI_CC_Id='%s', CU_Operation='%s', Typ_Code='%s', CC_Cur_Code='%s', CI_Id='%s', Rat_Id='%s', Rat_Price='%s', Rat_MU_Code='%s', Rat_Cur_Code='%s', Rat_Period='%s', Rat_Hourly='%s', Rat_Daily='%s', Rat_Monthly='%s', CR_Quantity='%s', CR_Quantity_at_Rate='%s', CC_XR='%s', CR_Cur_XR='%s', CR_ST_at_Rate_Cur='%s', CR_ST_at_CC_Cur='%s', CR_ST_at_Cur='%s', Cus_Name='%s', CI_Name='%s', CU_Description='%s', CC_Description='%s', Rat_Period_Description='%s', CC_Code='%s', Pla_Id='%s', Pla_Name='%s')>" % \
+                ( self.User_Id, self.Cus_Id, self.CR_Date_From, self.CR_Date_To, self.CIT_Status, self.Cur_Code, self.CIT_Count, self.CIT_Quantity, self.CIT_Generation, self.CU_Id, self.CI_CC_Id, self.CU_Operation, self.Typ_Code, self.CC_Cur_Code, self.CI_Id, self.Rat_Id, self.Rat_Price, self.Rat_MU_Code, self.Rat_Cur_Code, self.Rat_Period, self.Rat_Hourly, self.Rat_Daily, self.Rat_Monthly, self.CR_Quantity, self.CR_Quantity_at_Rate, self.CC_XR, self.CR_Cur_XR, self.CR_ST_at_Rate_Cur, self.CR_ST_at_CC_Cur, self.CR_ST_at_Cur, self.Cus_Name, self.CI_Name, self.CU_Description, self.CC_Description, self.Rat_Period_Description, self.CC_Code, self.Pla_Id, self.Pla_Name)
 
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 
 # gen_model_flask.py:117 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/flask_users.py

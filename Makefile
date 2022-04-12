@@ -51,7 +51,7 @@ collector:	${COLLECTOR_CODE_OUTPUT}/models.py ${COLLECTOR_CODE_OUTPUT}/orm_model
 	@echo "MAIN_FOLDER                   =" ${MAIN_FOLDER}
 	@echo "TEMPLATES_FOLDER              =" ${TEMPLATES_FOLDER}
 	@echo "SUITE_TOOLS_FOLDER            =" ${SUITE_TOOLS_FOLDER}
-	@echo "SUITE_APP_FOLDER              =" ${SUITE_APP_FOLDER}
+	@echo "SUITE_APP_FOLDER              =" ${SUITE_APP_FOLDER}q
 	@echo "SUITE_CODE_FOLDER             =" ${SUITE_CODE_FOLDER}
 	@echo "SUITE_AUTO_FOLDER             =" ${SUITE_AUTO_FOLDER}
 	@echo "SUITE_AUTO_MODELS             =" ${SUITE_AUTO_MODELS}
@@ -129,6 +129,8 @@ collector:	${COLLECTOR_CODE_OUTPUT}/models.py ${COLLECTOR_CODE_OUTPUT}/orm_model
 	cp  ${COLLECTOR_CODE_SRC}/*.md				${COLLECTOR_FOLDER}/.
 	cp  ${COLLECTOR_CODE_SRC}/app/*.py			${COLLECTOR_FOLDER}/app/.
 	cp  ${COLLECTOR_CODE_SRC}/app/plugins/*.py		${COLLECTOR_FOLDER}/app/plugins/.
+	cp  ${COLLECTOR_CODE_SRC}/app/plugins/*.html	${COLLECTOR_FOLDER}/app/plugins/.
+	cp  ${COLLECTOR_CODE_SRC}/app/plugins/*.html	${COLLECTOR_FOLDER}/app/templates/.
 	cp  ${COLLECTOR_CODE_SRC}/app/auth/*.py			${COLLECTOR_FOLDER}/app/auth/.
 	cp  ${COLLECTOR_CODE_SRC}/app/main/*.py			${COLLECTOR_FOLDER}/app/main/.
 	cp  ${COLLECTOR_CODE_SRC}/app/main/plugins_code/*.py	${COLLECTOR_FOLDER}/app/main/plugins_code/.

@@ -1,0 +1,1 @@
+/home/gvalera/GIT/EG-Collector-Tools/code/src/functions/statistics/view_statistics.py

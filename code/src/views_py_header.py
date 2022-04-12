@@ -11,7 +11,6 @@ from flask          import current_app
 from flask          import flash
 from flask          import request
 from flask          import Markup
-from flask          import current_app
 # GV from flask          import current_process
 from flask_login    import login_required
 from flask_login    import current_user
@@ -64,8 +63,11 @@ DAYS={
     'friday':       gettext('friday'),
     'saturday':     gettext('saturday'),
 }
+# hay que ver como ajustar procedimiento para incluir simbolos desde 
+# plugins
 TRANSLATION_SYMBOLS=[
     gettext('Adds'),
+    gettext('Admin Adds'),
     gettext('Queries'),
     gettext('Reports'),
     gettext('AAAA - Display Period Usage'),
@@ -228,7 +230,7 @@ def plugin(name):
     print(f"will execute plgin.execute ")
     result = plgin.execute(**kwargs)
     if plgin.format == 'html_body':
-        result=render_template('plugin.html',body=result)
+        result=render_template('plugin.html',body=result,collectordata=collectordata)
     return result
 
 # Main plugins reporter
@@ -241,11 +243,6 @@ def plugins():
         plugin=pim.plugins[name]
         output+=f"{plugin.get('name')} {plugin.get('type')} {plugin.get('scope')} {plugin.get('instance').title}<br>"
     return output
-
-
-
-
-
 
 
 # GV Flask Caching avoider
@@ -273,7 +270,7 @@ def get_collectordata():
     collectordata.update({"COLLECTOR_PERIOD":get_period_data(current_user.id,db.engine,Interface)})
     collectordata.update({"CONFIG":current_app.config})
     active_period = collectordata['COLLECTOR_PERIOD']['active']
-    dt = datetime.strptime(active_period,"%Y%m")
+    dt = datetime.datetime.strptime(active_period,"%Y%m")
     start,end = Get_Period(dt,PERIOD_MONTH)
     collectordata['COLLECTOR_PERIOD'].update({'start':start,'end':end})
     logger.debug(f"{this()}: dt: {dt} active_period={active_period}") 
@@ -309,25 +306,15 @@ def get_collectordata():
     logger.debug(f"views_py_header: get_collectordata(): COLLECTOR_CONFIG_FILE = {current_app.config.get('COLLECTOR_CONFIG_FILE')}")
     config.read(current_app.config.get('COLLECTOR_CONFIG_FILE'))
     if current_user.role.id in [ROLE_CUSTOMER,ROLE_ADMINISTRATOR,ROLE_GOD]:
+        collectordata.update({'customer_options':{'Adds':{'options':[]}}})
         if 'Customer_Options' in config.sections():
-            collectordata.update({
-                'customer_options':{
-                    "Adds":{
-                        #"roles":config.get('Customer_Options','roles').split(','),
-                        "options":json.loads(config.get('Customer_Options','options')),
-                        },
-                    }
-                })
+            collectordata['customer_options']['Adds']['options']+=json.loads(config.get('Customer_Options','options'))
+        collectordata['customer_options']['Adds']['options']+=current_app.config.get('CUSTOMER_OPTIONS',[])
     if current_user.role.id in [ROLE_ADMINISTRATOR,ROLE_GOD]:
+        collectordata.update({'customer_options':{'Admin Adds':{'options':[]}}})
         if 'Administrator_Options' in config.sections():
-            collectordata.update({
-                'administrator_options':{
-                    "Admin adds":{
-                        #"roles":config.get('Administrator_Options','roles').split(','),
-                        "options":json.loads(config.get('Administrator_Options','options')),
-                        },
-                    }
-                })
+            collectordata['customer_options']['Admin Adds']['options']+=json.loads(config.get('Administrator_Options','options'))
+        collectordata['customer_options']['Admin Adds']['options']+=current_app.config.get('ADMINISTRATOR_OPTIONS',[])
         
     logger.debug(f"views_py_header: get_collectordata(): collectordata = {collectordata}")
     

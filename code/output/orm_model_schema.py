@@ -1,7 +1,7 @@
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 
 # gen_model_flask.py:67 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/ORM_model_schema.py
@@ -338,12 +338,15 @@ def Create_Tables(engine):
                 'Statistics',Meta,
                 Column( 'CR_Date_From',Date, primary_key=True ),
                 Column( 'CR_Date_To',Date, primary_key=True ),
+                Column( 'User_Id',Integer, primary_key=True ),
                 Column( 'Cus_Id',Integer, primary_key=True ),
                 Column( 'CC_Id',Integer, primary_key=True ),
                 Column( 'CI_Id',Integer, primary_key=True ),
                 Column( 'CU_Id',Integer, primary_key=True ),
-                Column( 'Typ_Code',String(10) ),
-                Column( 'CR_Quantity',Numeric(20,12) ),
+                Column( 'Typ_Code',String(10), primary_key=True ),
+                Column( 'Agregation',Integer, primary_key=True ),
+                Column( 'CR_Quantity_at_Rate',Numeric(24,12) ),
+                Column( 'CR_Quantity',Numeric(24,12) ),
                 Column( 'CR_ST_at_Cur',Numeric(20,12) ),
                 Column( 'Cur_Code',String(3) ),
                 Column( 'CIT_Status',Integer ),
@@ -369,10 +372,10 @@ def Create_Tables(engine):
                 Column( 'CR_Date_To',Date, primary_key=True ),
                 Column( 'CIT_Status',Integer, primary_key=True ),
                 Column( 'Cur_Code',String(3), primary_key=True ),
-                Column( 'CU_Id',Integer, primary_key=True ),
                 Column( 'CIT_Count',Integer ),
                 Column( 'CIT_Quantity',Numeric(20,12) ),
                 Column( 'CIT_Generation',Integer ),
+                Column( 'CU_Id',Integer, primary_key=True ),
                 Column( 'CI_CC_Id',Integer ),
                 Column( 'CU_Operation',String(10) ),
                 Column( 'Typ_Code',String(10) ),

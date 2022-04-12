@@ -42,6 +42,7 @@ class Instance(Plugin):
     short_description = 'English short description'
     long_description  = 'English long description for Plugin 001'
     format = 'html_body'
+    scope = 'admin'
 
     def execute(self,**kwargs):
         print("-----")

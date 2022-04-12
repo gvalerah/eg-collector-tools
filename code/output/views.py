@@ -11,7 +11,6 @@ from flask          import current_app
 from flask          import flash
 from flask          import request
 from flask          import Markup
-from flask          import current_app
 # GV from flask          import current_process
 from flask_login    import login_required
 from flask_login    import current_user
@@ -64,8 +63,11 @@ DAYS={
     'friday':       gettext('friday'),
     'saturday':     gettext('saturday'),
 }
+# hay que ver como ajustar procedimiento para incluir simbolos desde 
+# plugins
 TRANSLATION_SYMBOLS=[
     gettext('Adds'),
+    gettext('Admin Adds'),
     gettext('Queries'),
     gettext('Reports'),
     gettext('AAAA - Display Period Usage'),
@@ -228,7 +230,7 @@ def plugin(name):
     print(f"will execute plgin.execute ")
     result = plgin.execute(**kwargs)
     if plgin.format == 'html_body':
-        result=render_template('plugin.html',body=result)
+        result=render_template('plugin.html',body=result,collectordata=collectordata)
     return result
 
 # Main plugins reporter
@@ -241,11 +243,6 @@ def plugins():
         plugin=pim.plugins[name]
         output+=f"{plugin.get('name')} {plugin.get('type')} {plugin.get('scope')} {plugin.get('instance').title}<br>"
     return output
-
-
-
-
-
 
 
 # GV Flask Caching avoider
@@ -273,7 +270,7 @@ def get_collectordata():
     collectordata.update({"COLLECTOR_PERIOD":get_period_data(current_user.id,db.engine,Interface)})
     collectordata.update({"CONFIG":current_app.config})
     active_period = collectordata['COLLECTOR_PERIOD']['active']
-    dt = datetime.strptime(active_period,"%Y%m")
+    dt = datetime.datetime.strptime(active_period,"%Y%m")
     start,end = Get_Period(dt,PERIOD_MONTH)
     collectordata['COLLECTOR_PERIOD'].update({'start':start,'end':end})
     logger.debug(f"{this()}: dt: {dt} active_period={active_period}") 
@@ -309,25 +306,15 @@ def get_collectordata():
     logger.debug(f"views_py_header: get_collectordata(): COLLECTOR_CONFIG_FILE = {current_app.config.get('COLLECTOR_CONFIG_FILE')}")
     config.read(current_app.config.get('COLLECTOR_CONFIG_FILE'))
     if current_user.role.id in [ROLE_CUSTOMER,ROLE_ADMINISTRATOR,ROLE_GOD]:
+        collectordata.update({'customer_options':{'Adds':{'options':[]}}})
         if 'Customer_Options' in config.sections():
-            collectordata.update({
-                'customer_options':{
-                    "Adds":{
-                        #"roles":config.get('Customer_Options','roles').split(','),
-                        "options":json.loads(config.get('Customer_Options','options')),
-                        },
-                    }
-                })
+            collectordata['customer_options']['Adds']['options']+=json.loads(config.get('Customer_Options','options'))
+        collectordata['customer_options']['Adds']['options']+=current_app.config.get('CUSTOMER_OPTIONS',[])
     if current_user.role.id in [ROLE_ADMINISTRATOR,ROLE_GOD]:
+        collectordata.update({'customer_options':{'Admin Adds':{'options':[]}}})
         if 'Administrator_Options' in config.sections():
-            collectordata.update({
-                'administrator_options':{
-                    "Admin adds":{
-                        #"roles":config.get('Administrator_Options','roles').split(','),
-                        "options":json.loads(config.get('Administrator_Options','options')),
-                        },
-                    }
-                })
+            collectordata['customer_options']['Admin Adds']['options']+=json.loads(config.get('Administrator_Options','options'))
+        collectordata['customer_options']['Admin Adds']['options']+=current_app.config.get('ADMINISTRATOR_OPTIONS',[])
         
     logger.debug(f"views_py_header: get_collectordata(): collectordata = {collectordata}")
     
@@ -340,7 +327,7 @@ def get_collectordata():
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 # gen_models_code.py:445 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/includes/models_py_imports.py
 from emtec.collector.db.flask_models import cit_generation
@@ -401,16 +388,148 @@ from emtec.collector.forms import frm_User,frm_User_delete
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 # gen_views.py:32 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/views/view_charge_items.py
+# ======================================================================
+#  Auto-Generated code. Do not modify 
+#  (C) Sertechno/Emtec Group (2018,2019,2020)
+#  GLVH @ 2022-04-12 18:46:27.979521
+# ======================================================================        
+# gen_views_form.html:AG 2022-04-12 18:46:27.979535
+@main.route('/forms/Charge_Items', methods=['GET', 'POST'])
+@login_required
+
+def forms_Charge_Items():
+    """ Form handling function for table Charge_Items """
+    logger.debug('forms_Charge_Items(): Enter')
+    
+    # Shardening Code goes her if needed
+    collectordata={}
+    collectordata.update({"COLLECTOR_PERIOD":get_period_data(current_user.id,db.engine,Interface)})
+    collectordata.update({"CONFIG":current_app.config})
+    suffix = collectordata['COLLECTOR_PERIOD']['active']
+    table_name='Charge_Items'
+    class_name='charge_item'
+    template_name='Charge_Items'
+    sharding=False
+    if 'COLLECTOR_CIT_SHARDING' in current_app.config: 
+        sharding=current_app.config['COLLECTOR_CIT_SHARDING']
+    if sharding:
+        charge_item.set_shard(suffix,db.engine)
+        flash(f"{gettext('Using shardened table: %s')}"%charge_item.__table__.name)
+    CU_Id  =  request.args.get('CU_Id',0,type=int)
+    CIT_DateTime  =  request.args.get('CIT_DateTime',0,type=int)
+    parent_key   = request.args.get('parent_key',None,type=str)
+    parent_value = request.args.get('parent_value',0,type=int)
+    # Ensures DB Data is commited prior main query
+    try:
+        db.session.commit()
+    except:
+        db.session.rollback()
+    row =  charge_item.query.filter(charge_item.CU_Id == CU_Id,charge_item.CIT_DateTime == CIT_DateTime).first()
+    if row is None:
+        row=charge_item()
+        session['is_new_row']=True
+    session['data'] =  {  'CU_Id':row.CU_Id, 'CIT_Date':row.CIT_Date, 'CIT_Time':str(row.CIT_Time), 'CIT_Quantity':row.CIT_Quantity, 'CIT_Status':row.CIT_Status, 'CIT_Is_Active':row.CIT_Is_Active, 'CIT_DateTime':row.CIT_DateTime }
+    
+    if parent_key is not None:
+       session['data'][parent_key] = parent_value
+       print('parent_key  = ',parent_key)
+       print('parent_value= ',parent_value)    
+       print('session["data"][parent_key] = %s'%(parent_key,session['data'][parent_key]))
+    
+    form = frm_charge_item()
+    
+    if form.has_FKs:
+        form.CU_Id.choices = db.session.query(charge_unit.CU_Id,charge_unit.CU_Description).order_by(charge_unit.CU_Description).all()
+        form.CIT_Status.choices = db.session.query(cit_status.CIT_Status,cit_status.Value).order_by(cit_status.Value).all()
+
+    
+    # Actual Form activation here
+    if form.validate_on_submit():
+        # Code for SAVE option -----------------------------------------
+        if form.submit_Save.data and current_user.role_id > 1:
+            row.CU_Id = form.CU_Id.data
+            row.CIT_Date = form.CIT_Date.data
+            row.CIT_Time = form.CIT_Time.data
+            row.CIT_Quantity = form.CIT_Quantity.data
+            row.CIT_Status = form.CIT_Status.data
+            row.CIT_Is_Active = form.CIT_Is_Active.data
+            
+            try:
+               session['new_row']=str(row)
+               db.session.flush()
+               db.session.add(row)
+               db.session.commit()
+               db.session.flush()
+               if session['is_new_row']==True:
+                   logger.audit ( '%s:NEW:%s' % (current_user.username,session['new_row'] ) )
+                   flash('New Charge Item created OK')
+               else:
+                   logger.audit ( '%s:OLD:%s' % (current_user.username,session['prev_row']) )
+                   logger.audit ( '%s:UPD:%s' % (current_user.username,session['new_row'] ) )    
+                   message=Markup('<b>Charge Item CU_Id,CIT_DateTime saved OK</b>')
+                   flash(message)
+               db.session.flush()
+            except Exception as e:
+               db.session.rollback()
+               db.session.flush()
+               message=Markup('ERROR saving Charge Item record : %s'%(e))
+               flash(message)
+            return redirect(url_for('.select_Charge_Items_query'))
+        # --------------------------------------------------------------
+        # Code for NEW option
+        # GV 20190109 f.write(        "        elif   form.submit_New.data:\n")
+        elif   form.submit_New.data and current_user.role_id>1:
+            #print('New Data Here ...')
+            session['is_new_row']=True
+            db.session.flush()
+            row=charge_item()
+    
+            return redirect(url_for('.forms_Charge_Items'))    
+    
+        # Code for CANCEL option 
+        elif   form.submit_Cancel.data:
+            #print('Cancel Data Here ... does nothing')
+            message=Markup('Charge Item Record modifications discarded ...')
+            flash(message)
+        # Code for ANY OTHER option should never get here
+        else:
+            #print('form validated but not submited ???')
+            message=Markup("<b>Charge Item data modifications not allowed for user '%s'. Please contact EG Suite's Administrator ...</b>"%(current_user.username))    
+            flash(message)
+    
+            return redirect(url_for('.forms_'))    
+    
+    
+    form.CU_Id.data = row.CU_Id
+    form.CIT_Date.data = row.CIT_Date
+    form.CIT_Time.data = row.CIT_Time
+    form.CIT_Quantity.data = row.CIT_Quantity
+    form.CIT_Status.data = row.CIT_Status
+    form.CIT_Is_Active.data = row.CIT_Is_Active
+    session['prev_row'] = str(row)
+    session['is_new_row'] = False
+    logger.debug('forms_Charge_Items(): Exit')
+    # Generates pagination data here
+    P=[]
+    # Tab Relations = []
+    
+    # Generation of pagination data completed
+    collectordata={}
+    collectordata.update({"COLLECTOR_PERIOD":get_period_data(current_user.id,db.engine,Interface)})
+    return render_template('charge_items.html', form=form, row=row, P=P,collectordata=collectordata)    
+# ======================================================================
+
+
 
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:49.906387
+#  GLVH @ 2022-04-12 18:46:27.987263
 # ======================================================================        
-# gen_views_delete.html:AG 2022-04-06 14:30:49.906401
+# gen_views_delete.html:AG 2022-04-12 18:46:27.987275
 @main.route('/forms/Charge_Items_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -472,12 +591,298 @@ def forms_Charge_Items_delete():
     return render_template('charge_items_delete.html', form=form, data=session.get('data'),row=row,collectordata=collectordata)
 #===============================================================================
 
+# table_name: Charge_Items
+# class_name: charge_item
+# is shardened: True
+# current_app: 
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:49.954248
+#  GLVH @ 2022-04-12 18:46:28.009445
 # ======================================================================
-# gen_views_api.html:AG 2022-04-06 14:30:49.954262
+
+# gen_views_select_query.html:AG 2022-04-12 18:46:28.009462        
+@main.route('/select/Charge_Items_Query', methods=['GET','POST'])
+@login_required
+@admin_required
+def select_Charge_Items_query():
+    """ Select rows handling function for table 'Charge_Items' """
+    logger.debug('select_Charge_Items_query(): Enter')
+    #chk_c000001(filename=os.path.join(current_app.root_path, '.c000001'),request=request,db=db,logger=logger)
+    # Shardening Code goes her if needed
+    collectordata={}
+    collectordata.update({"COLLECTOR_PERIOD":get_period_data(current_user.id,db.engine,Interface)})
+    collectordata.update({"CONFIG":current_app.config})
+    suffix = collectordata['COLLECTOR_PERIOD']['active']
+    table_name='Charge_Items'
+    class_name='charge_item'
+    template_name='Charge_Items'
+    sharding=False
+
+    if 'COLLECTOR_CIT_SHARDING' in current_app.config: 
+        sharding=current_app.config['COLLECTOR_CIT_SHARDING']
+    if sharding:
+        charge_item.set_shard(suffix,db.engine)
+        flash(f"{gettext('Using shardened table: %s')}"%charge_item.__table__.name) 
+
+
+    logger.debug("-----------------------------------------------------------")
+    logger.debug("%s: template_name            = %s",__name__,template_name)
+
+    logger.debug("%s: COLLECTOR_CIT_SHARDING   = %s",__name__,current_app.config.get('COLLECTOR_CIT_SHARDING'))
+    logger.debug("%s: sharding                 = %s",__name__,sharding)
+    logger.debug("%s: suffix                   = %s",__name__,suffix)
+    logger.debug("%s: table_name               = %s",__name__,table_name)
+    logger.debug("%s: class_name               = %s",__name__,class_name)
+    logger.debug("%s: class_name              = %s",__name__,class_name)
+
+    logger.debug("-----------------------------------------------------------")    
+        
+    # Get parameters from URL call
+    ia       =  request.args.get('ia',     None,type=str)
+    if ia is not None:
+        ia=ia.split(',')
+        if ia[0]=='ORDER':
+            #set_query_option(engine=db.engine,Interface=Interface,User_Id=current_user.id,Table_name='charge_item',Option_Type=OPTION_ORDER_BY,Argument_1=ia[1],Argument_2=ia[2])
+            set_query_option(engine=db.engine,Interface=Interface,User_Id=current_user.id,Table_name=class_name,Option_Type=OPTION_ORDER_BY,Argument_1=ia[1],Argument_2=ia[2])
+        elif ia[0]=='GROUP':
+            #set_query_option(engine=db.engine,Interface=Interface,User_Id=current_user.id,Table_name='charge_item',Option_Type=OPTION_GROUP_BY,Argument_1=ia[1])
+            set_query_option(engine=db.engine,Interface=Interface,User_Id=current_user.id,Table_name=class_name,Option_Type=OPTION_GROUP_BY,Argument_1=ia[1])
+        elif ia[0]=='LIMIT':
+            #set_query_option(engine=db.engine,Interface=Interface,User_Id=current_user.id,Table_name='charge_item',Option_Type=OPTION_LIMIT,Argument_1=ia[1])
+            set_query_option(engine=db.engine,Interface=Interface,User_Id=current_user.id,Table_name=class_name,Option_Type=OPTION_LIMIT,Argument_1=ia[1])
+
+    iad      =  request.args.get('iad',     None,type=int)
+    if iad is not None: delete_query_option(engine=db.engine,Interface=Interface,Id=iad) 
+    
+    field    =  request.args.get('field',   None,type=str)
+    value    =  request.args.get('value',   None,type=str)
+    
+    # Populates a list of foreign keys used for advanced filtering
+    # ------------------------------------------------------------------
+    foreign_keys={}
+    
+    foreign_keys.update({'CU_Id':(charge_unit,'charge_unit','CU_Id','CU_Description','Charge Unit Id')})
+    foreign_keys.update({'CIT_Status':(cit_status,'cit_status','CIT_Status','Value','Status')})
+    # ------------------------------------------------------------------
+    
+    if field is not None:
+        reset_query_options(    engine=db.engine,Interface=Interface,
+                                User_Id=current_user.id,
+                                #Table_name='charge_item'
+                                Table_name=class_name
+                                )
+
+        
+        if field in foreign_keys.keys():
+            Class,referenced_classname,referenced_Field,referenced_Value,column_Header=foreign_keys[field]
+            foreign_field='%s.%s:%s'%(referenced_classname,referenced_Value,column_Header)
+            foreign_record=Class.query.get(value)
+            foreign_description="'%s'"%getattr(foreign_record,referenced_Value)
+        set_query_option(   engine=db.engine,Interface=Interface,
+                        User_Id=current_user.id,
+                        Table_name=class_name,
+                        Option_Type=OPTION_FILTER,
+                        Argument_1=foreign_field,
+                        Argument_2='==',
+                        Argument_3=foreign_description
+                        )
+    page     =  request.args.get('page',    1   ,type=int)
+    addx     =  request.args.get('add.x',   None,type=int)
+    addy     =  request.args.get('add.y',   None,type=int)
+    exportx  =  request.args.get('export.x',None,type=int)
+    exporty  =  request.args.get('export.y',None,type=int)
+    filterx  =  request.args.get('filter.x',None,type=int)
+    filtery  =  request.args.get('filter.y',None,type=int)
+    # Select excluyent view mode
+    if   addx    is not None: mode = 'add'
+    elif exportx is not None: mode = 'export'
+    elif filterx is not None: mode = 'filter'
+    else:                     mode = 'select'
+    CU_Id =  request.args.get('CU_Id',None,type=str)
+    CIT_Date =  request.args.get('CIT_Date',None,type=str)
+    CIT_Time =  request.args.get('CIT_Time',None,type=str)
+    CIT_Quantity =  request.args.get('CIT_Quantity',None,type=str)
+    CIT_Status =  request.args.get('CIT_Status',None,type=str)
+    CIT_Is_Active =  request.args.get('CIT_Is_Active',None,type=str)
+    CIT_DateTime =  request.args.get('CIT_DateTime',None,type=str)
+    
+    # Build default query all fields from table
+    
+
+    if CU_Id is not None and len(CU_Id)>0:
+            Class,referenced_classname,referenced_Field,referenced_Value,column_Header=foreign_keys['CU_Id']
+            foreign_field='%s.%s:%s'%(referenced_classname,referenced_Value,column_Header)            
+            set_query_option(   engine=db.engine,Interface=Interface,
+                User_Id=current_user.id,
+                Table_name=class_name,
+                Option_Type=OPTION_FILTER,
+                Argument_1=foreign_field,
+                Argument_2='LIKE',
+                Argument_3='\"%%%s%%\"'%CU_Id
+                )
+                                
+    
+    
+    if CIT_Date is not None and len(CIT_Date)>0:
+            set_query_option(engine=db.engine,Interface=Interface,
+                User_Id=current_user.id,
+                Table_name=class_name,
+                Option_Type=OPTION_FILTER,
+                Argument_1='CIT_Date:Date',
+                Argument_2='LIKE',
+                Argument_3='\"%%%s%%\"'%CIT_Date
+                )
+    
+    
+    if CIT_Time is not None and len(CIT_Time)>0:
+            set_query_option(engine=db.engine,Interface=Interface,
+                User_Id=current_user.id,
+                Table_name=class_name,
+                Option_Type=OPTION_FILTER,
+                Argument_1='CIT_Time:Time',
+                Argument_2='LIKE',
+                Argument_3='\"%%%s%%\"'%CIT_Time
+                )
+    
+    
+    if CIT_Quantity is not None and len(CIT_Quantity)>0:
+            set_query_option(engine=db.engine,Interface=Interface,
+                User_Id=current_user.id,
+                Table_name=class_name,
+                Option_Type=OPTION_FILTER,
+                Argument_1='CIT_Quantity:Quantity',
+                Argument_2='LIKE',
+                Argument_3='\"%%%s%%\"'%CIT_Quantity
+                )
+    
+    
+    if CIT_Status is not None and len(CIT_Status)>0:
+            Class,referenced_classname,referenced_Field,referenced_Value,column_Header=foreign_keys['CIT_Status']
+            foreign_field='%s.%s:%s'%(referenced_classname,referenced_Value,column_Header)            
+            set_query_option(   engine=db.engine,Interface=Interface,
+                User_Id=current_user.id,
+                Table_name=class_name,
+                Option_Type=OPTION_FILTER,
+                Argument_1=foreign_field,
+                Argument_2='LIKE',
+                Argument_3='\"%%%s%%\"'%CIT_Status
+                )
+                                
+    
+    
+    if CIT_Is_Active is not None and len(CIT_Is_Active)>0:
+            set_query_option(engine=db.engine,Interface=Interface,
+                User_Id=current_user.id,
+                Table_name=class_name,
+                Option_Type=OPTION_FILTER,
+                Argument_1='CIT_Is_Active:Is Active',
+                Argument_2='LIKE',
+                Argument_3='\"%%%s%%\"'%CIT_Is_Active
+                )
+    
+    
+    if CIT_DateTime is not None and len(CIT_DateTime)>0:
+            set_query_option(engine=db.engine,Interface=Interface,
+                User_Id=current_user.id,
+                Table_name=class_name,
+                Option_Type=OPTION_FILTER,
+                Argument_1='CIT_DateTime:CIT_DateTime',
+                Argument_2='LIKE',
+                Argument_3='\"%%%s%%\"'%CIT_DateTime
+                )
+    
+    
+    
+    statement_query,options=get_query_options(engine=db.engine,Interface=Interface,Table_name=class_name,User_Id=current_user.id)
+    tracebox_log(statement_query,logger,length=80)
+    query=eval(statement_query)
+    filtered_query = query    
+    if mode == 'filter':
+        query=filtered_query
+    elif mode == 'export':
+        query=filtered_query
+        fh,output_file = tempfile.mkstemp(suffix='', prefix='%s_'%table_name, dir=None, text=False)
+        dict = {'header':{},'detail':[]}
+        count = 0
+        rows = query.all()
+        for row in rows:
+            dict['detail'].append({})
+            for column in ['CU_Id', 'CIT_Date', 'CIT_Time', 'CIT_Quantity', 'CIT_Status', 'CIT_Is_Active', 'CIT_DateTime']:
+                dict['detail'][count].update( { column:str(row.__getattribute__(column))})
+                
+            count += 1
+        dict['header'].update({'count':count})
+        jsonarray      = json.dumps(dict)
+        data           = json.loads(jsonarray)  
+        dataframe      = json_normalize(data, 'detail').assign(**data['header'])
+        fh,output_file = tempfile.mkstemp(suffix='', prefix='%_'%table_name, dir='/tmp', text=False)
+        xlsx_file      = '%s/%s'%(current_app.root_path,url_for('static',filename='%s.xls'%(output_file)))
+        dataframe.to_excel(xlsx_file,sheet_name=table_name,columns=['CU_Id', 'CIT_Date', 'CIT_Time', 'CIT_Quantity', 'CIT_Status', 'CIT_Is_Active', 'CIT_DateTime'])
+        return send_file(xlsx_file,as_attachment=True,attachment_filename=output_file.replace('/','_')+'.xls')
+    elif mode == 'add':
+        return redirect(url_for('.forms_%s'%table_name))
+    elif mode == 'select':
+        pass
+        # if some filter is required
+        if field is not None:
+            if field == 'CU_Id':
+                if value is not None:
+                    query = query.filter_by(CU_Id=value)
+            if field == 'CIT_Date':
+                if value is not None:
+                    query = query.filter_by(CIT_Date=value)
+            if field == 'CIT_Time':
+                if value is not None:
+                    query = query.filter_by(CIT_Time=value)
+            if field == 'CIT_Quantity':
+                if value is not None:
+                    query = query.filter_by(CIT_Quantity=value)
+            if field == 'CIT_Status':
+                if value is not None:
+                    query = query.filter_by(CIT_Status=value)
+            if field == 'CIT_Is_Active':
+                if value is not None:
+                    query = query.filter_by(CIT_Is_Active=value)
+            if field == 'CIT_DateTime':
+                if value is not None:
+                    query = query.filter_by(CIT_DateTime=value)
+            # ------------------------------------------------------------------
+    # JOIN other tables and generate foreign fields
+    # Will replace class name by sharding class in joins structure
+    # will have no effect in no sharding environment
+    query = query.join(charge_unit,charge_item.CU_Id == charge_unit.CU_Id).add_columns(charge_unit.CU_Description).join(cit_status,charge_item.CIT_Status == cit_status.CIT_Status).add_columns(cit_status.Value)
+    # ------------------------------------------------------------------
+    
+    # Actual request from DB follows
+    tracebox_log(query,logger,length=80)
+    # getting paginated rows for query
+    rows = query.paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
+    # Setting pagination variables ...
+    if field is not None:
+       next_url = url_for('.select_%s_query'%template_name, field=field, value=value, page=rows.next_num) if rows.has_next else None
+       prev_url = url_for('.select_%s_query'%template_name, field=field, value=value, page=rows.prev_num) if rows.has_prev else None
+    else:
+       next_url = url_for('.select_%s_query'%template_name, page=rows.next_num) if rows.has_next else None
+       prev_url = url_for('.select_%s_query'%template_name, page=rows.prev_num) if rows.has_prev else None
+    # Actual rendering ...
+    if request.headers.get('Content-Type') is not None or request.args.get('JSON',None,type=str) is not None:
+        # NOTE: needs review for JSONnifiyng output when needed (API Interface?)
+        if "JSON" in request.headers.get('Content-Type') or request.args.get('JSON',None,type=str) is not None:
+            logger.debug('select_%s_query(): will render: JSON rows'%template_name)
+            logger.debug('select_%s_query(): Exit'%template_name)
+            return json.dumps(serialize_object(rows.__dict__))
+    logger.debug('select_%s_query(): will render: %s_All.html'%(template_name,table_name.lower()))
+    logger.debug('select_%s_query(): Exit'%template_name)
+    return render_template('%s_select_All.html'%template_name.lower(),rows=rows,options=options,collectordata=collectordata)
+#===============================================================================
+   
+# ======================================================================
+#  Auto-Generated code. Do not modify 
+#  (C) Sertechno/Emtec Group (2018,2019,2020)
+#  GLVH @ 2022-04-12 18:46:28.038242
+# ======================================================================
+# gen_views_api.html:AG 2022-04-12 18:46:28.038257
 # table_name: Charge_Items
 # class_name: charge_item
 # is shardened: True
@@ -570,7 +975,7 @@ def api_post_Charge_Items():
             row.CIT_Quantity = request.json.get('CIT_Quantity',0.000000000000)
             row.CIT_Status = request.json.get('CIT_Status',0)
             row.CIT_Is_Active = request.json.get('CIT_Is_Active',0)
-            row.CIT_DateTime = request.json.get('CIT_DateTime',None)
+            row.CIT_DateTime = request.json.get('CIT_DateTime',CURRENT_TIMESTAMP)
             # ----------------------------------------------------------
             db.session.add(row)
             db.session.flush()
@@ -760,15 +1165,15 @@ def api_delete_Charge_Items(id):
 # ======================================================================# =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 # gen_views.py:32 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/views/view_charge_resumes.py
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:50.106443
+#  GLVH @ 2022-04-12 18:46:28.209778
 # ======================================================================        
-# gen_views_form.html:AG 2022-04-06 14:30:50.106456
+# gen_views_form.html:AG 2022-04-12 18:46:28.209792
 @main.route('/forms/Charge_Resumes', methods=['GET', 'POST'])
 @login_required
 
@@ -950,9 +1355,9 @@ def forms_Charge_Resumes():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:50.115079
+#  GLVH @ 2022-04-12 18:46:28.217915
 # ======================================================================        
-# gen_views_delete.html:AG 2022-04-06 14:30:50.115091
+# gen_views_delete.html:AG 2022-04-12 18:46:28.217928
 @main.route('/forms/Charge_Resumes_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -1024,10 +1429,10 @@ def forms_Charge_Resumes_delete():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:50.131362
+#  GLVH @ 2022-04-12 18:46:28.235693
 # ======================================================================
 
-# gen_views_select_query.html:AG 2022-04-06 14:30:50.131376        
+# gen_views_select_query.html:AG 2022-04-12 18:46:28.235710        
 @main.route('/select/Charge_Resumes_Query', methods=['GET','POST'])
 @login_required
 
@@ -1744,9 +2149,9 @@ def select_Charge_Resumes_query():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:50.160738
+#  GLVH @ 2022-04-12 18:46:28.268181
 # ======================================================================
-# gen_views_api.html:AG 2022-04-06 14:30:50.160753
+# gen_views_api.html:AG 2022-04-12 18:46:28.268196
 # table_name: Charge_Resumes
 # class_name: charge_resume
 # is shardened: None
@@ -1912,36 +2317,36 @@ def api_post_Charge_Resumes():
             row.CIT_Status = request.json.get('CIT_Status',None)
             row.Cur_Code = request.json.get('Cur_Code',None)
             row.CU_Id = request.json.get('CU_Id',None)
-            row.CIT_Count = request.json.get('CIT_Count',0)
-            row.CIT_Quantity = request.json.get('CIT_Quantity',0.000000000000)
+            row.CIT_Count = request.json.get('CIT_Count',None)
+            row.CIT_Quantity = request.json.get('CIT_Quantity',None)
             row.CIT_Generation = request.json.get('CIT_Generation',1)
-            row.CI_CC_Id = request.json.get('CI_CC_Id',0)
-            row.CU_Operation = request.json.get('CU_Operation',NONE)
-            row.Typ_Code = request.json.get('Typ_Code',NUL)
-            row.CC_Cur_Code = request.json.get('CC_Cur_Code',UF)
-            row.CI_Id = request.json.get('CI_Id',1)
-            row.Rat_Id = request.json.get('Rat_Id',0)
-            row.Rat_Price = request.json.get('Rat_Price',0.000000000000)
-            row.Rat_MU_Code = request.json.get('Rat_MU_Code',UNT)
-            row.Rat_Cur_Code = request.json.get('Rat_Cur_Code',UF)
-            row.Rat_Period = request.json.get('Rat_Period',1)
-            row.Rat_Hourly = request.json.get('Rat_Hourly',0.000000000000)
-            row.Rat_Daily = request.json.get('Rat_Daily',0.000000000000)
-            row.Rat_Monthly = request.json.get('Rat_Monthly',0.000000000000)
-            row.CR_Quantity = request.json.get('CR_Quantity',0.000000000000)
-            row.CR_Quantity_at_Rate = request.json.get('CR_Quantity_at_Rate',0.000000000000)
-            row.CC_XR = request.json.get('CC_XR',0.000000000000)
-            row.CR_Cur_XR = request.json.get('CR_Cur_XR',0.000000000000)
-            row.CR_ST_at_Rate_Cur = request.json.get('CR_ST_at_Rate_Cur',0.000000000000)
-            row.CR_ST_at_CC_Cur = request.json.get('CR_ST_at_CC_Cur',0.000000000000)
-            row.CR_ST_at_Cur = request.json.get('CR_ST_at_Cur',0.000000000000)
+            row.CI_CC_Id = request.json.get('CI_CC_Id',None)
+            row.CU_Operation = request.json.get('CU_Operation',None)
+            row.Typ_Code = request.json.get('Typ_Code',None)
+            row.CC_Cur_Code = request.json.get('CC_Cur_Code',None)
+            row.CI_Id = request.json.get('CI_Id',None)
+            row.Rat_Id = request.json.get('Rat_Id',None)
+            row.Rat_Price = request.json.get('Rat_Price',None)
+            row.Rat_MU_Code = request.json.get('Rat_MU_Code',None)
+            row.Rat_Cur_Code = request.json.get('Rat_Cur_Code',None)
+            row.Rat_Period = request.json.get('Rat_Period',None)
+            row.Rat_Hourly = request.json.get('Rat_Hourly',None)
+            row.Rat_Daily = request.json.get('Rat_Daily',None)
+            row.Rat_Monthly = request.json.get('Rat_Monthly',None)
+            row.CR_Quantity = request.json.get('CR_Quantity',None)
+            row.CR_Quantity_at_Rate = request.json.get('CR_Quantity_at_Rate',None)
+            row.CC_XR = request.json.get('CC_XR',None)
+            row.CR_Cur_XR = request.json.get('CR_Cur_XR',None)
+            row.CR_ST_at_Rate_Cur = request.json.get('CR_ST_at_Rate_Cur',None)
+            row.CR_ST_at_CC_Cur = request.json.get('CR_ST_at_CC_Cur',None)
+            row.CR_ST_at_Cur = request.json.get('CR_ST_at_Cur',None)
             row.Cus_Name = request.json.get('Cus_Name',None)
             row.CI_Name = request.json.get('CI_Name',None)
             row.CU_Description = request.json.get('CU_Description',None)
             row.CC_Description = request.json.get('CC_Description',None)
             row.Rat_Period_Description = request.json.get('Rat_Period_Description',None)
             row.CC_Code = request.json.get('CC_Code',None)
-            row.Pla_Id = request.json.get('Pla_Id',0)
+            row.Pla_Id = request.json.get('Pla_Id',None)
             row.Pla_Name = request.json.get('Pla_Name',None)
             # ----------------------------------------------------------
             db.session.add(row)
@@ -2271,15 +2676,15 @@ def api_delete_Charge_Resumes(id):
 # ======================================================================# =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 # gen_views.py:32 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/views/view_charge_unit_egm.py
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:50.266697
+#  GLVH @ 2022-04-12 18:46:28.385668
 # ======================================================================        
-# gen_views_form.html:AG 2022-04-06 14:30:50.266711
+# gen_views_form.html:AG 2022-04-12 18:46:28.385738
 @main.route('/forms/Charge_Unit_EGM', methods=['GET', 'POST'])
 @login_required
 
@@ -2410,9 +2815,9 @@ def forms_Charge_Unit_EGM():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:50.276306
+#  GLVH @ 2022-04-12 18:46:28.395395
 # ======================================================================        
-# gen_views_delete.html:AG 2022-04-06 14:30:50.276320
+# gen_views_delete.html:AG 2022-04-12 18:46:28.395411
 @main.route('/forms/Charge_Unit_EGM_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -2480,10 +2885,10 @@ def forms_Charge_Unit_EGM_delete():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:50.293037
+#  GLVH @ 2022-04-12 18:46:28.416222
 # ======================================================================
 
-# gen_views_select_query.html:AG 2022-04-06 14:30:50.293051        
+# gen_views_select_query.html:AG 2022-04-12 18:46:28.416238        
 @main.route('/select/Charge_Unit_EGM_Query', methods=['GET','POST'])
 @login_required
 
@@ -2790,9 +3195,9 @@ def select_Charge_Unit_EGM_query():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:50.324142
+#  GLVH @ 2022-04-12 18:46:28.450714
 # ======================================================================
-# gen_views_api.html:AG 2022-04-06 14:30:50.324156
+# gen_views_api.html:AG 2022-04-12 18:46:28.450737
 # table_name: Charge_Unit_EGM
 # class_name: charge_unit_egm
 # is shardened: None
@@ -3091,15 +3496,15 @@ def api_delete_Charge_Unit_EGM(id):
 # ======================================================================# =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 # gen_views.py:32 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/views/view_charge_units.py
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:50.440957
+#  GLVH @ 2022-04-12 18:46:28.589943
 # ======================================================================        
-# gen_views_form.html:AG 2022-04-06 14:30:50.440972
+# gen_views_form.html:AG 2022-04-12 18:46:28.589957
 @main.route('/forms/Charge_Units', methods=['GET', 'POST'])
 @login_required
 
@@ -3254,9 +3659,9 @@ def forms_Charge_Units():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:50.449060
+#  GLVH @ 2022-04-12 18:46:28.597687
 # ======================================================================        
-# gen_views_delete.html:AG 2022-04-06 14:30:50.449071
+# gen_views_delete.html:AG 2022-04-12 18:46:28.597698
 @main.route('/forms/Charge_Units_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -3324,10 +3729,10 @@ def forms_Charge_Units_delete():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:50.464824
+#  GLVH @ 2022-04-12 18:46:28.614384
 # ======================================================================
 
-# gen_views_select_query.html:AG 2022-04-06 14:30:50.464838        
+# gen_views_select_query.html:AG 2022-04-12 18:46:28.614400        
 @main.route('/select/Charge_Units_Query', methods=['GET','POST'])
 @login_required
 @admin_required
@@ -3706,9 +4111,9 @@ def select_Charge_Units_query():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:50.492744
+#  GLVH @ 2022-04-12 18:46:28.642034
 # ======================================================================
-# gen_views_api.html:AG 2022-04-06 14:30:50.492772
+# gen_views_api.html:AG 2022-04-12 18:46:28.642050
 # table_name: Charge_Units
 # class_name: charge_unit
 # is shardened: False
@@ -4033,15 +4438,15 @@ def api_delete_Charge_Units(id):
 # ======================================================================# =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 # gen_views.py:32 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/views/view_cit_generations.py
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:49.194278
+#  GLVH @ 2022-04-12 18:46:27.355818
 # ======================================================================        
-# gen_views_form.html:AG 2022-04-06 14:30:49.194301
+# gen_views_form.html:AG 2022-04-12 18:46:27.355845
 @main.route('/forms/CIT_Generations', methods=['GET', 'POST'])
 @login_required
 
@@ -4154,9 +4559,9 @@ def forms_CIT_Generations():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:49.210012
+#  GLVH @ 2022-04-12 18:46:27.363886
 # ======================================================================        
-# gen_views_delete.html:AG 2022-04-06 14:30:49.210037
+# gen_views_delete.html:AG 2022-04-12 18:46:27.363920
 @main.route('/forms/CIT_Generations_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -4222,10 +4627,10 @@ def forms_CIT_Generations_delete():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:49.232500
+#  GLVH @ 2022-04-12 18:46:27.380621
 # ======================================================================
 
-# gen_views_select_query.html:AG 2022-04-06 14:30:49.232515        
+# gen_views_select_query.html:AG 2022-04-12 18:46:27.380635        
 @main.route('/select/CIT_Generations_Query', methods=['GET','POST'])
 @login_required
 @admin_required
@@ -4402,9 +4807,9 @@ def select_CIT_Generations_query():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:49.272016
+#  GLVH @ 2022-04-12 18:46:27.407691
 # ======================================================================
-# gen_views_api.html:AG 2022-04-06 14:30:49.272030
+# gen_views_api.html:AG 2022-04-12 18:46:27.407706
 # table_name: CIT_Generations
 # class_name: cit_generation
 # is shardened: None
@@ -4647,15 +5052,15 @@ def api_delete_CIT_Generations(id):
 # ======================================================================# =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 # gen_views.py:32 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/views/view_cit_statuses.py
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:49.386284
+#  GLVH @ 2022-04-12 18:46:27.504212
 # ======================================================================        
-# gen_views_form.html:AG 2022-04-06 14:30:49.386298
+# gen_views_form.html:AG 2022-04-12 18:46:27.504227
 @main.route('/forms/CIT_Statuses', methods=['GET', 'POST'])
 @login_required
 
@@ -4768,9 +5173,9 @@ def forms_CIT_Statuses():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:49.394055
+#  GLVH @ 2022-04-12 18:46:27.512716
 # ======================================================================        
-# gen_views_delete.html:AG 2022-04-06 14:30:49.394067
+# gen_views_delete.html:AG 2022-04-12 18:46:27.512731
 @main.route('/forms/CIT_Statuses_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -4836,10 +5241,10 @@ def forms_CIT_Statuses_delete():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:49.412330
+#  GLVH @ 2022-04-12 18:46:27.529200
 # ======================================================================
 
-# gen_views_select_query.html:AG 2022-04-06 14:30:49.412345        
+# gen_views_select_query.html:AG 2022-04-12 18:46:27.529215        
 @main.route('/select/CIT_Statuses_Query', methods=['GET','POST'])
 @login_required
 @admin_required
@@ -5016,9 +5421,9 @@ def select_CIT_Statuses_query():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:49.444756
+#  GLVH @ 2022-04-12 18:46:27.559820
 # ======================================================================
-# gen_views_api.html:AG 2022-04-06 14:30:49.444770
+# gen_views_api.html:AG 2022-04-12 18:46:27.559836
 # table_name: CIT_Statuses
 # class_name: cit_status
 # is shardened: None
@@ -5261,15 +5666,15 @@ def api_delete_CIT_Statuses(id):
 # ======================================================================# =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 # gen_views.py:32 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/views/view_configuration_items.py
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:50.599103
+#  GLVH @ 2022-04-12 18:46:28.754586
 # ======================================================================        
-# gen_views_form.html:AG 2022-04-06 14:30:50.599118
+# gen_views_form.html:AG 2022-04-12 18:46:28.754601
 @main.route('/forms/Configuration_Items', methods=['GET', 'POST'])
 @login_required
 
@@ -5404,9 +5809,9 @@ def forms_Configuration_Items():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:50.607456
+#  GLVH @ 2022-04-12 18:46:28.762553
 # ======================================================================        
-# gen_views_delete.html:AG 2022-04-06 14:30:50.607469
+# gen_views_delete.html:AG 2022-04-12 18:46:28.762568
 @main.route('/forms/Configuration_Items_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -5474,10 +5879,10 @@ def forms_Configuration_Items_delete():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:50.623454
+#  GLVH @ 2022-04-12 18:46:28.779542
 # ======================================================================
 
-# gen_views_select_query.html:AG 2022-04-06 14:30:50.623497        
+# gen_views_select_query.html:AG 2022-04-12 18:46:28.779557        
 @main.route('/select/Configuration_Items_Query', methods=['GET','POST'])
 @login_required
 @admin_required
@@ -5762,9 +6167,9 @@ def select_Configuration_Items_query():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:50.653705
+#  GLVH @ 2022-04-12 18:46:28.809464
 # ======================================================================
-# gen_views_api.html:AG 2022-04-06 14:30:50.653756
+# gen_views_api.html:AG 2022-04-12 18:46:28.809479
 # table_name: Configuration_Items
 # class_name: configuration_item
 # is shardened: None
@@ -6047,15 +6452,15 @@ def api_delete_Configuration_Items(id):
 # ======================================================================# =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 # gen_views.py:32 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/views/view_cost_centers.py
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:50.754452
+#  GLVH @ 2022-04-12 18:46:28.910717
 # ======================================================================        
-# gen_views_form.html:AG 2022-04-06 14:30:50.754466
+# gen_views_form.html:AG 2022-04-12 18:46:28.910732
 @main.route('/forms/Cost_Centers', methods=['GET', 'POST'])
 @login_required
 
@@ -6198,9 +6603,9 @@ def forms_Cost_Centers():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:50.762207
+#  GLVH @ 2022-04-12 18:46:28.918842
 # ======================================================================        
-# gen_views_delete.html:AG 2022-04-06 14:30:50.762217
+# gen_views_delete.html:AG 2022-04-12 18:46:28.918857
 @main.route('/forms/Cost_Centers_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -6268,10 +6673,10 @@ def forms_Cost_Centers_delete():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:50.778902
+#  GLVH @ 2022-04-12 18:46:28.934244
 # ======================================================================
 
-# gen_views_select_query.html:AG 2022-04-06 14:30:50.778916        
+# gen_views_select_query.html:AG 2022-04-12 18:46:28.934259        
 @main.route('/select/Cost_Centers_Query', methods=['GET','POST'])
 @login_required
 @admin_required
@@ -6537,9 +6942,9 @@ def select_Cost_Centers_query():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:50.826245
+#  GLVH @ 2022-04-12 18:46:28.962872
 # ======================================================================
-# gen_views_api.html:AG 2022-04-06 14:30:50.826266
+# gen_views_api.html:AG 2022-04-12 18:46:28.962888
 # table_name: Cost_Centers
 # class_name: cost_center
 # is shardened: None
@@ -6822,15 +7227,15 @@ def api_delete_Cost_Centers(id):
 # ======================================================================# =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 # gen_views.py:32 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/views/view_countries_currencies.py
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:51.076157
+#  GLVH @ 2022-04-12 18:46:29.201375
 # ======================================================================        
-# gen_views_form.html:AG 2022-04-06 14:30:51.076172
+# gen_views_form.html:AG 2022-04-12 18:46:29.201390
 @main.route('/forms/Countries_Currencies', methods=['GET', 'POST'])
 @login_required
 
@@ -6942,9 +7347,9 @@ def forms_Countries_Currencies():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:51.083894
+#  GLVH @ 2022-04-12 18:46:29.209711
 # ======================================================================        
-# gen_views_delete.html:AG 2022-04-06 14:30:51.083904
+# gen_views_delete.html:AG 2022-04-12 18:46:29.209725
 @main.route('/forms/Countries_Currencies_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -7013,10 +7418,10 @@ def forms_Countries_Currencies_delete():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:51.100164
+#  GLVH @ 2022-04-12 18:46:29.226882
 # ======================================================================
 
-# gen_views_select_query.html:AG 2022-04-06 14:30:51.100178        
+# gen_views_select_query.html:AG 2022-04-12 18:46:29.226897        
 @main.route('/select/Countries_Currencies_Query', methods=['GET','POST'])
 @login_required
 @admin_required
@@ -7222,9 +7627,9 @@ def select_Countries_Currencies_query():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:51.128222
+#  GLVH @ 2022-04-12 18:46:29.255183
 # ======================================================================
-# gen_views_api.html:AG 2022-04-06 14:30:51.128236
+# gen_views_api.html:AG 2022-04-12 18:46:29.255198
 # table_name: Countries_Currencies
 # class_name: country_currency
 # is shardened: None
@@ -7479,15 +7884,15 @@ def api_delete_Countries_Currencies(id):
 # ======================================================================# =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 # gen_views.py:32 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/views/view_countries.py
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:50.927954
+#  GLVH @ 2022-04-12 18:46:29.059029
 # ======================================================================        
-# gen_views_form.html:AG 2022-04-06 14:30:50.927967
+# gen_views_form.html:AG 2022-04-12 18:46:29.059044
 @main.route('/forms/Countries', methods=['GET', 'POST'])
 @login_required
 
@@ -7604,9 +8009,9 @@ def forms_Countries():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:50.937415
+#  GLVH @ 2022-04-12 18:46:29.066939
 # ======================================================================        
-# gen_views_delete.html:AG 2022-04-06 14:30:50.937430
+# gen_views_delete.html:AG 2022-04-12 18:46:29.066954
 @main.route('/forms/Countries_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -7672,10 +8077,10 @@ def forms_Countries_delete():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:50.953580
+#  GLVH @ 2022-04-12 18:46:29.088061
 # ======================================================================
 
-# gen_views_select_query.html:AG 2022-04-06 14:30:50.953594        
+# gen_views_select_query.html:AG 2022-04-12 18:46:29.088076        
 @main.route('/select/Countries_Query', methods=['GET','POST'])
 @login_required
 @admin_required
@@ -7882,9 +8287,9 @@ def select_Countries_query():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:50.980629
+#  GLVH @ 2022-04-12 18:46:29.116772
 # ======================================================================
-# gen_views_api.html:AG 2022-04-06 14:30:50.980642
+# gen_views_api.html:AG 2022-04-12 18:46:29.116791
 # table_name: Countries
 # class_name: country
 # is shardened: None
@@ -8141,15 +8546,15 @@ def api_delete_Countries(id):
 # ======================================================================# =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 # gen_views.py:32 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/views/view_cu_operations.py
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:49.547613
+#  GLVH @ 2022-04-12 18:46:27.668110
 # ======================================================================        
-# gen_views_form.html:AG 2022-04-06 14:30:49.547627
+# gen_views_form.html:AG 2022-04-12 18:46:27.668125
 @main.route('/forms/CU_Operations', methods=['GET', 'POST'])
 @login_required
 
@@ -8266,9 +8671,9 @@ def forms_CU_Operations():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:49.555933
+#  GLVH @ 2022-04-12 18:46:27.679204
 # ======================================================================        
-# gen_views_delete.html:AG 2022-04-06 14:30:49.555947
+# gen_views_delete.html:AG 2022-04-12 18:46:27.679220
 @main.route('/forms/CU_Operations_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -8334,10 +8739,10 @@ def forms_CU_Operations_delete():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:49.571795
+#  GLVH @ 2022-04-12 18:46:27.696345
 # ======================================================================
 
-# gen_views_select_query.html:AG 2022-04-06 14:30:49.571809        
+# gen_views_select_query.html:AG 2022-04-12 18:46:27.696360        
 @main.route('/select/CU_Operations_Query', methods=['GET','POST'])
 @login_required
 @admin_required
@@ -8544,9 +8949,9 @@ def select_CU_Operations_query():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:49.603244
+#  GLVH @ 2022-04-12 18:46:27.726052
 # ======================================================================
-# gen_views_api.html:AG 2022-04-06 14:30:49.603259
+# gen_views_api.html:AG 2022-04-12 18:46:27.726069
 # table_name: CU_Operations
 # class_name: cu_operation
 # is shardened: None
@@ -8803,15 +9208,15 @@ def api_delete_CU_Operations(id):
 # ======================================================================# =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 # gen_views.py:32 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/views/view_currencies.py
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:51.220439
+#  GLVH @ 2022-04-12 18:46:29.351796
 # ======================================================================        
-# gen_views_form.html:AG 2022-04-06 14:30:51.220453
+# gen_views_form.html:AG 2022-04-12 18:46:29.351813
 @main.route('/forms/Currencies', methods=['GET', 'POST'])
 @login_required
 
@@ -8943,9 +9348,9 @@ def forms_Currencies():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:51.228517
+#  GLVH @ 2022-04-12 18:46:29.360544
 # ======================================================================        
-# gen_views_delete.html:AG 2022-04-06 14:30:51.228529
+# gen_views_delete.html:AG 2022-04-12 18:46:29.360559
 @main.route('/forms/Currencies_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -9011,10 +9416,10 @@ def forms_Currencies_delete():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:51.245535
+#  GLVH @ 2022-04-12 18:46:29.376999
 # ======================================================================
 
-# gen_views_select_query.html:AG 2022-04-06 14:30:51.245548        
+# gen_views_select_query.html:AG 2022-04-12 18:46:29.377048        
 @main.route('/select/Currencies_Query', methods=['GET','POST'])
 @login_required
 @admin_required
@@ -9221,9 +9626,9 @@ def select_Currencies_query():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:51.272814
+#  GLVH @ 2022-04-12 18:46:29.405634
 # ======================================================================
-# gen_views_api.html:AG 2022-04-06 14:30:51.272829
+# gen_views_api.html:AG 2022-04-12 18:46:29.405650
 # table_name: Currencies
 # class_name: currency
 # is shardened: None
@@ -9480,15 +9885,15 @@ def api_delete_Currencies(id):
 # ======================================================================# =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 # gen_views.py:32 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/views/view_customers.py
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:51.365383
+#  GLVH @ 2022-04-12 18:46:29.527713
 # ======================================================================        
-# gen_views_form.html:AG 2022-04-06 14:30:51.365399
+# gen_views_form.html:AG 2022-04-12 18:46:29.527736
 @main.route('/forms/Customers', methods=['GET', 'POST'])
 @login_required
 
@@ -9611,9 +10016,9 @@ def forms_Customers():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:51.373732
+#  GLVH @ 2022-04-12 18:46:29.538365
 # ======================================================================        
-# gen_views_delete.html:AG 2022-04-06 14:30:51.373746
+# gen_views_delete.html:AG 2022-04-12 18:46:29.538381
 @main.route('/forms/Customers_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -9681,10 +10086,10 @@ def forms_Customers_delete():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:51.390233
+#  GLVH @ 2022-04-12 18:46:29.560022
 # ======================================================================
 
-# gen_views_select_query.html:AG 2022-04-06 14:30:51.390247        
+# gen_views_select_query.html:AG 2022-04-12 18:46:29.560038        
 @main.route('/select/Customers_Query', methods=['GET','POST'])
 @login_required
 @admin_required
@@ -9886,9 +10291,9 @@ def select_Customers_query():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:51.416897
+#  GLVH @ 2022-04-12 18:46:29.594599
 # ======================================================================
-# gen_views_api.html:AG 2022-04-06 14:30:51.416912
+# gen_views_api.html:AG 2022-04-12 18:46:29.594641
 # table_name: Customers
 # class_name: customer
 # is shardened: None
@@ -10136,15 +10541,15 @@ def api_delete_Customers(id):
 # ======================================================================# =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 # gen_views.py:32 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/views/view_cu_types.py
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:49.705641
+#  GLVH @ 2022-04-12 18:46:27.810374
 # ======================================================================        
-# gen_views_form.html:AG 2022-04-06 14:30:49.705656
+# gen_views_form.html:AG 2022-04-12 18:46:27.810389
 @main.route('/forms/CU_Types', methods=['GET', 'POST'])
 @login_required
 
@@ -10262,9 +10667,9 @@ def forms_CU_Types():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:49.713418
+#  GLVH @ 2022-04-12 18:46:27.818502
 # ======================================================================        
-# gen_views_delete.html:AG 2022-04-06 14:30:49.713431
+# gen_views_delete.html:AG 2022-04-12 18:46:27.818521
 @main.route('/forms/CU_Types_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -10330,10 +10735,10 @@ def forms_CU_Types_delete():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:49.732153
+#  GLVH @ 2022-04-12 18:46:27.835998
 # ======================================================================
 
-# gen_views_select_query.html:AG 2022-04-06 14:30:49.732182        
+# gen_views_select_query.html:AG 2022-04-12 18:46:27.836013        
 @main.route('/select/CU_Types_Query', methods=['GET','POST'])
 @login_required
 @admin_required
@@ -10510,9 +10915,9 @@ def select_CU_Types_query():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:49.766349
+#  GLVH @ 2022-04-12 18:46:27.874659
 # ======================================================================
-# gen_views_api.html:AG 2022-04-06 14:30:49.766365
+# gen_views_api.html:AG 2022-04-12 18:46:27.874679
 # table_name: CU_Types
 # class_name: cu_type
 # is shardened: None
@@ -10755,15 +11160,15 @@ def api_delete_CU_Types(id):
 # ======================================================================# =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 # gen_views.py:32 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/views/view_exchange_rates.py
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:51.513887
+#  GLVH @ 2022-04-12 18:46:29.691519
 # ======================================================================        
-# gen_views_form.html:AG 2022-04-06 14:30:51.513900
+# gen_views_form.html:AG 2022-04-12 18:46:29.691533
 @main.route('/forms/Exchange_Rates', methods=['GET', 'POST'])
 @login_required
 
@@ -10874,9 +11279,9 @@ def forms_Exchange_Rates():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:51.522319
+#  GLVH @ 2022-04-12 18:46:29.703110
 # ======================================================================        
-# gen_views_delete.html:AG 2022-04-06 14:30:51.522333
+# gen_views_delete.html:AG 2022-04-12 18:46:29.703124
 @main.route('/forms/Exchange_Rates_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -10944,10 +11349,10 @@ def forms_Exchange_Rates_delete():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:51.538585
+#  GLVH @ 2022-04-12 18:46:29.719853
 # ======================================================================
 
-# gen_views_select_query.html:AG 2022-04-06 14:30:51.538599        
+# gen_views_select_query.html:AG 2022-04-12 18:46:29.719880        
 @main.route('/select/Exchange_Rates_Query', methods=['GET','POST'])
 @login_required
 @admin_required
@@ -11164,9 +11569,9 @@ def select_Exchange_Rates_query():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:51.576480
+#  GLVH @ 2022-04-12 18:46:29.749643
 # ======================================================================
-# gen_views_api.html:AG 2022-04-06 14:30:51.576494
+# gen_views_api.html:AG 2022-04-12 18:46:29.749659
 # table_name: Exchange_Rates
 # class_name: exchange_rate
 # is shardened: None
@@ -11421,15 +11826,15 @@ def api_delete_Exchange_Rates(id):
 # ======================================================================# =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 # gen_views.py:32 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/views/view_interface.py
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:51.683853
+#  GLVH @ 2022-04-12 18:46:29.844087
 # ======================================================================        
-# gen_views_form.html:AG 2022-04-06 14:30:51.683867
+# gen_views_form.html:AG 2022-04-12 18:46:29.844102
 @main.route('/forms/Interface', methods=['GET', 'POST'])
 @login_required
 
@@ -11544,9 +11949,9 @@ def forms_Interface():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:51.694016
+#  GLVH @ 2022-04-12 18:46:29.852254
 # ======================================================================        
-# gen_views_delete.html:AG 2022-04-06 14:30:51.694030
+# gen_views_delete.html:AG 2022-04-12 18:46:29.852267
 @main.route('/forms/Interface_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -11612,10 +12017,10 @@ def forms_Interface_delete():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:51.709956
+#  GLVH @ 2022-04-12 18:46:29.870617
 # ======================================================================
 
-# gen_views_select_query.html:AG 2022-04-06 14:30:51.709969        
+# gen_views_select_query.html:AG 2022-04-12 18:46:29.870636        
 @main.route('/select/Interface_Query', methods=['GET','POST'])
 @login_required
 @admin_required
@@ -11882,9 +12287,9 @@ def select_Interface_query():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:51.738220
+#  GLVH @ 2022-04-12 18:46:29.902622
 # ======================================================================
-# gen_views_api.html:AG 2022-04-06 14:30:51.738234
+# gen_views_api.html:AG 2022-04-12 18:46:29.902637
 # table_name: Interface
 # class_name: interface
 # is shardened: None
@@ -12167,15 +12572,15 @@ def api_delete_Interface(id):
 # ======================================================================# =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 # gen_views.py:32 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/views/view_measure_units.py
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:51.818943
+#  GLVH @ 2022-04-12 18:46:29.992621
 # ======================================================================        
-# gen_views_form.html:AG 2022-04-06 14:30:51.818957
+# gen_views_form.html:AG 2022-04-12 18:46:29.992636
 @main.route('/forms/Measure_Units', methods=['GET', 'POST'])
 @login_required
 
@@ -12288,9 +12693,9 @@ def forms_Measure_Units():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:51.826656
+#  GLVH @ 2022-04-12 18:46:30.001960
 # ======================================================================        
-# gen_views_delete.html:AG 2022-04-06 14:30:51.826669
+# gen_views_delete.html:AG 2022-04-12 18:46:30.001974
 @main.route('/forms/Measure_Units_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -12356,10 +12761,10 @@ def forms_Measure_Units_delete():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:51.842971
+#  GLVH @ 2022-04-12 18:46:30.019449
 # ======================================================================
 
-# gen_views_select_query.html:AG 2022-04-06 14:30:51.842986        
+# gen_views_select_query.html:AG 2022-04-12 18:46:30.019464        
 @main.route('/select/Measure_Units_Query', methods=['GET','POST'])
 @login_required
 @admin_required
@@ -12536,9 +12941,9 @@ def select_Measure_Units_query():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:51.871121
+#  GLVH @ 2022-04-12 18:46:30.049938
 # ======================================================================
-# gen_views_api.html:AG 2022-04-06 14:30:51.871137
+# gen_views_api.html:AG 2022-04-12 18:46:30.049964
 # table_name: Measure_Units
 # class_name: measure_unit
 # is shardened: None
@@ -12781,15 +13186,15 @@ def api_delete_Measure_Units(id):
 # ======================================================================# =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 # gen_views.py:32 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/views/view_platforms.py
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:51.987103
+#  GLVH @ 2022-04-12 18:46:30.155360
 # ======================================================================        
-# gen_views_form.html:AG 2022-04-06 14:30:51.987124
+# gen_views_form.html:AG 2022-04-12 18:46:30.155376
 @main.route('/forms/Platforms', methods=['GET', 'POST'])
 @login_required
 
@@ -12914,9 +13319,9 @@ def forms_Platforms():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:51.997593
+#  GLVH @ 2022-04-12 18:46:30.162938
 # ======================================================================        
-# gen_views_delete.html:AG 2022-04-06 14:30:51.997608
+# gen_views_delete.html:AG 2022-04-12 18:46:30.162950
 @main.route('/forms/Platforms_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -12982,10 +13387,10 @@ def forms_Platforms_delete():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:52.017812
+#  GLVH @ 2022-04-12 18:46:30.179650
 # ======================================================================
 
-# gen_views_select_query.html:AG 2022-04-06 14:30:52.017831        
+# gen_views_select_query.html:AG 2022-04-12 18:46:30.179700        
 @main.route('/select/Platforms_Query', methods=['GET','POST'])
 @login_required
 @admin_required
@@ -13222,9 +13627,9 @@ def select_Platforms_query():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:52.050697
+#  GLVH @ 2022-04-12 18:46:30.208594
 # ======================================================================
-# gen_views_api.html:AG 2022-04-06 14:30:52.050713
+# gen_views_api.html:AG 2022-04-12 18:46:30.208609
 # table_name: Platforms
 # class_name: platform
 # is shardened: None
@@ -13493,15 +13898,15 @@ def api_delete_Platforms(id):
 # ======================================================================# =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 # gen_views.py:32 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/views/view_rates.py
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:52.347046
+#  GLVH @ 2022-04-12 18:46:30.476033
 # ======================================================================        
-# gen_views_form.html:AG 2022-04-06 14:30:52.347074
+# gen_views_form.html:AG 2022-04-12 18:46:30.476052
 @main.route('/forms/Rates', methods=['GET', 'POST'])
 @login_required
 
@@ -13632,9 +14037,9 @@ def forms_Rates():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:52.357421
+#  GLVH @ 2022-04-12 18:46:30.484457
 # ======================================================================        
-# gen_views_delete.html:AG 2022-04-06 14:30:52.357435
+# gen_views_delete.html:AG 2022-04-12 18:46:30.484470
 @main.route('/forms/Rates_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -13702,10 +14107,10 @@ def forms_Rates_delete():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:52.375844
+#  GLVH @ 2022-04-12 18:46:30.509251
 # ======================================================================
 
-# gen_views_select_query.html:AG 2022-04-06 14:30:52.375860        
+# gen_views_select_query.html:AG 2022-04-12 18:46:30.509269        
 @main.route('/select/Rates_Query', methods=['GET','POST'])
 @login_required
 @admin_required
@@ -14055,9 +14460,9 @@ def select_Rates_query():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:52.407035
+#  GLVH @ 2022-04-12 18:46:30.544210
 # ======================================================================
-# gen_views_api.html:AG 2022-04-06 14:30:52.407050
+# gen_views_api.html:AG 2022-04-12 18:46:30.544225
 # table_name: Rates
 # class_name: rate
 # is shardened: None
@@ -14361,15 +14766,15 @@ def api_delete_Rates(id):
 # ======================================================================# =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 # gen_views.py:32 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/views/view_rat_periods.py
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:52.148990
+#  GLVH @ 2022-04-12 18:46:30.303191
 # ======================================================================        
-# gen_views_form.html:AG 2022-04-06 14:30:52.149008
+# gen_views_form.html:AG 2022-04-12 18:46:30.303207
 @main.route('/forms/Rat_Periods', methods=['GET', 'POST'])
 @login_required
 
@@ -14482,9 +14887,9 @@ def forms_Rat_Periods():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:52.157832
+#  GLVH @ 2022-04-12 18:46:30.312553
 # ======================================================================        
-# gen_views_delete.html:AG 2022-04-06 14:30:52.157846
+# gen_views_delete.html:AG 2022-04-12 18:46:30.312569
 @main.route('/forms/Rat_Periods_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -14550,10 +14955,10 @@ def forms_Rat_Periods_delete():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:52.175519
+#  GLVH @ 2022-04-12 18:46:30.329439
 # ======================================================================
 
-# gen_views_select_query.html:AG 2022-04-06 14:30:52.175533        
+# gen_views_select_query.html:AG 2022-04-12 18:46:30.329453        
 @main.route('/select/Rat_Periods_Query', methods=['GET','POST'])
 @login_required
 @admin_required
@@ -14730,9 +15135,9 @@ def select_Rat_Periods_query():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:52.204050
+#  GLVH @ 2022-04-12 18:46:30.357338
 # ======================================================================
-# gen_views_api.html:AG 2022-04-06 14:30:52.204065
+# gen_views_api.html:AG 2022-04-12 18:46:30.357354
 # table_name: Rat_Periods
 # class_name: rat_period
 # is shardened: None
@@ -14975,15 +15380,15 @@ def api_delete_Rat_Periods(id):
 # ======================================================================# =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 # gen_views.py:32 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/views/view_roles.py
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:52.501355
+#  GLVH @ 2022-04-12 18:46:30.662238
 # ======================================================================        
-# gen_views_form.html:AG 2022-04-06 14:30:52.501372
+# gen_views_form.html:AG 2022-04-12 18:46:30.662254
 @main.route('/forms/Roles', methods=['GET', 'POST'])
 @login_required
 
@@ -15100,9 +15505,9 @@ def forms_Roles():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:52.510199
+#  GLVH @ 2022-04-12 18:46:30.672401
 # ======================================================================        
-# gen_views_delete.html:AG 2022-04-06 14:30:52.510215
+# gen_views_delete.html:AG 2022-04-12 18:46:30.672418
 @main.route('/forms/Roles_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -15168,10 +15573,10 @@ def forms_Roles_delete():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:52.527117
+#  GLVH @ 2022-04-12 18:46:30.690178
 # ======================================================================
 
-# gen_views_select_query.html:AG 2022-04-06 14:30:52.527131        
+# gen_views_select_query.html:AG 2022-04-12 18:46:30.690194        
 @main.route('/select/Roles_Query', methods=['GET','POST'])
 @login_required
 @admin_required
@@ -15378,9 +15783,9 @@ def select_Roles_query():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:52.556624
+#  GLVH @ 2022-04-12 18:46:30.728931
 # ======================================================================
-# gen_views_api.html:AG 2022-04-06 14:30:52.556639
+# gen_views_api.html:AG 2022-04-12 18:46:30.728950
 # table_name: Roles
 # class_name: Role
 # is shardened: None
@@ -15637,85 +16042,162 @@ def api_delete_Roles(id):
 # ======================================================================# =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-02 11:27:47
-# =============================================================================
-# gen_views.py:32 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/views/view_st2.py
-
-# ======================================================================
-#  Auto-Generated code. Do not modify 
-#  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-02 11:27:55.928913
-# ======================================================================        
-# gen_views_delete.html:AG 2022-04-02 11:27:55.928932
-@main.route('/forms/st2_delete', methods=['GET', 'POST'])
-@login_required
-@permission_required(Permission.DELETE)
-@admin_required
-def forms_st2_delete():
-    """ Delete record handling function for table st2 """
-    logger.debug('forms_st2_delete(): Enter')
-    row =  st2.query.filter().first()
-
-    if row is None:
-        row=st2()
-    session['data'] =  {  'CR_Date_From':row.CR_Date_From, 'CR_Date_To':row.CR_Date_To, 'Cus_Id':row.Cus_Id, 'CC_Id':row.CC_Id, 'CI_Id':row.CI_Id, 'CU_Id':row.CU_Id, 'Typ_Code':row.Typ_Code, 'CR_Quantity':row.CR_Quantity, 'CR_ST_at_Cur':row.CR_ST_at_Cur, 'Cur_Code':row.Cur_Code, 'CIT_Status':row.CIT_Status, 'CIT_Count':row.CIT_Count, 'Pla_Id':row.Pla_Id }
-                       
-    form = frm_st2_delete()
-
-    # Tab['has_fks'] False
-    
-            
-    # Actual Form activation here
-    if form.validate_on_submit():
-    
-    # Code for SAVE option
-        if  form.submit_Delete.data:
-            print('Delete Data Here...')
-
-    
-    #f.write(        "            print('Delete Data Here...')
-            try:
-                session['deleted_row']=str(row)
-                db.session.flush()
-                db.session.delete(row)
-                db.session.commit()
-                db.session.flush()
-                logger.audit ( '%s:DEL:%s' % (current_user.username,session['deleted_row']) )
-                flash('St2  deleted OK')
-            except exc.IntegrityError as e:
-                db.session.rollback()    
-                flash('INTEGRITY ERROR: Are you sure there are no dependant records in other tables?')
-                return redirect(url_for('.forms_st2_delete',))    
-    
-            return redirect(url_for('.select_st2_query'))    
-    # Code for CANCEL option 
-        elif   form.submit_Cancel.data:
-            print('Cancel Data Here ... does nothing')
-            flash('Record modifications discarded ...')
-            return redirect(url_for('.select_st2_query'))    
-    # Code for ANY OTHER option should never get here
-        else:
-            print('form validated but not submited ???')
-            return redirect(url_for('.select_st2_query'))    
-    
-    logger.debug('forms_st2_delete(): Exit')
-    collectordata={}
-    collectordata.update({"COLLECTOR_PERIOD":get_period_data(current_user.id,db.engine,Interface)})
-    return render_template('st2_delete.html', form=form, data=session.get('data'),row=row,collectordata=collectordata)
-#===============================================================================
-# =============================================================================
-# Auto-Generated code. do not modify
-# (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 # gen_views.py:32 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/views/view_statistics.py
+# ======================================================================
+#  Auto-Generated code. Do not modify 
+#  (C) Sertechno/Emtec Group (2018,2019,2020)
+#  GLVH @ 2022-04-12 18:46:31.302036
+# ======================================================================        
+# gen_views_form.html:AG 2022-04-12 18:46:31.302051
+@main.route('/forms/Statistics', methods=['GET', 'POST'])
+@login_required
+
+def forms_Statistics():
+    """ Form handling function for table Statistics """
+    logger.debug('forms_Statistics(): Enter')
+    
+    # Shardening Code goes her if needed
+    collectordata={}
+    collectordata.update({"COLLECTOR_PERIOD":get_period_data(current_user.id,db.engine,Interface)})
+    collectordata.update({"CONFIG":current_app.config})
+    suffix = collectordata['COLLECTOR_PERIOD']['active']
+    table_name='Statistics'
+    class_name='statistics'
+    template_name='Statistics'
+    sharding=False
+    if 'COLLECTOR_CIT_SHARDING' in current_app.config: 
+        sharding=current_app.config['COLLECTOR_CIT_SHARDING']
+    if sharding:
+        statistics.set_shard(suffix,db.engine)
+        flash(f"{gettext('Using shardened table: %s')}"%statistics.__table__.name)
+    CR_Date_From  =  request.args.get('CR_Date_From',0,type=int)
+    CR_Date_To  =  request.args.get('CR_Date_To',0,type=int)
+    User_Id  =  request.args.get('User_Id',0,type=int)
+    Cus_Id  =  request.args.get('Cus_Id',0,type=int)
+    CC_Id  =  request.args.get('CC_Id',0,type=int)
+    CI_Id  =  request.args.get('CI_Id',0,type=int)
+    CU_Id  =  request.args.get('CU_Id',0,type=int)
+    Typ_Code  =  request.args.get('Typ_Code',0,type=int)
+    Agregation  =  request.args.get('Agregation',0,type=int)
+    
+    # Ensures DB Data is commited prior main query
+    try:
+        db.session.commit()
+    except:
+        db.session.rollback()
+    row =  statistics.query.filter(statistics.CR_Date_From == CR_Date_From,statistics.CR_Date_To == CR_Date_To,statistics.User_Id == User_Id,statistics.Cus_Id == Cus_Id,statistics.CC_Id == CC_Id,statistics.CI_Id == CI_Id,statistics.CU_Id == CU_Id,statistics.Typ_Code == Typ_Code,statistics.Agregation == Agregation).first()
+    if row is None:
+        row=statistics()
+        session['is_new_row']=True
+    session['data'] =  {  'CR_Date_From':row.CR_Date_From, 'CR_Date_To':row.CR_Date_To, 'User_Id':row.User_Id, 'Cus_Id':row.Cus_Id, 'CC_Id':row.CC_Id, 'CI_Id':row.CI_Id, 'CU_Id':row.CU_Id, 'Typ_Code':row.Typ_Code, 'Agregation':row.Agregation, 'CR_Quantity_at_Rate':row.CR_Quantity_at_Rate, 'CR_Quantity':row.CR_Quantity, 'CR_ST_at_Cur':row.CR_ST_at_Cur, 'Cur_Code':row.Cur_Code, 'CIT_Status':row.CIT_Status, 'CIT_Count':row.CIT_Count, 'Pla_Id':row.Pla_Id }
+    
+    form = frm_statistics()
+    
+    # Actual Form activation here
+    if form.validate_on_submit():
+        # Code for SAVE option -----------------------------------------
+        if form.submit_Save.data and current_user.role_id > 1:
+            row.CR_Date_From = form.CR_Date_From.data
+            row.CR_Date_To = form.CR_Date_To.data
+            row.User_Id = form.User_Id.data
+            row.Cus_Id = form.Cus_Id.data
+            row.CC_Id = form.CC_Id.data
+            row.CI_Id = form.CI_Id.data
+            row.CU_Id = form.CU_Id.data
+            row.Typ_Code = form.Typ_Code.data
+            row.Agregation = form.Agregation.data
+            row.CR_Quantity_at_Rate = form.CR_Quantity_at_Rate.data
+            row.CR_Quantity = form.CR_Quantity.data
+            row.CR_ST_at_Cur = form.CR_ST_at_Cur.data
+            row.Cur_Code = form.Cur_Code.data
+            row.CIT_Status = form.CIT_Status.data
+            row.CIT_Count = form.CIT_Count.data
+            row.Pla_Id = form.Pla_Id.data
+            try:
+               session['new_row']=str(row)
+               db.session.flush()
+               db.session.add(row)
+               db.session.commit()
+               db.session.flush()
+               if session['is_new_row']==True:
+                   logger.audit ( '%s:NEW:%s' % (current_user.username,session['new_row'] ) )
+                   flash('New Statistics created OK')
+               else:
+                   logger.audit ( '%s:OLD:%s' % (current_user.username,session['prev_row']) )
+                   logger.audit ( '%s:UPD:%s' % (current_user.username,session['new_row'] ) )    
+                   message=Markup('<b>Statistics CR_Date_From,CR_Date_To,User_Id,Cus_Id,CC_Id,CI_Id,CU_Id,Typ_Code,Agregation saved OK</b>')
+                   flash(message)
+               db.session.flush()
+            except Exception as e:
+               db.session.rollback()
+               db.session.flush()
+               message=Markup('ERROR saving Statistics record : %s'%(e))
+               flash(message)
+            return redirect(url_for('.select_Statistics_query'))
+        # --------------------------------------------------------------
+        # Code for NEW option
+        # GV 20190109 f.write(        "        elif   form.submit_New.data:\n")
+        elif   form.submit_New.data and current_user.role_id>1:
+            #print('New Data Here ...')
+            session['is_new_row']=True
+            db.session.flush()
+            row=statistics()
+    
+            return redirect(url_for('.forms_Statistics'))    
+    
+        # Code for CANCEL option 
+        elif   form.submit_Cancel.data:
+            #print('Cancel Data Here ... does nothing')
+            message=Markup('Statistics Record modifications discarded ...')
+            flash(message)
+        # Code for ANY OTHER option should never get here
+        else:
+            #print('form validated but not submited ???')
+            message=Markup("<b>Statistics data modifications not allowed for user '%s'. Please contact EG Suite's Administrator ...</b>"%(current_user.username))    
+            flash(message)
+    
+            return redirect(url_for('.forms_'))    
+    
+    
+    form.CR_Date_From.data = row.CR_Date_From
+    form.CR_Date_To.data = row.CR_Date_To
+    form.User_Id.data = row.User_Id
+    form.Cus_Id.data = row.Cus_Id
+    form.CC_Id.data = row.CC_Id
+    form.CI_Id.data = row.CI_Id
+    form.CU_Id.data = row.CU_Id
+    form.Typ_Code.data = row.Typ_Code
+    form.Agregation.data = row.Agregation
+    form.CR_Quantity_at_Rate.data = row.CR_Quantity_at_Rate
+    form.CR_Quantity.data = row.CR_Quantity
+    form.CR_ST_at_Cur.data = row.CR_ST_at_Cur
+    form.Cur_Code.data = row.Cur_Code
+    form.CIT_Status.data = row.CIT_Status
+    form.CIT_Count.data = row.CIT_Count
+    form.Pla_Id.data = row.Pla_Id
+    session['prev_row'] = str(row)
+    session['is_new_row'] = False
+    logger.debug('forms_Statistics(): Exit')
+    # Generates pagination data here
+    P=[]
+    # Tab Relations = []
+    
+    # Generation of pagination data completed
+    collectordata={}
+    collectordata.update({"COLLECTOR_PERIOD":get_period_data(current_user.id,db.engine,Interface)})
+    return render_template('statistics.html', form=form, row=row, P=P,collectordata=collectordata)    
+# ======================================================================
+
+
 
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:53.029530
+#  GLVH @ 2022-04-12 18:46:31.311354
 # ======================================================================        
-# gen_views_delete.html:AG 2022-04-06 14:30:53.029543
+# gen_views_delete.html:AG 2022-04-12 18:46:31.311368
 @main.route('/forms/Statistics_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -15725,15 +16207,18 @@ def forms_Statistics_delete():
     logger.debug('forms_Statistics_delete(): Enter')
     CR_Date_From  =  request.args.get('CR_Date_From',0,type=int)
     CR_Date_To  =  request.args.get('CR_Date_To',0,type=int)
+    User_Id  =  request.args.get('User_Id',0,type=int)
     Cus_Id  =  request.args.get('Cus_Id',0,type=int)
     CC_Id  =  request.args.get('CC_Id',0,type=int)
     CI_Id  =  request.args.get('CI_Id',0,type=int)
     CU_Id  =  request.args.get('CU_Id',0,type=int)
-    row =  statistics.query.filter(statistics.CR_Date_From == CR_Date_From,statistics.CR_Date_To == CR_Date_To,statistics.Cus_Id == Cus_Id,statistics.CC_Id == CC_Id,statistics.CI_Id == CI_Id,statistics.CU_Id == CU_Id).first()
+    Typ_Code  =  request.args.get('Typ_Code',0,type=int)
+    Agregation  =  request.args.get('Agregation',0,type=int)
+    row =  statistics.query.filter(statistics.CR_Date_From == CR_Date_From,statistics.CR_Date_To == CR_Date_To,statistics.User_Id == User_Id,statistics.Cus_Id == Cus_Id,statistics.CC_Id == CC_Id,statistics.CI_Id == CI_Id,statistics.CU_Id == CU_Id,statistics.Typ_Code == Typ_Code,statistics.Agregation == Agregation).first()
 
     if row is None:
         row=statistics()
-    session['data'] =  {  'CR_Date_From':row.CR_Date_From, 'CR_Date_To':row.CR_Date_To, 'Cus_Id':row.Cus_Id, 'CC_Id':row.CC_Id, 'CI_Id':row.CI_Id, 'CU_Id':row.CU_Id, 'Typ_Code':row.Typ_Code, 'CR_Quantity':row.CR_Quantity, 'CR_ST_at_Cur':row.CR_ST_at_Cur, 'Cur_Code':row.Cur_Code, 'CIT_Status':row.CIT_Status, 'CIT_Count':row.CIT_Count, 'Pla_Id':row.Pla_Id }
+    session['data'] =  {  'CR_Date_From':row.CR_Date_From, 'CR_Date_To':row.CR_Date_To, 'User_Id':row.User_Id, 'Cus_Id':row.Cus_Id, 'CC_Id':row.CC_Id, 'CI_Id':row.CI_Id, 'CU_Id':row.CU_Id, 'Typ_Code':row.Typ_Code, 'Agregation':row.Agregation, 'CR_Quantity_at_Rate':row.CR_Quantity_at_Rate, 'CR_Quantity':row.CR_Quantity, 'CR_ST_at_Cur':row.CR_ST_at_Cur, 'Cur_Code':row.Cur_Code, 'CIT_Status':row.CIT_Status, 'CIT_Count':row.CIT_Count, 'Pla_Id':row.Pla_Id }
                        
     form = frm_statistics_delete()
 
@@ -15756,11 +16241,11 @@ def forms_Statistics_delete():
                 db.session.commit()
                 db.session.flush()
                 logger.audit ( '%s:DEL:%s' % (current_user.username,session['deleted_row']) )
-                flash('Statistics CR_Date_From,CR_Date_To,Cus_Id,CC_Id,CI_Id,CU_Id deleted OK')
+                flash('Statistics CR_Date_From,CR_Date_To,User_Id,Cus_Id,CC_Id,CI_Id,CU_Id,Typ_Code,Agregation deleted OK')
             except exc.IntegrityError as e:
                 db.session.rollback()    
                 flash('INTEGRITY ERROR: Are you sure there are no dependant records in other tables?')
-                return redirect(url_for('.forms_Statistics_delete',CR_Date_From=session['data']['CR_Date_From'],CR_Date_To=session['data']['CR_Date_To'],Cus_Id=session['data']['Cus_Id'],CC_Id=session['data']['CC_Id'],CI_Id=session['data']['CI_Id'],CU_Id=session['data']['CU_Id']))    
+                return redirect(url_for('.forms_Statistics_delete',CR_Date_From=session['data']['CR_Date_From'],CR_Date_To=session['data']['CR_Date_To'],User_Id=session['data']['User_Id'],Cus_Id=session['data']['Cus_Id'],CC_Id=session['data']['CC_Id'],CI_Id=session['data']['CI_Id'],CU_Id=session['data']['CU_Id'],Typ_Code=session['data']['Typ_Code'],Agregation=session['data']['Agregation']))    
     
             return redirect(url_for('.select_Statistics_query'))    
     # Code for CANCEL option 
@@ -15779,20 +16264,429 @@ def forms_Statistics_delete():
     return render_template('statistics_delete.html', form=form, data=session.get('data'),row=row,collectordata=collectordata)
 #===============================================================================
 
-# ======================================================================
-#  Auto-Generated code. Do not modify 
-#  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:53.083838
-# ======================================================================
-# gen_views_api.html:AG 2022-04-06 14:30:53.083854
 # table_name: Statistics
 # class_name: statistics
 # is shardened: True
-# Table 'Statistics' keys = CR_Date_From,CR_Date_To,Cus_Id,CC_Id,CI_Id,CU_Id
+# current_app: 
+# ======================================================================
+#  Auto-Generated code. Do not modify 
+#  (C) Sertechno/Emtec Group (2018,2019,2020)
+#  GLVH @ 2022-04-12 18:46:31.329851
+# ======================================================================
+
+# gen_views_select_query.html:AG 2022-04-12 18:46:31.329866        
+@main.route('/select/Statistics_Query', methods=['GET','POST'])
+@login_required
+@admin_required
+def select_Statistics_query():
+    """ Select rows handling function for table 'Statistics' """
+    logger.debug('select_Statistics_query(): Enter')
+    #chk_c000001(filename=os.path.join(current_app.root_path, '.c000001'),request=request,db=db,logger=logger)
+    # Shardening Code goes her if needed
+    collectordata={}
+    collectordata.update({"COLLECTOR_PERIOD":get_period_data(current_user.id,db.engine,Interface)})
+    collectordata.update({"CONFIG":current_app.config})
+    suffix = collectordata['COLLECTOR_PERIOD']['active']
+    table_name='Statistics'
+    class_name='statistics'
+    template_name='Statistics'
+    sharding=False
+
+    if 'COLLECTOR_CIT_SHARDING' in current_app.config: 
+        sharding=current_app.config['COLLECTOR_CIT_SHARDING']
+    if sharding:
+        statistics.set_shard(suffix,db.engine)
+        flash(f"{gettext('Using shardened table: %s')}"%statistics.__table__.name) 
+
+
+    logger.debug("-----------------------------------------------------------")
+    logger.debug("%s: template_name            = %s",__name__,template_name)
+
+    logger.debug("%s: COLLECTOR_CIT_SHARDING   = %s",__name__,current_app.config.get('COLLECTOR_CIT_SHARDING'))
+    logger.debug("%s: sharding                 = %s",__name__,sharding)
+    logger.debug("%s: suffix                   = %s",__name__,suffix)
+    logger.debug("%s: table_name               = %s",__name__,table_name)
+    logger.debug("%s: class_name               = %s",__name__,class_name)
+    logger.debug("%s: class_name              = %s",__name__,class_name)
+
+    logger.debug("-----------------------------------------------------------")    
+        
+    # Get parameters from URL call
+    ia       =  request.args.get('ia',     None,type=str)
+    if ia is not None:
+        ia=ia.split(',')
+        if ia[0]=='ORDER':
+            #set_query_option(engine=db.engine,Interface=Interface,User_Id=current_user.id,Table_name='statistics',Option_Type=OPTION_ORDER_BY,Argument_1=ia[1],Argument_2=ia[2])
+            set_query_option(engine=db.engine,Interface=Interface,User_Id=current_user.id,Table_name=class_name,Option_Type=OPTION_ORDER_BY,Argument_1=ia[1],Argument_2=ia[2])
+        elif ia[0]=='GROUP':
+            #set_query_option(engine=db.engine,Interface=Interface,User_Id=current_user.id,Table_name='statistics',Option_Type=OPTION_GROUP_BY,Argument_1=ia[1])
+            set_query_option(engine=db.engine,Interface=Interface,User_Id=current_user.id,Table_name=class_name,Option_Type=OPTION_GROUP_BY,Argument_1=ia[1])
+        elif ia[0]=='LIMIT':
+            #set_query_option(engine=db.engine,Interface=Interface,User_Id=current_user.id,Table_name='statistics',Option_Type=OPTION_LIMIT,Argument_1=ia[1])
+            set_query_option(engine=db.engine,Interface=Interface,User_Id=current_user.id,Table_name=class_name,Option_Type=OPTION_LIMIT,Argument_1=ia[1])
+
+    iad      =  request.args.get('iad',     None,type=int)
+    if iad is not None: delete_query_option(engine=db.engine,Interface=Interface,Id=iad) 
+    
+    field    =  request.args.get('field',   None,type=str)
+    value    =  request.args.get('value',   None,type=str)
+    
+    # Populates a list of foreign keys used for advanced filtering
+    # ------------------------------------------------------------------
+    foreign_keys={}
+    
+    # ------------------------------------------------------------------
+    
+    if field is not None:
+        reset_query_options(    engine=db.engine,Interface=Interface,
+                                User_Id=current_user.id,
+                                #Table_name='statistics'
+                                Table_name=class_name
+                                )
+
+        
+        if field in foreign_keys.keys():
+            Class,referenced_classname,referenced_Field,referenced_Value,column_Header=foreign_keys[field]
+            foreign_field='%s.%s:%s'%(referenced_classname,referenced_Value,column_Header)
+            foreign_record=Class.query.get(value)
+            foreign_description="'%s'"%getattr(foreign_record,referenced_Value)
+        set_query_option(   engine=db.engine,Interface=Interface,
+                        User_Id=current_user.id,
+                        Table_name=class_name,
+                        Option_Type=OPTION_FILTER,
+                        Argument_1=foreign_field,
+                        Argument_2='==',
+                        Argument_3=foreign_description
+                        )
+    page     =  request.args.get('page',    1   ,type=int)
+    addx     =  request.args.get('add.x',   None,type=int)
+    addy     =  request.args.get('add.y',   None,type=int)
+    exportx  =  request.args.get('export.x',None,type=int)
+    exporty  =  request.args.get('export.y',None,type=int)
+    filterx  =  request.args.get('filter.x',None,type=int)
+    filtery  =  request.args.get('filter.y',None,type=int)
+    # Select excluyent view mode
+    if   addx    is not None: mode = 'add'
+    elif exportx is not None: mode = 'export'
+    elif filterx is not None: mode = 'filter'
+    else:                     mode = 'select'
+    CR_Date_From =  request.args.get('CR_Date_From',None,type=str)
+    CR_Date_To =  request.args.get('CR_Date_To',None,type=str)
+    User_Id =  request.args.get('User_Id',None,type=str)
+    Cus_Id =  request.args.get('Cus_Id',None,type=str)
+    CC_Id =  request.args.get('CC_Id',None,type=str)
+    CI_Id =  request.args.get('CI_Id',None,type=str)
+    CU_Id =  request.args.get('CU_Id',None,type=str)
+    Typ_Code =  request.args.get('Typ_Code',None,type=str)
+    Agregation =  request.args.get('Agregation',None,type=str)
+    CR_Quantity_at_Rate =  request.args.get('CR_Quantity_at_Rate',None,type=str)
+    CR_Quantity =  request.args.get('CR_Quantity',None,type=str)
+    CR_ST_at_Cur =  request.args.get('CR_ST_at_Cur',None,type=str)
+    Cur_Code =  request.args.get('Cur_Code',None,type=str)
+    CIT_Status =  request.args.get('CIT_Status',None,type=str)
+    CIT_Count =  request.args.get('CIT_Count',None,type=str)
+    Pla_Id =  request.args.get('Pla_Id',None,type=str)
+    
+    # Build default query all fields from table
+    
+
+    if CR_Date_From is not None and len(CR_Date_From)>0:
+            set_query_option(engine=db.engine,Interface=Interface,
+                User_Id=current_user.id,
+                Table_name=class_name,
+                Option_Type=OPTION_FILTER,
+                Argument_1='CR_Date_From:CR_Date_From',
+                Argument_2='LIKE',
+                Argument_3='\"%%%s%%\"'%CR_Date_From
+                )
+    
+    
+    if CR_Date_To is not None and len(CR_Date_To)>0:
+            set_query_option(engine=db.engine,Interface=Interface,
+                User_Id=current_user.id,
+                Table_name=class_name,
+                Option_Type=OPTION_FILTER,
+                Argument_1='CR_Date_To:CR_Date_To',
+                Argument_2='LIKE',
+                Argument_3='\"%%%s%%\"'%CR_Date_To
+                )
+    
+    
+    if User_Id is not None and len(User_Id)>0:
+            set_query_option(engine=db.engine,Interface=Interface,
+                User_Id=current_user.id,
+                Table_name=class_name,
+                Option_Type=OPTION_FILTER,
+                Argument_1='User_Id:User_Id',
+                Argument_2='LIKE',
+                Argument_3='\"%%%s%%\"'%User_Id
+                )
+    
+    
+    if Cus_Id is not None and len(Cus_Id)>0:
+            set_query_option(engine=db.engine,Interface=Interface,
+                User_Id=current_user.id,
+                Table_name=class_name,
+                Option_Type=OPTION_FILTER,
+                Argument_1='Cus_Id:Cus_Id',
+                Argument_2='LIKE',
+                Argument_3='\"%%%s%%\"'%Cus_Id
+                )
+    
+    
+    if CC_Id is not None and len(CC_Id)>0:
+            set_query_option(engine=db.engine,Interface=Interface,
+                User_Id=current_user.id,
+                Table_name=class_name,
+                Option_Type=OPTION_FILTER,
+                Argument_1='CC_Id:CC_Id',
+                Argument_2='LIKE',
+                Argument_3='\"%%%s%%\"'%CC_Id
+                )
+    
+    
+    if CI_Id is not None and len(CI_Id)>0:
+            set_query_option(engine=db.engine,Interface=Interface,
+                User_Id=current_user.id,
+                Table_name=class_name,
+                Option_Type=OPTION_FILTER,
+                Argument_1='CI_Id:CI_Id',
+                Argument_2='LIKE',
+                Argument_3='\"%%%s%%\"'%CI_Id
+                )
+    
+    
+    if CU_Id is not None and len(CU_Id)>0:
+            set_query_option(engine=db.engine,Interface=Interface,
+                User_Id=current_user.id,
+                Table_name=class_name,
+                Option_Type=OPTION_FILTER,
+                Argument_1='CU_Id:CU_Id',
+                Argument_2='LIKE',
+                Argument_3='\"%%%s%%\"'%CU_Id
+                )
+    
+    
+    if Typ_Code is not None and len(Typ_Code)>0:
+            set_query_option(engine=db.engine,Interface=Interface,
+                User_Id=current_user.id,
+                Table_name=class_name,
+                Option_Type=OPTION_FILTER,
+                Argument_1='Typ_Code:Typ_Code',
+                Argument_2='LIKE',
+                Argument_3='\"%%%s%%\"'%Typ_Code
+                )
+    
+    
+    if Agregation is not None and len(Agregation)>0:
+            set_query_option(engine=db.engine,Interface=Interface,
+                User_Id=current_user.id,
+                Table_name=class_name,
+                Option_Type=OPTION_FILTER,
+                Argument_1='Agregation:Agregation',
+                Argument_2='LIKE',
+                Argument_3='\"%%%s%%\"'%Agregation
+                )
+    
+    
+    if CR_Quantity_at_Rate is not None and len(CR_Quantity_at_Rate)>0:
+            set_query_option(engine=db.engine,Interface=Interface,
+                User_Id=current_user.id,
+                Table_name=class_name,
+                Option_Type=OPTION_FILTER,
+                Argument_1='CR_Quantity_at_Rate:CR_Quantity_at_Rate',
+                Argument_2='LIKE',
+                Argument_3='\"%%%s%%\"'%CR_Quantity_at_Rate
+                )
+    
+    
+    if CR_Quantity is not None and len(CR_Quantity)>0:
+            set_query_option(engine=db.engine,Interface=Interface,
+                User_Id=current_user.id,
+                Table_name=class_name,
+                Option_Type=OPTION_FILTER,
+                Argument_1='CR_Quantity:CR_Quantity',
+                Argument_2='LIKE',
+                Argument_3='\"%%%s%%\"'%CR_Quantity
+                )
+    
+    
+    if CR_ST_at_Cur is not None and len(CR_ST_at_Cur)>0:
+            set_query_option(engine=db.engine,Interface=Interface,
+                User_Id=current_user.id,
+                Table_name=class_name,
+                Option_Type=OPTION_FILTER,
+                Argument_1='CR_ST_at_Cur:CR_ST_at_Cur',
+                Argument_2='LIKE',
+                Argument_3='\"%%%s%%\"'%CR_ST_at_Cur
+                )
+    
+    
+    if Cur_Code is not None and len(Cur_Code)>0:
+            set_query_option(engine=db.engine,Interface=Interface,
+                User_Id=current_user.id,
+                Table_name=class_name,
+                Option_Type=OPTION_FILTER,
+                Argument_1='Cur_Code:Cur_Code',
+                Argument_2='LIKE',
+                Argument_3='\"%%%s%%\"'%Cur_Code
+                )
+    
+    
+    if CIT_Status is not None and len(CIT_Status)>0:
+            set_query_option(engine=db.engine,Interface=Interface,
+                User_Id=current_user.id,
+                Table_name=class_name,
+                Option_Type=OPTION_FILTER,
+                Argument_1='CIT_Status:CIT_Status',
+                Argument_2='LIKE',
+                Argument_3='\"%%%s%%\"'%CIT_Status
+                )
+    
+    
+    if CIT_Count is not None and len(CIT_Count)>0:
+            set_query_option(engine=db.engine,Interface=Interface,
+                User_Id=current_user.id,
+                Table_name=class_name,
+                Option_Type=OPTION_FILTER,
+                Argument_1='CIT_Count:CIT_Count',
+                Argument_2='LIKE',
+                Argument_3='\"%%%s%%\"'%CIT_Count
+                )
+    
+    
+    if Pla_Id is not None and len(Pla_Id)>0:
+            set_query_option(engine=db.engine,Interface=Interface,
+                User_Id=current_user.id,
+                Table_name=class_name,
+                Option_Type=OPTION_FILTER,
+                Argument_1='Pla_Id:Pla_Id',
+                Argument_2='LIKE',
+                Argument_3='\"%%%s%%\"'%Pla_Id
+                )
+    
+    
+    
+    statement_query,options=get_query_options(engine=db.engine,Interface=Interface,Table_name=class_name,User_Id=current_user.id)
+    tracebox_log(statement_query,logger,length=80)
+    query=eval(statement_query)
+    filtered_query = query    
+    if mode == 'filter':
+        query=filtered_query
+    elif mode == 'export':
+        query=filtered_query
+        fh,output_file = tempfile.mkstemp(suffix='', prefix='%s_'%table_name, dir=None, text=False)
+        dict = {'header':{},'detail':[]}
+        count = 0
+        rows = query.all()
+        for row in rows:
+            dict['detail'].append({})
+            for column in ['CR_Date_From', 'CR_Date_To', 'User_Id', 'Cus_Id', 'CC_Id', 'CI_Id', 'CU_Id', 'Typ_Code', 'Agregation', 'CR_Quantity_at_Rate', 'CR_Quantity', 'CR_ST_at_Cur', 'Cur_Code', 'CIT_Status', 'CIT_Count', 'Pla_Id']:
+                dict['detail'][count].update( { column:str(row.__getattribute__(column))})
+                
+            count += 1
+        dict['header'].update({'count':count})
+        jsonarray      = json.dumps(dict)
+        data           = json.loads(jsonarray)  
+        dataframe      = json_normalize(data, 'detail').assign(**data['header'])
+        fh,output_file = tempfile.mkstemp(suffix='', prefix='%_'%table_name, dir='/tmp', text=False)
+        xlsx_file      = '%s/%s'%(current_app.root_path,url_for('static',filename='%s.xls'%(output_file)))
+        dataframe.to_excel(xlsx_file,sheet_name=table_name,columns=['CR_Date_From', 'CR_Date_To', 'User_Id', 'Cus_Id', 'CC_Id', 'CI_Id', 'CU_Id', 'Typ_Code', 'Agregation', 'CR_Quantity_at_Rate', 'CR_Quantity', 'CR_ST_at_Cur', 'Cur_Code', 'CIT_Status', 'CIT_Count', 'Pla_Id'])
+        return send_file(xlsx_file,as_attachment=True,attachment_filename=output_file.replace('/','_')+'.xls')
+    elif mode == 'add':
+        return redirect(url_for('.forms_%s'%table_name))
+    elif mode == 'select':
+        pass
+        # if some filter is required
+        if field is not None:
+            if field == 'CR_Date_From':
+                if value is not None:
+                    query = query.filter_by(CR_Date_From=value)
+            if field == 'CR_Date_To':
+                if value is not None:
+                    query = query.filter_by(CR_Date_To=value)
+            if field == 'User_Id':
+                if value is not None:
+                    query = query.filter_by(User_Id=value)
+            if field == 'Cus_Id':
+                if value is not None:
+                    query = query.filter_by(Cus_Id=value)
+            if field == 'CC_Id':
+                if value is not None:
+                    query = query.filter_by(CC_Id=value)
+            if field == 'CI_Id':
+                if value is not None:
+                    query = query.filter_by(CI_Id=value)
+            if field == 'CU_Id':
+                if value is not None:
+                    query = query.filter_by(CU_Id=value)
+            if field == 'Typ_Code':
+                if value is not None:
+                    query = query.filter_by(Typ_Code=value)
+            if field == 'Agregation':
+                if value is not None:
+                    query = query.filter_by(Agregation=value)
+            if field == 'CR_Quantity_at_Rate':
+                if value is not None:
+                    query = query.filter_by(CR_Quantity_at_Rate=value)
+            if field == 'CR_Quantity':
+                if value is not None:
+                    query = query.filter_by(CR_Quantity=value)
+            if field == 'CR_ST_at_Cur':
+                if value is not None:
+                    query = query.filter_by(CR_ST_at_Cur=value)
+            if field == 'Cur_Code':
+                if value is not None:
+                    query = query.filter_by(Cur_Code=value)
+            if field == 'CIT_Status':
+                if value is not None:
+                    query = query.filter_by(CIT_Status=value)
+            if field == 'CIT_Count':
+                if value is not None:
+                    query = query.filter_by(CIT_Count=value)
+            if field == 'Pla_Id':
+                if value is not None:
+                    query = query.filter_by(Pla_Id=value)
+            
+    # Actual request from DB follows
+    tracebox_log(query,logger,length=80)
+    # getting paginated rows for query
+    rows = query.paginate(page, per_page=current_app.config['LINES_PER_PAGE'], error_out=False)
+    # Setting pagination variables ...
+    if field is not None:
+       next_url = url_for('.select_%s_query'%template_name, field=field, value=value, page=rows.next_num) if rows.has_next else None
+       prev_url = url_for('.select_%s_query'%template_name, field=field, value=value, page=rows.prev_num) if rows.has_prev else None
+    else:
+       next_url = url_for('.select_%s_query'%template_name, page=rows.next_num) if rows.has_next else None
+       prev_url = url_for('.select_%s_query'%template_name, page=rows.prev_num) if rows.has_prev else None
+    # Actual rendering ...
+    if request.headers.get('Content-Type') is not None or request.args.get('JSON',None,type=str) is not None:
+        # NOTE: needs review for JSONnifiyng output when needed (API Interface?)
+        if "JSON" in request.headers.get('Content-Type') or request.args.get('JSON',None,type=str) is not None:
+            logger.debug('select_%s_query(): will render: JSON rows'%template_name)
+            logger.debug('select_%s_query(): Exit'%template_name)
+            return json.dumps(serialize_object(rows.__dict__))
+    logger.debug('select_%s_query(): will render: %s_All.html'%(template_name,table_name.lower()))
+    logger.debug('select_%s_query(): Exit'%template_name)
+    return render_template('%s_select_All.html'%template_name.lower(),rows=rows,options=options,collectordata=collectordata)
+#===============================================================================
+   
+# ======================================================================
+#  Auto-Generated code. Do not modify 
+#  (C) Sertechno/Emtec Group (2018,2019,2020)
+#  GLVH @ 2022-04-12 18:46:31.363545
+# ======================================================================
+# gen_views_api.html:AG 2022-04-12 18:46:31.363568
+# table_name: Statistics
+# class_name: statistics
+# is shardened: True
+# Table 'Statistics' keys = CR_Date_From,CR_Date_To,User_Id,Cus_Id,CC_Id,CI_Id,CU_Id,Typ_Code,Agregation
 # Errors: None
 # PK field found 'CR_Date_From' db.Date
 # Errors: None
 # PK field found 'CR_Date_To' db.Date
+# Errors: None
+# PK field found 'User_Id' db.Integer
 # Errors: None
 # PK field found 'Cus_Id' db.Integer
 # Errors: None
@@ -15801,6 +16695,10 @@ def forms_Statistics_delete():
 # PK field found 'CI_Id' db.Integer
 # Errors: None
 # PK field found 'CU_Id' db.Integer
+# Errors: None
+# PK field found 'Typ_Code' db.String(10)
+# Errors: None
+# PK field found 'Agregation' db.Integer
 # Statistics id field is 'Statistics.CR_Date_From' of type ''
 
 @main.route('/api/get/Statistics'     , methods=['GET'])
@@ -15832,6 +16730,8 @@ def api_get_Statistics(id=None):
                         query = query.filter(Statistics.CR_Date_From == request.args.get('CR_Date_From'))
                     if 'CR_Date_To' in request.args:
                         query = query.filter(Statistics.CR_Date_To == request.args.get('CR_Date_To'))
+                    if 'User_Id' in request.args:
+                        query = query.filter(Statistics.User_Id == request.args.get('User_Id'))
                     if 'Cus_Id' in request.args:
                         query = query.filter(Statistics.Cus_Id == request.args.get('Cus_Id'))
                     if 'CC_Id' in request.args:
@@ -15842,6 +16742,10 @@ def api_get_Statistics(id=None):
                         query = query.filter(Statistics.CU_Id == request.args.get('CU_Id'))
                     if 'Typ_Code' in request.args:
                         query = query.filter(Statistics.Typ_Code == request.args.get('Typ_Code'))
+                    if 'Agregation' in request.args:
+                        query = query.filter(Statistics.Agregation == request.args.get('Agregation'))
+                    if 'CR_Quantity_at_Rate' in request.args:
+                        query = query.filter(Statistics.CR_Quantity_at_Rate == request.args.get('CR_Quantity_at_Rate'))
                     if 'CR_Quantity' in request.args:
                         query = query.filter(Statistics.CR_Quantity == request.args.get('CR_Quantity'))
                     if 'CR_ST_at_Cur' in request.args:
@@ -15893,11 +16797,14 @@ def api_post_Statistics():
             # Populates row from json, if ID=int:autoincrement then None
             row.CR_Date_From = request.json.get('CR_Date_From',None)
             row.CR_Date_To = request.json.get('CR_Date_To',None)
-            row.Cus_Id = request.json.get('Cus_Id',None)
+            row.User_Id = request.json.get('User_Id',None)
+            row.Cus_Id = request.json.get('Cus_Id',0)
             row.CC_Id = request.json.get('CC_Id',0)
             row.CI_Id = request.json.get('CI_Id',1)
-            row.CU_Id = request.json.get('CU_Id',None)
+            row.CU_Id = request.json.get('CU_Id',0)
             row.Typ_Code = request.json.get('Typ_Code',NUL)
+            row.Agregation = request.json.get('Agregation',0)
+            row.CR_Quantity_at_Rate = request.json.get('CR_Quantity_at_Rate',0.000000000000)
             row.CR_Quantity = request.json.get('CR_Quantity',0.000000000000)
             row.CR_ST_at_Cur = request.json.get('CR_ST_at_Cur',0.000000000000)
             row.Cur_Code = request.json.get('Cur_Code',None)
@@ -15943,6 +16850,8 @@ def api_put_Statistics(id):
             id_counter += 1
             query = query.filter(Statistics.CR_Date_To == id_values[id_counter])
             id_counter += 1
+            query = query.filter(Statistics.User_Id == id_values[id_counter])
+            id_counter += 1
             query = query.filter(Statistics.Cus_Id == id_values[id_counter])
             id_counter += 1
             query = query.filter(Statistics.CC_Id == id_values[id_counter])
@@ -15951,13 +16860,17 @@ def api_put_Statistics(id):
             id_counter += 1
             query = query.filter(Statistics.CU_Id == id_values[id_counter])
             id_counter += 1
+            query = query.filter(Statistics.Typ_Code == id_values[id_counter])
+            id_counter += 1
+            query = query.filter(Statistics.Agregation == id_values[id_counter])
+            id_counter += 1
             # --------------------------------------------------------------
             row = query.one_or_none()
             # If row exists then continue:
             if row is not None:
                 # Second loop seek for updated fields ----------------------
-                if 'Typ_Code' in request.json.keys():
-                    row.Typ_Code = request.json.get('Typ_Code')
+                if 'CR_Quantity_at_Rate' in request.json.keys():
+                    row.CR_Quantity_at_Rate = request.json.get('CR_Quantity_at_Rate')
                 if 'CR_Quantity' in request.json.keys():
                     row.CR_Quantity = request.json.get('CR_Quantity')
                 if 'CR_ST_at_Cur' in request.json.keys():
@@ -16012,6 +16925,8 @@ def api_patch_Statistics(id):
             id_counter += 1
             query = query.filter(Statistics.CR_Date_To == id_values[id_counter])
             id_counter += 1
+            query = query.filter(Statistics.User_Id == id_values[id_counter])
+            id_counter += 1
             query = query.filter(Statistics.Cus_Id == id_values[id_counter])
             id_counter += 1
             query = query.filter(Statistics.CC_Id == id_values[id_counter])
@@ -16020,6 +16935,10 @@ def api_patch_Statistics(id):
             id_counter += 1
             query = query.filter(Statistics.CU_Id == id_values[id_counter])
             id_counter += 1
+            query = query.filter(Statistics.Typ_Code == id_values[id_counter])
+            id_counter += 1
+            query = query.filter(Statistics.Agregation == id_values[id_counter])
+            id_counter += 1
             # --------------------------------------------------------------
             row = query.one_or_none()
             # If row exists then continue:
@@ -16027,8 +16946,8 @@ def api_patch_Statistics(id):
                 # Second loop seek for updated fields ----------------------
                 db.session.rollback()
                 if request.values is not None and len(request.values):
-                    if 'Typ_Code' in request.values:
-                        row.Typ_Code = request.values.get('Typ_Code')
+                    if 'CR_Quantity_at_Rate' in request.values:
+                        row.CR_Quantity_at_Rate = request.values.get('CR_Quantity_at_Rate')
                     if 'CR_Quantity' in request.values:
                         row.CR_Quantity = request.values.get('CR_Quantity')
                     if 'CR_ST_at_Cur' in request.values:
@@ -16092,6 +17011,9 @@ def api_delete_Statistics(id):
             query       = query.filter(Statistics.CR_Date_To == id_values[id_counter])
             id_counter +=1
             # detected primary key field: c.field
+            query       = query.filter(Statistics.User_Id == id_values[id_counter])
+            id_counter +=1
+            # detected primary key field: c.field
             query       = query.filter(Statistics.Cus_Id == id_values[id_counter])
             id_counter +=1
             # detected primary key field: c.field
@@ -16102,6 +17024,12 @@ def api_delete_Statistics(id):
             id_counter +=1
             # detected primary key field: c.field
             query       = query.filter(Statistics.CU_Id == id_values[id_counter])
+            id_counter +=1
+            # detected primary key field: c.field
+            query       = query.filter(Statistics.Typ_Code == id_values[id_counter])
+            id_counter +=1
+            # detected primary key field: c.field
+            query       = query.filter(Statistics.Agregation == id_values[id_counter])
             id_counter +=1
             # --------------------------------------------------------------
             row = query.one_or_none()
@@ -16129,15 +17057,15 @@ def api_delete_Statistics(id):
 # ======================================================================# =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 # gen_views.py:32 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/views/view_st_use_per_cu.py
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:52.683870
+#  GLVH @ 2022-04-12 18:46:30.875137
 # ======================================================================        
-# gen_views_form.html:AG 2022-04-06 14:30:52.683898
+# gen_views_form.html:AG 2022-04-12 18:46:30.875171
 @main.route('/forms/ST_Use_Per_CU', methods=['GET', 'POST'])
 @login_required
 
@@ -16285,9 +17213,9 @@ def forms_ST_Use_Per_CU():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:52.692843
+#  GLVH @ 2022-04-12 18:46:30.883766
 # ======================================================================        
-# gen_views_delete.html:AG 2022-04-06 14:30:52.692857
+# gen_views_delete.html:AG 2022-04-12 18:46:30.883780
 @main.route('/forms/ST_Use_Per_CU_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -16355,10 +17283,10 @@ def forms_ST_Use_Per_CU_delete():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:52.708706
+#  GLVH @ 2022-04-12 18:46:30.900988
 # ======================================================================
 
-# gen_views_select_query.html:AG 2022-04-06 14:30:52.708720        
+# gen_views_select_query.html:AG 2022-04-12 18:46:30.901004        
 @main.route('/select/ST_Use_Per_CU_Query', methods=['GET','POST'])
 @login_required
 
@@ -16850,9 +17778,9 @@ def select_ST_Use_Per_CU_query():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:52.740367
+#  GLVH @ 2022-04-12 18:46:30.935146
 # ======================================================================
-# gen_views_api.html:AG 2022-04-06 14:30:52.740396
+# gen_views_api.html:AG 2022-04-12 18:46:30.935164
 # table_name: ST_Use_Per_CU
 # class_name: st_use_per_cu
 # is shardened: None
@@ -17252,15 +18180,15 @@ def api_delete_ST_Use_Per_CU(id):
 # ======================================================================# =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 # gen_views.py:32 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/views/view_st_use_per_type.py
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:52.858868
+#  GLVH @ 2022-04-12 18:46:31.112448
 # ======================================================================        
-# gen_views_form.html:AG 2022-04-06 14:30:52.858884
+# gen_views_form.html:AG 2022-04-12 18:46:31.112462
 @main.route('/forms/ST_Use_Per_Type', methods=['GET', 'POST'])
 @login_required
 
@@ -17392,9 +18320,9 @@ def forms_ST_Use_Per_Type():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:52.867717
+#  GLVH @ 2022-04-12 18:46:31.127425
 # ======================================================================        
-# gen_views_delete.html:AG 2022-04-06 14:30:52.867766
+# gen_views_delete.html:AG 2022-04-12 18:46:31.127443
 @main.route('/forms/ST_Use_Per_Type_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -17466,10 +18394,10 @@ def forms_ST_Use_Per_Type_delete():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:52.885769
+#  GLVH @ 2022-04-12 18:46:31.146936
 # ======================================================================
 
-# gen_views_select_query.html:AG 2022-04-06 14:30:52.885786        
+# gen_views_select_query.html:AG 2022-04-12 18:46:31.146953        
 @main.route('/select/ST_Use_Per_Type_Query', methods=['GET','POST'])
 @login_required
 
@@ -17811,9 +18739,9 @@ def select_ST_Use_Per_Type_query():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:52.917653
+#  GLVH @ 2022-04-12 18:46:31.180086
 # ======================================================================
-# gen_views_api.html:AG 2022-04-06 14:30:52.917667
+# gen_views_api.html:AG 2022-04-12 18:46:31.180112
 # table_name: ST_Use_Per_Type
 # class_name: st_use_per_type
 # is shardened: None
@@ -17930,11 +18858,11 @@ def api_post_ST_Use_Per_Type():
             row.Year = request.json.get('Year',None)
             row.Month = request.json.get('Month',None)
             row.Count = request.json.get('Count',0)
-            row.Mean = request.json.get('Mean',0.000000000000)
-            row.Variance = request.json.get('Variance',0.000000000000)
-            row.StdDev = request.json.get('StdDev',0.000000000000)
-            row.Min = request.json.get('Min',0.000000000000)
-            row.Max = request.json.get('Max',0.000000000000)
+            row.Mean = request.json.get('Mean',None)
+            row.Variance = request.json.get('Variance',None)
+            row.StdDev = request.json.get('StdDev',None)
+            row.Min = request.json.get('Min',None)
+            row.Max = request.json.get('Max',None)
             # ----------------------------------------------------------
             db.session.add(row)
             db.session.flush()
@@ -18163,15 +19091,15 @@ def api_delete_ST_Use_Per_Type(id):
 # ======================================================================# =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 # gen_views.py:32 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/views/view_trace.py
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:53.190651
+#  GLVH @ 2022-04-12 18:46:31.466132
 # ======================================================================        
-# gen_views_form.html:AG 2022-04-06 14:30:53.190680
+# gen_views_form.html:AG 2022-04-12 18:46:31.466148
 @main.route('/forms/Trace', methods=['GET', 'POST'])
 @login_required
 
@@ -18274,9 +19202,9 @@ def forms_Trace():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:53.198768
+#  GLVH @ 2022-04-12 18:46:31.476456
 # ======================================================================        
-# gen_views_delete.html:AG 2022-04-06 14:30:53.198779
+# gen_views_delete.html:AG 2022-04-12 18:46:31.476478
 @main.route('/forms/Trace_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -18342,10 +19270,10 @@ def forms_Trace_delete():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:53.215970
+#  GLVH @ 2022-04-12 18:46:31.506431
 # ======================================================================
 
-# gen_views_select_query.html:AG 2022-04-06 14:30:53.215985        
+# gen_views_select_query.html:AG 2022-04-12 18:46:31.506449        
 @main.route('/select/Trace_Query', methods=['GET','POST'])
 @login_required
 @admin_required
@@ -18522,9 +19450,9 @@ def select_Trace_query():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:53.254140
+#  GLVH @ 2022-04-12 18:46:31.551045
 # ======================================================================
-# gen_views_api.html:AG 2022-04-06 14:30:53.254159
+# gen_views_api.html:AG 2022-04-12 18:46:31.551061
 # table_name: Trace
 # class_name: trace
 # is shardened: None
@@ -18765,15 +19693,15 @@ def api_delete_Trace(id):
 # ======================================================================# =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 # gen_views.py:32 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/views/view_user_resumes.py
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:53.416819
+#  GLVH @ 2022-04-12 18:46:31.757840
 # ======================================================================        
-# gen_views_form.html:AG 2022-04-06 14:30:53.416834
+# gen_views_form.html:AG 2022-04-12 18:46:31.757860
 @main.route('/forms/User_Resumes', methods=['GET', 'POST'])
 @login_required
 
@@ -18807,7 +19735,7 @@ def forms_User_Resumes():
     if row is None:
         row=user_resumes()
         session['is_new_row']=True
-    session['data'] =  {  'User_Id':row.User_Id, 'Cus_Id':row.Cus_Id, 'CR_Date_From':row.CR_Date_From, 'CR_Date_To':row.CR_Date_To, 'CIT_Status':row.CIT_Status, 'Cur_Code':row.Cur_Code, 'CU_Id':row.CU_Id, 'CIT_Count':row.CIT_Count, 'CIT_Quantity':row.CIT_Quantity, 'CIT_Generation':row.CIT_Generation, 'CI_CC_Id':row.CI_CC_Id, 'CU_Operation':row.CU_Operation, 'Typ_Code':row.Typ_Code, 'CC_Cur_Code':row.CC_Cur_Code, 'CI_Id':row.CI_Id, 'Rat_Id':row.Rat_Id, 'Rat_Price':row.Rat_Price, 'Rat_MU_Code':row.Rat_MU_Code, 'Rat_Cur_Code':row.Rat_Cur_Code, 'Rat_Period':row.Rat_Period, 'Rat_Hourly':row.Rat_Hourly, 'Rat_Daily':row.Rat_Daily, 'Rat_Monthly':row.Rat_Monthly, 'CR_Quantity':row.CR_Quantity, 'CR_Quantity_at_Rate':row.CR_Quantity_at_Rate, 'CC_XR':row.CC_XR, 'CR_Cur_XR':row.CR_Cur_XR, 'CR_ST_at_Rate_Cur':row.CR_ST_at_Rate_Cur, 'CR_ST_at_CC_Cur':row.CR_ST_at_CC_Cur, 'CR_ST_at_Cur':row.CR_ST_at_Cur, 'Cus_Name':row.Cus_Name, 'CI_Name':row.CI_Name, 'CU_Description':row.CU_Description, 'CC_Description':row.CC_Description, 'Rat_Period_Description':row.Rat_Period_Description, 'CC_Code':row.CC_Code, 'Pla_Id':row.Pla_Id, 'Pla_Name':row.Pla_Name }
+    session['data'] =  {  'User_Id':row.User_Id, 'Cus_Id':row.Cus_Id, 'CR_Date_From':row.CR_Date_From, 'CR_Date_To':row.CR_Date_To, 'CIT_Status':row.CIT_Status, 'Cur_Code':row.Cur_Code, 'CIT_Count':row.CIT_Count, 'CIT_Quantity':row.CIT_Quantity, 'CIT_Generation':row.CIT_Generation, 'CU_Id':row.CU_Id, 'CI_CC_Id':row.CI_CC_Id, 'CU_Operation':row.CU_Operation, 'Typ_Code':row.Typ_Code, 'CC_Cur_Code':row.CC_Cur_Code, 'CI_Id':row.CI_Id, 'Rat_Id':row.Rat_Id, 'Rat_Price':row.Rat_Price, 'Rat_MU_Code':row.Rat_MU_Code, 'Rat_Cur_Code':row.Rat_Cur_Code, 'Rat_Period':row.Rat_Period, 'Rat_Hourly':row.Rat_Hourly, 'Rat_Daily':row.Rat_Daily, 'Rat_Monthly':row.Rat_Monthly, 'CR_Quantity':row.CR_Quantity, 'CR_Quantity_at_Rate':row.CR_Quantity_at_Rate, 'CC_XR':row.CC_XR, 'CR_Cur_XR':row.CR_Cur_XR, 'CR_ST_at_Rate_Cur':row.CR_ST_at_Rate_Cur, 'CR_ST_at_CC_Cur':row.CR_ST_at_CC_Cur, 'CR_ST_at_Cur':row.CR_ST_at_Cur, 'Cus_Name':row.Cus_Name, 'CI_Name':row.CI_Name, 'CU_Description':row.CU_Description, 'CC_Description':row.CC_Description, 'Rat_Period_Description':row.Rat_Period_Description, 'CC_Code':row.CC_Code, 'Pla_Id':row.Pla_Id, 'Pla_Name':row.Pla_Name }
     
     form = frm_user_resumes()
     
@@ -18821,10 +19749,10 @@ def forms_User_Resumes():
             row.CR_Date_To = form.CR_Date_To.data
             row.CIT_Status = form.CIT_Status.data
             row.Cur_Code = form.Cur_Code.data
-            row.CU_Id = form.CU_Id.data
             row.CIT_Count = form.CIT_Count.data
             row.CIT_Quantity = form.CIT_Quantity.data
             row.CIT_Generation = form.CIT_Generation.data
+            row.CU_Id = form.CU_Id.data
             row.CI_CC_Id = form.CI_CC_Id.data
             row.CU_Operation = form.CU_Operation.data
             row.Typ_Code = form.Typ_Code.data
@@ -18905,10 +19833,10 @@ def forms_User_Resumes():
     form.CR_Date_To.data = row.CR_Date_To
     form.CIT_Status.data = row.CIT_Status
     form.Cur_Code.data = row.Cur_Code
-    form.CU_Id.data = row.CU_Id
     form.CIT_Count.data = row.CIT_Count
     form.CIT_Quantity.data = row.CIT_Quantity
     form.CIT_Generation.data = row.CIT_Generation
+    form.CU_Id.data = row.CU_Id
     form.CI_CC_Id.data = row.CI_CC_Id
     form.CU_Operation.data = row.CU_Operation
     form.Typ_Code.data = row.Typ_Code
@@ -18955,9 +19883,9 @@ def forms_User_Resumes():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:53.425110
+#  GLVH @ 2022-04-12 18:46:31.770290
 # ======================================================================        
-# gen_views_delete.html:AG 2022-04-06 14:30:53.425124
+# gen_views_delete.html:AG 2022-04-12 18:46:31.770334
 @main.route('/forms/User_Resumes_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -18976,7 +19904,7 @@ def forms_User_Resumes_delete():
 
     if row is None:
         row=user_resumes()
-    session['data'] =  {  'User_Id':row.User_Id, 'Cus_Id':row.Cus_Id, 'CR_Date_From':row.CR_Date_From, 'CR_Date_To':row.CR_Date_To, 'CIT_Status':row.CIT_Status, 'Cur_Code':row.Cur_Code, 'CU_Id':row.CU_Id, 'CIT_Count':row.CIT_Count, 'CIT_Quantity':row.CIT_Quantity, 'CIT_Generation':row.CIT_Generation, 'CI_CC_Id':row.CI_CC_Id, 'CU_Operation':row.CU_Operation, 'Typ_Code':row.Typ_Code, 'CC_Cur_Code':row.CC_Cur_Code, 'CI_Id':row.CI_Id, 'Rat_Id':row.Rat_Id, 'Rat_Price':row.Rat_Price, 'Rat_MU_Code':row.Rat_MU_Code, 'Rat_Cur_Code':row.Rat_Cur_Code, 'Rat_Period':row.Rat_Period, 'Rat_Hourly':row.Rat_Hourly, 'Rat_Daily':row.Rat_Daily, 'Rat_Monthly':row.Rat_Monthly, 'CR_Quantity':row.CR_Quantity, 'CR_Quantity_at_Rate':row.CR_Quantity_at_Rate, 'CC_XR':row.CC_XR, 'CR_Cur_XR':row.CR_Cur_XR, 'CR_ST_at_Rate_Cur':row.CR_ST_at_Rate_Cur, 'CR_ST_at_CC_Cur':row.CR_ST_at_CC_Cur, 'CR_ST_at_Cur':row.CR_ST_at_Cur, 'Cus_Name':row.Cus_Name, 'CI_Name':row.CI_Name, 'CU_Description':row.CU_Description, 'CC_Description':row.CC_Description, 'Rat_Period_Description':row.Rat_Period_Description, 'CC_Code':row.CC_Code, 'Pla_Id':row.Pla_Id, 'Pla_Name':row.Pla_Name }
+    session['data'] =  {  'User_Id':row.User_Id, 'Cus_Id':row.Cus_Id, 'CR_Date_From':row.CR_Date_From, 'CR_Date_To':row.CR_Date_To, 'CIT_Status':row.CIT_Status, 'Cur_Code':row.Cur_Code, 'CIT_Count':row.CIT_Count, 'CIT_Quantity':row.CIT_Quantity, 'CIT_Generation':row.CIT_Generation, 'CU_Id':row.CU_Id, 'CI_CC_Id':row.CI_CC_Id, 'CU_Operation':row.CU_Operation, 'Typ_Code':row.Typ_Code, 'CC_Cur_Code':row.CC_Cur_Code, 'CI_Id':row.CI_Id, 'Rat_Id':row.Rat_Id, 'Rat_Price':row.Rat_Price, 'Rat_MU_Code':row.Rat_MU_Code, 'Rat_Cur_Code':row.Rat_Cur_Code, 'Rat_Period':row.Rat_Period, 'Rat_Hourly':row.Rat_Hourly, 'Rat_Daily':row.Rat_Daily, 'Rat_Monthly':row.Rat_Monthly, 'CR_Quantity':row.CR_Quantity, 'CR_Quantity_at_Rate':row.CR_Quantity_at_Rate, 'CC_XR':row.CC_XR, 'CR_Cur_XR':row.CR_Cur_XR, 'CR_ST_at_Rate_Cur':row.CR_ST_at_Rate_Cur, 'CR_ST_at_CC_Cur':row.CR_ST_at_CC_Cur, 'CR_ST_at_Cur':row.CR_ST_at_Cur, 'Cus_Name':row.Cus_Name, 'CI_Name':row.CI_Name, 'CU_Description':row.CU_Description, 'CC_Description':row.CC_Description, 'Rat_Period_Description':row.Rat_Period_Description, 'CC_Code':row.CC_Code, 'Pla_Id':row.Pla_Id, 'Pla_Name':row.Pla_Name }
                        
     form = frm_user_resumes_delete()
 
@@ -19029,10 +19957,10 @@ def forms_User_Resumes_delete():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:53.441935
+#  GLVH @ 2022-04-12 18:46:31.796856
 # ======================================================================
 
-# gen_views_select_query.html:AG 2022-04-06 14:30:53.441951        
+# gen_views_select_query.html:AG 2022-04-12 18:46:31.796872        
 @main.route('/select/User_Resumes_Query', methods=['GET','POST'])
 @login_required
 
@@ -19121,10 +20049,10 @@ def select_User_Resumes_query():
     CR_Date_To =  request.args.get('CR_Date_To',None,type=str)
     CIT_Status =  request.args.get('CIT_Status',None,type=str)
     Cur_Code =  request.args.get('Cur_Code',None,type=str)
-    CU_Id =  request.args.get('CU_Id',None,type=str)
     CIT_Count =  request.args.get('CIT_Count',None,type=str)
     CIT_Quantity =  request.args.get('CIT_Quantity',None,type=str)
     CIT_Generation =  request.args.get('CIT_Generation',None,type=str)
+    CU_Id =  request.args.get('CU_Id',None,type=str)
     CI_CC_Id =  request.args.get('CI_CC_Id',None,type=str)
     CU_Operation =  request.args.get('CU_Operation',None,type=str)
     Typ_Code =  request.args.get('Typ_Code',None,type=str)
@@ -19223,17 +20151,6 @@ def select_User_Resumes_query():
                 )
     
     
-    if CU_Id is not None and len(CU_Id)>0:
-            set_query_option(engine=db.engine,Interface=Interface,
-                User_Id=current_user.id,
-                Table_name=class_name,
-                Option_Type=OPTION_FILTER,
-                Argument_1='CU_Id:CU_Id',
-                Argument_2='LIKE',
-                Argument_3='\"%%%s%%\"'%CU_Id
-                )
-    
-    
     if CIT_Count is not None and len(CIT_Count)>0:
             set_query_option(engine=db.engine,Interface=Interface,
                 User_Id=current_user.id,
@@ -19264,6 +20181,17 @@ def select_User_Resumes_query():
                 Argument_1='CIT_Generation:CIT_Generation',
                 Argument_2='LIKE',
                 Argument_3='\"%%%s%%\"'%CIT_Generation
+                )
+    
+    
+    if CU_Id is not None and len(CU_Id)>0:
+            set_query_option(engine=db.engine,Interface=Interface,
+                User_Id=current_user.id,
+                Table_name=class_name,
+                Option_Type=OPTION_FILTER,
+                Argument_1='CU_Id:CU_Id',
+                Argument_2='LIKE',
+                Argument_3='\"%%%s%%\"'%CU_Id
                 )
     
     
@@ -19590,7 +20518,7 @@ def select_User_Resumes_query():
         rows = query.all()
         for row in rows:
             dict['detail'].append({})
-            for column in ['User_Id', 'Cus_Id', 'CR_Date_From', 'CR_Date_To', 'CIT_Status', 'Cur_Code', 'CU_Id', 'CIT_Count', 'CIT_Quantity', 'CIT_Generation', 'CI_CC_Id', 'CU_Operation', 'Typ_Code', 'CC_Cur_Code', 'CI_Id', 'Rat_Id', 'Rat_Price', 'Rat_MU_Code', 'Rat_Cur_Code', 'Rat_Period', 'Rat_Hourly', 'Rat_Daily', 'Rat_Monthly', 'CR_Quantity', 'CR_Quantity_at_Rate', 'CC_XR', 'CR_Cur_XR', 'CR_ST_at_Rate_Cur', 'CR_ST_at_CC_Cur', 'CR_ST_at_Cur', 'Cus_Name', 'CI_Name', 'CU_Description', 'CC_Description', 'Rat_Period_Description', 'CC_Code', 'Pla_Id', 'Pla_Name']:
+            for column in ['User_Id', 'Cus_Id', 'CR_Date_From', 'CR_Date_To', 'CIT_Status', 'Cur_Code', 'CIT_Count', 'CIT_Quantity', 'CIT_Generation', 'CU_Id', 'CI_CC_Id', 'CU_Operation', 'Typ_Code', 'CC_Cur_Code', 'CI_Id', 'Rat_Id', 'Rat_Price', 'Rat_MU_Code', 'Rat_Cur_Code', 'Rat_Period', 'Rat_Hourly', 'Rat_Daily', 'Rat_Monthly', 'CR_Quantity', 'CR_Quantity_at_Rate', 'CC_XR', 'CR_Cur_XR', 'CR_ST_at_Rate_Cur', 'CR_ST_at_CC_Cur', 'CR_ST_at_Cur', 'Cus_Name', 'CI_Name', 'CU_Description', 'CC_Description', 'Rat_Period_Description', 'CC_Code', 'Pla_Id', 'Pla_Name']:
                 dict['detail'][count].update( { column:str(row.__getattribute__(column))})
                 
             count += 1
@@ -19600,7 +20528,7 @@ def select_User_Resumes_query():
         dataframe      = json_normalize(data, 'detail').assign(**data['header'])
         fh,output_file = tempfile.mkstemp(suffix='', prefix='%_'%table_name, dir='/tmp', text=False)
         xlsx_file      = '%s/%s'%(current_app.root_path,url_for('static',filename='%s.xls'%(output_file)))
-        dataframe.to_excel(xlsx_file,sheet_name=table_name,columns=['User_Id', 'Cus_Id', 'CR_Date_From', 'CR_Date_To', 'CIT_Status', 'Cur_Code', 'CU_Id', 'CIT_Count', 'CIT_Quantity', 'CIT_Generation', 'CI_CC_Id', 'CU_Operation', 'Typ_Code', 'CC_Cur_Code', 'CI_Id', 'Rat_Id', 'Rat_Price', 'Rat_MU_Code', 'Rat_Cur_Code', 'Rat_Period', 'Rat_Hourly', 'Rat_Daily', 'Rat_Monthly', 'CR_Quantity', 'CR_Quantity_at_Rate', 'CC_XR', 'CR_Cur_XR', 'CR_ST_at_Rate_Cur', 'CR_ST_at_CC_Cur', 'CR_ST_at_Cur', 'Cus_Name', 'CI_Name', 'CU_Description', 'CC_Description', 'Rat_Period_Description', 'CC_Code', 'Pla_Id', 'Pla_Name'])
+        dataframe.to_excel(xlsx_file,sheet_name=table_name,columns=['User_Id', 'Cus_Id', 'CR_Date_From', 'CR_Date_To', 'CIT_Status', 'Cur_Code', 'CIT_Count', 'CIT_Quantity', 'CIT_Generation', 'CU_Id', 'CI_CC_Id', 'CU_Operation', 'Typ_Code', 'CC_Cur_Code', 'CI_Id', 'Rat_Id', 'Rat_Price', 'Rat_MU_Code', 'Rat_Cur_Code', 'Rat_Period', 'Rat_Hourly', 'Rat_Daily', 'Rat_Monthly', 'CR_Quantity', 'CR_Quantity_at_Rate', 'CC_XR', 'CR_Cur_XR', 'CR_ST_at_Rate_Cur', 'CR_ST_at_CC_Cur', 'CR_ST_at_Cur', 'Cus_Name', 'CI_Name', 'CU_Description', 'CC_Description', 'Rat_Period_Description', 'CC_Code', 'Pla_Id', 'Pla_Name'])
         return send_file(xlsx_file,as_attachment=True,attachment_filename=output_file.replace('/','_')+'.xls')
     elif mode == 'add':
         return redirect(url_for('.forms_%s'%table_name))
@@ -19626,9 +20554,6 @@ def select_User_Resumes_query():
             if field == 'Cur_Code':
                 if value is not None:
                     query = query.filter_by(Cur_Code=value)
-            if field == 'CU_Id':
-                if value is not None:
-                    query = query.filter_by(CU_Id=value)
             if field == 'CIT_Count':
                 if value is not None:
                     query = query.filter_by(CIT_Count=value)
@@ -19638,6 +20563,9 @@ def select_User_Resumes_query():
             if field == 'CIT_Generation':
                 if value is not None:
                     query = query.filter_by(CIT_Generation=value)
+            if field == 'CU_Id':
+                if value is not None:
+                    query = query.filter_by(CU_Id=value)
             if field == 'CI_CC_Id':
                 if value is not None:
                     query = query.filter_by(CI_CC_Id=value)
@@ -19749,9 +20677,9 @@ def select_User_Resumes_query():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:53.477768
+#  GLVH @ 2022-04-12 18:46:31.840960
 # ======================================================================
-# gen_views_api.html:AG 2022-04-06 14:30:53.477784
+# gen_views_api.html:AG 2022-04-12 18:46:31.840978
 # table_name: User_Resumes
 # class_name: user_resumes
 # is shardened: None
@@ -19809,14 +20737,14 @@ def api_get_User_Resumes(id=None):
                         query = query.filter(User_Resumes.CIT_Status == request.args.get('CIT_Status'))
                     if 'Cur_Code' in request.args:
                         query = query.filter(User_Resumes.Cur_Code == request.args.get('Cur_Code'))
-                    if 'CU_Id' in request.args:
-                        query = query.filter(User_Resumes.CU_Id == request.args.get('CU_Id'))
                     if 'CIT_Count' in request.args:
                         query = query.filter(User_Resumes.CIT_Count == request.args.get('CIT_Count'))
                     if 'CIT_Quantity' in request.args:
                         query = query.filter(User_Resumes.CIT_Quantity == request.args.get('CIT_Quantity'))
                     if 'CIT_Generation' in request.args:
                         query = query.filter(User_Resumes.CIT_Generation == request.args.get('CIT_Generation'))
+                    if 'CU_Id' in request.args:
+                        query = query.filter(User_Resumes.CU_Id == request.args.get('CU_Id'))
                     if 'CI_CC_Id' in request.args:
                         query = query.filter(User_Resumes.CI_CC_Id == request.args.get('CI_CC_Id'))
                     if 'CU_Operation' in request.args:
@@ -19916,10 +20844,10 @@ def api_post_User_Resumes():
             row.CR_Date_To = request.json.get('CR_Date_To',None)
             row.CIT_Status = request.json.get('CIT_Status',None)
             row.Cur_Code = request.json.get('Cur_Code',None)
-            row.CU_Id = request.json.get('CU_Id',None)
             row.CIT_Count = request.json.get('CIT_Count',None)
             row.CIT_Quantity = request.json.get('CIT_Quantity',None)
             row.CIT_Generation = request.json.get('CIT_Generation',1)
+            row.CU_Id = request.json.get('CU_Id',None)
             row.CI_CC_Id = request.json.get('CI_CC_Id',None)
             row.CU_Operation = request.json.get('CU_Operation',None)
             row.Typ_Code = request.json.get('Typ_Code',None)
@@ -20276,15 +21204,15 @@ def api_delete_User_Resumes(id):
 # ======================================================================# =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-06 14:30:48
+# GLVH @ 2022-04-12 18:46:26
 # =============================================================================
 # gen_views.py:32 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/views/view_users.py
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:53.608044
+#  GLVH @ 2022-04-12 18:46:31.977414
 # ======================================================================        
-# gen_views_form.html:AG 2022-04-06 14:30:53.608058
+# gen_views_form.html:AG 2022-04-12 18:46:31.977428
 @main.route('/forms/Users', methods=['GET', 'POST'])
 @login_required
 
@@ -20420,9 +21348,9 @@ def forms_Users():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:53.617575
+#  GLVH @ 2022-04-12 18:46:31.985113
 # ======================================================================        
-# gen_views_delete.html:AG 2022-04-06 14:30:53.617588
+# gen_views_delete.html:AG 2022-04-12 18:46:31.985124
 @main.route('/forms/Users_delete', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.DELETE)
@@ -20490,10 +21418,10 @@ def forms_Users_delete():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:53.633731
+#  GLVH @ 2022-04-12 18:46:32.009980
 # ======================================================================
 
-# gen_views_select_query.html:AG 2022-04-06 14:30:53.633745        
+# gen_views_select_query.html:AG 2022-04-12 18:46:32.009995        
 @main.route('/select/Users_Query', methods=['GET','POST'])
 @login_required
 @admin_required
@@ -20894,9 +21822,9 @@ def select_Users_query():
 # ======================================================================
 #  Auto-Generated code. Do not modify 
 #  (C) Sertechno/Emtec Group (2018,2019,2020)
-#  GLVH @ 2022-04-06 14:30:53.664602
+#  GLVH @ 2022-04-12 18:46:32.047922
 # ======================================================================
-# gen_views_api.html:AG 2022-04-06 14:30:53.664617
+# gen_views_api.html:AG 2022-04-12 18:46:32.047938
 # table_name: Users
 # class_name: User
 # is shardened: None
@@ -25594,191 +26522,6 @@ def uploaded_file(filename):
     #return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
     return send_from_directory(UPLOAD_FOLDER, filename)
 """    
-# ======================================================================
-# View for Fast Calculation of Period Usage up to now
-# (c) Sertechno 2021
-# GLVH @ 2021-12-04 Initial version
-# ======================================================================
-
-from pprint                         import pformat
-from emtec.collector.forms          import frm_charging_resume
-from babel.numbers                  import format_number
-from babel.numbers                  import format_decimal
-from babel.numbers                  import format_percent
-from emtec.collector.db.orm_model   import Configuration_Items
-import simplejson as json
-
-# ======================================================================
-
-
-@main.route('/report/Period_Usage', methods=['GET','POST'])
-@login_required
-def report_Period_Usage():
-    logger.debug(f'{this()}: Enter')    
-    collectordata=get_collectordata()
-    
-    db.session.flush()
-    db.session.commit()
-        
-    Cus_Id          =  current_user.cost_center.Cus_Id
-    Rates           = {}
-    
-    parser = configparser.ConfigParser(
-            allow_no_value=False,     # don't allow "key" without "="
-            delimiters=('=',),        # inifile "=" between key and value
-            comment_prefixes=(';','#'),  # only ';' for comments (fixes #channel)
-            inline_comment_prefixes=(';'),     # comments after lines
-            interpolation=configparser.ExtendedInterpolation(),
-            empty_lines_in_values=False  # empty line means new key
-            )
-    parser.read(current_app.config.get('COLLECTOR_CONFIG_FILE'))
-    # Read Configuration
-    Rates = {}
-    # Reads Rates from configuration file
-    for option in parser.options('Rates'):
-        values = parser.get('Rates',option).split(',')
-        logger.debug(f"values={values}")
-        if len(values)>1:
-            rate,measure_unit,period,is_allways_billeable = values
-        else:
-            rate = values[0]
-        Rates.update({
-            option:{
-                'rate'                : round(float(rate),12),
-                'measure_unit'        : str(measure_unit).strip().upper(),
-                'period'              : str(period).strip().upper(),
-                'is-allways_billeable': True if str(is_allways_billeable).upper() in ['TRUE','VERDADERO','SI','T','V','S'] else False
-            }
-        })
-    # set shardened Charge Items Table as per active period
-    suffix = f"{current_user.cost_center.Cus_Id}_{collectordata['COLLECTOR_PERIOD']['active']}"
-    Charge_Items.set_shard(suffix,db.engine)  
-    # GV BETA Message, to be removed --------------------------------------
-    flash(gettext('Beta version. Query in development. Results are referential only'),'warning')
-    # GV BETA Message, to be removed --------------------------------------
-    usage = db.Get_Period_Usage(customer_id=Cus_Id,rates=Rates)
-    # GV pprint(usage)
-    # Updated cached data for this specific query if requested 
-    dt = datetime.strptime(usage.get('period'),'%Y%m')
-    usage.update({'period_month':f"{dt.strftime('%B').lower()}" })
-    usage.update({'period_year':f"{dt.strftime('%Y')}"          })
-    usage.update({'period_text':f"{dt.strftime('%B %Y')}"       })
-    customer = db.session.query(Customers.Cus_Name
-                ).filter(Customers.Cus_Id==current_user.cost_center.Cus_Id
-                ).one_or_none()
-    if customer is not None and len(customer):
-        customer = customer[0]
-    else:
-        customer = ''
-    usage.update({'customer':customer})
-    try:
-        temp_folder   = "/tmp"
-        temp_filename = f"{temp_folder}/{next(tempfile._get_candidate_names())}.json"
-        with open(temp_filename,"w") as fp:
-            fp.write(json.dumps(usage))
-        return render_template('report_period_usage.html',data=usage,collectordata=collectordata,temp_filename=temp_filename)
-    except Exception as e:
-        return f"{this()}: Exception:  {str(e)}"
-        
-@main.route('/download/Period_Usage', methods=['GET','POST'])
-@login_required
-def download_Period_Usage():
-    logger.debug(f'{this()}: Enter')    
-    collectordata=get_collectordata()
-    
-    db.session.flush()
-    db.session.commit()
-    
-    temp_filename   =  request.args.get('temp_filename',None,type=str)
-    if not temp_filename:
-        return "Invalid data"
-
-    with open(temp_filename,'r') as fp:
-        data = json.load(fp)
-    
-    if data is None:
-        return "Invalid data"
-        
-    
-    d = {
-        'detail':[],
-        'rows':0
-    }
-    # Build list of records to export from query
-    for Component_Type in ['CPU','RAM']:
-        for Power_Status in ['0','1']:
-            try:
-                row = data[Component_Type][Power_Status]
-                d['detail'].append({
-                        'type'      :Component_Type,
-                        'power'     :'ON' if Power_Status=='1' else 'OFF',
-                        'hours'     :row.get('hours',0),
-                        'Q_hours'   :row.get('Q_hours',0),
-                        'Q_month'   :row.get('Q_month',0),
-                        'rate'      :row.get('rate',0),
-                        'rtmf'      :row.get('rtmf',0),
-                        'rate_month':row.get('rate_month',0),
-                        'bill'      :row.get('bill',0),
-                })
-            except Exception as e:
-                print(f"Exception: str({e})")
-    for Component_Type in ['DSK','SNP','DRP','IMG']:
-        for Power_Status in ['0','1']:
-            try:
-                row = data[Component_Type][Power_Status]
-                d['detail'].append({
-                        'type'      :Component_Type,
-                        'power'     :'ON' if Power_Status=='1' else 'OFF',
-                        'hours'     :row.get('hours',0),
-                        'Q_hours'   :row.get('Q_hours',0),
-                        'Q_month'   :row.get('Q_month',0),
-                        'rate'      :0,
-                        'rtmf'      :0,
-                        'rate_month':0,
-                        'bill'      :0,
-                })
-                for Disk_Type in ['HDD','SSD']:
-                    rox = row[Disk_Type]
-                    d['detail'].append({
-                            'type'      :f"{Component_Type}-{Disk_Type}",
-                            'power'     :'ON' if Power_Status=='1' else 'OFF',
-                            'hours'     :0,
-                            'Q_hours'   :0,
-                            'Q_month'   :rox.get('Q_month',0),
-                            'rate'      :rox.get('rate',0),
-                            'rtmf'      :row.get('rtmf',0),
-                            'rate_month':rox.get('rate_month',0),
-                            'bill'      :rox.get('bill',0),
-                    })
-            except Exception as e:
-                print(f"Exception: str({e})")
-                    
-    # List of fields in desired order 
-    headers=[
-                'type',
-                'power',
-                'hours',
-                'Q_hours',
-                'Q_month',
-                'rate',
-                'rtmf',
-                'rate_month',
-                'bill',
-    ]
-    # Normalize data into a Pandas Dataframe
-    df1 = json_normalize(d, 'detail')
-    # Reorder columns
-    df1 = df1.reindex(columns=headers)
-    # create temporary filename       
-    temp_name   = f"{ next(tempfile._get_candidate_names()) }.xlsx"
-    #print(f"temp_name={temp_name}")
-    
-    xlsx_file="%s/%s"%(current_app.root_path,url_for('static',filename='tmp/%s'%(temp_name)))
-    #print(f"df1={df1}")
-    #print(f"xlsx_file={xlsx_file}")
-    df1.to_excel(xlsx_file,f"Usage {data.get('period')}")
-    
-    return send_file(xlsx_file,as_attachment=True,attachment_filename=temp_name)
 # =============================================================================
 # View for Get Active Sharding Period
 # (c) Sertechno 2020
@@ -25876,6 +26619,70 @@ def set_Period():
                     User_Id=current_user.id
                     )
             )
+# =============================================================================
+# Statistics basic reporter
+# (c) Sertechno 2022
+# GLVH @ 2022-04-12
+# =============================================================================
+
+# view required imports
+import os
+import json
+import datetime
+from flask import request
+from pprint import pprint,pformat
+from emtec.collector.statistics import *
+# view required functions
+
+@main.route('/statistics/resumes', methods=['GET'])
+@login_required
+#@permission_required(Permission.CUSTOMER)
+def statistics_Resumes():
+    logger.warning('Enter: statistics_Resumes()'%())
+    print         ('Enter: statistics_Resumes()'%())
+    """
+    collectordata=get_collectordata()
+        
+    config_ini = configparser.ConfigParser(interpolation=ExtendedInterpolation())
+    if current_app.config.get('COLLECTOR_CONFIG_FILE'):
+        config_ini.read( current_app.config.get('COLLECTOR_CONFIG_FILE') )        
+        limit_user_cost_centers = config_ini.getboolean('Interface','limit_user_cost_centers',fallback=False)
+    else:
+        limit_user_cost_centers = False
+    """ 
+    # Will get all meaningfull periods
+    periods_data = Get_Periods(logger=logger)
+
+    periods = request.args.get('periods','today').split(',')
+
+    print(f"periods_data = {periods_data}")
+    print(f"periods      = {periods}")
+
+    user        = 1 # Forced Global system Adm Statistical User
+    customer    = 3
+    status      = 1
+    currency    = 'UF'
+    platform    = 1
+    agregations = request.args.get('agregations',AGREGATION_CU_TYPE)
+    print(f"agregations={agregations}")
+    agregations = str(agregations).split(',')
+    print(f"agregations={agregations}")
+    for i in range(len(agregations)):
+        agregations[i]=int(agregations[i])
+    print(f"agregations={agregations}")
+
+    resumes=[]
+    for name in periods:
+        start       = periods_data[name][0]
+        end         = periods_data[name][1]
+        resumes.append({'name':name,'resume':Get_Resume(db,user,customer,start,end,status,currency,platform,agregations,logger)})
+
+
+    #return render_template("report_statistics.html",resume=resume,collectordata=collectordata)
+    return render_template("report_statistics.html",resumes=resumes)
+
+# =============================================================================
+
 # =============================================================================
 # View for Get Charging Resume from DB
 # (c) Sertechno 2018

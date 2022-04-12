@@ -153,18 +153,34 @@ from emtec.plugins import *
 
 plugins_dir = os.path.join(app.root_path,'plugins')
 print(f"Loading plugins from: {plugins_dir}")
-app.config.update({'PLUGINS_MANAGER':PluginsManager(app=app,user=None,folder=plugins_dir,logger=logger)})
-print(f"app.config.PLUGINS_MANAGER = {app.config.get('PLUGINS_MANAGER')}")
-plugins = app.config.get('PLUGINS_MANAGER').plugins
+plugins_manager = PluginsManager(app=app,user=None,folder=plugins_dir,logger=logger) 
+app.config.update({'PLUGINS_MANAGER':plugins_manager})
+#print(f"app.config.PLUGINS_MANAGER = {app.config.get('PLUGINS_MANAGER')}")
+plugins = plugins_manager.plugins
 #print(f"plugins= {plugins}")
+plugins_manager.loaded()
+app.config.update({
+    'CUSTOMER_OPTIONS':[],
+    'ADMINISTRATOR_OPTIONS':[],
+})
+
 for name in plugins:
-    print()
-    print(f"Loaded plugin:   {name} {plugins.get(name).get('version')}")
+    #print()
+    #print(f"Loaded plugin:   {name} {plugins.get(name).get('version')}")
     instance = plugins.get(name).get('instance')
-    print(f"         instance: {instance}")
-    print(f"            title: {instance.title}")
-    print(f"short_description: {instance.short_description}")
-    print(f" long_description: {instance.long_description}")
+    #print(f"         instance: {instance}")
+    #print(f"            title: {instance.title}")
+    #print(f"short_description: {instance.short_description}")
+    #print(f" long_description: {instance.long_description}")
+    #print(f" scope/visibility: {instance.scope}/{instance.visibility}")
+    if instance.scope=='customer':
+        app.config['CUSTOMER_OPTIONS'].append({"name":instance.short_description,"url":f"/plugin/{name}","header":None,"hr":False,"test":False})
+    else:
+        app.config['ADMINISTRATOR_OPTIONS'].append({"name":instance.short_description,"url":f"/plugin/{name}","header":None,"hr":False,"test":False})
+
+# pprint (app.config)
+
+
 
 if __name__ == '__main__':
     app_ctx = app.app_context()

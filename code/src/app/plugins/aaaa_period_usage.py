@@ -38,9 +38,9 @@ class Instance(Plugin):
     version   = '1.0.1'
     templates = {'main':template_main}
     kwargs    = {}
-    title     = 'Period Usage'
-    short_description = 'Period Usage Report'
-    long_description  = 'AAAA Period Usage Report'
+    title     = gettext('Period Usage')
+    short_description = gettext('AAAA - Display Period Usage')
+    long_description  = gettext('Aguas Andinas - Display Period Usage Report')
     format = "html_body"
 
     def execute(self,data=None,**kwargs):
@@ -50,8 +50,9 @@ class Instance(Plugin):
             setattr(self,kwarg,kwargs.get(kwarg))
         #self.details()
         # Initialize Instance variables
-
+        print(f"{self.name}: executing plugin ")
         result = self.report_Period_Usage()
+        print(f"{self.name}: result = {type(result)} {len(result)}")
             
         return result
 
@@ -118,7 +119,9 @@ class Instance(Plugin):
             temp_filename = f"{temp_folder}/{next(tempfile._get_candidate_names())}.json"
             with open(temp_filename,"w") as fp:
                 fp.write(json.dumps(usage))
-            return render_template('report_period_usage.html',data=usage,collectordata=collectordata,temp_filename=temp_filename)
+            # GV 20220406 return render_template('report_period_usage.html',data=usage,collectordata=collectordata,temp_filename=temp_filename)
+            print(f"{self.name}: RENDERING : aaaa_period_usage.html")
+            return render_template('aaaa_period_usage.html',data=usage,collectordata=collectordata,temp_filename=temp_filename)
         except Exception as e:
             return f"{this()}: Exception:  {str(e)}"
             

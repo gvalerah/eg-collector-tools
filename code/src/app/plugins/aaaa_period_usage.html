@@ -2,18 +2,10 @@
 {# Period Usage Report Template                                                  #}
 {# For Customer on a defined period and status                                   #}
 {# (c) Sertechno 2021                                                            #}
-{# GLVH @ 2021-12-05                                                             #}
+{# GLVH @ 2021-12-05 Initial version                                             #}
 {# GLVH @ 2022-03-06 Refactoring for bootstrap 5                                 #}
+{# GLVH @ 2022-04-06 Plugin code - HTML BODY only                                #}
 {# ============================================================================= #}
-{% extends "collector_app.html" %}
-
-{% import "bootstrap/wtf.html" as wtf %}
-
-{% import "_macros.html" as macros %}
-
-{% block title %}{{gettext('Period Usage')}}{% endblock %}
-
-{% block content %}
     <h1>{{gettext('Usage Resume for period')}}: 
         <span style="color:blue">{{gettext(data.period_month)|capitalize}} {{data.period_year}} ({{data.customer}})</span>
     </h1>
@@ -429,6 +421,5 @@
         <td><b>{{collectordata.COLLECTOR_PERIOD.available|replace(',',', ')}}</b></td>
     </tr>
 </table>
-{% endblock content %}
 
 {# ============================================================================= #}
