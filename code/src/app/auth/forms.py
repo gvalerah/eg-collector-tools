@@ -1,6 +1,6 @@
 # GV 20220310 collector/app/auth/forms.py
 from flask_wtf                          import FlaskForm
-from wtforms                            import StringField, PasswordField, BooleanField, SubmitField, SelectField
+from wtforms                            import StringField, PasswordField, BooleanField, SubmitField, SelectField, IntegerField
 # GV 200020310 from wtforms.validators                import Required, Length, Email, Regexp, EqualTo
 from wtforms.validators                 import DataRequired, Length, Email, Regexp, EqualTo
 from wtforms                            import ValidationError
@@ -21,7 +21,8 @@ class RegistrationForm(FlaskForm):
                     DataRequired(), Length(1, 64), Regexp('^[A-Za-z][A-Za-z0-9_.]*$', 0, \
                     'Usernames must have only letters, ' \
                     'numbers, dots or underscores')])
-                    
+    name = StringField('Name')
+
     role_id     = SelectField('Role', validators=[DataRequired()], choices=[(1,'Customer'),(2,'Reporter'),(3,'Charger'),(4,'Administrator'),(5,'Auditor')], coerce=int)
         
     email       = StringField('Email', validators=[ DataRequired(), Length(1, 64), Email()])
@@ -31,8 +32,20 @@ class RegistrationForm(FlaskForm):
     
     password2   = PasswordField('Confirm password', validators=[ DataRequired()])
     
+
+    CC_Id = IntegerField('Cost Center')
+    roles = StringField('Roles')
+    ldap  = BooleanField('LDAP')
+    ldap_method = StringField('LDAP Method')
+    ldap_user   = StringField('LDAP User')
+    ldap_common = StringField('LDAP Common')
+    ldap_host   = StringField('LDAP Host')
+    ldap_port   = IntegerField('LDAP Port')
+    ldap_domain = StringField('LDAP Domain')
+    vars        = StringField('Variables')
+
     submit = SubmitField('Register')
-    
+        
     #def validate_email(self, field):
     #    if User.query.filter_by(email=field.data).first():
     #        raise ValidationError('Email already registered.')

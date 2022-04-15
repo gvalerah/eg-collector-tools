@@ -1,8 +1,10 @@
+import os
 import sys
 import configparser
 import datetime
 import time
 import logging
+import simplejson as json
 from flask import Flask
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
@@ -10,6 +12,7 @@ from    emtec.common.functions              import *
 from    emtec.collector.common.context      import Context
 from emtec.collector.statistics import *
 from emtec.feedback import *
+from flask import current_app
 
 # Application Initialization function
 def create_flask_app(app_name,config_file=None):
@@ -130,12 +133,13 @@ def Get_Resumes(
         db        = None,
         today     = None,
         customer  = 0,
-        all       = False,
+        force_all = False,
         logger    = logging.getLogger(),
         cit_status= 1,
         cur_code  = 'UF',
         ci_id     = [],
         user_id   = '1',
+        platform  = 2,
         cc_id     = '30000000',
         fast      = True,
         callback  = None,
@@ -144,52 +148,82 @@ def Get_Resumes(
     today = Get_Today(today)
     periods = Get_Periods(today,logger)
     resumes = {}
+    logger.debug(f"{this()}: current_app={current_app}")
+    logger.debug(f"{this()}: __file__={__file__}")
+    logger.debug(f"{this()}: os.path.basename(__file__)={os.path.basename(__file__)}")
+    logger.debug(f"{this()}: os.getcwd()={os.getcwd()}")
+    cache_filename = os.path.join(os.getcwd(),f"{os.path.basename(__file__).split('.')[0]}.cache")
+    logger.info(f"{this()}: cache_filename={cache_filename}")
+    
+    if os.path.exists(cache_filename):
+        with open(cache_filename,"r") as fp:
+            cache = json.load(fp)
+    else:
+        cache = {}
+    logger.debug(f"{this()}: cache = {cache}")
     for name in periods:
         # previous month will be calculated only in day 1 or forced
-        if not all and name == 'previous_month':
-            if today.day > 1 :
-                continue
+        #if not force_all and name == 'previous_month':
+        #    if today.day > 1 :
+        #        continue
         period = periods.get(name)
         start,end = period
         suffix = f"{customer}_{start.year:04d}{start.month:02d}"
-        logger.warning(f"Process resume '{name}' for Charge Items {suffix} {start.day:02d}-{end.day:02d}")
-        logger.warning(f"user={user_id} customer={customer} cost_center={cc_id}")
+        logger.info(f"{this()}: Process resume '{name}' for Charge Items {suffix} {start.day:02d}-{end.day:02d}")
+        logger.debug(f"{this()}: user={user_id} customer={customer} cost_center={cc_id}")
         count = None
-        if db is not None:
-            count = Generate_Resume(
-                db,
-                customer,
-                start,
-                end,
-                cit_status,
-                cur_code,
-                ci_id,
-                user_id,
-                cc_id,
-                fast=True,
-                logger=logger,
-                callback=callback,
-                **kwargs
-                )
-        resumes.update({name:{'count':count}})
-    logger.warning('---------------------')
-    platform=0
+        key=f"{user_id}-{customer}-{platform}-{cc_id}-{start.strftime('%Y%m%d')}-{end.strftime('%Y%m%d')}-{name}"
+        logger.debug(f"{this()}: key= {key}")
+        # Allways update 'current_mont' and today' resumes, avoid other already generated resumes
+        # already available in 'cache'
+        # unless 'force_all' is specified
+        # 'previous_month' is static and should be generated only once a month
+        # 'current_month_so_far' is static and should be generated only once a day (yesterday's info)
+        logger.debug(f"{this()}: force_all={force_all} name={name} key={key} missing={key not in cache.keys()}")
+        if force_all or name in ['current_month','today'] or  key not in cache.keys():
+            logger.info(f"{this()}: Processing resume key = {key}")
+            
+            if db is not None:
+                count = Generate_Resume(
+                    db,
+                    customer,
+                    start,
+                    end,
+                    cit_status,
+                    cur_code,
+                    ci_id,
+                    user_id,
+                    cc_id,
+                    fast=True,
+                    logger=logger,
+                    callback=callback,
+                    **kwargs
+                    )
+            if count is not None and count>0:
+                cache.update({key:{'count':count}})
+                with open(cache_filename,'w') as fp:
+                    fp.write(json.dumps(cache))
+            resumes.update({name:{'count':count}})
+        else:
+            logger.warning(f"{this()}: Avoid processs of resume key = {key}")
+        # lo movi hacia arriba 2 lineas por velocidad y evitar redundacia probar
+        # resumes.update({name:{'count':count}})
     for name in resumes:
         period = periods.get(name)
         start,end = period
-        logger.warning(f"resume: {name:22s}{start.strftime('%Y-%m-%d')}/{end.strftime('%Y-%m-%d')} = {resumes[name].get('count'):10,.0f}")
+        logger.info(f"{this()}: resume: {name} {start.strftime('%Y-%m-%d')}/{end.strftime('%Y-%m-%d')} = {resumes[name].get('count')}")
         Consolidate_Resume(db,user_id,customer,start,end,cit_status,cur_code,platform,logger)
         for agregation in AGREGATIONS:
             resume = Get_Resume(db,user_id,customer,start,end,cit_status,cur_code,platform,agregation,logger=logger)
             if resume:
-                logger.warning(
-                    f"resume {resume.get('description','Unknown')} rows={len(resume.get('rows',[]))} "
-                    f"Q@R={resume.get('Quantity_at_Rate'):,.0f} "
-                    f"Q={resume.get('Quantity'):,.0f} "
-                    f"P={resume.get('ST_at_Cur'):,.2f} {resume.get('currency')}"
+                logger.info(
+                    f"{this()}: resume: "
+                    f"Q@R = {resume.get('Quantity_at_Rate'):,.0f} "
+                    f"Q = {resume.get('Quantity'):,.0f} "
+                    f"P = {resume.get('ST_at_Cur'):,.2f} {resume.get('currency')} "
+                    f"rows = {len(resume.get('rows',[])):7,.0f} "
+                    f"{resume.get('description','Unknown')}"
                 )
-
-    logger.warning('---------------------')
 
 config_file = sys.argv[1]
 driver_group = 'Statistics'
@@ -232,67 +266,71 @@ if (os.path.isfile(config_file)):
     print(f"Charge_Items.__tablename__ = {Charge_Items.__tablename__}") 
     
     if (C):
-        handler,log_file = Reset_Log_File_Name(
-                        logger=logger,
-                        folder=C.log_folder,
-                        nameFormat="%s.log"%driver_group.replace(' ','_'),
-                        level=C.log_level,
-                        handler=handler,
-                        handlerType=handlerType,
-                        when=when,
-                        interval=interval,
-                        backupCount=backupCount
-                        )
-        log_file_previous = None
-
-        name = 'Statistics'
-        statistics = ['Get_Resumes'] 
-        pool_seconds = config_ini.getint('Statistics','pool_seconds',fallback=3600)
-
-        logger.info(f"{name}: ****** Daemon Start *********************")
-        logger.info(f"{name}: as '{getpass.getuser()}' Using configuration: '{config_file}'")
-        logger.info(f"{name}: *****************************************")
-        # GV --------------------------------------------------------------
-        # GV Overrides default log level for this driver group only
-        log_level       = config_ini.get('Statistics','log_level',fallback=C.log_level)        
-        logger.info(f"{name}: log level from config is  = {log_level}")
-        if type(log_level) == str:
-            log_level=log_level.lower()
-            if      log_level == 'debug':       log_level=logging.DEBUG
-            elif    log_level == 'information': log_level=logging.INFO
-            elif    log_level == 'error':       log_level=logging.ERROR
-            elif    log_level == 'warning':     log_level=logging.WARNING
-            elif    log_level == 'critical':    log_level=logging.CRITICAL
-            elif    log_level == 'fatal':       log_level=logging.FATAL
-            else:                               log_level=C.log_level
-        logger.setLevel(log_level)
-        logger.info(f"{name}: driver {name} log level set to           = {logger.level}")
-        logger.info(f"{name}: driver {name} log effective level set to = {logger.getEffectiveLevel()}")
-        logger.info(f"{name}: driver {name} logger                     = {logger}")
-        # GV --------------------------------------------------------------
-
-        logger.debug(f"{name}: name         = {name}")
-        logger.debug(f"{name}: pool_seconds = {pool_seconds}")
-
-        # GV Required to handle multiple collector services in one daemon
-        # GV services are serialized
-        date=datetime.datetime.now()
-        customer    = config_ini.getint    ('Statistics','customer',fallback=3)        
-        status      = config_ini.getint    ('Statistics','status',fallback=1)        
-        currency    = config_ini.get       ('Statistics','currency',fallback='UF')        
-        cis         = config_ini.get       ('Statistics','cis',fallback=None)        
-        user        = config_ini.getint    ('Statistics','user',fallback=1)        
-        cost_center = config_ini.get       ('Statistics','cost_center',fallback=None)        
-        fast        = config_ini.getboolean('Statistics','fast',fallback=True)        
-        callback    = config_ini.get       ('Statistics','callback',fallback='default')        
-
-        if callback is not None:
-            if  callback == 'default':
-                callback=display_advance
-            else:
-                callback=globals().get(callback)
 
         while True:
+
+            handler,log_file = Reset_Log_File_Name(
+                            logger=logger,
+                            folder=C.log_folder,
+                            nameFormat="%s.log"%driver_group.replace(' ','_'),
+                            level=C.log_level,
+                            handler=handler,
+                            handlerType=handlerType,
+                            when=when,
+                            interval=interval,
+                            backupCount=backupCount
+                            )
+            log_file_previous = None
+
+            name = 'Statistics'
+            statistics = ['Get_Resumes'] 
+            pool_seconds = config_ini.getint('Statistics','pool_seconds',fallback=3600)
+
+            logger.info(f"{name}: ****** Daemon Start *********************")
+            logger.info(f"{name}: as '{getpass.getuser()}' Using configuration: '{config_file}'")
+            logger.info(f"{name}: *****************************************")
+            # GV --------------------------------------------------------------
+            # GV Overrides default log level for this driver group only
+            log_level       = config_ini.get('Statistics','log_level',fallback=C.log_level)        
+            logger.info(f"{name}: log level from config is  = {log_level}")
+            if type(log_level) == str:
+                log_level=log_level.lower()
+                if      log_level == 'debug':       log_level=logging.DEBUG
+                elif    log_level == 'information': log_level=logging.INFO
+                elif    log_level == 'error':       log_level=logging.ERROR
+                elif    log_level == 'warning':     log_level=logging.WARNING
+                elif    log_level == 'critical':    log_level=logging.CRITICAL
+                elif    log_level == 'fatal':       log_level=logging.FATAL
+                else:                               log_level=C.log_level
+            logger.setLevel(log_level)
+            logger.info(f"{name}: driver {name} log level set to           = {logger.level}")
+            logger.info(f"{name}: driver {name} log effective level set to = {logger.getEffectiveLevel()}")
+            logger.info(f"{name}: driver {name} logger                     = {logger}")
+            # GV --------------------------------------------------------------
+
+            logger.debug(f"{name}: name         = {name}")
+            logger.debug(f"{name}: pool_seconds = {pool_seconds}")
+
+            # GV Required to handle multiple collector services in one daemon
+            # GV services are serialized
+            date=datetime.datetime.now()
+            customer    = config_ini.getint    ('Statistics','customer',fallback=3)        
+            status      = config_ini.getint    ('Statistics','status',fallback=1)        
+            currency    = config_ini.get       ('Statistics','currency',fallback='UF')        
+            cis         = config_ini.get       ('Statistics','cis',fallback=None)        
+            user        = config_ini.getint    ('Statistics','user',fallback=1)        
+            cost_center = config_ini.get       ('Statistics','cost_center',fallback=None)        
+            platform    = config_ini.get       ('Statistics','platform',fallback=2)        
+            force_all   = config_ini.getboolean('Statistics','force_all',fallback=False)        
+            fast        = config_ini.getboolean('Statistics','fast',fallback=True)        
+            callback    = config_ini.get       ('Statistics','callback',fallback='default')        
+
+            if callback is not None:
+                if  callback == 'default':
+                    callback=display_advance
+                else:
+                    callback=globals().get(callback)
+
             # GV Check for propper log file for this iteration
             if (log_file_previous != log_file):
                 logger.info(f"{name}: Logging to '{log_file}'")
@@ -312,12 +350,15 @@ if (os.path.isfile(config_file)):
                     for statistic in statistics:
                         logger.info(f"{name}: Executing statistics mode '{statistic}'")
                         print(f"{name}: {time.strftime('%H:%M:%S')} Executing statistics mode '{statistic}'")
+                        db.session.close()
+                        db.session.flush()
+                        start=datetime.datetime.now().timestamp()
                         if statistic == 'Get_Resumes':
                             Get_Resumes(
                                 db         = db,
                                 today      = date,
                                 customer   = customer,
-                                all        = all,
+                                force_all  = force_all,
                                 logger     = logger,
                                 cit_status = status,
                                 cur_code   = currency,
@@ -329,8 +370,10 @@ if (os.path.isfile(config_file)):
                             )
                         else:
                             C.logger.error(f"{name}: Invalid statistics name '{statistic}'.")
+                        end=datetime.datetime.now().timestamp()
+                        logger.info(f"{name}: '{statistic}' took {end-start:,.0f} seconds")
                 except Exception as e:
-                    C.logger.error(f"{name}: Exception catched during Stadistical execution.'errno:{e.errno},strerror:{e.strerror},args:{e.args}'")
+                    C.logger.error(f"{name}: Exception catched during Statistical execution.'errno:{e.errno},strerror:{e.strerror},args:{e.args}'")
                     #break
                 os._exit(0)
                 # GV --------------------------------------------------

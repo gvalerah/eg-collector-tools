@@ -10,6 +10,7 @@ from flask                              import redirect
 from flask                              import request
 from flask                              import url_for
 from flask                              import flash
+from flask                              import current_app
 
 # Authorization sub-system
 from .                                  import auth
@@ -28,6 +29,8 @@ from ..                                 import logger
 
 # Actual Application model
 from emtec.collector.db.flask_models    import User
+from emtec.debug                        import *
+from emtec.ldap                         import *
 
 # Interface
 from .forms                             import LoginForm
@@ -38,6 +41,7 @@ from .forms                             import RegistrationForm
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
+    logger.debug(f"{this()}: IN")
     try:
         logger.debug(f"login: login in course ... viene mas data")
         logger.debug(f"login: User       = {User}")
@@ -64,22 +68,97 @@ def login():
             try:
                 logger.debug(f"login: form.validate_on_submit() = True")
                 user = User.query.filter_by(username=form.username.data).first()
-                #rint(f"login: {user}")
                 logger.debug(f"login: {user}")
-                if user is not None and user.verify_password(form.password.data):
-                    login_user(user, False)
-                    #rint(       f"login: 69: request.args.get('next') = {request.args.get('next')}")
-                    logger.debug(f"login: 70: request.args.get('next') = {request.args.get('next')}")
-                    #rint(       f"login: 71: url_for('main.index')    =",url_for('main.index'))
-                    logger.debug(f"login: 72: url_for('main.index')    = {url_for('main.index')}")
-                    return redirect(request.args.get('next') or url_for('main.index'))
+                if user.ldap:
+                    # LDAP HERE ----------------------------------------------
+                    logger.info(f"{this()}:  user {user} requires LDAP authentication")
+                    try:
+                        # LDAP default methos is SIMPLE, otherwise needs to be specified
+                        if user.ldap_method is None:
+                            method = 'SIMPLE'
+                        else:
+                            method = user.ldap_method.strip().upper()
+                        if len(method):
+                            logger.info(f"{this()}: method = {method}")
+                            ldap_user_name = user.ldap_user
+                            ldap_common_name = user.ldap_common
+                            host   = user.ldap_host   if user.ldap_host   is not None else current_app.config.get('LDAP_HOST')
+                            port   = user.ldap_port   if user.ldap_port               else current_app.config.get('LDAP_PORT')
+                            domain = user.ldap_domain if user.ldap_domain is not None else current_app.config.get('LDAP_DOMAIN')
+                            # Elemental very simple OPEN LDAP Authentication
+                            if method == 'SIMPLE': 
+                                LDAP_username = ldap_username(username=ldap_user_name,common_name=ldap_common_name,domain=domain)
+                                logger.info(f"{this()}: LDAP_username = {LDAP_username}")
+                                success = ldap_authentication(LDAP_username, form.password.data,host=host,port=port,logger=logger)
+                            # MS Windows Active Directory Authentication
+                            elif method in ['MSAD','WINDOWS']:
+                                logger.info(f"{this()}: Enter MSAD/WINDOWS authentication")
+                                # Gets sure LDAP username format is DOMAIN\USERNAME
+                                if ldap_user_name.find("\\")>-1: pass
+                                elif ldap_user_name.find("@")>-1: pass
+                                else: ldap_user_name = f"{domain.upper()}\\{ldap_user_name}"
+                                logger.debug(f"{this()}: ldap_user_name={ldap_user_name}")
+                                options = {}
+                                # defaults
+                                '''
+                                protocol = 3
+                                options  = [(ldap.OPT_REFERRALS,0)]
+                                if len(user.vars):
+                                    pairs = user.vars.split(',')
+                                    for pair in pairs:
+                                        var,value=pair.split('=')
+                                        variables.update({var:value})
+                                    for variable in variables:
+                                        if variable == 'protocol':protocol=int(value)
+                                        else:
+                                            key = getattr(ldap,key)
+                                            if key is not None:
+                                                # cast value to int if possible
+                                                try:
+                                                    value=int(value)
+                                                except:
+                                                    pass
+                                                options.append((key,value))
+                                '''
+                                try:
+                                    vars = json.loads(user.vars)
+                                except:
+                                    vars = {}
+                                logger.debug(f"{this()}: host={host} user={ldap_user_name} vars={vars}")
+                                success = ldap_authentication_msad(host, ldap_user_name, form.password.data, logger=logger,**vars)
+                            # Legacy NT Lan Manager authentication should be considered obsolete
+                            elif method in ['NTLM']: 
+                                if ldap_user_name.find("\\")>-1: pass
+                                elif ldap_user_name.find("@")>-1:
+                                    usr,dom = ldap_user_name.split('@',1)
+                                    ldap_user_name = f"{str(dom).upper()}\\{usr}"
+                                else: ldap_user_name = f"{domain.upper()}\\{ldap_user_name}"
+                                flash(f"host={host} user={ldap_user_name} pwd={form.password.data}")
+                                vars = json.loads(user.vars)
+                                url = f"http://{domain}/{vars.get('endpoint')}"
+                                success = ldap_authentication_ntlm(url, ldap_user_name, form.password.data,logger=logger)
+                            logger.info(f"{this()}: success={success}")
+                            if success:
+                                login_user(user, False)
+                                return redirect(request.args.get('next') or url_for('main.index'))
+                            else:
+                                flash(gettext('Invalid username or password.'),'error')
+                        else:
+                            flash(gettext('Invalid authentication method required.'),'error')
+                    except Exception as e:
+                        flash(f"EXCEPTION: {str(e)}",'error')
+                    # LDAP HERE ----------------------------------------------
                 else:
-                    logger.error(f"login: user = {user}")
-                    if user is not None:
-                        logger.error(f"login: user.verify_password() = {user.verify_password}")
-                print('Invalid username or password.')
-                flash('Invalid username or password.','error')
-                #lash('Invalid username or password.')
+                    if user is not None and user.verify_password(form.password.data):
+                        login_user(user, False)
+                        logger.debug(f"{this()}: request.args.get('next') = {request.args.get('next')}")
+                        logger.debug(f"{this()}: url_for('main.index')    = {url_for('main.index')}")
+                        return redirect(request.args.get('next') or url_for('main.index'))
+                    else:
+                        logger.error(f"login: user = {user}")
+                        if user is not None:
+                            logger.error(f"login: user.verify_password() = {user.verify_password(form.password.data)}")
+                    flash('Invalid username or password.','error')
             except Exception as e:
                 print       ( f"login: form validated exception: {str(e)}")
                 logger.error( f"login: form validated exception: {str(e)}")
@@ -120,11 +199,21 @@ def register():
     db.session.flush()
     form = RegistrationForm()
     if form.validate_on_submit():
-                
         user = User(username=form.username.data,
             role_id=form.role_id.data,
             email=form.email.data,
-            password=form.password.data)
+            password=form.password.data,
+            CC_Id = form.CC_Id.data,
+            roles = form.roles.data,
+            ldap  = form.ldap.data,
+            ldap_method = form.ldap_method.data,
+            ldap_user   = form.ldap_user.data,
+            ldap_common = form.ldap_common.data,
+            ldap_host   = form.ldap_host.data,
+            ldap_port   = form.ldap_port.data,
+            ldap_domain = form.ldap_domain.data,
+            vars        = form.vars.data
+            )
         try:
             #flash("Trying to register user: '%s'"%user)
             db.session.add(user)

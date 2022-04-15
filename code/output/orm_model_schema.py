@@ -1,7 +1,7 @@
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-12 18:46:26
+# GLVH @ 2022-04-14 17:25:17
 # =============================================================================
 
 # gen_model_flask.py:67 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/ORM_model_schema.py
@@ -420,6 +420,7 @@ def Create_Tables(engine):
                 Column( 'CC_Id',Integer, ForeignKey('Cost_Centers.CC_Id') ),
                 Column( 'roles',String(255) ),
                 Column( 'ldap',Boolean ),
+                Column( 'ldap_method',String(45) ),
                 Column( 'ldap_user',String(45) ),
                 Column( 'ldap_common',String(45) ),
                 Column( 'ldap_host',String(45) ),
