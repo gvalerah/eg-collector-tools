@@ -21,7 +21,7 @@ from sqlalchemy import ForeignKey
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-14 17:25:17
+# GLVH @ 2022-04-16 20:09:52
 # =============================================================================
 
 from sqlalchemy                 import Table, Column
@@ -36,7 +36,7 @@ from sqlalchemy                 import VARBINARY
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-14 17:25:17
+# GLVH @ 2022-04-16 20:09:52
 # =============================================================================
 import json
 import logging
@@ -50,7 +50,7 @@ Base = declarative_base()
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-14 17:25:17
+# GLVH @ 2022-04-16 20:09:52
 # =============================================================================
 
 # GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_cit_generations.py
@@ -222,7 +222,7 @@ class CIT_Generations(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-14 17:25:17
+# GLVH @ 2022-04-16 20:09:52
 # =============================================================================
 
 # GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_cit_statuses.py
@@ -394,7 +394,7 @@ class CIT_Statuses(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-14 17:25:17
+# GLVH @ 2022-04-16 20:09:52
 # =============================================================================
 
 # GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_cu_operations.py
@@ -570,7 +570,7 @@ class CU_Operations(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-14 17:25:17
+# GLVH @ 2022-04-16 20:09:52
 # =============================================================================
 
 # GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_cu_types.py
@@ -742,7 +742,7 @@ class CU_Types(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-14 17:25:17
+# GLVH @ 2022-04-16 20:09:52
 # =============================================================================
 
 # GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_charge_items.py
@@ -924,7 +924,7 @@ class Charge_Items(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-14 17:25:17
+# GLVH @ 2022-04-16 20:09:52
 # =============================================================================
 
 # gen_model_flask.py:865 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_charge_items.py
@@ -1085,7 +1085,7 @@ def get_Charge_Items(table_name_suffix):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-14 17:25:17
+# GLVH @ 2022-04-16 20:09:52
 # =============================================================================
 
 # GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_charge_resumes.py
@@ -1329,7 +1329,7 @@ class Charge_Resumes(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-14 17:25:17
+# GLVH @ 2022-04-16 20:09:52
 # =============================================================================
 
 # GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_charge_unit_egm.py
@@ -1517,7 +1517,7 @@ class Charge_Unit_EGM(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-14 17:25:17
+# GLVH @ 2022-04-16 20:09:52
 # =============================================================================
 
 # GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_charge_units.py
@@ -1713,7 +1713,7 @@ class Charge_Units(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-14 17:25:17
+# GLVH @ 2022-04-16 20:09:52
 # =============================================================================
 
 # GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_configuration_items.py
@@ -1897,7 +1897,7 @@ class Configuration_Items(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-14 17:25:17
+# GLVH @ 2022-04-16 20:09:52
 # =============================================================================
 
 # GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_cost_centers.py
@@ -2081,7 +2081,7 @@ class Cost_Centers(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-14 17:25:17
+# GLVH @ 2022-04-16 20:09:52
 # =============================================================================
 
 # GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_countries.py
@@ -2257,7 +2257,7 @@ class Countries(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-14 17:25:17
+# GLVH @ 2022-04-16 20:09:52
 # =============================================================================
 
 # GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_countries_currencies.py
@@ -2431,7 +2431,7 @@ class Countries_Currencies(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-14 17:25:17
+# GLVH @ 2022-04-16 20:09:52
 # =============================================================================
 
 # GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_currencies.py
@@ -2607,7 +2607,7 @@ class Currencies(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-14 17:25:17
+# GLVH @ 2022-04-16 20:09:52
 # =============================================================================
 
 # GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_customers.py
@@ -2781,7 +2781,7 @@ class Customers(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-14 17:25:17
+# GLVH @ 2022-04-16 20:09:52
 # =============================================================================
 
 # GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_exchange_rates.py
@@ -2957,7 +2957,7 @@ class Exchange_Rates(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-14 17:25:17
+# GLVH @ 2022-04-16 20:09:52
 # =============================================================================
 
 # GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_interface.py
@@ -3141,7 +3141,7 @@ class Interface(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-14 17:25:17
+# GLVH @ 2022-04-16 20:09:52
 # =============================================================================
 
 # GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_measure_units.py
@@ -3313,7 +3313,7 @@ class Measure_Units(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-14 17:25:17
+# GLVH @ 2022-04-16 20:09:52
 # =============================================================================
 
 # GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_platforms.py
@@ -3493,7 +3493,7 @@ class Platforms(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-14 17:25:17
+# GLVH @ 2022-04-16 20:09:52
 # =============================================================================
 
 # GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_rat_periods.py
@@ -3665,7 +3665,7 @@ class Rat_Periods(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-14 17:25:17
+# GLVH @ 2022-04-16 20:09:52
 # =============================================================================
 
 # GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_rates.py
@@ -3861,7 +3861,7 @@ class Rates(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-14 17:25:17
+# GLVH @ 2022-04-16 20:09:52
 # =============================================================================
 
 # GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_roles.py
@@ -4037,7 +4037,7 @@ class Roles(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-14 17:25:17
+# GLVH @ 2022-04-16 20:09:52
 # =============================================================================
 
 # GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_st_use_per_cu.py
@@ -4251,7 +4251,7 @@ class ST_Use_Per_CU(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-14 17:25:17
+# GLVH @ 2022-04-16 20:09:52
 # =============================================================================
 
 # GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_st_use_per_type.py
@@ -4445,7 +4445,7 @@ class ST_Use_Per_Type(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-14 17:25:17
+# GLVH @ 2022-04-16 20:09:52
 # =============================================================================
 
 # GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_statistics.py
@@ -4498,6 +4498,7 @@ class Statistics(Base):
     CI_Id               = Column( Integer, primary_key=True )
     CU_Id               = Column( Integer, primary_key=True )
     Typ_Code            = Column( String(10), primary_key=True )
+    Period              = Column( String(45), primary_key=True )
     Agregation          = Column( Integer, primary_key=True )
     CR_Quantity_at_Rate = Column( Numeric(24,12) )
     CR_Quantity         = Column( Numeric(24,12) )
@@ -4507,7 +4508,7 @@ class Statistics(Base):
     CIT_Count           = Column( Integer )
     Pla_Id              = Column( Integer )
     
-    def __init__(self, CR_Date_From=None, CR_Date_To=None, User_Id=None, Cus_Id=0, CC_Id=0, CI_Id=1, CU_Id=0, Typ_Code='NUL', Agregation=0, CR_Quantity_at_Rate=0.000000000000, CR_Quantity=0.000000000000, CR_ST_at_Cur=0.000000000000, Cur_Code='None', CIT_Status=None, CIT_Count=0, Pla_Id=0,engine=None,logger=None):
+    def __init__(self, CR_Date_From=None, CR_Date_To=None, User_Id=None, Cus_Id=0, CC_Id=0, CI_Id=1, CU_Id=0, Typ_Code='NUL', Period='None', Agregation=0, CR_Quantity_at_Rate=0.000000000000, CR_Quantity=0.000000000000, CR_ST_at_Cur=0.000000000000, Cur_Code='None', CIT_Status=None, CIT_Count=0, Pla_Id=0,engine=None,logger=None):
         """ Initiates a Statistics class record """
         self.engine=engine
         self.logger=logger
@@ -4519,6 +4520,7 @@ class Statistics(Base):
         self.CI_Id               = CI_Id
         self.CU_Id               = CU_Id
         self.Typ_Code            = Typ_Code
+        self.Period              = Period
         self.Agregation          = Agregation
         self.CR_Quantity_at_Rate = CR_Quantity_at_Rate
         self.CR_Quantity         = CR_Quantity
@@ -4531,22 +4533,22 @@ class Statistics(Base):
         self.log('Created %s'%self)
     def __repr__(self):
         """ default class Statistics representation function """
-        return "<Statistics( CR_Date_From='%s', CR_Date_To='%s', User_Id='%s', Cus_Id='%s', CC_Id='%s', CI_Id='%s', CU_Id='%s', Typ_Code='%s', Agregation='%s', CR_Quantity_at_Rate='%s', CR_Quantity='%s', CR_ST_at_Cur='%s', Cur_Code='%s', CIT_Status='%s', CIT_Count='%s', Pla_Id='%s')>" % \
-                ( self.CR_Date_From, self.CR_Date_To, self.User_Id, self.Cus_Id, self.CC_Id, self.CI_Id, self.CU_Id, self.Typ_Code, self.Agregation, self.CR_Quantity_at_Rate, self.CR_Quantity, self.CR_ST_at_Cur, self.Cur_Code, self.CIT_Status, self.CIT_Count, self.Pla_Id)
+        return "<Statistics( CR_Date_From='%s', CR_Date_To='%s', User_Id='%s', Cus_Id='%s', CC_Id='%s', CI_Id='%s', CU_Id='%s', Typ_Code='%s', Period='%s', Agregation='%s', CR_Quantity_at_Rate='%s', CR_Quantity='%s', CR_ST_at_Cur='%s', Cur_Code='%s', CIT_Status='%s', CIT_Count='%s', Pla_Id='%s')>" % \
+                ( self.CR_Date_From, self.CR_Date_To, self.User_Id, self.Cus_Id, self.CC_Id, self.CI_Id, self.CU_Id, self.Typ_Code, self.Period, self.Agregation, self.CR_Quantity_at_Rate, self.CR_Quantity, self.CR_ST_at_Cur, self.Cur_Code, self.CIT_Status, self.CIT_Count, self.Pla_Id)
 
     def get_list(self):
         """ Gets Statistics record in list format """
-        __list = [ self.CR_Date_From, self.CR_Date_To, self.User_Id, self.Cus_Id, self.CC_Id, self.CI_Id, self.CU_Id, self.Typ_Code, self.Agregation, self.CR_Quantity_at_Rate, self.CR_Quantity, self.CR_ST_at_Cur, self.Cur_Code, self.CIT_Status, self.CIT_Count, self.Pla_Id]
+        __list = [ self.CR_Date_From, self.CR_Date_To, self.User_Id, self.Cus_Id, self.CC_Id, self.CI_Id, self.CU_Id, self.Typ_Code, self.Period, self.Agregation, self.CR_Quantity_at_Rate, self.CR_Quantity, self.CR_ST_at_Cur, self.Cur_Code, self.CIT_Status, self.CIT_Count, self.Pla_Id]
         return __list
 
     def get_tuple(self):
         """ Gets Statistics record in tuple format """
-        __tuple = ( self.CR_Date_From, self.CR_Date_To, self.User_Id, self.Cus_Id, self.CC_Id, self.CI_Id, self.CU_Id, self.Typ_Code, self.Agregation, self.CR_Quantity_at_Rate, self.CR_Quantity, self.CR_ST_at_Cur, self.Cur_Code, self.CIT_Status, self.CIT_Count, self.Pla_Id)
+        __tuple = ( self.CR_Date_From, self.CR_Date_To, self.User_Id, self.Cus_Id, self.CC_Id, self.CI_Id, self.CU_Id, self.Typ_Code, self.Period, self.Agregation, self.CR_Quantity_at_Rate, self.CR_Quantity, self.CR_ST_at_Cur, self.Cur_Code, self.CIT_Status, self.CIT_Count, self.Pla_Id)
         return __tuple
 
     def get_dict(self):
         """ Gets Statistics record in dict format """
-        __dict={'CR_Date_From':self.CR_Date_From,'CR_Date_To':self.CR_Date_To,'User_Id':self.User_Id,'Cus_Id':self.Cus_Id,'CC_Id':self.CC_Id,'CI_Id':self.CI_Id,'CU_Id':self.CU_Id,'Typ_Code':self.Typ_Code,'Agregation':self.Agregation,'CR_Quantity_at_Rate':self.CR_Quantity_at_Rate,'CR_Quantity':self.CR_Quantity,'CR_ST_at_Cur':self.CR_ST_at_Cur,'Cur_Code':self.Cur_Code,'CIT_Status':self.CIT_Status,'CIT_Count':self.CIT_Count,'Pla_Id':self.Pla_Id}
+        __dict={'CR_Date_From':self.CR_Date_From,'CR_Date_To':self.CR_Date_To,'User_Id':self.User_Id,'Cus_Id':self.Cus_Id,'CC_Id':self.CC_Id,'CI_Id':self.CI_Id,'CU_Id':self.CU_Id,'Typ_Code':self.Typ_Code,'Period':self.Period,'Agregation':self.Agregation,'CR_Quantity_at_Rate':self.CR_Quantity_at_Rate,'CR_Quantity':self.CR_Quantity,'CR_ST_at_Cur':self.CR_ST_at_Cur,'Cur_Code':self.Cur_Code,'CIT_Status':self.CIT_Status,'CIT_Count':self.CIT_Count,'Pla_Id':self.Pla_Id}
 
         return __dict
 
@@ -4598,41 +4600,41 @@ class Statistics(Base):
 
     def get_columns(self):
         """ Gets Statistics record column full details list """
-        __list=[{'field': 'CR_Date_From', 'type': 'date', 'type_flask': 'db.Date', 'type_sqlalchemy': 'Date', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 1, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'DateField', 'is_id': False, 'header': 'CR_Date_From', 'is_time': False}, {'field': 'CR_Date_To', 'type': 'date', 'type_flask': 'db.Date', 'type_sqlalchemy': 'Date', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 2, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'DateField', 'is_id': False, 'header': 'CR_Date_To', 'is_time': False}, {'field': 'User_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 3, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'User_Id', 'is_time': False}, {'field': 'Cus_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': '0', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 4, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'Cus_Id', 'is_time': False}, {'field': 'CC_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': '0', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 5, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'CC_Id', 'is_time': False}, {'field': 'CI_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': '1', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 6, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'CI_Id', 'is_time': False}, {'field': 'CU_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': '0', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 7, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'CU_Id', 'is_time': False}, {'field': 'Typ_Code', 'type': 'varchar(10)', 'type_flask': 'db.String(10)', 'type_sqlalchemy': 'String(10)', 'null': 'NO', 'key': 'PRI', 'default': 'NUL', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 8, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Typ_Code', 'is_time': False}, {'field': 'Agregation', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': '0', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 9, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'Agregation', 'is_time': False}, {'field': 'CR_Quantity_at_Rate', 'type': 'decimal(24,12)', 'type_flask': 'db.Numeric(24,12)', 'type_sqlalchemy': 'Numeric(24,12)', 'null': 'YES', 'key': '', 'default': '0.000000000000', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 10, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'CR_Quantity_at_Rate', 'is_time': False}, {'field': 'CR_Quantity', 'type': 'decimal(24,12)', 'type_flask': 'db.Numeric(24,12)', 'type_sqlalchemy': 'Numeric(24,12)', 'null': 'YES', 'key': '', 'default': '0.000000000000', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 11, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'CR_Quantity', 'is_time': False}, {'field': 'CR_ST_at_Cur', 'type': 'decimal(20,12)', 'type_flask': 'db.Numeric(20,12)', 'type_sqlalchemy': 'Numeric(20,12)', 'null': 'YES', 'key': '', 'default': '0.000000000000', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 12, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'CR_ST_at_Cur', 'is_time': False}, {'field': 'Cur_Code', 'type': 'varchar(3)', 'type_flask': 'db.String(3)', 'type_sqlalchemy': 'String(3)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 13, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Cur_Code', 'is_time': False}, {'field': 'CIT_Status', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 14, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'CIT_Status', 'is_time': False}, {'field': 'CIT_Count', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': '0', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 15, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'CIT_Count', 'is_time': False}, {'field': 'Pla_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': '0', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 16, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'Pla_Id', 'is_time': False}]
+        __list=[{'field': 'CR_Date_From', 'type': 'date', 'type_flask': 'db.Date', 'type_sqlalchemy': 'Date', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 1, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'DateField', 'is_id': False, 'header': 'CR_Date_From', 'is_time': False}, {'field': 'CR_Date_To', 'type': 'date', 'type_flask': 'db.Date', 'type_sqlalchemy': 'Date', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 2, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'DateField', 'is_id': False, 'header': 'CR_Date_To', 'is_time': False}, {'field': 'User_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 3, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'User_Id', 'is_time': False}, {'field': 'Cus_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': '0', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 4, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'Cus_Id', 'is_time': False}, {'field': 'CC_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': '0', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 5, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'CC_Id', 'is_time': False}, {'field': 'CI_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': '1', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 6, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'CI_Id', 'is_time': False}, {'field': 'CU_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': '0', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 7, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'CU_Id', 'is_time': False}, {'field': 'Typ_Code', 'type': 'varchar(10)', 'type_flask': 'db.String(10)', 'type_sqlalchemy': 'String(10)', 'null': 'NO', 'key': 'PRI', 'default': 'NUL', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 8, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Typ_Code', 'is_time': False}, {'field': 'Period', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 9, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Period', 'is_time': False}, {'field': 'Agregation', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': '0', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 10, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'Agregation', 'is_time': False}, {'field': 'CR_Quantity_at_Rate', 'type': 'decimal(24,12)', 'type_flask': 'db.Numeric(24,12)', 'type_sqlalchemy': 'Numeric(24,12)', 'null': 'YES', 'key': '', 'default': '0.000000000000', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 11, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'CR_Quantity_at_Rate', 'is_time': False}, {'field': 'CR_Quantity', 'type': 'decimal(24,12)', 'type_flask': 'db.Numeric(24,12)', 'type_sqlalchemy': 'Numeric(24,12)', 'null': 'YES', 'key': '', 'default': '0.000000000000', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 12, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'CR_Quantity', 'is_time': False}, {'field': 'CR_ST_at_Cur', 'type': 'decimal(20,12)', 'type_flask': 'db.Numeric(20,12)', 'type_sqlalchemy': 'Numeric(20,12)', 'null': 'YES', 'key': '', 'default': '0.000000000000', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 13, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'CR_ST_at_Cur', 'is_time': False}, {'field': 'Cur_Code', 'type': 'varchar(3)', 'type_flask': 'db.String(3)', 'type_sqlalchemy': 'String(3)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 14, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Cur_Code', 'is_time': False}, {'field': 'CIT_Status', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 15, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'CIT_Status', 'is_time': False}, {'field': 'CIT_Count', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': '0', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 16, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'CIT_Count', 'is_time': False}, {'field': 'Pla_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': '0', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 17, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'Pla_Id', 'is_time': False}]
 
         return __list
 
     def get_column_headers(self):
         """ Gets Statistics record column headers list """
-        __list=['CR_Date_From', 'CR_Date_To', 'User_Id', 'Cus_Id', 'CC_Id', 'CI_Id', 'CU_Id', 'Typ_Code', 'Agregation', 'CR_Quantity_at_Rate', 'CR_Quantity', 'CR_ST_at_Cur', 'Cur_Code', 'CIT_Status', 'CIT_Count', 'Pla_Id']
+        __list=['CR_Date_From', 'CR_Date_To', 'User_Id', 'Cus_Id', 'CC_Id', 'CI_Id', 'CU_Id', 'Typ_Code', 'Period', 'Agregation', 'CR_Quantity_at_Rate', 'CR_Quantity', 'CR_ST_at_Cur', 'Cur_Code', 'CIT_Status', 'CIT_Count', 'Pla_Id']
 
         return __list
 
     def get_column_types(self):
         """ Gets Statistics record column data types list """
-        __list=['Date', 'Date', 'Integer', 'Integer', 'Integer', 'Integer', 'Integer', 'String(10)', 'Integer', 'Numeric(24,12)', 'Numeric(24,12)', 'Numeric(20,12)', 'String(3)', 'Integer', 'Integer', 'Integer']
+        __list=['Date', 'Date', 'Integer', 'Integer', 'Integer', 'Integer', 'Integer', 'String(10)', 'String(45)', 'Integer', 'Numeric(24,12)', 'Numeric(24,12)', 'Numeric(20,12)', 'String(3)', 'Integer', 'Integer', 'Integer']
 
         return __list
 
     def get_column_meta(self):
         """ Gets Statistics record column data meta list """
-        __list=[('CR_Date_From', 'Date'), ('CR_Date_To', 'Date'), ('User_Id', 'Integer'), ('Cus_Id', 'Integer'), ('CC_Id', 'Integer'), ('CI_Id', 'Integer'), ('CU_Id', 'Integer'), ('Typ_Code', 'String(10)'), ('Agregation', 'Integer'), ('CR_Quantity_at_Rate', 'Numeric(24,12)'), ('CR_Quantity', 'Numeric(24,12)'), ('CR_ST_at_Cur', 'Numeric(20,12)'), ('Cur_Code', 'String(3)'), ('CIT_Status', 'Integer'), ('CIT_Count', 'Integer'), ('Pla_Id', 'Integer')]
+        __list=[('CR_Date_From', 'Date'), ('CR_Date_To', 'Date'), ('User_Id', 'Integer'), ('Cus_Id', 'Integer'), ('CC_Id', 'Integer'), ('CI_Id', 'Integer'), ('CU_Id', 'Integer'), ('Typ_Code', 'String(10)'), ('Period', 'String(45)'), ('Agregation', 'Integer'), ('CR_Quantity_at_Rate', 'Numeric(24,12)'), ('CR_Quantity', 'Numeric(24,12)'), ('CR_ST_at_Cur', 'Numeric(20,12)'), ('Cur_Code', 'String(3)'), ('CIT_Status', 'Integer'), ('CIT_Count', 'Integer'), ('Pla_Id', 'Integer')]
 
         return __list
 
-    def search_key(self,CR_Date_From,CR_Date_To,User_Id,Cus_Id,CC_Id,CI_Id,CU_Id,Typ_Code,Agregation):
-        """ Search for an unique Statistics record using all key fields (CR_Date_From,CR_Date_To,User_Id,Cus_Id,CC_Id,CI_Id,CU_Id,Typ_Code,Agregation) """
+    def search_key(self,CR_Date_From,CR_Date_To,User_Id,Cus_Id,CC_Id,CI_Id,CU_Id,Typ_Code,Period,Agregation):
+        """ Search for an unique Statistics record using all key fields (CR_Date_From,CR_Date_To,User_Id,Cus_Id,CC_Id,CI_Id,CU_Id,Typ_Code,Period,Agregation) """
         try:
             if self.engine is not None:
                 Session=sessionmaker(bind=self.engine)
                 session=Session()
-                record = session.query(Statistics).filter(Statistics.CR_Date_From==CR_Date_From).filter(Statistics.CR_Date_To==CR_Date_To).filter(Statistics.User_Id==User_Id).filter(Statistics.Cus_Id==Cus_Id).filter(Statistics.CC_Id==CC_Id).filter(Statistics.CI_Id==CI_Id).filter(Statistics.CU_Id==CU_Id).filter(Statistics.Typ_Code==Typ_Code).filter(Statistics.Agregation==Agregation).one_or_none()
+                record = session.query(Statistics).filter(Statistics.CR_Date_From==CR_Date_From).filter(Statistics.CR_Date_To==CR_Date_To).filter(Statistics.User_Id==User_Id).filter(Statistics.Cus_Id==Cus_Id).filter(Statistics.CC_Id==CC_Id).filter(Statistics.CI_Id==CI_Id).filter(Statistics.CU_Id==CU_Id).filter(Statistics.Typ_Code==Typ_Code).filter(Statistics.Period==Period).filter(Statistics.Agregation==Agregation).one_or_none()
                 session.flush()
             else:
                 session.rollback()
                 record = None
         except Exception as e:
-            detail='Statistics.search_key(%s,%s,%s,%s,%s,%s,%s,%s,%s): Exception: %s'%(CR_Date_From,CR_Date_To,User_Id,Cus_Id,CC_Id,CI_Id,CU_Id,Typ_Code,Agregation,e)
+            detail='Statistics.search_key(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s): Exception: %s'%(CR_Date_From,CR_Date_To,User_Id,Cus_Id,CC_Id,CI_Id,CU_Id,Typ_Code,Period,Agregation,e)
             emtec_handle_general_exception(e,detail=detail,module=__name__,function='Statistics.search_key()',logger=self.logger)
             record = None
         return record
@@ -4645,7 +4647,7 @@ class Statistics(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-14 17:25:17
+# GLVH @ 2022-04-16 20:09:52
 # =============================================================================
 
 # gen_model_flask.py:865 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_statistics.py
@@ -4673,6 +4675,7 @@ def get_Statistics(table_name_suffix):
     CI_Id               = Column( Integer, primary_key=True )
     CU_Id               = Column( Integer, primary_key=True )
     Typ_Code            = Column( String(10), primary_key=True )
+    Period              = Column( String(45), primary_key=True )
     Agregation          = Column( Integer, primary_key=True )
     CR_Quantity_at_Rate = Column( Numeric(24,12) )
     CR_Quantity         = Column( Numeric(24,12) )
@@ -4682,7 +4685,7 @@ def get_Statistics(table_name_suffix):
     CIT_Count           = Column( Integer )
     Pla_Id              = Column( Integer )
     
-    def __init__(self, CR_Date_From=None, CR_Date_To=None, User_Id=None, Cus_Id=0, CC_Id=0, CI_Id=1, CU_Id=0, Typ_Code='NUL', Agregation=0, CR_Quantity_at_Rate=0.000000000000, CR_Quantity=0.000000000000, CR_ST_at_Cur=0.000000000000, Cur_Code='None', CIT_Status=None, CIT_Count=0, Pla_Id=0,engine=None,logger=None):
+    def __init__(self, CR_Date_From=None, CR_Date_To=None, User_Id=None, Cus_Id=0, CC_Id=0, CI_Id=1, CU_Id=0, Typ_Code='NUL', Period='None', Agregation=0, CR_Quantity_at_Rate=0.000000000000, CR_Quantity=0.000000000000, CR_ST_at_Cur=0.000000000000, Cur_Code='None', CIT_Status=None, CIT_Count=0, Pla_Id=0,engine=None,logger=None):
         """ Initiates a Statistics class record """
         self.engine=engine
         self.logger=logger
@@ -4694,6 +4697,7 @@ def get_Statistics(table_name_suffix):
         self.CI_Id               = CI_Id
         self.CU_Id               = CU_Id
         self.Typ_Code            = Typ_Code
+        self.Period              = Period
         self.Agregation          = Agregation
         self.CR_Quantity_at_Rate = CR_Quantity_at_Rate
         self.CR_Quantity         = CR_Quantity
@@ -4706,22 +4710,22 @@ def get_Statistics(table_name_suffix):
         self.log('Created %s'%self)
     def __repr__(self):
         """ default class Statistics representation function """
-        return "<Statistics( CR_Date_From='%s', CR_Date_To='%s', User_Id='%s', Cus_Id='%s', CC_Id='%s', CI_Id='%s', CU_Id='%s', Typ_Code='%s', Agregation='%s', CR_Quantity_at_Rate='%s', CR_Quantity='%s', CR_ST_at_Cur='%s', Cur_Code='%s', CIT_Status='%s', CIT_Count='%s', Pla_Id='%s')>" % \
-                ( self.CR_Date_From, self.CR_Date_To, self.User_Id, self.Cus_Id, self.CC_Id, self.CI_Id, self.CU_Id, self.Typ_Code, self.Agregation, self.CR_Quantity_at_Rate, self.CR_Quantity, self.CR_ST_at_Cur, self.Cur_Code, self.CIT_Status, self.CIT_Count, self.Pla_Id)
+        return "<Statistics( CR_Date_From='%s', CR_Date_To='%s', User_Id='%s', Cus_Id='%s', CC_Id='%s', CI_Id='%s', CU_Id='%s', Typ_Code='%s', Period='%s', Agregation='%s', CR_Quantity_at_Rate='%s', CR_Quantity='%s', CR_ST_at_Cur='%s', Cur_Code='%s', CIT_Status='%s', CIT_Count='%s', Pla_Id='%s')>" % \
+                ( self.CR_Date_From, self.CR_Date_To, self.User_Id, self.Cus_Id, self.CC_Id, self.CI_Id, self.CU_Id, self.Typ_Code, self.Period, self.Agregation, self.CR_Quantity_at_Rate, self.CR_Quantity, self.CR_ST_at_Cur, self.Cur_Code, self.CIT_Status, self.CIT_Count, self.Pla_Id)
 
     def get_list(self):
         """ Gets Statistics record in list format """
-        __list = [ self.CR_Date_From, self.CR_Date_To, self.User_Id, self.Cus_Id, self.CC_Id, self.CI_Id, self.CU_Id, self.Typ_Code, self.Agregation, self.CR_Quantity_at_Rate, self.CR_Quantity, self.CR_ST_at_Cur, self.Cur_Code, self.CIT_Status, self.CIT_Count, self.Pla_Id]
+        __list = [ self.CR_Date_From, self.CR_Date_To, self.User_Id, self.Cus_Id, self.CC_Id, self.CI_Id, self.CU_Id, self.Typ_Code, self.Period, self.Agregation, self.CR_Quantity_at_Rate, self.CR_Quantity, self.CR_ST_at_Cur, self.Cur_Code, self.CIT_Status, self.CIT_Count, self.Pla_Id]
         return __list
 
     def get_tuple(self):
         """ Gets Statistics record in tuple format """
-        __tuple = ( self.CR_Date_From, self.CR_Date_To, self.User_Id, self.Cus_Id, self.CC_Id, self.CI_Id, self.CU_Id, self.Typ_Code, self.Agregation, self.CR_Quantity_at_Rate, self.CR_Quantity, self.CR_ST_at_Cur, self.Cur_Code, self.CIT_Status, self.CIT_Count, self.Pla_Id)
+        __tuple = ( self.CR_Date_From, self.CR_Date_To, self.User_Id, self.Cus_Id, self.CC_Id, self.CI_Id, self.CU_Id, self.Typ_Code, self.Period, self.Agregation, self.CR_Quantity_at_Rate, self.CR_Quantity, self.CR_ST_at_Cur, self.Cur_Code, self.CIT_Status, self.CIT_Count, self.Pla_Id)
         return __tuple
 
     def get_dict(self):
         """ Gets Statistics record in dict format """
-        __dict={'CR_Date_From':self.CR_Date_From,'CR_Date_To':self.CR_Date_To,'User_Id':self.User_Id,'Cus_Id':self.Cus_Id,'CC_Id':self.CC_Id,'CI_Id':self.CI_Id,'CU_Id':self.CU_Id,'Typ_Code':self.Typ_Code,'Agregation':self.Agregation,'CR_Quantity_at_Rate':self.CR_Quantity_at_Rate,'CR_Quantity':self.CR_Quantity,'CR_ST_at_Cur':self.CR_ST_at_Cur,'Cur_Code':self.Cur_Code,'CIT_Status':self.CIT_Status,'CIT_Count':self.CIT_Count,'Pla_Id':self.Pla_Id}
+        __dict={'CR_Date_From':self.CR_Date_From,'CR_Date_To':self.CR_Date_To,'User_Id':self.User_Id,'Cus_Id':self.Cus_Id,'CC_Id':self.CC_Id,'CI_Id':self.CI_Id,'CU_Id':self.CU_Id,'Typ_Code':self.Typ_Code,'Period':self.Period,'Agregation':self.Agregation,'CR_Quantity_at_Rate':self.CR_Quantity_at_Rate,'CR_Quantity':self.CR_Quantity,'CR_ST_at_Cur':self.CR_ST_at_Cur,'Cur_Code':self.Cur_Code,'CIT_Status':self.CIT_Status,'CIT_Count':self.CIT_Count,'Pla_Id':self.Pla_Id}
 
         return __dict
 
@@ -4773,41 +4777,41 @@ def get_Statistics(table_name_suffix):
 
     def get_columns(self):
         """ Gets Statistics record column full details list """
-        __list=[{'field': 'CR_Date_From', 'type': 'date', 'type_flask': 'db.Date', 'type_sqlalchemy': 'Date', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 1, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'DateField', 'is_id': False, 'header': 'CR_Date_From', 'is_time': False}, {'field': 'CR_Date_To', 'type': 'date', 'type_flask': 'db.Date', 'type_sqlalchemy': 'Date', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 2, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'DateField', 'is_id': False, 'header': 'CR_Date_To', 'is_time': False}, {'field': 'User_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 3, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'User_Id', 'is_time': False}, {'field': 'Cus_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': '0', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 4, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'Cus_Id', 'is_time': False}, {'field': 'CC_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': '0', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 5, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'CC_Id', 'is_time': False}, {'field': 'CI_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': '1', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 6, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'CI_Id', 'is_time': False}, {'field': 'CU_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': '0', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 7, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'CU_Id', 'is_time': False}, {'field': 'Typ_Code', 'type': 'varchar(10)', 'type_flask': 'db.String(10)', 'type_sqlalchemy': 'String(10)', 'null': 'NO', 'key': 'PRI', 'default': 'NUL', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 8, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Typ_Code', 'is_time': False}, {'field': 'Agregation', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': '0', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 9, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'Agregation', 'is_time': False}, {'field': 'CR_Quantity_at_Rate', 'type': 'decimal(24,12)', 'type_flask': 'db.Numeric(24,12)', 'type_sqlalchemy': 'Numeric(24,12)', 'null': 'YES', 'key': '', 'default': '0.000000000000', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 10, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'CR_Quantity_at_Rate', 'is_time': False}, {'field': 'CR_Quantity', 'type': 'decimal(24,12)', 'type_flask': 'db.Numeric(24,12)', 'type_sqlalchemy': 'Numeric(24,12)', 'null': 'YES', 'key': '', 'default': '0.000000000000', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 11, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'CR_Quantity', 'is_time': False}, {'field': 'CR_ST_at_Cur', 'type': 'decimal(20,12)', 'type_flask': 'db.Numeric(20,12)', 'type_sqlalchemy': 'Numeric(20,12)', 'null': 'YES', 'key': '', 'default': '0.000000000000', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 12, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'CR_ST_at_Cur', 'is_time': False}, {'field': 'Cur_Code', 'type': 'varchar(3)', 'type_flask': 'db.String(3)', 'type_sqlalchemy': 'String(3)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 13, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Cur_Code', 'is_time': False}, {'field': 'CIT_Status', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 14, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'CIT_Status', 'is_time': False}, {'field': 'CIT_Count', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': '0', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 15, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'CIT_Count', 'is_time': False}, {'field': 'Pla_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': '0', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 16, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'Pla_Id', 'is_time': False}]
+        __list=[{'field': 'CR_Date_From', 'type': 'date', 'type_flask': 'db.Date', 'type_sqlalchemy': 'Date', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 1, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'DateField', 'is_id': False, 'header': 'CR_Date_From', 'is_time': False}, {'field': 'CR_Date_To', 'type': 'date', 'type_flask': 'db.Date', 'type_sqlalchemy': 'Date', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 2, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'DateField', 'is_id': False, 'header': 'CR_Date_To', 'is_time': False}, {'field': 'User_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 3, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'User_Id', 'is_time': False}, {'field': 'Cus_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': '0', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 4, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'Cus_Id', 'is_time': False}, {'field': 'CC_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': '0', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 5, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'CC_Id', 'is_time': False}, {'field': 'CI_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': '1', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 6, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'CI_Id', 'is_time': False}, {'field': 'CU_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': '0', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 7, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'CU_Id', 'is_time': False}, {'field': 'Typ_Code', 'type': 'varchar(10)', 'type_flask': 'db.String(10)', 'type_sqlalchemy': 'String(10)', 'null': 'NO', 'key': 'PRI', 'default': 'NUL', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 8, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Typ_Code', 'is_time': False}, {'field': 'Period', 'type': 'varchar(45)', 'type_flask': 'db.String(45)', 'type_sqlalchemy': 'String(45)', 'null': 'NO', 'key': 'PRI', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 9, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Period', 'is_time': False}, {'field': 'Agregation', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'NO', 'key': 'PRI', 'default': '0', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 10, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'Agregation', 'is_time': False}, {'field': 'CR_Quantity_at_Rate', 'type': 'decimal(24,12)', 'type_flask': 'db.Numeric(24,12)', 'type_sqlalchemy': 'Numeric(24,12)', 'null': 'YES', 'key': '', 'default': '0.000000000000', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 11, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'CR_Quantity_at_Rate', 'is_time': False}, {'field': 'CR_Quantity', 'type': 'decimal(24,12)', 'type_flask': 'db.Numeric(24,12)', 'type_sqlalchemy': 'Numeric(24,12)', 'null': 'YES', 'key': '', 'default': '0.000000000000', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 12, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'CR_Quantity', 'is_time': False}, {'field': 'CR_ST_at_Cur', 'type': 'decimal(20,12)', 'type_flask': 'db.Numeric(20,12)', 'type_sqlalchemy': 'Numeric(20,12)', 'null': 'YES', 'key': '', 'default': '0.000000000000', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 13, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': True, 'form_type': 'DecimalField', 'is_id': False, 'header': 'CR_ST_at_Cur', 'is_time': False}, {'field': 'Cur_Code', 'type': 'varchar(3)', 'type_flask': 'db.String(3)', 'type_sqlalchemy': 'String(3)', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 14, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'StringField', 'is_id': False, 'header': 'Cur_Code', 'is_time': False}, {'field': 'CIT_Status', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': None, 'extra': '', 'is_form_editable': True, 'format': None, 'order': 15, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'CIT_Status', 'is_time': False}, {'field': 'CIT_Count', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': '0', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 16, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'CIT_Count', 'is_time': False}, {'field': 'Pla_Id', 'type': 'int', 'type_flask': 'db.Integer', 'type_sqlalchemy': 'Integer', 'null': 'YES', 'key': '', 'default': '0', 'extra': '', 'is_form_editable': True, 'format': None, 'order': 17, 'is_searchable': True, 'is_fk': False, 'foreign_field': None, 'is_numeric': False, 'form_type': 'IntegerField', 'is_id': False, 'header': 'Pla_Id', 'is_time': False}]
 
         return __list
 
     def get_column_headers(self):
         """ Gets Statistics record column headers list """
-        __list=['CR_Date_From', 'CR_Date_To', 'User_Id', 'Cus_Id', 'CC_Id', 'CI_Id', 'CU_Id', 'Typ_Code', 'Agregation', 'CR_Quantity_at_Rate', 'CR_Quantity', 'CR_ST_at_Cur', 'Cur_Code', 'CIT_Status', 'CIT_Count', 'Pla_Id']
+        __list=['CR_Date_From', 'CR_Date_To', 'User_Id', 'Cus_Id', 'CC_Id', 'CI_Id', 'CU_Id', 'Typ_Code', 'Period', 'Agregation', 'CR_Quantity_at_Rate', 'CR_Quantity', 'CR_ST_at_Cur', 'Cur_Code', 'CIT_Status', 'CIT_Count', 'Pla_Id']
 
         return __list
 
     def get_column_types(self):
         """ Gets Statistics record column data types list """
-        __list=['Date', 'Date', 'Integer', 'Integer', 'Integer', 'Integer', 'Integer', 'String(10)', 'Integer', 'Numeric(24,12)', 'Numeric(24,12)', 'Numeric(20,12)', 'String(3)', 'Integer', 'Integer', 'Integer']
+        __list=['Date', 'Date', 'Integer', 'Integer', 'Integer', 'Integer', 'Integer', 'String(10)', 'String(45)', 'Integer', 'Numeric(24,12)', 'Numeric(24,12)', 'Numeric(20,12)', 'String(3)', 'Integer', 'Integer', 'Integer']
 
         return __list
 
     def get_column_meta(self):
         """ Gets Statistics record column data meta list """
-        __list=[('CR_Date_From', 'Date'), ('CR_Date_To', 'Date'), ('User_Id', 'Integer'), ('Cus_Id', 'Integer'), ('CC_Id', 'Integer'), ('CI_Id', 'Integer'), ('CU_Id', 'Integer'), ('Typ_Code', 'String(10)'), ('Agregation', 'Integer'), ('CR_Quantity_at_Rate', 'Numeric(24,12)'), ('CR_Quantity', 'Numeric(24,12)'), ('CR_ST_at_Cur', 'Numeric(20,12)'), ('Cur_Code', 'String(3)'), ('CIT_Status', 'Integer'), ('CIT_Count', 'Integer'), ('Pla_Id', 'Integer')]
+        __list=[('CR_Date_From', 'Date'), ('CR_Date_To', 'Date'), ('User_Id', 'Integer'), ('Cus_Id', 'Integer'), ('CC_Id', 'Integer'), ('CI_Id', 'Integer'), ('CU_Id', 'Integer'), ('Typ_Code', 'String(10)'), ('Period', 'String(45)'), ('Agregation', 'Integer'), ('CR_Quantity_at_Rate', 'Numeric(24,12)'), ('CR_Quantity', 'Numeric(24,12)'), ('CR_ST_at_Cur', 'Numeric(20,12)'), ('Cur_Code', 'String(3)'), ('CIT_Status', 'Integer'), ('CIT_Count', 'Integer'), ('Pla_Id', 'Integer')]
 
         return __list
 
-    def search_key(self,CR_Date_From,CR_Date_To,User_Id,Cus_Id,CC_Id,CI_Id,CU_Id,Typ_Code,Agregation):
-        """ Search for an unique Statistics record using all key fields (CR_Date_From,CR_Date_To,User_Id,Cus_Id,CC_Id,CI_Id,CU_Id,Typ_Code,Agregation) """
+    def search_key(self,CR_Date_From,CR_Date_To,User_Id,Cus_Id,CC_Id,CI_Id,CU_Id,Typ_Code,Period,Agregation):
+        """ Search for an unique Statistics record using all key fields (CR_Date_From,CR_Date_To,User_Id,Cus_Id,CC_Id,CI_Id,CU_Id,Typ_Code,Period,Agregation) """
         try:
             if self.engine is not None:
                 Session=sessionmaker(bind=self.engine)
                 session=Session()
-                record = session.query(Statistics).filter(Statistics.CR_Date_From==CR_Date_From).filter(Statistics.CR_Date_To==CR_Date_To).filter(Statistics.User_Id==User_Id).filter(Statistics.Cus_Id==Cus_Id).filter(Statistics.CC_Id==CC_Id).filter(Statistics.CI_Id==CI_Id).filter(Statistics.CU_Id==CU_Id).filter(Statistics.Typ_Code==Typ_Code).filter(Statistics.Agregation==Agregation).one_or_none()
+                record = session.query(Statistics).filter(Statistics.CR_Date_From==CR_Date_From).filter(Statistics.CR_Date_To==CR_Date_To).filter(Statistics.User_Id==User_Id).filter(Statistics.Cus_Id==Cus_Id).filter(Statistics.CC_Id==CC_Id).filter(Statistics.CI_Id==CI_Id).filter(Statistics.CU_Id==CU_Id).filter(Statistics.Typ_Code==Typ_Code).filter(Statistics.Period==Period).filter(Statistics.Agregation==Agregation).one_or_none()
                 session.flush()
             else:
                 session.rollback()
                 record = None
         except Exception as e:
-            detail='Statistics.search_key(%s,%s,%s,%s,%s,%s,%s,%s,%s): Exception: %s'%(CR_Date_From,CR_Date_To,User_Id,Cus_Id,CC_Id,CI_Id,CU_Id,Typ_Code,Agregation,e)
+            detail='Statistics.search_key(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s): Exception: %s'%(CR_Date_From,CR_Date_To,User_Id,Cus_Id,CC_Id,CI_Id,CU_Id,Typ_Code,Period,Agregation,e)
             emtec_handle_general_exception(e,detail=detail,module=__name__,function='Statistics.search_key()',logger=self.logger)
             record = None
         return record
@@ -4824,7 +4828,7 @@ def get_Statistics(table_name_suffix):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-14 17:25:17
+# GLVH @ 2022-04-16 20:09:52
 # =============================================================================
 
 # GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_trace.py
@@ -4996,7 +5000,7 @@ class Trace(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-14 17:25:17
+# GLVH @ 2022-04-16 20:09:52
 # =============================================================================
 
 # GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_user_resumes.py
@@ -5240,7 +5244,7 @@ class User_Resumes(Base):
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-14 17:25:17
+# GLVH @ 2022-04-16 20:09:52
 # =============================================================================
 
 # GV gen_model_flask.py:418 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/orm_users.py

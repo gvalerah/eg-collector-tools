@@ -1,4 +1,5 @@
 import os
+from statistics import StatisticsError
 import sys
 import configparser
 import datetime
@@ -130,19 +131,20 @@ def create_flask_app(app_name,config_file=None):
     return app
 
 def Get_Resumes(
-        db        = None,
-        today     = None,
-        customer  = 0,
-        force_all = False,
-        logger    = logging.getLogger(),
-        cit_status= 1,
-        cur_code  = 'UF',
-        ci_id     = [],
-        user_id   = '1',
-        platform  = 2,
-        cc_id     = '30000000',
-        fast      = True,
-        callback  = None,
+        db         = None,
+        today      = None,
+        user_id    = '1',
+        customer   = 0,
+        platform   = 2,
+        cc_id      = '30000000',
+        ci_id      = [],
+        cit_status = 1,
+        cur_code   = 'UF',
+        force_all  = False,
+        keep_all   = False,
+        logger     = logging.getLogger(),
+        fast       = True,
+        callback   = None,
         **kwargs
     ):
     today = Get_Today(today)
@@ -172,7 +174,7 @@ def Get_Resumes(
         logger.info(f"{this()}: Process resume '{name}' for Charge Items {suffix} {start.day:02d}-{end.day:02d}")
         logger.debug(f"{this()}: user={user_id} customer={customer} cost_center={cc_id}")
         count = None
-        key=f"{user_id}-{customer}-{platform}-{cc_id}-{start.strftime('%Y%m%d')}-{end.strftime('%Y%m%d')}-{name}"
+        key=f"{user_id}-{customer}-{platform}-{cc_id}-{cur_code}-{start.strftime('%Y%m%d')}-{end.strftime('%Y%m%d')}-{name}"
         logger.debug(f"{this()}: key= {key}")
         # Allways update 'current_mont' and today' resumes, avoid other already generated resumes
         # already available in 'cache'
@@ -180,30 +182,47 @@ def Get_Resumes(
         # 'previous_month' is static and should be generated only once a month
         # 'current_month_so_far' is static and should be generated only once a day (yesterday's info)
         logger.debug(f"{this()}: force_all={force_all} name={name} key={key} missing={key not in cache.keys()}")
-        if force_all or name in ['current_month','today'] or  key not in cache.keys():
-            logger.info(f"{this()}: Processing resume key = {key}")
-            
-            if db is not None:
-                count = Generate_Resume(
-                    db,
-                    customer,
-                    start,
-                    end,
-                    cit_status,
-                    cur_code,
-                    ci_id,
-                    user_id,
-                    cc_id,
-                    fast=True,
-                    logger=logger,
-                    callback=callback,
-                    **kwargs
-                    )
-            if count is not None and count>0:
-                cache.update({key:{'count':count}})
-                with open(cache_filename,'w') as fp:
-                    fp.write(json.dumps(cache))
-            resumes.update({name:{'count':count}})
+        if force_all or name in ['current_month','today','yesterday'] or  key not in cache.keys():
+            if name == 'yesterday':
+                yesterday_key=f"{user_id}-{customer}-{platform}-{cc_id}-{cur_code}-{start.strftime('%Y%m%d')}-{end.strftime('%Y%m%d')}-today"
+                if keep_all:
+                    logger.warning(f"{this()}: KEEPING yesterday's resume: {yesterday_key}")
+                else:
+                    logger.warning(f"{this()}: DELETING yesterday's resume: {yesterday_key}")
+                    statement = db.query(Statistics
+                                    ).filter(Statistics.User_id  == user_id
+                                    ).filter(Statistics.Cus_Id   == customer
+                                    ).filter(Statistics.Pla_Id   == platform
+                                    ).filter(Statistics.CC_Id    == cc_id
+                                    ).filter(Statistics.Cur_Code == cur_code
+                                    ).filter(Statistics.CR_Date_From == start.strftime("%Y-%m-%d")
+                                    ).filter(Statistics.CR_Date_To   == end.strftime("%Y-%m-%d")
+                                    ).filter(Statistics.Period   == PERIOD_RANGES[STAT_PERIOD_TODAY]
+                                    ).delete()
+                    # Actual delete here
+            else:
+                logger.info(f"{this()}: Processing resume key = {key}")            
+                if db is not None:
+                    count = Generate_Resume(
+                        db,
+                        customer,
+                        start,
+                        end,
+                        cit_status,
+                        cur_code,
+                        ci_id,
+                        user_id,
+                        cc_id,
+                        fast=True,
+                        logger=logger,
+                        callback=callback,
+                        **kwargs
+                        )
+                if count is not None and count>0:
+                    cache.update({key:{'count':count,'updated':datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}})
+                    with open(cache_filename,'w') as fp:
+                        fp.write(json.dumps(cache))
+                resumes.update({name:{'count':count}})
         else:
             logger.warning(f"{this()}: Avoid processs of resume key = {key}")
         # lo movi hacia arriba 2 lineas por velocidad y evitar redundacia probar
@@ -212,9 +231,9 @@ def Get_Resumes(
         period = periods.get(name)
         start,end = period
         logger.info(f"{this()}: resume: {name} {start.strftime('%Y-%m-%d')}/{end.strftime('%Y-%m-%d')} = {resumes[name].get('count')}")
-        Consolidate_Resume(db,user_id,customer,start,end,cit_status,cur_code,platform,logger)
+        Consolidate_Resume(db,user_id,customer,platform,cc_id,cur_code,cit_status,start,end,name,logger)
         for agregation in AGREGATIONS:
-            resume = Get_Resume(db,user_id,customer,start,end,cit_status,cur_code,platform,agregation,logger=logger)
+            resume = Get_Resume(db,user_id,customer,platform,cc_id,cur_code,cit_status,start,end,name,agregation,logger=logger)
             if resume:
                 logger.info(
                     f"{this()}: resume: "
@@ -314,16 +333,17 @@ if (os.path.isfile(config_file)):
             # GV Required to handle multiple collector services in one daemon
             # GV services are serialized
             date=datetime.datetime.now()
-            customer    = config_ini.getint    ('Statistics','customer',fallback=3)        
-            status      = config_ini.getint    ('Statistics','status',fallback=1)        
-            currency    = config_ini.get       ('Statistics','currency',fallback='UF')        
-            cis         = config_ini.get       ('Statistics','cis',fallback=None)        
-            user        = config_ini.getint    ('Statistics','user',fallback=1)        
-            cost_center = config_ini.get       ('Statistics','cost_center',fallback=None)        
-            platform    = config_ini.get       ('Statistics','platform',fallback=2)        
-            force_all   = config_ini.getboolean('Statistics','force_all',fallback=False)        
-            fast        = config_ini.getboolean('Statistics','fast',fallback=True)        
-            callback    = config_ini.get       ('Statistics','callback',fallback='default')        
+            customer    = config_ini.getint    ('Statistics','customer'     ,fallback=3)        
+            status      = config_ini.getint    ('Statistics','status'       ,fallback=1)        
+            currency    = config_ini.get       ('Statistics','currency'     ,fallback='UF')        
+            cis         = config_ini.get       ('Statistics','cis'          ,fallback=None)        
+            user        = config_ini.getint    ('Statistics','user'         ,fallback=1)        
+            cost_center = config_ini.get       ('Statistics','cost_center'  ,fallback=None)        
+            platform    = config_ini.get       ('Statistics','platform'     ,fallback=2)        
+            force_all   = config_ini.getboolean('Statistics','force_all'    ,fallback=False)        
+            keep_all    = config_ini.getboolean('Statistics','keep_all'     ,fallback=False)        
+            fast        = config_ini.getboolean('Statistics','fast'         ,fallback=True)        
+            callback    = config_ini.get       ('Statistics','callback'     ,fallback='default')        
 
             if callback is not None:
                 if  callback == 'default':
@@ -357,14 +377,16 @@ if (os.path.isfile(config_file)):
                             Get_Resumes(
                                 db         = db,
                                 today      = date,
+                                user_id    = user,
                                 customer   = customer,
-                                force_all  = force_all,
-                                logger     = logger,
+                                platform   = platform,
+                                cc_id      = cost_center,
+                                ci_id      = cis,
                                 cit_status = status,
                                 cur_code   = currency,
-                                ci_id      = cis,
-                                user_id    = user,
-                                cc_id      = cost_center,
+                                force_all  = force_all,
+                                keep_all   = keep_all,
+                                logger     = logger,
                                 fast       = fast,
                                 callback   = callback,
                             )

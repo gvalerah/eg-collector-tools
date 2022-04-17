@@ -1,7 +1,7 @@
 # =============================================================================
 # Auto-Generated code. do not modify
 # (c) Sertechno 2018
-# GLVH @ 2022-04-14 17:25:17
+# GLVH @ 2022-04-16 20:09:52
 # =============================================================================
 
 # gen_model_flask.py:67 => /home/gvalera/GIT/EG-Suite-Tools/Collector/code/auto/models/ORM_model_schema.py
@@ -344,6 +344,7 @@ def Create_Tables(engine):
                 Column( 'CI_Id',Integer, primary_key=True ),
                 Column( 'CU_Id',Integer, primary_key=True ),
                 Column( 'Typ_Code',String(10), primary_key=True ),
+                Column( 'Period',String(45), primary_key=True ),
                 Column( 'Agregation',Integer, primary_key=True ),
                 Column( 'CR_Quantity_at_Rate',Numeric(24,12) ),
                 Column( 'CR_Quantity',Numeric(24,12) ),
