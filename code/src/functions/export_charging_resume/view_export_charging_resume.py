@@ -509,6 +509,8 @@ def export_to_xls(output_file,rows,Customer,From,To,Status,Currency):
            
     return xlsx_file    
 
+
+
 def export_to_csv(output_file,rows,Customer,From,To,Status,Currency,full=False):
     cvs_file="%s/%s"%(current_app.root_path,url_for('static',filename='tmp/%s'%(output_file)))
     f=open(cvs_file,"w")

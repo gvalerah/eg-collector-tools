@@ -12,14 +12,14 @@ TITLE="Developer's Menu - Collector (${TOOLS})"
 MENU="Choose one of the folowing options:"
 OPTIONS=(   
             2 "Generate and Compile Source Code" 
-            1 "GITLab Pull"
-            a "GitLab Push"
             b "Collector              Source Up (Flask) DEV"
             e "Collector              Source Up (Flask) QA"
             f "Collector              Source Up (Flask) AAAA"
             c "Collector Nutanix PC 3 Source Up"
             d "Collector Services     Source Up"
             s "SQL Tools Menu"
+            1 "GITLab Pull"
+            a "GitLab Push"
             q "Quit"
         )
 while true;

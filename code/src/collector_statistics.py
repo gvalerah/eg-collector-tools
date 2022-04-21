@@ -1,21 +1,22 @@
-import os
-from statistics import StatisticsError
-import sys
-import configparser
-import datetime
-import time
-import logging
-import simplejson as json
-from flask import Flask
-from sqlalchemy import create_engine
-from sqlalchemy.orm import Session
-from    emtec.common.functions              import *
-from    emtec.collector.common.context      import Context
-from emtec.collector.statistics import *
-from emtec.feedback import *
-from flask import current_app
+import  os
+#from    statistics import StatisticsError
+import  sys
+import  configparser
+import  datetime
+import  time
+import  logging
+import  simplejson as json
+from    flask import                    Flask
+from    flask import                    current_app
+from    sqlalchemy                      import create_engine
+from    sqlalchemy.orm                  import Session
+from    emtec.common.functions          import *
+from    emtec.collector.common.context  import Context
+from    emtec.feedback                  import *
+from    emtec.collector.statistics      import *
 
-# Application Initialization function
+
+""" # Application Initialization function
 def create_flask_app(app_name,config_file=None):
     config_ini = configparser.ConfigParser(interpolation=configparser.ExtendedInterpolation())
     if config_file is None:
@@ -129,6 +130,7 @@ def create_flask_app(app_name,config_file=None):
     #app.register_blueprint(auth_blueprint, url_prefix='/auth')
 
     return app
+"""
 
 def Get_Resumes(
         db         = None,
@@ -163,6 +165,11 @@ def Get_Resumes(
     else:
         cache = {}
     logger.debug(f"{this()}: cache = {cache}")
+
+    logger.warning(f"{this()}: WILL PROCESS")
+    for name in periods:
+        logger.warning(f"{this()}: period:{name} {periods.get(name)}")
+
     for name in periods:
         # previous month will be calculated only in day 1 or forced
         #if not force_all and name == 'previous_month':
@@ -170,6 +177,7 @@ def Get_Resumes(
         #        continue
         period = periods.get(name)
         start,end = period
+        logger.warning(f"{this()}: period:{name} start:{start} end:{end}")
         suffix = f"{customer}_{start.year:04d}{start.month:02d}"
         logger.info(f"{this()}: Process resume '{name}' for Charge Items {suffix} {start.day:02d}-{end.day:02d}")
         logger.debug(f"{this()}: user={user_id} customer={customer} cost_center={cc_id}")
@@ -182,26 +190,43 @@ def Get_Resumes(
         # 'previous_month' is static and should be generated only once a month
         # 'current_month_so_far' is static and should be generated only once a day (yesterday's info)
         logger.debug(f"{this()}: force_all={force_all} name={name} key={key} missing={key not in cache.keys()}")
-        if force_all or name in ['current_month','today','yesterday'] or  key not in cache.keys():
-            if name == 'yesterday':
-                yesterday_key=f"{user_id}-{customer}-{platform}-{cc_id}-{cur_code}-{start.strftime('%Y%m%d')}-{end.strftime('%Y%m%d')}-today"
+        # previous month and current_mont_so_far resumes will ve aoided if exist unless they're enforced
+        if force_all or name in ['current_month','today','yesterday','yesterday_so_far'] or  key not in cache.keys():
+            # 'dayly' resumes may be kept if required, so let's check
+            if   name == 'yesterday':
+                yesterday_key=f"{user_id}-{customer}-{platform}-{cc_id}-{cur_code}-{start.strftime('%Y%m%d')}-{end.strftime('%Y%m%d')}-{PERIOD_RANGES[STAT_PERIOD_TODAY]}"
                 if keep_all:
                     logger.warning(f"{this()}: KEEPING yesterday's resume: {yesterday_key}")
                 else:
                     logger.warning(f"{this()}: DELETING yesterday's resume: {yesterday_key}")
                     statement = db.query(Statistics
-                                    ).filter(Statistics.User_id  == user_id
-                                    ).filter(Statistics.Cus_Id   == customer
-                                    ).filter(Statistics.Pla_Id   == platform
-                                    ).filter(Statistics.CC_Id    == cc_id
-                                    ).filter(Statistics.Cur_Code == cur_code
+                                    ).filter(Statistics.User_id      == user_id
+                                    ).filter(Statistics.Cus_Id       == customer
+                                    ).filter(Statistics.Pla_Id       == platform
+                                    ).filter(Statistics.CC_Id        == cc_id
+                                    ).filter(Statistics.Cur_Code     == cur_code
                                     ).filter(Statistics.CR_Date_From == start.strftime("%Y-%m-%d")
                                     ).filter(Statistics.CR_Date_To   == end.strftime("%Y-%m-%d")
-                                    ).filter(Statistics.Period   == PERIOD_RANGES[STAT_PERIOD_TODAY]
+                                    ).filter(Statistics.Period       == PERIOD_RANGES[STAT_PERIOD_TODAY]
                                     ).delete()
-                    # Actual delete here
+            elif name == 'yesterday_so_far':
+                yesterday_so_far_key=f"{user_id}-{customer}-{platform}-{cc_id}-{cur_code}-{start.strftime('%Y%m%d')}-{end.strftime('%Y%m%d')}-{PERIOD_RANGES[STAT_PERIOD_CURRENT_MONTH_SO_FAR]}"
+                if keep_all:
+                    logger.warning(f"{this()}: KEEPING yesterday's resume: {yesterday_so_far_key}")
+                else:
+                    logger.warning(f"{this()}: DELETING yesterday's resume: {yesterday_so_far_key}")
+                    statement = db.query(Statistics
+                                    ).filter(Statistics.User_id      == user_id
+                                    ).filter(Statistics.Cus_Id       == customer
+                                    ).filter(Statistics.Pla_Id       == platform
+                                    ).filter(Statistics.CC_Id        == cc_id
+                                    ).filter(Statistics.Cur_Code     == cur_code
+                                    ).filter(Statistics.CR_Date_From == start.strftime("%Y-%m-%d")
+                                    ).filter(Statistics.CR_Date_To   == end.strftime("%Y-%m-%d")
+                                    ).filter(Statistics.Period       == PERIOD_RANGES[STAT_PERIOD_CURRENT_MONTH_SO_FAR]
+                                    ).delete()
             else:
-                logger.info(f"{this()}: Processing resume key = {key}")            
+                logger.warning(f"{this()}: Generate Resume '{name.capitalize()}' Processing resume key = {key}")            
                 if db is not None:
                     count = Generate_Resume(
                         db,
@@ -224,12 +249,18 @@ def Get_Resumes(
                         fp.write(json.dumps(cache))
                 resumes.update({name:{'count':count}})
         else:
-            logger.warning(f"{this()}: Avoid processs of resume key = {key}")
+            logger.warning(f"{this()}: Avoid processs of resume '{name.capitalize()}' key = {key}")
         # lo movi hacia arriba 2 lineas por velocidad y evitar redundacia probar
         # resumes.update({name:{'count':count}})
+
+    logger.warning(f"{this()}: resumes updated in this session:")
+    for name in resumes:
+        logger.warning(f"{this()}:  {name}")
+
     for name in resumes:
         period = periods.get(name)
         start,end = period
+        logger.warning(f"{this()}: period={name} start={start} end={end}")
         logger.info(f"{this()}: resume: {name} {start.strftime('%Y-%m-%d')}/{end.strftime('%Y-%m-%d')} = {resumes[name].get('count')}")
         Consolidate_Resume(db,user_id,customer,platform,cc_id,cur_code,cit_status,start,end,name,logger)
         for agregation in AGREGATIONS:
@@ -243,6 +274,23 @@ def Get_Resumes(
                     f"rows = {len(resume.get('rows',[])):7,.0f} "
                     f"{resume.get('description','Unknown')}"
                 )
+    
+    logger.warning(f"{this()}: Check for history availability")
+    rows = Get_Resume_History(
+            db=db,
+            user=1,
+            customer=3,
+            platform=2,
+            currency='UF',
+            status=1,
+            start=None,
+            end=None,
+            periods=['previous_month','current_month'],
+            agregation=AGREGATION_CUSTOMER,
+            logger=logging.getLogger()
+            )
+    for row in rows:
+        logger.warning(f"{this()}: row = {row}")
 
 config_file = sys.argv[1]
 driver_group = 'Statistics'
@@ -289,16 +337,16 @@ if (os.path.isfile(config_file)):
         while True:
 
             handler,log_file = Reset_Log_File_Name(
-                            logger=logger,
-                            folder=C.log_folder,
-                            nameFormat="%s.log"%driver_group.replace(' ','_'),
-                            level=C.log_level,
-                            handler=handler,
-                            handlerType=handlerType,
-                            when=when,
-                            interval=interval,
-                            backupCount=backupCount
-                            )
+                                logger=logger,
+                                folder=C.log_folder,
+                                nameFormat="%s.log"%driver_group.replace(' ','_'),
+                                level=C.log_level,
+                                handler=handler,
+                                handlerType=handlerType,
+                                when=when,
+                                interval=interval,
+                                backupCount=backupCount
+                                )
             log_file_previous = None
 
             name = 'Statistics'
@@ -343,7 +391,7 @@ if (os.path.isfile(config_file)):
             force_all   = config_ini.getboolean('Statistics','force_all'    ,fallback=False)        
             keep_all    = config_ini.getboolean('Statistics','keep_all'     ,fallback=False)        
             fast        = config_ini.getboolean('Statistics','fast'         ,fallback=True)        
-            callback    = config_ini.get       ('Statistics','callback'     ,fallback='default')        
+            callback    = config_ini.get       ('Statistics','callback'     ,fallback=None)        
 
             if callback is not None:
                 if  callback == 'default':
@@ -436,3 +484,5 @@ else:
 print()    
 print(f"{sys.argv[0]}: ERROR: Collector Deamon FAIL **********************")
 print()
+
+

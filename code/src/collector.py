@@ -148,6 +148,7 @@ print (f"Set Global multilanguage strings ...")
 app.jinja_env.globals.update(has_access=has_access)
 # GV -------------------------------------------------------------------
 
+
 from emtec.plugins import *
 # Plugins management enabler
 

@@ -91,11 +91,17 @@
                 </table>
             </td>
             <td>
-                <img src="{{r.figure}}" alt="{{r.name}}">
+                {% if r.figure is not none %}
+                    <img src="{{r.figure}}" alt="{{r.name}}">
+                {% endif %}
+                {% if r.history is not none %}
+                    <img src="{{r.history}}" alt="{{r.name}}_history">
+                {% endif %}
             </td>
         </tr>
     </table>
 {% endfor %}
 {% endblock content %}
+
 
 {# ============================================================================= #}

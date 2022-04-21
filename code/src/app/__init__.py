@@ -39,7 +39,8 @@ login_manager.session_protection    = 'strong'
 login_manager.login_view            = 'auth.login'
 
 # Common Application wide objects --------------------------------------
-db                                  = Collector_ORM_DB()
+echo=True
+db                                  = Collector_ORM_DB(echo=echo)
 # create logger logger. Logger name need to be hardcoded at creation
 # time, need to evaluate variable naming
 logger                              = logging.getLogger(__name__)
