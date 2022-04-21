@@ -37,7 +37,7 @@ def Gen_Resume_Graphics(
 
     x=[]
     y=[]
-    xh=[] 
+    xh={} 
     yh=[]
     series={}
     series_to_plot=[]
@@ -61,6 +61,12 @@ def Gen_Resume_Graphics(
         graphic1.add_y_serie(ytitles[i],values=y[i],units=units,rotation=rotation,precision=precision)
     filename=Plot_Graphic(graphic1,resume.get('user'),name,agregation,series_to_plot=series_to_plot)
     
+
+    start,end = Get_Period(resume['start'],PERIOD_MONTH)
+
+    end_of_previous = start - timedelta(days=1) # Gets last day of previous month
+
+
     if include_history:
         logger.debug(f"{this()}: Check for history availability")
 
@@ -72,33 +78,74 @@ def Gen_Resume_Graphics(
                     resume.get('currency'),
                     resume.get('status'),
                     start=None,
-                    end=None,
-
-                    periods=['previous_month','current_month'],
+                    end=end_of_previous,
+                    periods=['previous_month'],
                     agregation=agregation,
                     include_rows=True,
                     logger=logger
-                    )
+                )
+        history+=Get_Resume_History(
+                    db,
+                    resume.get('user'),
+                    resume.get('customer'),
+                    resume.get('platform'),
+                    resume.get('currency'),
+                    resume.get('status'),
+                    start=start,
+                    end  =end,
+                    periods=['current_month'],
+                    agregation=agregation,
+                    include_rows=True,
+                    logger=logger
+                )
 
+        while len(history)>max_history_months:
+            history.pop(0)
+
+        xxh=[]
+        yyh={}
         for resume in history:
+            logger.debug(f"resume: {resume['start']} {resume['end']} {resume['periods']} {resume['description']}")
             key = resume['start'].strftime("%b %y")
-            xh.append(key) 
+            idx= int(len(xh)/2)
+            xh.update({key:idx,idx:key}) 
+            xxh.append(key)        
             for r in resume['rows']:
                 serie = getattr(r,xfield)
-                value = getattr(r,yfields[0])
-                #print(f"serie={serie} value={value}")
                 if serie not in series.keys():
                     index = int(len(series)/2)
                     series.update({serie:index,index:serie})
-                    yh.append([])
-                yh[series[serie]].append(value)   
+                    yyh.update({serie:index})
 
-        width = 1/len(xh)/len(yh)
-        left = width*len(yh)/2
+        data = {}
+        for x in xxh:
+            if x not in data.keys():
+                data.update({x:{}})
+            for y in yyh:
+                if y not in data[x].keys():
+                    data[x].update({y:[]})
+                data[x][y]=0
+
+        x = 0
+        for resume in history:
+            xkey = resume['start'].strftime("%b %y")
+            idx= int(len(xh)/2)
+            xh.update({key:idx,idx:key}) 
+            for r in resume['rows']:
+                serie = getattr(r,xfield)
+                value = getattr(r,yfields[0])
+                data[xkey][serie]=value
+            x += 1   
+
+        yh=[]
+        for i in range(int(len(series)/2)):
+            yh.append([])
+            for x in range(len(xxh)):
+                yh[i].append(data[xxh[x]][series[i]])
         
         graphic2     = None
         graphic2     = Graphic(name)
-        graphic2.add_x_serie('Month',values=xh,labels=xh,precision=0)
+        graphic2.add_x_serie('Month',values=xxh,labels=xxh,precision=0)
         logger.debug(f"len y series ={len(yh)} {series}")
         series_to_plot=[]
         for i in range(len(yh)):
@@ -129,6 +176,7 @@ def statistics_Resumes():
     platform    = request.args.get('platform',   config.getint('Statistics','platform',fallback=2))
     periods     = request.args.get('periods',    PERIOD_RANGES[STAT_PERIOD_TODAY]).split(',')
     agregations = request.args.get('agregations',AGREGATION_TYPE)
+    max_history_months = int(request.args.get('max_history_months',6))
 
     if date.lower() == 'today':
         date=datetime.datetime.now()
@@ -184,6 +232,7 @@ def statistics_Resumes():
                     filename,history_filename=Gen_Resume_Graphics(
                             x,y,resume,agregation,
                             include_history=True,
+                            max_history_months=max_history_months,
                             logger=logger
                             )
                 elif agregation == AGREGATION_CC:
@@ -193,6 +242,7 @@ def statistics_Resumes():
                     filename,history_filename=Gen_Resume_Graphics(
                             x,y,resume,agregation,
                             include_history=True,
+                            max_history_months=max_history_months,
                             rotation=15,
                             precision=0,
                             logger=logger
@@ -203,6 +253,7 @@ def statistics_Resumes():
                     filename,history_filename=Gen_Resume_Graphics(
                             x,y,resume,agregation,
                             include_history=True,
+                            max_history_months=max_history_months,
                             precision=0,
                             logger=logger
                             )
@@ -404,75 +455,6 @@ def API_statistics_Resumes_Update():
                 resume[key] = resume[key].strftime("%Y-%m-%d")
 
     return json.dumps(resume)
-
-
-
-
-
-
-
-
-    table = True if str(table).upper() in ['1','TRUE'] else False
-
-    if date.lower() == 'today':
-        date=datetime.datetime.now()
-    else:
-        date=datetime.datetime.strptime(date,"%Y-%m-%d")
-
-    # Will get all meaningfull periods upon request argument or default
-    periods_data = Get_Periods(today=date,logger=logger)
-
-    for name in periods:
-        if name not in periods_data.keys():
-            try:
-                periods.append(PERIOD_RANGES[int(name)])
-            except:
-                continue
-    removals = True
-    while removals:
-        removals = False
-        for name in periods:
-            if name not in periods_data.keys():
-                periods.remove(name)
-                removals=True
-
-    agregations = str(agregations).split(',')
-    for i in range(len(agregations)):
-        agregations[i]=int(agregations[i])
-
-    resumes=[]
-    
-    d={
-        'user':user,
-        'customer':customer,
-        'status':status,
-        'currency':currency,
-        'platform':platform,
-        'date':date.strftime("%Y-%m-%d"),
-        'available_periods':[key for key in periods_data.keys()],
-        'requested':periods,
-        'agregations':agregations,
-        'periods':[],
-        'table':table
-    }
-    i=0
-    for name in periods:
-        start       = periods_data[name][0]
-        end         = periods_data[name][1]
-        resumes.append({'name':name,'agregations':Get_Resume(db,user,customer,platform,None,currency,status,start,end,name,agregations,logger=logger)})
-        for key in resumes[i]['agregations'].keys():
-            if key == 'rows':
-                for j in range(len(resumes[i]['agregations']['rows'])):
-                    resumes[i]['agregations']['rows'][j]=resumes[i]['agregations']['rows'][j].get_json_dict()
-            else:
-                if type(resumes[i]['agregations'][key]) == datetime.datetime:
-                    resumes[i]['agregations'][key] = resumes[i]['agregations'][key].strftime("%Y-%m-%d")
-        if table:
-            resumes[i]['agregations'].update(rows_to_table(resumes[i]['agregations']['rows']))
-        d['periods'].append({'name':name,'resumes':resumes})
-        i+=1
-    return json.dumps(d)
-
 
 def rows_to_table(rows):
     table = {'columns':[],'rows':[]}
