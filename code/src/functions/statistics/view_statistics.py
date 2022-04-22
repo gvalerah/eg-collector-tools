@@ -23,6 +23,7 @@ def Gen_Resume_Graphics(
         precision          = 0,
         logger             = logging.getLogger()
     ):
+    logger.info(f"{this()}: IN")
     filename = None
     history_filename = None
 
@@ -59,7 +60,8 @@ def Gen_Resume_Graphics(
     graphic1.add_x_serie(xtitle,values=x,labels=x,rotation=rotation,precision=precision)
     for i in range(len(y)):
         graphic1.add_y_serie(ytitles[i],values=y[i],units=units,rotation=rotation,precision=precision)
-    filename=Plot_Graphic(graphic1,resume.get('user'),name,agregation,series_to_plot=series_to_plot)
+    graphic1.title = f"{resume.get('user')} {name} {agregation}"
+    filename=Plot_Graphic(graphic1,series_to_plot=series_to_plot,logger=logger)
     
 
     start,end = Get_Period(resume['start'],PERIOD_MONTH)
@@ -99,11 +101,14 @@ def Gen_Resume_Graphics(
                     logger=logger
                 )
 
+        logger.debug(f"{this()}: removes excess of history ...")
         while len(history)>max_history_months:
             history.pop(0)
 
         xxh=[]
         yyh={}
+
+        logger.debug(f"{this()}: prepares table's series x and ys ...")
         for resume in history:
             logger.debug(f"resume: {resume['start']} {resume['end']} {resume['periods']} {resume['description']}")
             key = resume['start'].strftime("%b %y")
@@ -118,6 +123,9 @@ def Gen_Resume_Graphics(
                     yyh.update({serie:index})
 
         data = {}
+        
+        logger.debug(f"{this()}: initialize data ...")
+
         for x in xxh:
             if x not in data.keys():
                 data.update({x:{}})
@@ -127,6 +135,9 @@ def Gen_Resume_Graphics(
                 data[x][y]=0
 
         x = 0
+        
+        logger.debug(f"{this()}: populates data ...")
+
         for resume in history:
             xkey = resume['start'].strftime("%b %y")
             idx= int(len(xh)/2)
@@ -138,6 +149,7 @@ def Gen_Resume_Graphics(
             x += 1   
 
         yh=[]
+        logger.debug(f"{this()}: populates series lists  ...")
         for i in range(int(len(series)/2)):
             yh.append([])
             for x in range(len(xxh)):
@@ -146,14 +158,16 @@ def Gen_Resume_Graphics(
         graphic2     = None
         graphic2     = Graphic(name)
         graphic2.add_x_serie('Month',values=xxh,labels=xxh,precision=0)
-        logger.debug(f"len y series ={len(yh)} {series}")
+        logger.debug(f"{this()}: len y series ={len(yh)} {series}")
         series_to_plot=[]
         for i in range(len(yh)):
             logger.debug(f"adding serie '{series.get(i)}' values {len(yh[i])} ={yh[i]}")
             graphic2.add_y_serie(series.get(i),values=yh[i],units=units)
             series_to_plot.append(i)
-        history_filename=Plot_Graphic(graphic2,resume.get('user'),f"{name}_history",agregation,series_to_plot=series_to_plot)
+        graphic2.title = f"{resume.get('user')} {name} history {agregation}"
+        history_filename=Plot_Graphic(graphic2,series_to_plot=series_to_plot,logger=logger)
     
+    logger.info(f"{this()}: returns {filename} {history_filename}")
     return filename,history_filename
 
 @main.route('/statistics/resumes', methods=['GET'])
@@ -217,7 +231,8 @@ def statistics_Resumes():
         # Get Resume (it may include mix of period names Ex. 'current_month_so_far'+'today')
         resume      = Get_Resume(db,user,customer,platform,None,currency,status,start,end,name,agregations,logger=logger)
 
-        for row in resume.get('rows'):
+        #for row in resume.get('rows'):
+        if True:
             # Will process all resume's rows upon agregation Type
             # Sets Up graphic objects for actual resume and historic comparison
             for agregation in agregations:
